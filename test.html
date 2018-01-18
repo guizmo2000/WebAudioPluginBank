@@ -3,7 +3,7 @@
 <html>
 <style include="shared-styles">
  #WCdelay{
-   top:20%;
+   top:30%;
    left:10%;
  }
 </style>
@@ -17,10 +17,19 @@
   </div>
   <div class="content">
     <wc-pingpongdelay id="WCdelay"></wc-pingpongdelay>
-    <audio src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/audio/BasketCase Greenday riff DI.mp3" id="soundSample" controls loop crossorigin="anonymous"></audio>
+    <audio src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
     <h3>Soon you'll be able to test here if your Web audio plugin is conforme to the API</h3>
   </div>
 
 </body>
+<script>
+  var AudioContext = window.AudioContext || window.webkitAudioContext;
+  var contexteAudio = new AudioContext();
+  let player = document.getElementById("soundSample");
+  let wcdelay = document.getElementById("WCdelay");
+  wcdelay.buildGraph(contexteAudio);
+  player.connect(wcdelay.getEffect().getInputNode());
+  wcdelay.connect(contexteAudio.destination);
+</script>
 
 </html>
