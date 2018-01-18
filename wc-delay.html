@@ -1,0 +1,107 @@
+<link rel="import" href="./webaudio-controls.html">
+<link rel="import" href="./shared-styles.html">
+<script src="./EffectLib.js"></script>
+<script>UseWebAudioControlsMidi = 1</script>
+
+
+<dom-module id="wc-pingpongdelay">
+  <template >
+    <style include="shared-styles">
+    </style>
+    <div class="row">
+      <div class="column">
+        <webaudio-knob id="knob1" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/nux_yellow_not_stripped.png"
+          width="40" height="40" data-role="feedback"></webaudio-knob>
+        <span class="knob-label" id="knob1-label">FEEDBACK</span>
+      </div>
+      <div class="column">
+        <webaudio-knob id="knob2" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/nux_yellow_not_stripped.png"
+          width="40" height="40" data-role="time"></webaudio-knob>
+        <span class="knob-label" id="knob2-label">TIME</span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column">
+        <webaudio-knob id="knob3" class="knob" sprites="99" value="0" step="1" midilearn="true" src="./img/nux_yellow_not_stripped.png"
+          width="40" height="40" data-role="mix"></webaudio-knob>
+        <span class="knob-label" id="knob3-label">MIX</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="column">
+        <webaudio-switch id="switch1" class="switch" midilearn="true" src="./img/switch_1.png" width="40" height="25"></webaudio-switch>
+      </div>
+    </div>
+    <div class="row">
+      <div class="column">
+        <span class="pedalLabel">DELAY</span>
+      </div>
+    </div>
+  </template>
+  <script>
+    class WCPingPongDelay extends Polymer.Element {
+
+      static get is() { return 'wc-pingpongdelay'; }
+
+      constructor(){
+        super();
+      }
+
+      static get properties() {
+        this.boundingRect = {
+          dataWidth: {
+            type: Number,
+            value: 120
+          },
+          dataHeight: {
+            type: Number,
+            value: 180
+          }
+        };
+        return this.boundingRect;
+      }
+      buildGraph(ctx){
+        this.effect = new PongPingDelay(ctx);
+        this.effect.setup();
+        this.$.knob1.addEventListener('change', (e) => this.effect.setFeedback(e.target.value / 100));
+        this.$.knob2.addEventListener('change', (e) => this.effect.setTime(e.target.value / 100));
+        this.$.knob3.addEventListener('change', (e) => this.effect.setMix(e.target.value / 100));
+        this.bypass();
+        this.setSwitchListener();
+
+      }
+      setSwitchListener() {
+        this.$.switch1.addEventListener('change',(e)=>{
+          if (this.isOn) this.bypass();
+          else this.reactivate();
+
+          this.isOn = !this.isOn;
+        });
+      }
+      setPedalActive(active) {
+        if (active == undefined || active == false) {
+          this.isOn = false;
+          this.bypass();
+          this.$.switch1.value = 0;
+        } else if (active) {
+          this.isOn = true;
+          this.reactivate();
+          this.$.switch1.value = 1;
+        }
+      }
+      getEffect(){
+        return this.effect;
+      }
+      bypass() {
+        this.effect.bypass();
+      }
+      reactivate() {
+        this.effect.reactivate();
+      }
+
+    }
+    // Register the x-custom element with the browser
+    customElements.define(WCPingPongDelay.is, WCPingPongDelay);
+  </script>
+</dom-module>
