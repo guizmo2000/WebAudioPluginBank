@@ -117,7 +117,7 @@
       super(ctx);
       console.log("delay construction");
       var mix, time, feedback;
-      var test = {"name": "wcPingPongDelay"}
+      this.test = {"name": "wcPingPongDelay"}
     }
 
     setup() {
