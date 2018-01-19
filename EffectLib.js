@@ -117,6 +117,7 @@
       super(ctx);
       console.log("delay construction");
       var mix, time, feedback;
+      var test = {"name": "wcPingPongDelay"}
     }
 
     setup() {
@@ -166,6 +167,10 @@
       this.setTime(this.params.time.default);
       this.setFeedback(this.params.feedback.default);
       this.setMix(this.params.mix.default);
+    }
+
+    getParam(paramName) {
+      return this.test.paramName;
     }
 
     getSetupParamsDefault() {

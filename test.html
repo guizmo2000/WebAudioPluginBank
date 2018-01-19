@@ -4,6 +4,7 @@
 <link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webaudio-controls/webaudio-controls.html">
 <!-- Plugin in its redistribuable form-->
 <link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/wc-delay.html">
+<script src="./testAPI.js"></script>
 
 <!-- What follows is an example of html/js code that instanciates it :
 The wc-pingpongdelay html tag is the custom element defined in the 
@@ -16,10 +17,16 @@ here wcdelay is the plugin object that implements the plugin API
 <!doctype html>
 <html>
 <style include="shared-styles">
- #WCdelay{
-   top:30%;
-   left:10%;
- }
+  #WCdelay {
+    top: 30%;
+    left: 10%;
+  }
+
+  #APITest {
+    position: relative;
+    top: 40%;
+    
+  }
 </style>
 
 <title>Plugin tester</title>
@@ -33,6 +40,8 @@ here wcdelay is the plugin object that implements the plugin API
     <wc-pingpongdelay id="WCdelay"></wc-pingpongdelay>
     <audio src="./BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
     <h3>Soon you'll be able to test here if your Web audio plugin is conforme to the API</h3>
+  </div>
+  <div id="APITest">
   </div>
 
 </body>
