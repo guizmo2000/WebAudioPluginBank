@@ -190,9 +190,9 @@
         this.effect = new PongPingDelay(ctx);
         this.effect.setup();
         this.bypass();
-        this.$.knob1.addEventListener('change', feedbackListener);
-        this.$.knob2.addEventListener('change', timebackListener);
-        this.$.knob3.addEventListener('change', mixListener);
+        this.$.knob1.onchange = this.feedbackListener;
+        this.$.knob2.onchange = this.timebackListener;
+        this.$.knob3.onchange =  this.mixListener;
         this.setSwitchListener();
 
       }
