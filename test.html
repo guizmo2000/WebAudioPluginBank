@@ -29,9 +29,9 @@
   let mediaSource = contexteAudio.createMediaElementSource(player);
   let wcdelay = document.getElementById("WCdelay");
   wcdelay.buildGraph(contexteAudio);
-  mediaSource.connect(wcdelay.getEffect().getInputNode());
+  //mediaSource.connect(wcdelay.getEffect().getInputNode());
   console.log(contexteAudio.destination);
-  wcdelay.getEffect().getOutputNode().connect(contexteAudio.destination);
+  //wcdelay.getEffect().getOutputNode().connect(contexteAudio.destination);
 </script>
 
 </html>
