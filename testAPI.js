@@ -35,7 +35,7 @@ window.onload = function () {
   try {
     var msg = document.createElement('p');
     plugin.getEffect().getParam("name");
-    msg.innerHTML="Your plugin does implement getParam() method file the 'name' field "+plugin.getEffect().getParam("name");
+    msg.innerHTML="Your plugin does implement getParam() method file the 'name' field "+plugin.getEffect().getParam(name);
     msg.setAttribute('style','color : green');
     wrapper.appendChild(msg);
   } catch (error) {
