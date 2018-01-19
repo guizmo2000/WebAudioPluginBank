@@ -26,10 +26,12 @@
   var AudioContext = window.AudioContext || window.webkitAudioContext;
   var contexteAudio = new AudioContext();
   let player = document.getElementById("soundSample");
+  let mediaSource = contexteAudio.createMediaElementSource(player);
   let wcdelay = document.getElementById("WCdelay");
   wcdelay.buildGraph(contexteAudio);
-  player.connect(wcdelay.getEffect().getInputNode());
-  wcdelay.connect(contexteAudio.destination);
+  mediaSource.connect(wcdelay.getEffect().getInputNode());
+  console.log(contexteAudio.destination);
+  wcdelay.getEffect().getOutputNode().connect(contexteAudio.destination);
 </script>
 
 </html>
