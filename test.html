@@ -1,3 +1,10 @@
+<!-- Plugin dependencies 
+     The Delay depends on Polymer 2 because it uses the webaudiocontrols knobs, etc
+     that also depend on Polymer. If we remove this dependency, then the delay
+     would have zero dependencies on its own.
+
+     These should be located on a "shared" repo, or on CDNs
+-->
 <script src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 <link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/polymer/polymer.html">
 <link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webaudio-controls/webaudio-controls.html">
