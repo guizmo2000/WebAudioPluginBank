@@ -36,6 +36,9 @@
     }
     reactivate() {
     }
+    getMetadata(){
+      return null;
+    }
 
     /*
     *
