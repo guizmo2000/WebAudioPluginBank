@@ -8,6 +8,7 @@
 <script src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 <link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/polymer/polymer.html">
 <link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webaudio-controls/webaudio-controls.html">
+<link rel="stylesheet" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/mocha/mocha.css">
 <!-- Plugin in its redistribuable form, note that we use here an 
      absolute URL, that means that YOU can use it too in YOUR html page/host -->
 <!-- <link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/wc-delay.html"> -->
@@ -106,7 +107,6 @@ here wcdelay is the plugin object that implements the plugin API
     var expect = chai.expect;
     var assert = chai.assert;
     var plugin = document.getElementById("plugin");
-    console.log(plugin);
     describe('Plugin', function () {
       it('plugin should have a JSON getMetadata() method', function () {
         expect(plugin.getEffect().getMetadata()).to.exist;
