@@ -171,6 +171,7 @@
 
       constructor(){
         super();
+        buildGraph(ctx);
       }
 
       static get properties() {
@@ -189,23 +190,24 @@
       buildGraph(ctx){
         this.effect = new PongPingDelay(ctx);
         this.effect.setup();
+        console.log(this.effect)
         this.bypass();
-        this.$.knob1.onchange = this.feedbackListener;
-        this.$.knob2.onchange = this.timebackListener;
-        this.$.knob3.onchange =  this.mixListener;
+        this.$.knob1.addEventListener('change', (e) => this.effect.setFeedback(e.target.value / 100));
+        this.$.knob2.addEventListener('change', (e) => this.effect.setTime(e.target.value / 100));
+        this.$.knob3.addEventListener('change', (e) => this.effect.setMix(e.target.value / 100));
         this.setSwitchListener();
 
       }
 
-      feedbackListener(event){
-        this.effect.setFeedback(event.target.value/100);
-      }
-      timebackListener(event){
-        this.effect.setTime(event.target.value/100);
-      }
-      mixListener(event){
-        this.effect.setMix(event.target.value/100);
-      }
+      // feedbackListener(event){
+      //   this.effect.setFeedback(event.target.value/100);
+      // }
+      // timebackListener(event){
+      //   this.effect.setTime(event.target.value/100);
+      // }
+      // mixListener(event){
+      //   this.effect.setMix(event.target.value/100);
+      // }
 
 
       setSwitchListener() {
@@ -240,5 +242,6 @@
     }
     // Register the x-custom element with the browser
     customElements.define(WCPingPongDelay.is, WCPingPongDelay);
+    console.log(WCPingPongDelay.is);
   </script>
 </dom-module>

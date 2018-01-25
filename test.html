@@ -10,11 +10,11 @@
 <link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webaudio-controls/webaudio-controls.html">
 <!-- Plugin in its redistribuable form, note that we use here an 
      absolute URL, that means that YOU can use it too in YOUR html page/host -->
-<link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/wc-delay.html">
+<!-- <link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/wc-delay.html"> -->
 
 <!-- Here we have a VERY preliminary code that unit tests the API,
      with hard coded names etc. -->
-<script src="./testAPI.js"></script>
+<!-- <script src="./testAPI.js"></script> -->
 
 <!-- What follows is an example of html/js code that instanciates it :
 The wc-pingpongdelay html tag is the custom element defined in the 
@@ -27,15 +27,15 @@ here wcdelay is the plugin object that implements the plugin API
 <!doctype html>
 <html>
 <style include="shared-styles">
-  #WCdelay {
+  #plugin {
     top: 30%;
-    left: 10%;
+    left: 20%;
   }
 
-  #APITest {
+  #mocha {
     position: relative;
-    top: 40%;
-    
+    top: 20%;
+
   }
 </style>
 
@@ -46,31 +46,85 @@ here wcdelay is the plugin object that implements the plugin API
   <div class="title">
     <h1>Plugin Tester</h1>
   </div>
-  <div class="content">
-    <wc-pingpongdelay id="WCdelay"></wc-pingpongdelay>
+  <div class="content" id="main">
     <audio src="./BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
-    <h3>Soon you'll be able to test here if your Web audio plugin is compliant to the API</h3>
+    <h3>Paste here the link to your webaudio plugin</h3>
+    URL:
+   <input type="text" id="urlPlugin" name="url" value="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/wc-delay.html"> <!--Name of the WC : -->
+    <button onclick="loadPlugin()">Load it</button>
+    <button onclick="buildPlugin(); testPlugin();">Test it</button>
   </div>
-  <div id="APITest">
-  </div>
-
+  <div id="mocha"></div>
+  <script src="../bower_components/mocha/mocha.js"></script>
+  <script src="../node_modules/chai/chai.js"></script>
+  <script>mocha.setup('bdd')</script>
 </body>
 <script>
   var AudioContext = window.AudioContext || window.webkitAudioContext;
   var contexteAudio = new AudioContext();
   let player = document.getElementById("soundSample");
   let mediaSource = contexteAudio.createMediaElementSource(player);
-  let wcdelay = document.getElementById("WCdelay");
 
-  console.log(wcdelay);
-  wcdelay.buildGraph(contexteAudio);
-  mediaSource.connect(wcdelay.getEffect().getInputNode());
-  console.log(contexteAudio.destination);
+  function loadPlugin() {
+    let link = document.createElement('link');
+    link.rel = "import";
+    link.href = document.getElementById("urlPlugin").value;
+    link.id="linkPlugin";
+    document.body.appendChild(link);
+  }
+  function buildPlugin() {
 
-  // the wcdelay plugin does is not yet compliant with the API from the paper
-  // it acts like the "host" of the plugin in the wam/fasut sense
-  // we could have wcdelay.node or wcdelay.getRootNode() ... ?
-  wcdelay.getEffect().getOutputNode().connect(contexteAudio.destination);
+    if (supportsImports()) {
+      // Good to go!
+      // here we get the name of the dom-module name defined in the wc by exploring the import
+      let plugin = document.createElement(document.getElementById("linkPlugin").import.body.querySelector("dom-module").id);
+      plugin.setAttribute("id", "plugin");
+      document.getElementById("main").appendChild(plugin);
+      plugin.buildGraph(contexteAudio);
+      mediaSource.connect(plugin.getEffect().getInputNode());
+
+
+      // the proposed plugin does is not yet compliant with the API from the paper
+      // it acts like the "host" of the plugin in the wam/fasut sense
+      // we could have wcdelay.node or wcdelay.getRootNode() ... ?
+      plugin.getEffect().getOutputNode().connect(contexteAudio.destination);
+    } else {
+      console.log("imports are not loaded")
+    }
+
+
+
+  }
+  // to test if the load has succeeded
+  function supportsImports() {
+    return 'import' in document.createElement('link');
+  }
+  /* 
+  here we use mocha chai.js to apply unit test on the plugin. The test cases cover the existence and (soon) the type of the API calls.
+  */ 
+  function testPlugin() {
+    var expect = chai.expect;
+    var assert = chai.assert;
+    describe('Plugin', function () {
+      it('plugin should have a JSON getMetadata() method', function () {
+        expect(plugin.getEffect().getMetadata()).to.exist;
+        expect(plugin.getEffect().getMetadata()).to.not.be.empty;
+      });
+      it('plugin should have a JSON getDescriptor() method', function () {
+        expect(plugin.getEffect().getDescriptor()).to.exist;
+        expect(plugin.getEffect().getDescriptor()).to.not.be.empty;
+      });
+      it('plugin should have a JSON getMetadata() method', function () {
+        expect(plugin.getEffect().getParam()).to.exist;
+        expect(plugin.getEffect().getParam()).to.not.be.empty;
+      });
+    });
+    mocha.run();
+  }
+
 </script>
+
+
+
 
 </html>
