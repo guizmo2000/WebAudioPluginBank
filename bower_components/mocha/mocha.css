@@ -259,9 +259,10 @@ body {
 }
 
 #mocha-stats {
-  position: fixed;
-  top: 15px;
+  position: relative;
+  top: 30px;
   right: 10px;
+  bottom: 30px;
   font-size: 12px;
   margin: 0;
   color: #888;
@@ -269,7 +270,7 @@ body {
 }
 
 #mocha-stats .progress {
-  float: right;
+  float: left;
   padding-top: 0;
 
   /**
