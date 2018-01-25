@@ -37,7 +37,7 @@
     reactivate() {
     }
     getMetadata(){
-      return null;
+      return "metadata";
     }
 
     /*

@@ -105,6 +105,8 @@ here wcdelay is the plugin object that implements the plugin API
   function testPlugin() {
     var expect = chai.expect;
     var assert = chai.assert;
+    var plugin = document.getElementById("plugin");
+    console.log(plugin);
     describe('Plugin', function () {
       it('plugin should have a JSON getMetadata() method', function () {
         expect(plugin.getEffect().getMetadata()).to.exist;
