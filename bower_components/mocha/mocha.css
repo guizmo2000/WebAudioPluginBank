@@ -267,7 +267,7 @@ body {
   margin: 0;
   color: #888;
   z-index: 1;
-  margin-bottom: 50px;
+  margin-bottom: 50px !important;
 }
 
 #mocha-stats .progress {
