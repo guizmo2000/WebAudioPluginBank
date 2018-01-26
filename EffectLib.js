@@ -1,13 +1,16 @@
 
 
 
-
   /*  ################################## main effect class ########################################  */
   class EffectTemplate {
 
-    constructor(ctx) {
+    constructor(name, version) {
       this.params = null;
-      this.context = ctx? ctx : new AudioContext;
+      this.name = name;
+      this.version = version;
+      this.context = GlobalContext.context;
+
+
     }
     setup() { }
     createNodes() {
@@ -35,9 +38,6 @@
       this.inputNode.connect(this.outputNode);
     }
     reactivate() {
-    }
-    getMetadata(){
-      return "metadata";
     }
 
     /*
@@ -115,16 +115,14 @@
 
   /*  ################################## Delay ########################################@  */
 
-   class PongPingDelay extends EffectTemplate {
-    constructor(ctx) {
-      super(ctx);
-      console.log("delay construction");
+  class PongPingDelay extends EffectTemplate {
+    constructor(name, version) {
+      super(name, version);
       var mix, time, feedback;
-      this.test = {"name": "wcPingPongDelay"}
+
     }
 
     setup() {
-      console.log("delay setup");
       super.setup();
       if (this.params == null) this.params = this.getSetupParamsDefault();
       this.createNodes();
@@ -132,8 +130,8 @@
       this.linktoParams();
     }
 
+
     createNodes() {
-      console.log("here");
       super.createNodes();
       this.delayNodeLeft = this.context.createDelay();
       this.delayNodeRight = this.context.createDelay();
@@ -170,10 +168,6 @@
       this.setTime(this.params.time.default);
       this.setFeedback(this.params.feedback.default);
       this.setMix(this.params.mix.default);
-    }
-
-    getParam(paramName) {
-      return this.test.paramName;
     }
 
     getSetupParamsDefault() {
@@ -253,19 +247,19 @@
     */
     setTime(_time) {
       if (_time < this.params.time.max && _time > this.params.time.min) this.time = _time;
-      this.delayNodeLeft.delayTime.value = _time;
-      this.delayNodeRight.delayTime.value = _time;
+      this.delayNodeLeft.delayTime.setValueAtTime(_time,GlobalContext.context.currentTime);
+      this.delayNodeRight.delayTime.setValueAtTime(_time, GlobalContext.context.currentTime);
     }
 
     setFeedback(_feedback) {
       if (_feedback < this.params.feedback.max && _feedback > this.params.feedback.min) this.feedback = _feedback;
-      this.feedbackGainNode.gain.value = parseFloat(this.feedback, 10);
+      this.feedbackGainNode.gain.setValueAtTime(parseFloat(this.feedback, 10),GlobalContext.context.currentTime);
     }
 
     setMix(_mix) {
       if (_mix < this.params.mix.max && _mix > this.params.mix.min) this.mix = _mix;
-      this.dryGainNode.gain.value = this.getDryLevel(this.mix);
-      this.wetGainNode.gain.value = this.getWetLevel(this.mix);
+      this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.mix),GlobalContext.context.currentTime);
+      this.wetGainNode.gain.setValueAtTime(this.getDryLevel(this.mix),GlobalContext.context.currentTime);
     }
 
     getTime(){
@@ -284,8 +278,8 @@
   /*  ################################## Chorus ########################################@  */
 
   class Chorus extends EffectTemplate {
-    constructor(ctx) {
-      super(ctx);
+    constructor(name, version) {
+      super(name, version);
       var speed,delay, depth, osc, mix;
 
     }
@@ -434,29 +428,29 @@
     */
     setDelay(_delay) {
       if (_delay < this.params.delay.max && _delay > this.params.delay.min) this.delay = _delay;
-      this.delayNodeLeft.delayTime.value = this.delay * 0.05;
-      this.delayNodeRight.delayTime.value = this.delay * 0.05;
-     // console.log(this.delayNodeRight.delayTime.value);
+      this.delayNodeLeft.delayTime.setValueAtTime(this.delay * 0.05, GlobalContext.context.currentTime);
+      this.delayNodeRight.delayTime.setValueAtTime(this.delay * 0.05, GlobalContext.context.currentTime);
+     // console.log(this.delayNodeRight.delayTime.setValueAtTime());
     }
 
     setSpeed(_speed) {
       if (_speed < this.params.speed.max && _speed > this.params.speed.min) this.speed = _speed;
-      this.osc.frequency.value = this.speed;
-    //  console.log(this.osc.frequency.value);
+      this.osc.frequency.setValueAtTime(this.speed, GlobalContext.context.currentTime);
+    //  console.log(this.osc.frequency.setValueAtTime());
      // console.log(this.scldepth);
     }
 
     setDepth(_depth) {
       if (_depth < this.params.depth.max && _depth > this.params.depth.min) this.depth = _depth;
-      this.scldepth.gain.value = this.depth ;
-      this.scrdepth.gain.value = - this.depth;
+      this.scldepth.gain.setValueAtTime(this.depth,GlobalContext.context.currentTime);
+      this.scrdepth.gain.setValueAtTime(- this.depth,GlobalContext.context.currentTime);
       console.log(this.depth);
       console.log(this.scldepth.gain.value);
     }
     setMix(_mix) {
       if (_mix < this.params.mix.max && _mix > this.params.mix.min) this.mix = _mix;
-      this.dryGainNode.gain.value = this.getDryLevel(this.mix);
-      this.wetGainNode.gain.value = this.getWetLevel(this.mix);
+      this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.mix), GlobalContext.context.currentTime);
+      this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.mix), GlobalContext.context.currentTime);
     }
  
     getDelay(){
@@ -476,8 +470,8 @@
    /*  ################################## OVERDRIVE ########################################@  */
 
    class Overdrive extends EffectTemplate {
-    constructor(ctx) {
-      super(ctx);
+    constructor(name, version) {
+      super(name, version);
       var preBand,color, drive, postCut, curve;
 
     }
@@ -657,7 +651,4 @@
 
 
   }
-
-
-
 

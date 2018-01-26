@@ -72,6 +72,10 @@ here wcdelay is the plugin object that implements the plugin API
     link.href = document.getElementById("urlPlugin").value;
     link.id="linkPlugin";
     document.body.appendChild(link);
+    fetch(document.getElementById("linkPlugin").import).then(function(){
+      buildPlugin();
+      testPlugin();
+    });
   }
   function buildPlugin() {
 
