@@ -1,16 +1,13 @@
 
 
 
+
   /*  ################################## main effect class ########################################  */
   class EffectTemplate {
 
-    constructor(name, version) {
+    constructor(ctx) {
       this.params = null;
-      this.name = name;
-      this.version = version;
-      this.context = GlobalContext.context;
-
-
+      this.context = ctx? ctx : new AudioContext;
     }
     setup() { }
     createNodes() {
@@ -38,6 +35,9 @@
       this.inputNode.connect(this.outputNode);
     }
     reactivate() {
+    }
+    getMetadata(){
+      return "metadata";
     }
 
     /*
@@ -115,14 +115,16 @@
 
   /*  ################################## Delay ########################################@  */
 
-  class PongPingDelay extends EffectTemplate {
-    constructor(name, version) {
-      super(name, version);
+   class PongPingDelay extends EffectTemplate {
+    constructor(ctx) {
+      super(ctx);
+      console.log("delay construction");
       var mix, time, feedback;
-
+      this.test = {"name": "wcPingPongDelay"}
     }
 
     setup() {
+      console.log("delay setup");
       super.setup();
       if (this.params == null) this.params = this.getSetupParamsDefault();
       this.createNodes();
@@ -278,8 +280,8 @@
   /*  ################################## Chorus ########################################@  */
 
   class Chorus extends EffectTemplate {
-    constructor(name, version) {
-      super(name, version);
+    constructor(ctx) {
+      super(ctx);
       var speed,delay, depth, osc, mix;
 
     }
