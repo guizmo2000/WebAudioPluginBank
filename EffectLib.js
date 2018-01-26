@@ -249,19 +249,19 @@
     */
     setTime(_time) {
       if (_time < this.params.time.max && _time > this.params.time.min) this.time = _time;
-      this.delayNodeLeft.delayTime.setValueAtTime(_time,GlobalContext.context.currentTime);
-      this.delayNodeRight.delayTime.setValueAtTime(_time, GlobalContext.context.currentTime);
+      this.delayNodeLeft.delayTime.setValueAtTime(_time,this.context.currentTime);
+      this.delayNodeRight.delayTime.setValueAtTime(_time, this.context.currentTime);
     }
 
     setFeedback(_feedback) {
       if (_feedback < this.params.feedback.max && _feedback > this.params.feedback.min) this.feedback = _feedback;
-      this.feedbackGainNode.gain.setValueAtTime(parseFloat(this.feedback, 10),GlobalContext.context.currentTime);
+      this.feedbackGainNode.gain.setValueAtTime(parseFloat(this.feedback, 10),this.context.currentTime);
     }
 
     setMix(_mix) {
       if (_mix < this.params.mix.max && _mix > this.params.mix.min) this.mix = _mix;
-      this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.mix),GlobalContext.context.currentTime);
-      this.wetGainNode.gain.setValueAtTime(this.getDryLevel(this.mix),GlobalContext.context.currentTime);
+      this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.mix),this.context.currentTime);
+      this.wetGainNode.gain.setValueAtTime(this.getDryLevel(this.mix),this.context.currentTime);
     }
 
     getTime(){
@@ -430,29 +430,29 @@
     */
     setDelay(_delay) {
       if (_delay < this.params.delay.max && _delay > this.params.delay.min) this.delay = _delay;
-      this.delayNodeLeft.delayTime.setValueAtTime(this.delay * 0.05, GlobalContext.context.currentTime);
-      this.delayNodeRight.delayTime.setValueAtTime(this.delay * 0.05, GlobalContext.context.currentTime);
+      this.delayNodeLeft.delayTime.setValueAtTime(this.delay * 0.05, this.context.currentTime);
+      this.delayNodeRight.delayTime.setValueAtTime(this.delay * 0.05, this.context.currentTime);
      // console.log(this.delayNodeRight.delayTime.setValueAtTime());
     }
 
     setSpeed(_speed) {
       if (_speed < this.params.speed.max && _speed > this.params.speed.min) this.speed = _speed;
-      this.osc.frequency.setValueAtTime(this.speed, GlobalContext.context.currentTime);
+      this.osc.frequency.setValueAtTime(this.speed, this.context.currentTime);
     //  console.log(this.osc.frequency.setValueAtTime());
      // console.log(this.scldepth);
     }
 
     setDepth(_depth) {
       if (_depth < this.params.depth.max && _depth > this.params.depth.min) this.depth = _depth;
-      this.scldepth.gain.setValueAtTime(this.depth,GlobalContext.context.currentTime);
-      this.scrdepth.gain.setValueAtTime(- this.depth,GlobalContext.context.currentTime);
+      this.scldepth.gain.setValueAtTime(this.depth,this.context.currentTime);
+      this.scrdepth.gain.setValueAtTime(- this.depth,this.context.currentTime);
       console.log(this.depth);
       console.log(this.scldepth.gain.value);
     }
     setMix(_mix) {
       if (_mix < this.params.mix.max && _mix > this.params.mix.min) this.mix = _mix;
-      this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.mix), GlobalContext.context.currentTime);
-      this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.mix), GlobalContext.context.currentTime);
+      this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.mix), this.context.currentTime);
+      this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.mix), this.context.currentTime);
     }
  
     getDelay(){
