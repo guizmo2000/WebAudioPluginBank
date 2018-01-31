@@ -83,13 +83,13 @@ here wcdelay is the plugin object that implements the plugin API
       plugin.setAttribute("id", "plugin");
       document.getElementById("main").appendChild(plugin);
       plugin.buildGraph(contexteAudio);
-      mediaSource.connect(plugin.getEffect().getInputNode());
+      mediaSource.connect(plugin.getEffect().getInput(0));
 
 
       // the proposed plugin does is not yet compliant with the API from the paper
       // it acts like the "host" of the plugin in the wam/fasut sense
       // we could have wcdelay.node or wcdelay.getRootNode() ... ?
-      plugin.getEffect().getOutputNode().connect(contexteAudio.destination);
+      plugin.getEffect().getOutput(0).connect(contexteAudio.destination);
     } else {
       console.log("imports are not loaded")
     }
@@ -132,57 +132,57 @@ here wcdelay is the plugin object that implements the plugin API
 
     describe('Param getter', function () {
       it('plugin should have a getParam(key) method', function () {
-        expect(plugin.getEffect().getParam(key)).to.exist;
+        expect(plugin.getEffect().getParam("key")).to.exist;
       });
       it('the getParam() function should  not be empty', function () {
-        expect(plugin.getEffect().getParam(key)).to.not.be.empty;
+        expect(plugin.getEffect().getParam("key")).to.not.be.empty;
       });
     });
 
 
     describe('Param setter', function () {
       it('plugin should have a setParam(key,value) method', function () {
-        expect(plugin.getEffect().setParam(key,value)).to.exist;
+        expect(plugin.getEffect().setParam("key","value")).to.exist;
       });
     });
 
 
     describe('Patch getter', function () {
       it('plugin should have a getPatch(key) method', function () {
-        expect(plugin.getEffect().getPatch(data)).to.exist;
+        expect(plugin.getEffect().getPatch(0)).to.exist;
       });
       it('the getMetadata() function should  not be empty', function () {
-        expect(plugin.getEffect().getPatch(data)).to.not.be.empty;
+        expect(plugin.getEffect().getPatch(0)).to.not.be.empty;
       });
     });
 
 
     describe('Patch setter', function () {
       it('plugin should have a setPatch(key,value) method', function () {
-        expect(plugin.getEffect().setPatch(data,index)).to.exist;
+        expect(plugin.getEffect().setPatch(0,"index")).to.exist;
       });
     });
 
 
     describe('State getter', function () {
       it('plugin should have a getState(key) method', function () {
-        expect(plugin.getEffect().getState(state)).to.exist;
+        expect(plugin.getEffect().getState()).to.exist;
       });
-      it('the getMetadata() function should  not be empty', function () {
-        expect(plugin.getEffect().getState(state)).to.not.be.empty;
+      it('the getState() function should  not be empty', function () {
+        expect(plugin.getEffect().getState()).to.not.be.empty;
       });
     });
 
 
     describe('State setter', function () {
-      it('plugin should have a setState(key,value) method', function () {
-        expect(plugin.getEffect().setState(state)).to.exist;
+      it('plugin should have a setState(value) method', function () {
+        expect(plugin.getEffect().setState("disable")).to.exist;
       });
     });
 
     describe('midi enable', function () {
       it('plugin should have a onMidi(msg) method', function () {
-        expect(plugin.getEffect().onMidi(msg)).to.exist;
+        expect(plugin.getEffect().onMidi("msg")).to.exist;
       });
     });
 
@@ -191,7 +191,7 @@ here wcdelay is the plugin object that implements the plugin API
         expect(plugin.getEffect().patchNames).to.exist;
       });
       it('patchNames should be instanceOf String []', function () {
-        expect(plugin.getEffect().patchNames).to.be.an.instanceof(array);
+        expect(plugin.getEffect().patchNames).to.be.an.instanceof(Array);
       });
     });
 

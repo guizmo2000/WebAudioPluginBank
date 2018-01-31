@@ -1,4 +1,4 @@
-<script src="./EffectLib.js"></script>
+<script src="./PingPongDelay.js"></script>
 <script>UseWebAudioControlsMidi = 1</script>
 <dom-module id="wc-pingpongdelay">
   <template>
@@ -188,14 +188,13 @@
         return this.boundingRect;
       }
       buildGraph(ctx){
-        this.effect = new PongPingDelay(ctx);
-        this.effect.setup();
+        this.effect = new PingPongDelay(ctx);
         console.log(this.effect)
-        this.bypass();
-        this.$.knob1.addEventListener('change', (e) => this.effect.setFeedback(e.target.value / 100));
-        this.$.knob2.addEventListener('change', (e) => this.effect.setTime(e.target.value / 100));
-        this.$.knob3.addEventListener('change', (e) => this.effect.setMix(e.target.value / 100));
+        this.$.knob1.addEventListener('change', (e) => this.effect.setParam("feedback",e.target.value / 100));
+        this.$.knob2.addEventListener('change', (e) => this.effect.setParam("time",e.target.value / 100));
+        this.$.knob3.addEventListener('change', (e) => this.effect.setParam("mix",e.target.value / 100));
         this.setSwitchListener();
+        this.bypass();
 
       }
 
@@ -233,10 +232,10 @@
         return this.effect;
       }
       bypass() {
-        this.effect.bypass();
+        this.effect.setState("disable");
       }
       reactivate() {
-        this.effect.reactivate();
+        this.effect.setState("enable");
       }
 
     }
