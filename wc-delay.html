@@ -61,77 +61,6 @@
         justify-content: flex-start;
         align-items: stretch;
       }
-      /***** .input,.output  *****/
-
-      .input,
-      .output {
-        position: absolute;
-        top: 20px;
-      }
-
-      .output:hover {
-        background-image: url("../../../../img/outputHover.png");
-      }
-
-      .output {
-        background-image: url("../../../../img/output.png");
-        background-repeat: no-repeat;
-        background-position: center center;
-
-        width: 90px;
-        height: 20px;
-
-        right: -88px;
-      }
-
-
-      .input:hover {
-        background-image: url("../../../../img/inputHover.png");
-      }
-
-      .input {
-        background-image: url("../../../../img/input.png");
-        background-repeat: no-repeat;
-        background-position: left center;
-
-        width: 20px;
-        height: 20px;
-
-        left: -20px;
-      }
-      /***** div_menuPanel *****/
-
-      .div_menuPanel {
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        align-items: stretch;
-
-        position: absolute;
-        top: -28px;
-        right: 12px;
-        z-index: 99;
-      }
-
-      .div_menuPanel button:hover>iron-icon {
-        color: #fff;
-      }
-
-      .div_menuPanel button:hover {
-        background: rgba(0, 0, 0, 0.4);
-      }
-
-      .div_menuPanel button {
-        background: transparent;
-        border: 0px;
-
-        cursor: pointer;
-      }
-
-      .div_menuPanel button iron-icon {
-        color: #bbb;
-        width: 16px;
-      }
     </style>
     <div class="row">
       <div class="column">
@@ -165,13 +94,14 @@
     </div>
   </template>
   <script>
+    let wctemp = document.currentScript.ownerDocument.querySelector("wc-pingpongdelay");
+  
     class WCPingPongDelay extends Polymer.Element {
 
       static get is() { return 'wc-pingpongdelay'; }
 
       constructor(){
         super();
-        // buildGraph(ctx);
       }
 
       static get properties() {
@@ -187,27 +117,13 @@
         };
         return this.boundingRect;
       }
-      buildGraph(ctx){
-        this.effect = new PingPongDelay(ctx);
-        console.log(this.effect)
-        this.$.knob1.addEventListener('change', (e) => this.effect.setParam("feedback",e.target.value / 100));
-        this.$.knob2.addEventListener('change', (e) => this.effect.setParam("time",e.target.value / 100));
-        this.$.knob3.addEventListener('change', (e) => this.effect.setParam("mix",e.target.value / 100));
-        this.setSwitchListener();
-        this.bypass();
+      set plug (p)  { this._plug = p; }
 
-      }
-
-      // feedbackListener(event){
-      //   this.effect.setFeedback(event.target.value/100);
-      // }
-      // timebackListener(event){
-      //   this.effect.setTime(event.target.value/100);
-      // }
-      // mixListener(event){
-      //   this.effect.setMix(event.target.value/100);
-      // }
-
+     setKnobs(){
+        this.$.knob1.addEventListener('change', (e) => this._plug.setParam("feedback",e.target.value / 100));
+        this.$.knob2.addEventListener('change', (e) => this._plug.setParam("time",e.target.value / 100));
+        this.$.knob3.addEventListener('change', (e) => this._plug.setParam("mix",e.target.value / 100));
+     }
 
       setSwitchListener() {
         this.$.switch1.addEventListener('change',(e)=>{
@@ -228,19 +144,15 @@
           this.$.switch1.value = 1;
         }
       }
-      getEffect(){
-        return this.effect;
-      }
       bypass() {
-        this.effect.setState("disable");
+        this._plug.setState("disable");
       }
       reactivate() {
-        this.effect.setState("enable");
+        this._plug.setState("enable");
       }
 
     }
     // Register the x-custom element with the browser
     customElements.define(WCPingPongDelay.is, WCPingPongDelay);
-    console.log(WCPingPongDelay.is);
   </script>
 </dom-module>

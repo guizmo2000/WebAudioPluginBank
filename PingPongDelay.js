@@ -6,10 +6,13 @@
 
 class PingPongDelay {
 
-  // API Implementation part
+  
 
   constructor(ctx) {
     this.context = ctx ? ctx : new AudioContext;
+
+    /*    ################     API PROPERTIES    ###############   */
+
     this.state;
     this.inputs = [];
     this.outputs = [];
@@ -83,6 +86,9 @@ class PingPongDelay {
     this.setup();
   }
 
+  /*    ################     API METHODS    ###############   */
+
+  // p9 count inputs
   inputChannelCount(){
     return this.inputs.length;
   }
@@ -150,7 +156,8 @@ class PingPongDelay {
     //web midi api ?
   }
 
-  // free audio part
+  /*  #########  Personnal code for the web audio graph  #########   */
+
   setup() {
     console.log("delay setup");
     this.createIO();
@@ -320,6 +327,11 @@ class PingPongDelay {
     if (_mix < this.descriptor.mix.range.max && _mix > this.descriptor.mix.range.min) this.params.mix = _mix;
     this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
     this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
+  }
+
+
+  connect(audioNode){
+    this.getOutput(0).connect(audioNode);
   }
 
 }

@@ -11,8 +11,6 @@
 <link rel="stylesheet" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/mocha/mocha.css">
 <!-- Plugin in its redistribuable form, note that we use here an 
      absolute URL, that means that YOU can use it too in YOUR html page/host -->
-<!-- <link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/wc-delay.html"> -->
-
 <!-- Here we have a VERY preliminary code that unit tests the API,
      with hard coded names etc. -->
 <!-- <script src="./testAPI.js"></script> -->
@@ -51,9 +49,11 @@ here wcdelay is the plugin object that implements the plugin API
     <audio src="./BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
     <h3>Paste here the link to your webaudio plugin</h3>
     URL:
-   <input type="text" id="urlPlugin" name="url" value="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/wc-delay.html"> <!--Name of the WC : -->
+    <input type="text" id="urlPlugin" name="url" value="http://127.0.0.1:8887/wasabi-host.html">
+    <!--Name of the WC : -->
     <button onclick="loadPlugin()">Load it</button>
-    <button onclick="buildPlugin(); testPlugin();">Test it</button>
+    <button onclick="buildPlugin()">build it</button>
+    <button onclick="testPlugin()">Test it</button>
   </div>
   <div id="mocha"></div>
   <script src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/mocha/mocha.js"></script>
@@ -61,147 +61,178 @@ here wcdelay is the plugin object that implements the plugin API
   <script>mocha.setup('bdd')</script>
 </body>
 <script>
-  var AudioContext = window.AudioContext || window.webkitAudioContext;
-  var contexteAudio = new AudioContext();
-  let player = document.getElementById("soundSample");
-  let mediaSource = contexteAudio.createMediaElementSource(player);
 
-  function loadPlugin() {
-    let link = document.createElement('link');
-    link.rel = "import";
-    link.href = document.getElementById("urlPlugin").value;
-    link.id="linkPlugin";
-    document.body.appendChild(link);
+  var AudioContext = window.AudioContext || window.webkitAudioContext;
+  var ctx = new AudioContext();
+  let player = document.getElementById("soundSample");
+  let mediaSource = ctx.createMediaElementSource(player);
+  let className;
+
+  function buildPlugin() {
+    if (supportsImports){
+    var self = this;
+    return new Promise(function (resolve, reject) {
+      ctx = self.ctx;
+      let host = document.createElement(document.getElementById("linkHost").import.head.querySelector("template").id);
+      host.context = ctx;
+      host.id = "plugin";
+      console.log(host);
+      // find a strategy : should we import : the host or the processing class ? in pedalboard we do both
+      host.load("http://127.0.0.1:8887/PingPongDelay.js").then(function (wasabi) {
+        console.log(wasabi);
+        mediaSource.connect(wasabi.getInput(0));
+        wasabi.connect(ctx.destination);
+        testPlugin(wasabi);
+
+      })
+      resolve()
+      //testPlugin()
+    });
     
   }
-  function buildPlugin() {
-
-    if (supportsImports()) {
-      // Good to go!
-      // here we get the name of the dom-module name defined in the wc by exploring the import
-      let plugin = document.createElement(document.getElementById("linkPlugin").import.body.querySelector("dom-module").id);
-      plugin.setAttribute("id", "plugin");
-      document.getElementById("main").appendChild(plugin);
-      plugin.buildGraph(contexteAudio);
-      mediaSource.connect(plugin.getEffect().getInput(0));
-
-
-      // the proposed plugin does is not yet compliant with the API from the paper
-      // it acts like the "host" of the plugin in the wam/fasut sense
-      // we could have wcdelay.node or wcdelay.getRootNode() ... ?
-      plugin.getEffect().getOutput(0).connect(contexteAudio.destination);
-    } else {
-      console.log("imports are not loaded")
-    }
-
 
 
   }
+
+  function loadPlugin() {
+    load(document.getElementById("urlPlugin").value);
+  }
+
+  function load(url, className) {
+    var self = this;
+    if (this._plug) this._plug.disconnect();
+    return new Promise(function (resolve, reject) {
+
+      function loaded() {
+        if (!className) {
+          var tokens = url.split("/");
+          className = tokens[tokens.length - 1].split(".")[0];
+          className = className.toUpperCase();
+        }
+      }
+
+      if (url.endsWith(".js")) {
+        var script = document.createElement('script');
+        script.src = url;
+        script.onload = loaded;
+        document.head.appendChild(script);
+      }
+      else if (url.endsWith(".html")) {
+        var link = document.createElement('link');
+        link.rel = 'import';
+        link.href = url;
+        link.onload = loaded;
+        link.id = "linkHost"
+        document.head.appendChild(link);
+      }
+      else reject("invalid argument");
+    })
+  }
+
   // to test if the load has succeeded
   function supportsImports() {
     return 'import' in document.createElement('link');
   }
   /* 
   here we use mocha chai.js to apply unit test on the plugin. The test cases cover the existence and (soon) the type of the API calls.
-  */ 
-  function testPlugin() {
+  */
+  function testPlugin(param) {
     var expect = chai.expect;
     var assert = chai.assert;
-    var plugin = document.getElementById("plugin");
-
+    var plugin = param;
 
     describe('Metadata', function () {
       it('plugin should have a JSON getMetadata() method', function () {
-        expect(plugin.getEffect().getMetadata()).to.exist;
+        expect(plugin.getMetadata()).to.exist;
       });
       it('the getMetadata() function should return a json object', function () {
-        expect(plugin.getEffect().getMetadata()).to.not.be.empty;
+        expect(plugin.getMetadata()).to.not.be.empty;
       });
     });
 
 
     describe('Descriptor', function () {
       it('plugin should have a JSON getDescriptor() method', function () {
-        expect(plugin.getEffect().getDescriptor()).to.exist;
+        expect(plugin.getDescriptor()).to.exist;
       });
       it('getDescriptor() function should return a json object', function () {
-        expect(plugin.getEffect().getDescriptor()).to.not.be.empty;
+        expect(plugin.getDescriptor()).to.not.be.empty;
       });
     });
 
 
     describe('Param getter', function () {
       it('plugin should have a getParam(key) method', function () {
-        expect(plugin.getEffect().getParam("key")).to.exist;
+        assert.isFunction(plugin.getParam(), "okay");
       });
       it('the getParam() function should  not be empty', function () {
-        expect(plugin.getEffect().getParam("key")).to.not.be.empty;
+        expect(plugin.getParam("key")).to.not.be.empty;
       });
     });
 
 
     describe('Param setter', function () {
       it('plugin should have a setParam(key,value) method', function () {
-        expect(plugin.getEffect().setParam("key","value")).to.exist;
+        expect(plugin.setParam("key", "value")).to.exist;
       });
     });
 
 
     describe('Patch getter', function () {
       it('plugin should have a getPatch(key) method', function () {
-        expect(plugin.getEffect().getPatch(0)).to.exist;
+        expect(plugin.getPatch(0)).to.exist;
       });
       it('the getMetadata() function should  not be empty', function () {
-        expect(plugin.getEffect().getPatch(0)).to.not.be.empty;
+        expect(plugin.getPatch(0)).to.not.be.empty;
       });
     });
 
 
     describe('Patch setter', function () {
       it('plugin should have a setPatch(key,value) method', function () {
-        expect(plugin.getEffect().setPatch(0,"index")).to.exist;
+        expect(plugin.setPatch(0, "index")).to.exist;
       });
     });
 
 
     describe('State getter', function () {
-      it('plugin should have a getState(key) method', function () {
-        expect(plugin.getEffect().getState()).to.exist;
+      it('plugin should have a getState() method', function () {
+        expect(plugin.getState()).to.exist;
       });
       it('the getState() function should  not be empty', function () {
-        expect(plugin.getEffect().getState()).to.not.be.empty;
+        expect(plugin.getState()).to.not.be.empty;
       });
     });
 
 
     describe('State setter', function () {
       it('plugin should have a setState(value) method', function () {
-        expect(plugin.getEffect().setState("disable")).to.exist;
+        expect(plugin.setState("disable")).to.exist;
       });
     });
 
     describe('midi enable', function () {
       it('plugin should have a onMidi(msg) method', function () {
-        expect(plugin.getEffect().onMidi("msg")).to.exist;
+        expect(plugin.onMidi("msg")).to.exist;
       });
     });
 
     describe('Patches array', function () {
       it('plugin should have a patchNames field', function () {
-        expect(plugin.getEffect().patchNames).to.exist;
+        expect(plugin.patchNames).to.exist;
       });
       it('patchNames should be instanceOf String []', function () {
-        expect(plugin.getEffect().patchNames).to.be.an.instanceof(Array);
+        expect(plugin.patchNames).to.be.an.instanceof(Array);
       });
     });
 
     describe('Input Channel Number', function () {
       it('plugin should have an inputChannelCount() method', function () {
-        expect(plugin.getEffect().inputChannelCount()).to.exist;
+        expect(plugin.inputChannelCount()).to.exist;
       });
     });
 
-    
+
 
 
     mocha.run();

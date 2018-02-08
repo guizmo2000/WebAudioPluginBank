@@ -1,0 +1,75 @@
+<template id="wasabi-host">
+  <div id="wasabi-content">
+  </div>
+</template>
+<script>
+
+  var hosts = hosts || {};
+  let importDoc = document.currentScript.ownerDocument;
+  let template = importDoc.querySelector("#wasabi-host");
+
+  class WasabiHost extends HTMLElement {
+    constructor() {
+      super();
+      this._root = this.attachShadow({ mode: 'open' });
+      this.ctx ="";
+      this._inited = false;
+    }
+
+    init() {
+      return new Promise(function (resolve, reject) {
+        let ctx = self.ctx;
+        if (!ctx) {
+           ctx = new AudioContext();
+        }else{
+          self.ctx = ctx;
+        }
+        // here we have to make a "new" with something like the name in the URl.
+        var plug = new PingPongDelay(ctx);
+        resolve(plug);
+      });
+    }
+
+
+    load(url, className) {
+      var self = this;
+      var plug;
+      return new Promise(function (resolve, reject) {
+        function loaded() {
+          
+          self.init().then((wasabi) => {
+            var detail = { url: url, wasabi: wasabi, status: 200 }
+            var event = new CustomEvent("load", { detail: detail });
+            self.dispatchEvent(event);
+            resolve(wasabi);
+          });
+          
+        }
+        
+
+        if (url.endsWith(".js")) {
+          var script = document.createElement('script');
+          script.src = url;
+          script.onload = loaded;
+          document.head.appendChild(script);
+        }
+        else if (url.endsWith(".html")) {
+          console.log("ah?")
+          var link = document.createElement('link');
+          link.rel = 'import';
+          link.href = url;
+          link.onload = loaded;
+          document.head.appendChild(link);
+        }
+        else reject("invalid argument");
+      });
+    }
+  }
+
+
+
+
+  window.customElements.define('wasabi-host', WasabiHost);
+
+
+</script>
