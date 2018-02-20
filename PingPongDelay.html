@@ -3,18 +3,37 @@
   <template id="wc-pingpongdelay">
     <style>
       :host {
-        box-shadow: inset -3px -3px 3px 5px rgba(0, 0, 0, 0.6), inset 3px 3px 3px 5px rgba(255, 255, 255, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.9), 0 4px 5px 0 rgba(0, 0, 0, 0.9), 0 1px 10px 0 rgba(0, 0, 0, 0.9);
+        /* box-shadow: inset -3px -3px 3px 5px rgba(0, 0, 0, 0.6), inset 3px 3px 3px 5px rgba(255, 255, 255, 0.5), 0 2px 4px -1px rgba(0, 0, 0, 0.9), 0 4px 5px 0 rgba(0, 0, 0, 0.9), 0 1px 10px 0 rgba(0, 0, 0, 0.9); */
+        /* box-shadow: inset -3px -3px 3px 5px rgba(0, 0, 0, 0.69), inset 3px 3px 3px 2px rgba(255, 255, 255, 0.45), 0 2px 4px -1px rgba(0, 0, 0, 0), 0 4px 5px 0 rgba(0, 0, 0, 0), 0 1px 10px 0 rgba(181, 181, 181, 0); */
+        box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+
 
         width: [[dataWidth]]px;
-        height: [[dataHeight]]px;
-        border-radius: 10px;
-
+        /* height: [[dataHeight]]px; */
         position: absolute;
         top: 0px;
         left: 0px;
         display: block;
         user-select: none;
         cursor: move;
+        z-index: 9;
+        
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+      }
+      
+      *:focus {
+        outline: 0;
+      }
+
+      .pedalLabel,
+      .div_buttons {
+        border-radius: 8px;
+      }
+
+      .div_menuPanel {
+        /* border-top-left-radius: 8px;
+        border-top-right-radius: 8px; */
       }
 
       webaudio-switch {
@@ -22,18 +41,35 @@
       }
 
       .pedalLabel {
-        font-size: 20px;
+        /* background: rgba(0, 0, 0, 0.4); */
+        box-shadow: inset 0px 1px 5px #111;
+        border: 1px solid #ccc;
+        color: #ccc;
+        /* border:2px solid #aaa; */
+        padding: 4px 10px;
+        margin: 2px 0px;
+
+        font-size: 10px;
         text-align: center;
         user-select: none;
-        font-family: Lemon\/Milk;
+        /* font-family: Lemon\/Milk; */
+        font-family: helvetica;
+        text-transform: uppercase;
       }
 
       .knob-label {
-        font-size: 10px;
+        color: #ddd;
+        text-shadow: 0px 1px 1px #000;
+
+        font-size: 6px;
+        margin-top: -2px;
 
         text-align: center;
+        text-transform: uppercase;
         overflow: hidden;
         user-select: none;
+        font-family: helvetica;
+
       }
 
       .elements {
@@ -41,6 +77,7 @@
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
+
         padding: 10px;
       }
 
@@ -51,7 +88,7 @@
         align-items: center;
 
         flex: 1;
-        margin: 1px;
+        margin: 3px;
       }
 
       .row {
