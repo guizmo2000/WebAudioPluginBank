@@ -49,9 +49,9 @@ here wcdelay is the plugin object that implements the plugin API
     <audio src="./BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
     <h3>Paste here the link to your webaudio plugin</h3>
     URL:
-    <input type="text" id="urlPlugin" name="url" value="http://127.0.0.1:8887/wasabi-host.html">
+    <input type="text" id="urlPlugin" name="url" value="wasabi-host.html">
     <!--Name of the WC : -->
-    <button onclick="loadPlugin()">Load it</button>
+    <button onclick="loadPlugin(); stockUrl();">Load it</button>
     <button onclick="buildPlugin()">build it</button>
     <button onclick="testPlugin()">Test it</button>
   </div>
@@ -66,33 +66,40 @@ here wcdelay is the plugin object that implements the plugin API
   var ctx = new AudioContext();
   let player = document.getElementById("soundSample");
   let mediaSource = ctx.createMediaElementSource(player);
+  var container = document.getElementById("main");
   let className;
 
   function buildPlugin() {
-    if (supportsImports){
-    var self = this;
-    return new Promise(function (resolve, reject) {
-      ctx = self.ctx;
-      let host = document.createElement(document.getElementById("linkHost").import.head.querySelector("template").id);
-      host.context = ctx;
-      host.id = "plugin";
-      console.log(host);
-      // find a strategy : should we import : the host or the processing class ? in pedalboard we do both
-      host.load("http://127.0.0.1:8887/PingPongDelay.html").then(function (wasabi) {
-        console.log(wasabi);
-        console.log
-        mediaSource.connect(wasabi.getInput(0));
-        wasabi.connect(ctx.destination);
-        testPlugin(wasabi);
+    if (supportsImports) {
+      var self = this;
+      return new Promise(function (resolve, reject) {
+        ctx = self.ctx;
+        let host = document.createElement(stockUrl());
+        host.context = ctx;
+        host.id = "plugin";
+        console.log(host);
+        // find a strategy : should we import : the host or the processing class ? in pedalboard we do both
+        host.load("http://127.0.0.1:8887/PingPongDelay.html").then(function (wasabi) {
+          console.log(wasabi);
+          if (typeof wasabi.inputChannelCount() != 0){   //--> has to be implemented in WAMS
+          //if(wasabi.options.numberOfInputs !=0){
+         mediaSource.connect(wasabi.getInput(0));
+         }
+          container.appendChild(host);
+          wasabi.connect(ctx.destination);
+          testPlugin(wasabi);
 
-      })
-      resolve()
-      //testPlugin()
-    });
-    
+        })
+        resolve()
+        
+      });      
+    }
   }
-
-
+  function stockUrl() {
+    let url = document.getElementById("urlPlugin").value;
+    var tokens = url.split("/");
+    fileName = tokens[tokens.length - 1].split(".")[0];
+    return fileName;
   }
 
   function loadPlugin() {

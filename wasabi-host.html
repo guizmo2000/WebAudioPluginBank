@@ -7,6 +7,7 @@
   var hosts = hosts || {};
   let importDoc = document.currentScript.ownerDocument;
   let template = importDoc.querySelector("#wasabi-host");
+  console.log(template);
 
   class WasabiHost extends HTMLElement {
     constructor() {
@@ -32,7 +33,6 @@
       });
     }
 
-
     load(url, className) {
       var self = this;
       var plug;
@@ -47,9 +47,14 @@
             var detail = { url: url, wasabi: wasabi, status: 200 }
             var event = new CustomEvent("load", { detail: detail });
             self.dispatchEvent(event);
+
             resolve(wasabi);
           });
-          
+          if (url.endsWith(".html")) {
+          let wc = document.createElement(this.import.head.querySelector("template").id);
+          let content = self.shadowRoot.getElementById("wasabi-content");
+          content.appendChild(wc);
+          }
         }
         
 
@@ -62,9 +67,11 @@
         else if (url.endsWith(".html")) {
           var link = document.createElement('link');
           link.rel = 'import';
+          link.id = 'urlPlugin';
           link.href = url;
           link.onload = loaded;
           document.head.appendChild(link);
+          console.log("2");
         }
         else reject("invalid argument");
       });
