@@ -78,8 +78,9 @@ here wcdelay is the plugin object that implements the plugin API
       host.id = "plugin";
       console.log(host);
       // find a strategy : should we import : the host or the processing class ? in pedalboard we do both
-      host.load("http://127.0.0.1:8887/PingPongDelay.js").then(function (wasabi) {
+      host.load("http://127.0.0.1:8887/PingPongDelay.html").then(function (wasabi) {
         console.log(wasabi);
+        console.log
         mediaSource.connect(wasabi.getInput(0));
         wasabi.connect(ctx.destination);
         testPlugin(wasabi);
@@ -207,7 +208,7 @@ here wcdelay is the plugin object that implements the plugin API
 
     describe('State setter', function () {
       it('plugin should have a setState(value) method', function () {
-        expect(plugin.setState("disable")).to.exist;
+        expect(plugin.setState("enable")).to.exist;
       });
     });
 

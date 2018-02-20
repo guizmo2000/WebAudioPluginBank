@@ -12,11 +12,13 @@
     constructor() {
       super();
       this._root = this.attachShadow({ mode: 'open' });
+      this._root.appendChild(template.content.cloneNode(true));
       this.ctx ="";
       this._inited = false;
     }
 
-    init() {
+    init(className) {
+      console.log(className);
       return new Promise(function (resolve, reject) {
         let ctx = self.ctx;
         if (!ctx) {
@@ -24,8 +26,8 @@
         }else{
           self.ctx = ctx;
         }
-        // here we have to make a "new" with something like the name in the URl.
-        var plug = new PingPongDelay(ctx);
+        var hostsClass = hosts[className];
+        var plug = new hostsClass(ctx);
         resolve(plug);
       });
     }
@@ -36,8 +38,12 @@
       var plug;
       return new Promise(function (resolve, reject) {
         function loaded() {
-          
-          self.init().then((wasabi) => {
+          if (!className) {
+            var tokens = url.split("/");
+            className = tokens[tokens.length-1].split(".")[0];
+            //className = className.toUpperCase();
+          }          
+          self.init(className).then((wasabi) => {
             var detail = { url: url, wasabi: wasabi, status: 200 }
             var event = new CustomEvent("load", { detail: detail });
             self.dispatchEvent(event);
@@ -54,7 +60,6 @@
           document.head.appendChild(script);
         }
         else if (url.endsWith(".html")) {
-          console.log("ah?")
           var link = document.createElement('link');
           link.rel = 'import';
           link.href = url;

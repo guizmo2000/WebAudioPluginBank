@@ -3,8 +3,9 @@
 /* ES6 web audio class following the API standard
 * Author : Guillaume Etevenard
 */
+var hosts = hosts || {};
 
-class PingPongDelay {
+hosts.PingPongDelay = class PingPongDelay {
 
   
 
@@ -163,7 +164,7 @@ class PingPongDelay {
     this.createIO();
     this.createNodes();
     this.connectNodes();
-    this.linktoParams()
+    this.linktoParams();
   }
 
   createIO(){
