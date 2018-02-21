@@ -36,6 +36,13 @@ here wcdelay is the plugin object that implements the plugin API
     top: 20%;
 
   }
+  #inputs{
+    display: grid;
+  }
+  input{
+    width : 300px;
+  }
+
 </style>
 
 <title>Plugin tester</title>
@@ -48,13 +55,19 @@ here wcdelay is the plugin object that implements the plugin API
   <div class="content" id="main">
     <audio src="./BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
     <h3>Paste here the link to your webaudio plugin</h3>
-    URL:
+    <div id="inputs">
+    Plugin URL (processor or gui):
     <!-- <input type="text" id="urlPlugin" name="url" value="wasabi-host.html"> -->
     <input type="text" id="urlPlugin" name="url" value="https://webaudiomodules.org/wam-host.html">
+    Host Url
+    <!-- <input type="text" id="urlHost" value="http://127.0.0.1:8887/PingPongDelay.html"> -->
+    <input type="text" id="urlHost" value="https://webaudiomodules.org/synths/obxd.html">
     <!--Name of the WC : -->
+  </div>
+  <div id="buttons">
     <button onclick="loadPlugin(); stockUrl();">Load it</button>
     <button onclick="buildPlugin()">build it</button>
-    <button onclick="testPlugin()">Test it</button>
+  </div>
   </div>
   <div id="mocha"></div>
   <script src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/mocha/mocha.js"></script>
@@ -67,8 +80,14 @@ here wcdelay is the plugin object that implements the plugin API
   var ctx = new AudioContext();
   let player = document.getElementById("soundSample");
   let mediaSource = ctx.createMediaElementSource(player);
+  player.onplay = function () {
+    ctx.resume().then(() => {
+      console.log('Playback resumed successfully');
+    });
+  }
   var container = document.getElementById("main");
   let className;
+  let hostUrl = document.getElementById("urlHost").value;
 
   function buildPlugin() {
     if (supportsImports) {
@@ -76,26 +95,25 @@ here wcdelay is the plugin object that implements the plugin API
       return new Promise(function (resolve, reject) {
         ctx = self.ctx;
         let host = document.createElement(stockUrl());
-        host.setAttribute("style","position : relative");
+        host.setAttribute("style", "position : relative");
         host.context = ctx;
         host.id = "plugin";
         console.log(host);
-        // find a strategy : should we import : the host or the processing class ? in pedalboard we do both
-        //host.load("http://127.0.0.1:8887/PingPongDelay.html").then(function (wasabi) {
-          host.load("https://webaudiomodules.org/synths/obxd.html").then(function (wasabi) {
+        host.load(hostUrl).then(function (wasabi) {
           console.log(wasabi);
-          //if (typeof wasabi.inputChannelCount() != 0){   //--> has to be implemented in WAMS
-          //if(wasabi.options.numberOfInputs !=0){
-         //mediaSource.connect(wasabi.getInput(0));
-        // }
-          container.appendChild(host);
+          try {
+            mediaSource.connect(wasabi.getInput(0));
+          } catch (error) {
+            console.log("no input for this plugin")
+          }
           wasabi.connect(ctx.destination);
+          container.appendChild(host);
           testPlugin(wasabi);
 
         })
         resolve()
-        
-      });      
+
+      });
     }
   }
   function stockUrl() {
@@ -174,7 +192,7 @@ here wcdelay is the plugin object that implements the plugin API
 
     describe('Param getter', function () {
       it('plugin should have a getParam(key) method', function () {
-        assert.isFunction(plugin.getParam(), "okay");
+        assert.notExists(plugin.getParam(), "okay");
       });
       it('the getParam() function should  not be empty', function () {
         expect(plugin.getParam("key")).to.not.be.empty;
@@ -224,7 +242,7 @@ here wcdelay is the plugin object that implements the plugin API
 
     describe('midi enable', function () {
       it('plugin should have a onMidi(msg) method', function () {
-        expect(plugin.onMidi("msg")).to.exist;
+        expect(plugin.onMidi()).to.exist;
       });
     });
 
