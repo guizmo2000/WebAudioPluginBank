@@ -10,12 +10,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 'use strict';
 
-import {removeCustomPropAssignment, StyleNode} from './css-parse.js' // eslint-disable-line no-unused-vars
-import {nativeShadow} from './style-settings.js'
-import StyleTransformer from './style-transformer.js'
-import * as StyleUtil from './style-util.js'
-import * as RX from './common-regex.js'
-import StyleInfo from './style-info.js'
+import {removeCustomPropAssignment, StyleNode} from './css-parse.js'; // eslint-disable-line no-unused-vars
+import {nativeShadow} from './style-settings.js';
+import StyleTransformer from './style-transformer.js';
+import * as StyleUtil from './style-util.js';
+import * as RX from './common-regex.js';
+import StyleInfo from './style-info.js';
 
 // TODO: dedupe with shady
 /**
@@ -448,7 +448,10 @@ class StyleProperties {
  * @param {string} scopeId
  */
   _scopeKeyframes(rule, scopeId) {
-    rule.keyframesNameRx = new RegExp(rule['keyframesName'], 'g');
+    // Animation names are of the form [\w-], so ensure that the name regex does not partially apply
+    // to similarly named keyframe names by checking for a word boundary at the beginning and
+    // a non-word boundary or `-` at the end.
+    rule.keyframesNameRx = new RegExp(`\\b${rule['keyframesName']}(?!\\B|-)`, 'g');
     rule.transformedKeyframesName = rule['keyframesName'] + '-' + scopeId;
     rule.transformedSelector = rule.transformedSelector || rule['selector'];
     rule['selector'] = rule.transformedSelector.replace(

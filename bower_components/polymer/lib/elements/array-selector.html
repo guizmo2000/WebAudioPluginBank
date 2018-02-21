@@ -17,7 +17,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   'use strict';
 
   /**
-   * Element mixin for recording  dynamic associations between item paths in a
+   * Element mixin for recording dynamic associations between item paths in a
    * master `items` array and a `selected` array such that path changes to the
    * master array (at the host) element or elsewhere via data-binding) are
    * correctly propagated to items in the selected array and vice-versa.
@@ -30,16 +30,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
    * representing the last selected item.  When `multi` is true, `selected`
    * is an array of multiply selected items.
    *
-   * @polymerMixin
+   * @polymer
+   * @mixinFunction
+   * @appliesMixin Polymer.ElementMixin
    * @memberof Polymer
+   * @summary Element mixin for recording dynamic associations between item paths in a
+   * master `items` array and a `selected` array
    */
   let ArraySelectorMixin = Polymer.dedupingMixin(superClass => {
 
     /**
-     * @polymerMixinClass
-     * @implements {Polymer_ArraySelectorMixin}
+     * @constructor
+     * @extends {superClass}
+     * @implements {Polymer_ElementMixin}
      */
-    class ArraySelectorMixin extends superClass {
+    let elementBase = Polymer.ElementMixin(superClass);
+
+    /**
+     * @polymer
+     * @mixinClass
+     * @implements {Polymer_ArraySelectorMixin}
+     * @unrestricted
+     */
+    class ArraySelectorMixin extends elementBase {
 
       static get properties() {
 
@@ -66,6 +79,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
            * When `multi` is true, this is an array that contains any selected.
            * When `multi` is false, this is the currently selected item, or `null`
            * if no item is selected.
+           * @type {?(Object|Array<!Object>)}
            */
           selected: {
             type: Object,
@@ -75,6 +89,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           /**
            * When `multi` is false, this is the currently selected item, or `null`
            * if no item is selected.
+           * @type {?Object}
            */
           selectedItem: {
             type: Object,
@@ -90,11 +105,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             value: false
           }
 
-        }
+        };
       }
 
       static get observers() {
-        return ['__updateSelection(multi, items.*)']
+        return ['__updateSelection(multi, items.*)'];
       }
 
       constructor() {
@@ -196,7 +211,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       /**
        * Clears the selection state.
-       *
+       * @return {void}
        */
       clearSelection() {
         // Unbind previous selection
@@ -207,7 +222,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         // order: selected array index
         this.__selectedMap = new Map();
         // Initialize selection
-        this.selected = this.multi ? [] : null
+        this.selected = this.multi ? [] : null;
         this.selectedItem = null;
       }
 
@@ -224,7 +239,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       /**
        * Returns whether the item is currently selected.
        *
-       * @param {*} idx Index from `items` array to test
+       * @param {number} idx Index from `items` array to test
        * @return {boolean} Whether the item is selected
        */
       isIndexSelected(idx) {
@@ -254,6 +269,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * Deselects the given item if it is already selected.
        *
        * @param {*} item Item from `items` array to deselect
+       * @return {void}
        */
       deselect(item) {
         let idx = this.__selectedMap.get(item);
@@ -276,6 +292,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * Deselects the given index if it is already selected.
        *
        * @param {number} idx Index from `items` array to deselect
+       * @return {void}
        */
       deselectIndex(idx) {
         this.deselect(this.items[idx]);
@@ -286,6 +303,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * deselect the item if already selected.
        *
        * @param {*} item Item from `items` array to select
+       * @return {void}
        */
       select(item) {
         this.selectIndex(this.items.indexOf(item));
@@ -296,6 +314,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        * deselect the item if already selected.
        *
        * @param {number} idx Index from `items` array to select
+       * @return {void}
        */
       selectIndex(idx) {
         let item = this.items[idx];
@@ -354,19 +373,23 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
    *   <template>
    *
    *     <div> Employee list: </div>
-   *     <template is="dom-repeat" id="employeeList" items="{{employees}}">
+   *     <dom-repeat id="employeeList" items="{{employees}}">
+   *       <template>
    *         <div>First name: <span>{{item.first}}</span></div>
-   *         <div>Last name: <span>{{item.last}}</span></div>
-   *         <button on-click="toggleSelection">Select</button>
-   *     </template>
+   *           <div>Last name: <span>{{item.last}}</span></div>
+   *           <button on-click="toggleSelection">Select</button>
+   *       </template>
+   *     </dom-repeat>
    *
    *     <array-selector id="selector" items="{{employees}}" selected="{{selected}}" multi toggle></array-selector>
    *
    *     <div> Selected employees: </div>
-   *     <template is="dom-repeat" items="{{selected}}">
+   *     <dom-repeat items="{{selected}}">
+   *       <template>
    *         <div>First name: <span>{{item.first}}</span></div>
    *         <div>Last name: <span>{{item.last}}</span></div>
-   *     </template>
+   *       </template>
+   *     </dom-repeat>
    *
    *   </template>
    *
@@ -374,25 +397,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
    * ```
    *
    * ```js
-   * Polymer({
-   *   is: 'employee-list',
-   *   ready() {
-   *     this.employees = [
-   *         {first: 'Bob', last: 'Smith'},
-   *         {first: 'Sally', last: 'Johnson'},
-   *         ...
-   *     ];
-   *   },
-   *   toggleSelection(e) {
-   *     let item = this.$.employeeList.itemForElement(e.target);
-   *     this.$.selector.select(item);
-   *   }
-   * });
+   *class EmployeeList extends Polymer.Element {
+   *  static get is() { return 'employee-list'; }
+   *  static get properties() {
+   *    return {
+   *      employees: {
+   *        value() {
+   *          return [
+   *            {first: 'Bob', last: 'Smith'},
+   *            {first: 'Sally', last: 'Johnson'},
+   *            ...
+   *          ];
+   *        }
+   *      }
+   *    };
+   *  }
+   *  toggleSelection(e) {
+   *    let item = this.$.employeeList.itemForElement(e.target);
+   *    this.$.selector.select(item);
+   *  }
+   *}
    * ```
    *
-   * @polymerElement
-   * @extends Polymer.Element
-   * @mixes Polymer.ArraySelectorMixin
+   * @polymer
+   * @customElement
+   * @extends {baseArraySelector}
+   * @appliesMixin Polymer.ArraySelectorMixin
    * @memberof Polymer
    * @summary Custom element that links paths between an input `items` array and
    *   an output `selected` item or array based on calls to its selection API.
@@ -400,7 +430,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   class ArraySelector extends baseArraySelector {
     // Not needed to find template; can be removed once the analyzer
     // can find the tag name from customElements.define call
-    static get is() { return 'array-selector' }
+    static get is() { return 'array-selector'; }
   }
   customElements.define(ArraySelector.is, ArraySelector);
   Polymer.ArraySelector = ArraySelector;
