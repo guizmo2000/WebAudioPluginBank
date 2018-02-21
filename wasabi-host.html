@@ -23,8 +23,10 @@
       return new Promise(function (resolve, reject) {
         let ctx = self.ctx;
         if (!ctx) {
+          console.log("pas ctx?", ctx)
            ctx = new AudioContext();
         }else{
+          console.log("ctx", ctx)
           self.ctx = ctx;
         }
         var hostsClass = hosts[className];

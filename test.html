@@ -6,7 +6,6 @@
      These should be located on a "shared" repo, or on CDNs
 -->
 <meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
-<script src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 <script src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
 WebAudioControlsOptions={
@@ -61,16 +60,18 @@ here wcdelay is the plugin object that implements the plugin API
     <h3>Paste here the link to your webaudio plugin</h3>
     <div id="inputs">
     Host URL (processor or gui):
-    <!-- <input type="text" id="urlHost" name="url" value="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/wasabi-host.html"> -->
-    <input type="text" id="urlHost" name="url" value="https://webaudiomodules.org/wam-host.html">
+    <input type="text" id="urlHost" name="url">
+    <!-- https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/wasabi-host.html> -->
+    <!-- https://webaudiomodules.org/wam-host.html -->
     Plugin Url
-    <!-- <input type="text" id="urlPlugin" value="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/PingPongDelay.html"> -->
-    <input type="text" id="urlPlugin" value="https://webaudiomodules.org/synths/obxd.html">
+    <input type="text" id="urlPlugin">
+    <!-- https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/PingPongDelay.html -->
+    <!-- https://webaudiomodules.org/synths/obxd.html -->
     <!--Name of the WC : -->
   </div>
   <div id="buttons">
-    <button onclick="loadPlugin(); stockUrl();">Load it</button>
-    <button onclick="buildPlugin()">build it</button>
+    <button onclick="loadPlugin()">Load it</button>
+    <button id="bt_buildIt">build it</button>
   </div>
   </div>
   <div id="mocha"></div>
@@ -79,37 +80,47 @@ here wcdelay is the plugin object that implements the plugin API
   <script>mocha.setup('bdd')</script>
 </body>
 <script>
-
   var AudioContext = window.AudioContext || window.webkitAudioContext;
-  var ctx = new AudioContext();
-  let player = document.getElementById("soundSample");
-  let mediaSource = ctx.createMediaElementSource(player);
-  player.onplay = function () {
+    var ctx = new AudioContext();
+window.onload=()=>{
+    
+
+  let bt_buildIt=document.querySelector('#bt_buildIt');
+  bt_buildIt.addEventListener('click',()=>{
+    console.log("bt_buildit ",ctx);
+    buildPlugin(ctx);
+  });
+
+  var player = document.getElementById("soundSample");
+  player.onplay = () => {
     ctx.resume().then(() => {
       console.log('Playback resumed successfully');
     });
   }
-  var container = document.getElementById("main");
-  let className;
-  let plugUrl = document.getElementById("urlPlugin").value;
-
-  function buildPlugin() {
+}
+  function buildPlugin(ctx) {
+    var player = document.getElementById("soundSample");
+    var mediaSource = ctx.createMediaElementSource(player);
+    var container = document.getElementById("main");
+    let plugUrl = document.getElementById("urlPlugin").value;
     if (supportsImports) {
       var self = this;
       return new Promise(function (resolve, reject) {
-        ctx = self.ctx;
+        console.log("promesse ",ctx);
         let host = document.createElement(stockUrl());
         host.setAttribute("style", "position : relative");
         host.context = ctx;
         host.id = "plugin";
         console.log(host);
+        console.log("plugUrl: ",plugUrl);
         host.load(plugUrl).then(function (wasabi) {
           console.log(wasabi);
-          try {
+         // try {
             mediaSource.connect(wasabi.getInput(0));
-          } catch (error) {
-            console.log("no input for this plugin")
-          }
+            console.log("tried ",ctx)
+          //} catch (error) {
+            //console.log("no input for this plugin")
+          //}
           wasabi.connect(ctx.destination);
           container.appendChild(host);
           testPlugin(wasabi);
@@ -120,14 +131,17 @@ here wcdelay is the plugin object that implements the plugin API
       });
     }
   }
+
   function stockUrl() {
-    let url = document.getElementById("urlHost").value;
+    var url = document.getElementById("urlHost").value;
+    console.log("urlhost ",url);
     var tokens = url.split("/");
     fileName = tokens[tokens.length - 1].split(".")[0];
     return fileName;
   }
 
   function loadPlugin() {
+    stockUrl();
     load(document.getElementById("urlHost").value);
   }
 
@@ -196,7 +210,9 @@ here wcdelay is the plugin object that implements the plugin API
 
     describe('Param getter', function () {
       it('plugin should have a getParam(key) method', function () {
+        console.log(plugin);
         assert.notExists(plugin.getParam(), "okay");
+       
       });
       it('the getParam() function should  not be empty', function () {
         expect(plugin.getParam("key")).to.not.be.empty;
@@ -245,11 +261,11 @@ here wcdelay is the plugin object that implements the plugin API
       });
     });
 
-    describe('midi enable', function () {
-      it('plugin should have a onMidi(msg) method', function () {
-        expect(plugin.onMidi()).to.exist;
-      });
-    });
+    // describe('midi enable', function () {
+    //   it('plugin should have a onMidi(msg) method', function () {
+    //     expect(plugin.onMidi()).to.exist;
+    //   });
+    // });
 
     describe('Patches array', function () {
       it('plugin should have a patchNames field', function () {
