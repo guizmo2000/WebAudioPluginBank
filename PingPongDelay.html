@@ -146,7 +146,10 @@
         super();
         this._root = this.attachShadow({ mode: 'open' });
         this._root.appendChild(wctemp.content.cloneNode(true));
+        this.setKnobs();
+        
       }
+      set plug (p)  { this._plug = p; }
 
       static get properties() {
         this.boundingRect = {
@@ -161,12 +164,12 @@
         };
         return this.boundingRect;
       }
-      set plug (p)  { this._plug = p; }
+      
 
      setKnobs(){
-        this.$.knob1.addEventListener('change', (e) => this._plug.setParam("feedback",e.target.value / 100));
-        this.$.knob2.addEventListener('change', (e) => this._plug.setParam("time",e.target.value / 100));
-        this.$.knob3.addEventListener('change', (e) => this._plug.setParam("mix",e.target.value / 100));
+        this._root.querySelector("#knob1").addEventListener('change', (e) => this._plug.setParam("feedback",e.target.value / 100));
+        this._root.querySelector("#knob2").addEventListener('change', (e) => this._plug.setParam("time",e.target.value / 100));
+        this._root.querySelector("#knob3").addEventListener('change', (e) => this._plug.setParam("mix",e.target.value / 100));
      }
 
       setSwitchListener() {
