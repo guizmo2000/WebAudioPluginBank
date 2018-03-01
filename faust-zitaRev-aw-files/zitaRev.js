@@ -90,12 +90,16 @@ hosts.FaustZitaRev = class zitaRevNode extends AudioWorkletNode {
         this.port.onmessage = this.handleMessage.bind(this);
     }
     
-    getJSON()
+    /*
+    *
+    *renamed to match with the tests 
+    */
+    getMetadata()
     {
         return getJSONzitaRev();
     }
     
-    setParamValue(path, val)
+    setParam(path, val)
     {
         //this.port.postMessage({ type:"param", key:path, value:val });
         
@@ -103,7 +107,7 @@ hosts.FaustZitaRev = class zitaRevNode extends AudioWorkletNode {
         this.parameters.get(path).setValueAtTime(val, 0);
     }
     
-    getParamValue(path)
+    getParam(path)
     {
         return this.parameters.get(path).value;
     }
@@ -128,8 +132,11 @@ hosts.FaustZitaRev = class zitaRevNode extends AudioWorkletNode {
         return this.output_handler;
     }
     
-    // TO REMOVE
-    getNumInputs()
+    /*
+    *
+    *renamed to match with the tests 
+    */
+    inputChannelCount()
     {
         return parseInt(this.json_object.inputs);
     }
@@ -138,8 +145,12 @@ hosts.FaustZitaRev = class zitaRevNode extends AudioWorkletNode {
     {
         return parseInt(this.json_object.outputs);
     }
-    
-    getParams()
+
+    /*
+    *
+    *renamed to match with the tests 
+    */
+    getDescriptor()
     {
         return this.inputs_items;
     }
@@ -166,8 +177,12 @@ hosts.FaustZitaRev = class zitaRevNode extends AudioWorkletNode {
     {
         this.port.postMessage({ type: "pitchWheel", data: [channel, wheel] });
     }
-    
-    midiMessage(data)
+
+    /*
+    *
+    *renamed to match with the tests 
+    */
+    onMidi(data)
     {
         this.port.postMessage({ type:"midi", data:data });
     }
