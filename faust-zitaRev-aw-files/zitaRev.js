@@ -26,12 +26,15 @@ hosts.FaustZitaRev = class zitaRevNode extends AudioWorkletNode {
         
         var json_object = JSON.parse(getJSONzitaRev());
         
+        
         // Setting values for the input, the output and the channel count.
         options.numberOfInputs = parseInt(json_object.inputs);
         options.numberOfOutputs = parseInt(json_object.outputs);
         options.channelCount = 1;
         
         super(context, 'zitaRev', options);
+        this._gui = document.createElement("wc-zitarev");
+        this._gui.plug = this;
         
         // JSON parsing functions
         this.parse_ui = function(ui, obj)

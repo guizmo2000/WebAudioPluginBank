@@ -193,8 +193,7 @@
       super();
       this._root = this.attachShadow({ mode: 'open' });
       this._root.appendChild(wctemp.content.cloneNode(true));
-      this.setKnobs();
-      this.isOn=false;
+      this.isOn = false;
     }
 
     static get properties() {
@@ -210,12 +209,12 @@
       };
       return this.boundingRect;
     }
-    set plug(p) { 
+    set plug(p) {
       this._plug = p;
-      setknobs();
-      setSwitchListener();
+      this.setKnobs();
+      this.setSwitchListener();
 
-       }
+    }
 
     setKnobs() {
 
@@ -229,7 +228,7 @@
       this._root.querySelector("#knob8").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq", e.target.value));
       this._root.querySelector("#knob9").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level", e.target.value));
       this._root.querySelector("#knob10").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/Output/Dry/Wet_Mix", e.target.value));
-      this._root.querySelector("#knob1").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/Output/Level", e.target.value));
+      this._root.querySelector("#knob11").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/Output/Level", e.target.value));
     }
 
 
@@ -262,12 +261,12 @@
     // }
 
     setSwitchListener() {
-        this._root.querySelector("#switch1").addEventListener('change',(e)=>{
-          if (this.isOn) this.bypass()
-          else this.reactivate();
-          this.isOn = !this.isOn;
-        });
-      }
+      this._root.querySelector("#switch1").addEventListener('change', (e) => {
+        if (this.isOn) this.bypass()
+        else this.reactivate();
+        this.isOn = !this.isOn;
+      });
+    }
 
     bypass() {
       this._plug.setParam("/Zita_Rev1/Output/Dry/Wet_Mix", -1);
