@@ -17,7 +17,9 @@ hosts.PingPongDelay = class PingPongDelay {
     this.state;
     this.inputs = [];
     this.outputs = [];
-
+    this._gui = document.createElement("wc-pingpongdelay");
+    this._gui.plug = this;
+    console.log(this._gui);
 
 
     // P2 : Json metadata
@@ -109,6 +111,7 @@ hosts.PingPongDelay = class PingPongDelay {
   }
 
   getParam(key) {
+    console.log("act");
     if (key == "time") {
       this.getTime();
     } else if (key == "feedback") {
@@ -121,6 +124,7 @@ hosts.PingPongDelay = class PingPongDelay {
   }
 
   setParam(key, value) {
+    console.log("act");
     if (key == "time") {
       this.setTime(value);
     } else if (key == "feedback") {

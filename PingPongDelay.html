@@ -1,11 +1,13 @@
 <script src="./PingPongDelay.js"></script>
-<script src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<!-- <script src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
   WebAudioControlsOptions = {
     useMidi: 1,
   };
 </script>
-<script src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<script src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script> -->
+<link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/polymer/polymer.html">
+<link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webaudio-controls/webaudio-controls.html">
   <template id="wc-pingpongdelay">
     <style>
       :host {
@@ -146,10 +148,14 @@
         super();
         this._root = this.attachShadow({ mode: 'open' });
         this._root.appendChild(wctemp.content.cloneNode(true));
-        this.setKnobs();
+        this.isOn = false;
         
       }
-      set plug (p)  { this._plug = p; }
+      set plug (p)  {
+        this._plug = p;
+        this.setKnobs();
+        this.setSwitchListener();
+        }
 
       static get properties() {
         this.boundingRect = {
@@ -173,24 +179,13 @@
      }
 
       setSwitchListener() {
-        this.$.switch1.addEventListener('change',(e)=>{
-          if (this.isOn) this.bypass();
+        this._root.querySelector("#switch1").addEventListener('change',(e)=>{
+          if (this.isOn) this.bypass()
           else this.reactivate();
-
           this.isOn = !this.isOn;
         });
       }
-      setPedalActive(active) {
-        if (active == undefined || active == false) {
-          this.isOn = false;
-          this.bypass();
-          this.$.switch1.value = 0;
-        } else if (active) {
-          this.isOn = true;
-          this.reactivate();
-          this.$.switch1.value = 1;
-        }
-      }
+      
       bypass() {
         this._plug.setState("disable");
       }
