@@ -1695,7 +1695,6 @@ webaudio-keyboard{
   }
   window.addEventListener("load",()=>{
     document.body.appendChild(midimenu);
-    console.log(midimenu);
   });
   if(window.UseWebAudioControlsMidi||opt.useMidi)
     window.webAudioControlsMidiManager = new WebAudioControlsMidiManager();
