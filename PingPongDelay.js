@@ -19,8 +19,7 @@ hosts.PingPongDelay = class PingPongDelay {
     this.outputs = [];
     this._gui = document.createElement("wc-pingpongdelay");
     this._gui.plug = this;
-    console.log(this._gui);
-
+    
 
     // P2 : Json metadata
     this.metadata = {

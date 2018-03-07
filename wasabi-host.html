@@ -64,7 +64,6 @@
     }
 
 
-
     load(url, className, flag) {
       var self = this;
       var plug;
@@ -81,22 +80,32 @@
               var detail = { url: url, wasabi: wasabi, status: 200 }
               var event = new CustomEvent("load", { detail: detail });
               self.dispatchEvent(event);
+              if (url.endsWith(".html")) {
+                let wc = document.createElement(this.import.head.querySelector("template").id);
+                let content = self.shadowRoot.getElementById("wasabi-content");
+                wc.plug = wasabi;
+                content.appendChild(wc);
+              }
               resolve(wasabi);
             });
           } else {
             self.init(className).then((wasabi) => {
+              console.log("yo");
+              console.log(this);
               var detail = { url: url, wasabi: wasabi, status: 200 }
               var event = new CustomEvent("load", { detail: detail });
               self.dispatchEvent(event);
+              if (url.endsWith(".html")) {
+                let wc = document.createElement(this.import.head.querySelector("template").id);
+                let content = self.shadowRoot.getElementById("wasabi-content");
+                wc.plug = wasabi;
+                content.appendChild(wc);
+              }
               resolve(wasabi);
             });
 
           }
-          if (url.endsWith(".html")) {
-            let wc = document.createElement(this.import.head.querySelector("template").id);
-            let content = self.shadowRoot.getElementById("wasabi-content");
-            content.appendChild(wc);
-          }
+
         }
 
 
