@@ -7,7 +7,6 @@
   var hosts = hosts || {};
   let importDoc = document.currentScript.ownerDocument;
   let template = importDoc.querySelector("#wasabi-host");
-  console.log(template);
 
   class WasabiHost extends HTMLElement {
     constructor() {
@@ -23,7 +22,6 @@
       return new Promise(function (resolve, reject) {
         let ctx = self.ctx;
         if (!ctx) {
-          console.log("pas ctx?", ctx)
           ctx = new AudioContext();
         } else {
           self.ctx = ctx;
@@ -42,7 +40,6 @@
       return new Promise(function (resolve, reject) {
         let ctx = self.ctx;
         if (!ctx) {
-          console.log("pas ctx?", ctx)
           ctx = new AudioContext();
         } else {
           self.ctx = ctx;
@@ -51,7 +48,7 @@
         var hostsClass = hosts[className];
         var plug;
         // The main global scope
-        faust = self.ctx.audioWorklet.addModule("/faust-zitaRev-aw-files/zitaRev-processor.js").then(function () {
+        faust = self.ctx.audioWorklet.addModule("faust-zitaRev-aw-files/zitaRev-processor.js").then(function () {
           try {
             plug = new hostsClass(self.ctx, {});
             return (plug);
@@ -90,8 +87,6 @@
             });
           } else {
             self.init(className).then((wasabi) => {
-              console.log("yo");
-              console.log(this);
               var detail = { url: url, wasabi: wasabi, status: 200 }
               var event = new CustomEvent("load", { detail: detail });
               self.dispatchEvent(event);
@@ -122,7 +117,6 @@
           link.href = url;
           link.onload = loaded;
           document.head.appendChild(link);
-          console.log("2");
         }
         else reject("invalid argument");
       });
