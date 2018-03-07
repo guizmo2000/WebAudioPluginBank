@@ -48,7 +48,7 @@
         var hostsClass = hosts[className];
         var plug;
         // The main global scope
-        faust = self.ctx.audioWorklet.addModule("faust-zitaRev-aw-files/zitaRev-processor.js").then(function () {
+        faust = self.ctx.audioWorklet.addModule("https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/faust-zitaRev-aw-files/zitaRev-processor.js").then(function () {
           try {
             plug = new hostsClass(self.ctx, {});
             return (plug);
