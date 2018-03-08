@@ -1,28 +1,31 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<title>empty host</title>
+  <title>empty host</title>
 </head>
 <link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/wasabi-host.html">
+
 <body>
-    <audio src="./BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
-    <wasabi-host id="loader"></wasabi-host>
+  <audio src="./BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
+  <wasabi-host id="loader"></wasabi-host>
 
 </body>
 <script>
-    var ctx = new AudioContext();
-    var player = document.getElementById("soundSample");
-    var mediaSource = ctx.createMediaElementSource(player);
-    var host = document.querySelector("#loader");
-    host.load("FaustZitaRev.html").then(function (node) {
-            console.log(node);
-            try {
-              if (node instanceof AudioWorkletNode) mediaSource.connect(node);
-              else  mediaSource.connect(wasabi.getInput(0));
-            } catch (error) {
-              console.log(error, "no correct input for this plugin")
-            }
-            node.connect(ctx.destination);
-    });
+  var ctx = new AudioContext();
+  var player = document.getElementById("soundSample");
+  var mediaSource = ctx.createMediaElementSource(player);
+  var host = document.querySelector("#loader");
+  host.load("https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/FaustZitaRev.html").then(function (node) {
+    console.log(node);
+    try {
+      if (node instanceof AudioWorkletNode) mediaSource.connect(node);
+      else mediaSource.connect(wasabi.getInput(0));
+    } catch (error) {
+      console.log(error, "no correct input for this plugin")
+    }
+    node.connect(ctx.destination);
+  });
 </script>
+
 </html>
