@@ -49,11 +49,11 @@
         // The main global scope
         var processor;
         if(className.includes("Zita")) processor = "./faust-zitaRev-aw-files/zitaRev-processor.js";
-        else if(className.includes("Thru")) processor = "./faust-Thru-aw-files/ThruZeroFlanger_bypass-processor.js";
+        else if(className.includes("Thru")) processor = "./faust-Thru-aw-files/ThruZeroFlanger-processor.js";
         faust = self.ctx.audioWorklet.addModule(processor).then(function () {
           try {
             plug = new hostsClass(self.ctx, {});
-            console.log(plug.getDescriptor());
+            console.log(plug.getMetadata());
             return (plug);
           } catch (error) {
             console.log(error); console.log("Faust module cannot be loaded or compiled");

@@ -169,6 +169,7 @@
       console.log(this);
       this._plug = p;
       this.setKnobs();
+      this.setActive(false);
       this.setSwitchListener();
 
     }
@@ -181,6 +182,18 @@
     
     }
 
+   setActive(active) {
+        if (active == undefined || active == false) {
+          this.isOn = false;
+          this.bypass();
+          this._root.querySelector("#switch1").value = 0;
+        } else if (active) {
+          this.isOn = true;
+          this.reactivate();
+          this._root.querySelector("#switch1").value = 1;
+        }
+      }
+
     setSwitchListener() {
       console.log("setswitch");
       this._root.querySelector("#switch1").addEventListener('change', (e) => {
@@ -191,12 +204,12 @@
     }
 
     bypass() {
-      this._plug.setParam("/Thru_Zero_Flanger/bypass",0);
+      this._plug.setParam("/Thru_Zero_Flanger/bypass",1);
       console.log("disabled");
     }
 
     reactivate() {
-      this._plug.setParam("/Thru_Zero_Flanger/bypass",1);
+      this._plug.setParam("/Thru_Zero_Flanger/bypass",0);
 
     }
 
