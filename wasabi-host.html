@@ -48,12 +48,12 @@
         var plug;
         // The main global scope
         var processor;
-        if(className.includes("Zita")) processor = "https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/faust-zitaRev-aw-files/zitaRev-processor.js";
-        else if(className.includes("Thru")) processor = "https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/faust-Thru-aw-files/ThruZeroFlanger-processor.js";
+        if(className.includes("Zita")) processor = "./faust-zitaRev-aw-files/zitaRev-processor.js";
+        else if(className.includes("Thru")) processor = "./faust-Thru-aw-files/ThruZeroFlanger-processor.js";
         faust = self.ctx.audioWorklet.addModule(processor).then(function () {
           try {
             plug = new hostsClass(self.ctx, {});
-            console.log(plug.getMetadata());
+            console.log(plug.getDescriptor());
             return (plug);
           } catch (error) {
             console.log(error); console.log("Faust module cannot be loaded or compiled");

@@ -182,14 +182,14 @@
   </div>
 </template>
 <script>
-  let wctemp = document.currentScript.ownerDocument.querySelector("#wc-zitarev");
+  let zitaRevTemp = document.currentScript.ownerDocument.querySelector("#wc-zitarev");
   class ZitaRevGui extends HTMLElement {
     static get is() { return 'wc-zitarev'; }
 
     constructor() {
       super();
       this._root = this.attachShadow({ mode: 'open' });
-      this._root.appendChild(wctemp.content.cloneNode(true));
+      this._root.appendChild(zitaRevTemp.content.cloneNode(true));
       this.isOn = true;
     }
 
@@ -215,17 +215,17 @@
     }
 
     setKnobs() {
-      this._root.querySelector("#knob1").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/Input/In_Delay", e.target.value),false);
-      this._root.querySelector("#knob2").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X", e.target.value));
-      this._root.querySelector("#knob3").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60", e.target.value));
-      this._root.querySelector("#knob4").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60", e.target.value));
-      this._root.querySelector("#knob5").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping", e.target.value));
-      this._root.querySelector("#knob6").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq", e.target.value));
-      this._root.querySelector("#knob7").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level", e.target.value));
-      this._root.querySelector("#knob8").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq", e.target.value));
-      this._root.querySelector("#knob9").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level", e.target.value));
-      this._root.querySelector("#knob10").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/Output/Dry/Wet_Mix", e.target.value));
-      this._root.querySelector("#knob11").addEventListener('change', (e) => this._plug.setParam("/Zita_Rev1/Output/Level", e.target.value),false);
+      this._root.querySelector("#knob1").addEventListener('change', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Input/In_Delay", e.target.value),false);
+      this._root.querySelector("#knob2").addEventListener('change', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X", e.target.value));
+      this._root.querySelector("#knob3").addEventListener('change', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60", e.target.value));
+      this._root.querySelector("#knob4").addEventListener('change', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60", e.target.value));
+      this._root.querySelector("#knob5").addEventListener('change', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping", e.target.value));
+      this._root.querySelector("#knob6").addEventListener('change', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq", e.target.value));
+      this._root.querySelector("#knob7").addEventListener('change', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level", e.target.value));
+      this._root.querySelector("#knob8").addEventListener('change', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq", e.target.value));
+      this._root.querySelector("#knob9").addEventListener('change', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level", e.target.value));
+      this._root.querySelector("#knob10").addEventListener('change', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Output/Dry/Wet_Mix", e.target.value));
+      this._root.querySelector("#knob11").addEventListener('change', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Output/Level", e.target.value),false);
     }
 
     setSwitchListener() {
@@ -238,12 +238,12 @@
     }
 
     bypass() {
-      this._plug.setParam("/Zita_Rev1/Output/Dry/Wet_Mix", -1);
+      this._plug.setParam("/zitaRev/bypass",0);
       console.log("disabled");
     }
 
     reactivate() {
-      this._plug.setParam("/Zita_Rev1/Output/Dry/Wet_Mix", 1);
+      this._plug.setParam("/zitaRev/bypass",1);
 
     }
 

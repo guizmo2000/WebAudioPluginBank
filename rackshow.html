@@ -2,7 +2,7 @@
 <html>
 
 <head>
-  <title>empty host</title>
+  <title>rack show</title>
 </head>
 <meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
 <link rel="import" href="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/wasabi-host.html">
@@ -17,16 +17,17 @@
   var player = document.getElementById("soundSample");
   var mediaSource = ctx.createMediaElementSource(player);
   var host = document.querySelector("#loader");
-  host.load("FaustZitaRev.html").then(function (node) {
-    console.log(node);
-    try {
-      if (node instanceof AudioWorkletNode) mediaSource.connect(node);
-      else mediaSource.connect(wasabi.getInput(0));
+
+  Promise.all([host.load("FaustZitaRev.html"), host.load("FaustThruZeroFlanger.html")]).then(function (node){
+  try {
+      if (node[0] instanceof AudioWorkletNode) mediaSource.connect(node[0]);
+      else mediaSource.connect(node[0].getInput(0));
     } catch (error) {
       console.log(error, "no correct input for this plugin")
     }
-    node.connect(ctx.destination);
-  });
+    node[0].connect(node[1]);
+    node[1].connect(ctx.destination);
+});
 </script>
 
 </html>
