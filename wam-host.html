@@ -1,0 +1,343 @@
+
+// WAM Host
+// Jari Kleimola 2018 (jari@webaudiomodules.org)
+
+<template id="wam-host-template">
+  <div id="wam-content">
+    <div id="topbar">
+      <a id="logo" href="https://webaudiomodules.org" target="_blank"><div>WAM</div></a>
+      <div id="title"></div>
+      <div class="right">
+        <div class="control">
+          <label>bank</label>
+          <select id="banks"></select>
+        </div>
+        <div class="control">
+          <label>patch</label>
+          <select id="patches"></select>
+        </div>
+        <div class="control">
+          <label>midi</label>
+          <select id="midiIn"></select>
+        </div>
+      </div>
+    </div>
+    <div id="wam-frontpanel" class="hidden"></div>
+    <div id="keys"></div>
+  </div>
+  <div id="nowasm">
+    <div>WebAssembly is unsupported in this browser version</div>
+  </div>
+  
+  <style>
+    :host { display:block; }
+    #wam-content { font-family:sans-serif; font-weight:100; font-size:14px; user-select:none; cursor:default; padding:5px 0 0 10px; }
+    #wam-content { width:815px; background:#000; padding:5px; }
+    #topbar { display:flex; background:#222; color:#eee; height:40px; line-height:38px; }
+    
+    #logo { line-height:23px; text-decoration:none;
+      width:22px; height:22px; border:2px solid #222; color:#ccc;
+      border-radius:50%; margin:6px 3px 0 4px; cursor:pointer; }
+    #logo div { margin-left:2px; font-size:7.5px; font-weight:100;
+      text-decoration:none; }
+    #logo:hover { border-color:lightgreen; color:white; font-weight:800px; }
+    
+    .right { display:flex; margin-left:auto; }
+    .control { margin:0 10px; }
+    label  { color:#bbb; font-size:12px; }
+    select { background:#222; color:#eee; height:20px; margin-top:10px; cursor:pointer; }
+    li,#title { cursor:pointer; }
+    #title:hover { color:lightgreen; }
+    span { color:#eee; }
+    #keys { border-top:5px solid darkgreen; }
+    #wam-frontpanel { overflow:hidden; }
+    #wam-frontpanel.hidden { height:0; }
+    #nowasm { font-family:sans-serif; font-weight:100; font-size:14px; color:#222; border:1px solid #222; padding:5px; width:813px; height:83px; display:none; }
+    
+    select.moz {
+      padding-right: 25px;
+      background-image: url("data:image/svg+xml,\
+        <svg version='1.1' xmlns='http://www.w3.org/2000/svg' width='12px'\
+             height='12px' transform='translate(0,-1)' viewBox='0 0 1200 1000' fill='rgb(0,0,0)'>\
+          <path fill='rgb(200,200,200)' d='M1100 411l-198 -199l-353 353l-353 -353l-197 199l551 551z'/>\
+        </svg>");
+      background-repeat: no-repeat;
+      background-position: calc(100% - 7px) 50%;
+      -moz-appearance: none;
+      appearance: none;      
+      border:1px solid #aaa;
+      border-radius:4px;
+      font-size:11px;
+      font-weight:100;
+    }    
+  </style>
+</template>
+
+<script src="https://webaudiomodules.org/audioworklet.js"></script>
+<script src="https://webaudiomodules.org/libs/keys.js"></script>
+
+<script>
+  var WAM = WAM || {}
+  WAM.lazyloads = WAM.lazyloads || [];
+  WAM.origin = "https://webaudiomodules.org";
+  
+  let importDoc = document.currentScript.ownerDocument;
+  let template  = importDoc.querySelector("#wam-host-template");
+  
+  // -- having to use ES6 here sux
+  class WamHost extends HTMLElement
+  {
+    constructor () {
+      super();
+      this._actx = undefined;
+      this._root = this.attachShadow({mode: 'open'});
+      this._root.appendChild(template.content.cloneNode(true));
+      this._inited = false;
+      this.velocity = 80;
+    }
+    
+    connectedCallback () {
+      var self = this;
+      this.style.display = "block";
+      
+      if (window.WebAssembly) {
+        this._root.querySelector("#title").onclick = function () {
+          if (self._plug.gui) {
+            var front = self._root.querySelector("#wam-frontpanel");
+            front.classList.toggle("hidden");
+            front.style.height = front.classList.contains("hidden") ? 0 : self._plug.gui.height + "px";
+          }
+        }
+        this._root.querySelector("#wam-frontpanel").onmousedown = function (e) { e.stopPropagation(); }
+        this._root.querySelector("#keys").onmousedown = function (e) { e.stopPropagation(); }
+
+        if (navigator.userAgent.indexOf("Firefox/") >= 0) {
+          var combos = this._root.querySelectorAll("#topbar select");
+          for (var i=0; i<combos.length; i++) {
+            combos[i].classList.add("moz");
+          }
+        }
+      }
+      else {
+        this._root.querySelector("#nowasm").style.display = "block";
+        this._root.querySelector("#wam-content").style.display = "none";
+      }
+    }
+
+    toggleFrontPanel() {
+      if (this._plug.gui) {
+        var front = this._root.querySelector("#wam-frontpanel");
+        front.classList.toggle("hidden");
+        front.style.height = front.classList.contains("hidden") ? 0 : this._plug.gui.height + "px";
+      }      
+    }
+    
+    set context (actx) { this._actx = actx; }
+    get context () { return this._actx; }
+    set src (url) { this.load(url); }
+    
+    static get observedAttributes() { return ['src']; }
+    attributeChangedCallback(name, oldValue, newValue) {
+      if (name == "src")
+        this.load(newValue);
+    }
+    
+    load (url, className) {
+      var self = this;
+      if (this._plug) this._plug.disconnect();
+      return new Promise( function (resolve,reject) {
+
+        if (!WAM.webComponentsReady) {
+          var lazy = { host:self, url:url, className:className }
+          lazy.promise = { resolve:resolve, reject:reject }
+          WAM.lazyloads.push(lazy);
+          return;
+        }
+        
+        function loaded () {
+          if (!className) {
+            var tokens = url.split("/");
+            className = tokens[tokens.length-1].split(".")[0];
+            className = className.toUpperCase();
+          }
+          self._initInstance(className).then((wam) => {
+            var detail = { url:url, wam:wam, status:200 }
+            var event  = new CustomEvent("load", { detail:detail });
+            self.dispatchEvent(event);
+            if (self.hasAttribute("autoconnect"))
+              wam.connect( wam.context.destination );
+            resolve(wam);
+          });
+        }
+        
+        function loadWAM () {
+          if (url.endsWith(".js")) {
+            var script = document.createElement('script');
+            script.src = url;
+            script.onload = loaded;
+            document.head.appendChild(script);          
+          }
+          else if (url.endsWith(".html")) {
+            var link = document.createElement('link');
+            link.rel = 'import';
+            link.href = url;
+            link.onload = loaded;
+            document.head.appendChild(link);
+          }
+          else reject("invalid argument");
+        }
+        
+        function audioWorkletReady () {
+          var lib = WAM.origin + "/wamsdk/wam-controller.js";
+          if (document.querySelectorAll('[src="' + lib + '"]').length > 0)
+            loadWAM();
+          else {
+            var script = document.createElement('script');
+            script.setAttribute('src', lib);
+            document.head.appendChild(script);
+            script.onload = function () { loadWAM(); }
+          }
+        }
+        
+        if (!window.AudioWorkletNode) {
+          if (!self._actx) {
+            if (!self.hasAttribute("autoconnect")) {
+              reject("missing properties");
+              return;
+            }
+            self._actx = new AudioContext();
+          }
+          AWPF.polyfill(self._actx).then(() => audioWorkletReady());
+        }
+        else audioWorkletReady();        
+      })
+    }
+    
+    _initInstance (cls) {
+      var self = this;
+      return new Promise( function (resolve,reject) {
+        
+        // -- audiocontext
+        let actx = self._actx;
+        if (!actx) {
+          if (AWPF.isAudioWorkletPolyfilled) actx = AWPF.context;
+          else actx = new AudioContext();
+          self._actx = actx;
+        }
+        actx.audioWorklet.addModule(WAM.origin + "/wamsdk/wam-processor.js");
+        var wamClass = WAM[cls];        
+        self._root.querySelector("#title").innerHTML = wamClass.title + " <span>//</span>";
+
+        // -- create WAM instance
+        // -- invoked after processor has been registered
+        function ready () {
+          var plug = new wamClass(actx);
+          self._plug = plug;
+          self._initFrontPanel(plug);
+          self._initPresets(plug);
+          self._initMidi();
+          self._midikeys.keyDown = (note, name) => plug.onMidi([0x90, note, self.velocity]);
+          self._midikeys.keyUp   = (note, name) => plug.onMidi([0x80, note, self.velocity]);
+          resolve(plug);
+        }
+
+        // -- register processor
+        if (wamClass.importScripts)
+          wamClass.importScripts(actx).then(() => { ready() });
+        /* else if (wamClass.processorScripts) {
+          var imports = wamClass.processorScripts.map(x => actx.audioWorklet.addModule(WAM.origin + x).then(() => { Promise.resolve; }));
+          Promise.all(imports).then(() => {
+            setTimeout( function() { ready(); }, 500);
+          });
+        } */
+        else reject("processor scripts not found");
+      });
+    }
+    
+    _initPresets (plug) {
+      // -- populate comboboxes
+      var self = this;
+      var banks   = this._root.getElementById("banks");
+      var patches = this._root.getElementById("patches");
+      banks.innerHTML = "";
+      patches.innerHTML = "";
+      self._inited = false;
+      plug.banks.forEach( name => { banks.appendChild(new Option(name)); });
+
+      // -- change bank
+      banks.onchange = function (e) {
+        plug.loadBank(e.target.value).then(bank => {
+          patches.innerHTML = "";
+          bank.forEach( name => { patches.appendChild(new Option(name)); });
+          if (!self._inited) { self._inited = true; patches.selectedIndex = plug.defpatch ? plug.defpatch : 0; }
+          patches.onchange({ target:patches });
+        })
+      }
+      banks.onchange({ target:banks });
+
+      // -- change patch
+      patches.onchange = function (e) {
+        var i = e.target.selectedIndex;
+        if (plug.selectPatch) plug.selectPatch(i);
+        else {
+          var patch = plug.getPatch ? plug.getPatch(i) : plug.bank[i];
+          plug.setPatch(patch);
+        }
+      }
+    }
+    
+    _initMidi () {
+      let combo = this._root.querySelector("#midiIn");
+      if (navigator.requestMIDIAccess) {
+        navigator.requestMIDIAccess().then((midiIF) => {
+          for (let input of midiIF.inputs.values()) {
+            let option = new Option(input.name);
+            option.port = input;
+            combo.appendChild(option);
+          }
+          combo.onchange = e => {
+            this._plug.midiIn = e.target.options[e.target.selectedIndex].port;
+          }
+          if (combo.options.length > 0)
+            combo.onchange({ target:combo });
+        })
+      }
+    }
+    
+    _initFrontPanel (plug) {
+      if (plug.gui) {
+        var front = this._root.querySelector("#wam-frontpanel");
+        front.appendChild(plug.gui);
+        if (!front.classList.contains("hidden"))
+          front.style.height = plug.gui.height + "px";
+        this._root.querySelector("#wam-content").style.width = plug.gui.width + "px";
+        this._root.querySelector("#keys").style.width = plug.gui.width + "px";
+      }
+      
+      // -- midi keyboard
+      if (!this._midikeys) {
+      this._midikeys = new QwertyHancock({
+        container: this._root.querySelector("#keys"), height: 60,
+        octaves: 6, startNote: 'C2', oct:4,
+        whiteNotesColour: 'white', blackNotesColour: 'black', activeColour:'orange'
+        });
+      }
+    }
+  }
+
+  window.customElements.define('wam-host', WamHost);
+  
+  window.addEventListener("WebComponentsReady", function() {
+    WAM.webComponentsReady = true;
+    
+    // -- give other WebComponentsReady listeners chance to run
+    // -- before lazy loading
+    setTimeout( function () {
+      WAM.lazyloads.forEach( function (item) {
+        item.host.load( item.url, item.className ).then(
+          function (wam) { item.promise.resolve(wam); },
+          function (err) { item.promise.reject(err); });
+      }, 10);      
+    });
+  });
+</script>
