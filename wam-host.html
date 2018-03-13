@@ -189,6 +189,7 @@
         
         function audioWorkletReady () {
           var lib = WAM.origin + "/wamsdk/wam-controller.js";
+          console.log(lib);
           if (document.querySelectorAll('[src="' + lib + '"]').length > 0)
             loadWAM();
           else {
