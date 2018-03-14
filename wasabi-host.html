@@ -1,5 +1,5 @@
 <template id="wasabi-host">
-  <div id="wasabi-content">
+  <div id="wasabi-content" style="display : flex">
   </div>
 </template>
 <script>
@@ -48,8 +48,12 @@
         var plug;
         // The main global scope
         var processor;
-        if(className.includes("Zita")) processor = "./faust-zitaRev-aw-files/zitaRev-processor.js";
-        else if(className.includes("Thru")) processor = "./faust-Thru-aw-files/ThruZeroFlanger-processor.js";
+        if(className.includes("Zita")) processor = "../faust-zitaRev-aw-files/zitaRev-processor.js";
+        else if(className.includes("Thru")) processor = "../faust-Thru-aw-files/ThruZeroFlanger-processor.js";
+        else if(className.includes("Blipper")) processor = "../faust-Blipper-aw-files/Blipper-processor.js";
+        else if(className.includes("WeirdPhaser")) processor = "../faust-weird-phaser/WeirdPhaser-processor.js";
+        else if(className.includes("StereoFreqShifter")) processor = "../faust-SFS-aw-files/StereoFreqShifter-processor.js";
+        else if(className.includes("DualPitchShifter")) processor = "../faust-DPS-aw-files/DualPitchShifter-processor.js";
         faust = self.ctx.audioWorklet.addModule(processor).then(function () {
           try {
             plug = new hostsClass(self.ctx, {});
