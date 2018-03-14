@@ -9,7 +9,7 @@
 <template id="wc-freqshifter">
   <style>
     :host {
-      background: linear-gradient( rgb(77, 74, 78),rgb(67, 48, 238));
+      background: linear-gradient( rgb(77, 74, 78),rgb(35, 172, 153));
       box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
       width: 150px;
       height: 180px;
@@ -172,10 +172,10 @@
     }
 
     setKnobs() {
-      this._root.querySelector("#knob1").addEventListener('change', (e) => this._plug.setParam("/Stereo_Frequency_Shifter/L-R_Offset", e.target.value));
-      this._root.querySelector("#knob2").addEventListener('change', (e) => this._plug.setParam("/Stereo_Frequency_Shifter/Mix", e.target.value));
-      this._root.querySelector("#knob3").addEventListener('change', (e) => this._plug.setParam("/Stereo_Frequency_Shifter/Shift_Scalar", e.target.value));
-      this._root.querySelector("#knob4").addEventListener('change', (e) => this._plug.setParam("/Stereo_Frequency_Shifter/Shift", e.target.value));
+      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("/Stereo_Frequency_Shifter/L-R_Offset", e.target.value));
+      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("/Stereo_Frequency_Shifter/Mix", e.target.value));
+      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("/Stereo_Frequency_Shifter/Shift_Scalar", e.target.value));
+      this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("/Stereo_Frequency_Shifter/Shift", e.target.value));
     
     }
 
