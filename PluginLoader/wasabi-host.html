@@ -1,12 +1,21 @@
+<!-- Here is a loader for both pure JS WebAudio and FAUST modules -->
+<!-- The load system is inspired from the https://www.webaudiomodules.org/wam-host.html one -->
+
+<!-- Template for the HTML Element which will include the WC loaded -->
 <template id="wasabi-host">
   <div id="wasabi-content" style="display : flex">
   </div>
 </template>
 <script>
 
+/*
+* hosts : global variable used to instanciate dynamically the audio modules loaded
+*/
   var hosts = hosts || {};
   let importDoc = document.currentScript.ownerDocument;
   let template = importDoc.querySelector("#wasabi-host");
+
+
 
   class WasabiHost extends HTMLElement {
     constructor() {
@@ -17,6 +26,9 @@
       this._inited = false;
     }
 
+    /*
+    *Instanciation of the audio module loaded
+    */
     init(className) {
       console.log(className);
       return new Promise(function (resolve, reject) {
@@ -32,7 +44,10 @@
       });
     }
 
-    // in faust there is no global processor but one for each plugin. --> issue : how to make this loader generic
+    /*
+    * Faust does not have "generic processor" so here is a special instanciation based on name of the modules....
+    *  --> this part has to be fixed by calling a generic faust processor.
+    */
     initFaust(className) {
       console.log("initFaust");
       // The main global scope
@@ -73,45 +88,71 @@
       var plug;
       return new Promise(function (resolve, reject) {
         function loaded() {
-          if (!className) {
-
+            
+          // Get the name of the file to know which module has to be instanciated.
             var tokens = url.split("/");
             className = tokens[tokens.length - 1].split(".")[0];
-          }
+
           // temporary distinction before unifying the code
           if (url.includes("Faust") || url.includes("faust")) {
-            self.initFaust(className).then((wasabi) => {
-              var detail = { url: url, wasabi: wasabi, status: 200 }
+            self.initFaust(className).then((webaudioNode) => {
+
+              // Loading of the GUI (if html file)
+              var detail = { url: url, webaudioNode: webaudioNode, status: 200 }
               var event = new CustomEvent("load", { detail: detail });
               self.dispatchEvent(event);
               if (url.endsWith(".html")) {
+
+                /* Here we get the name of the wc to instanciate in the template element of the file included:
+                * <template id="wc-mymodule">
+                * --> every html web audio module loaded with this "wasabi-host" must have this id matching the name of
+                * his WC
+                */
                 let wc = document.createElement(this.import.head.querySelector("template").id);
+
+                /*
+                * Once created the element is added the the <div id="wasabi-content">
+                */
                 let content = self.shadowRoot.getElementById("wasabi-content");
-                wc.plug = wasabi;
+                wc.plug = webaudioNode;
                 content.appendChild(wc);
               }
-              resolve(wasabi);
+              resolve(webaudioNode);
             });
           } else {
-            self.init(className).then((wasabi) => {
-              var detail = { url: url, wasabi: wasabi, status: 200 }
+            self.init(className).then((webaudioNode) => {
+
+               // Loading of the GUI (if html file)
+              var detail = { url: url, webaudioNode: webaudioNode, status: 200 }
               var event = new CustomEvent("load", { detail: detail });
               self.dispatchEvent(event);
               if (url.endsWith(".html")) {
+
+                /* Here we get the name of the wc to instanciate in the template element of the file included:
+                * <template id="wc-mymodule">
+                * --> every html web audio module loaded with this "wasabi-host" must have this id matching the name of
+                * his WC
+                */
                 let wc = document.createElement(this.import.head.querySelector("template").id);
                 console.log(wc.is);
+
+                /*
+                * Once created the element is added the the <div id="wasabi-content">
+                */
                 let content = self.shadowRoot.getElementById("wasabi-content");
-                wc.plug = wasabi;
+                wc.plug = webaudioNode;
                 content.appendChild(wc);
               }
-              resolve(wasabi);
+              resolve(webaudioNode);
             });
 
           }
 
         }
 
-
+        /*
+        * Here is chosen how the modules are loaded (link or script) 
+        */
         if (url.endsWith(".js")) {
           var script = document.createElement('script');
           script.src = url;
