@@ -21,6 +21,12 @@
   var splitter;
   var merger;
 
+  player.onplay = () => {
+        ctx.resume().then(() => {
+          console.log('Playback resumed successfully');
+        });
+      }
+
   var constraints = {
             audio: {
               echoCancellation: false,
