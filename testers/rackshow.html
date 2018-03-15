@@ -18,7 +18,7 @@
   var mediaSource = ctx.createMediaElementSource(player);
   var host = document.querySelector("#loader");
 
-  Promise.all([host.load("./../Faust/ZitaRev/FaustZitaRev.html"), host.load("./../Olivier-Larkin/ThruZeroFlanger/FaustThruZeroFlanger.html"),host.load("./../Olivier-Larkin/WeirdPhaser/FaustWeirdPhaser.html"),host.load("./../Olivier-Larkin/StereoFrequencyShifter/FaustStereoFreqShifter.html"),host.load("./../Olivier-Larkin/Blipper/FaustBlipper.html"),host.load("./../Olivier-Larkin/DualPitchShifter/FaustDualPitchShifter.html")]).then(function (node){
+  Promise.all([host.load("./../Faust/ZitaRev/FaustZitaRev.html"), host.load("./../oliver-Larkin/ThruZeroFlanger/FaustThruZeroFlanger.html"),host.load("./../oliver-Larkin/WeirdPhaser/FaustWeirdPhaser.html"),host.load("./../oliver-Larkin/StereoFrequencyShifter/FaustStereoFreqShifter.html"),host.load("./../oliver-Larkin/Blipper/FaustBlipper.html"),host.load("./../oliver-Larkin/DualPitchShifter/FaustDualPitchShifter.html")]).then(function (node){
   try {
       if (node[0] instanceof AudioWorkletNode) mediaSource.connect(node[0]);
       else mediaSource.connect(node[0].getInput(0));

@@ -17,7 +17,7 @@
   var player = document.getElementById("soundSample");
   var mediaSource = ctx.createMediaElementSource(player);
   var host = document.querySelector("#loader");
-  host.load("./../Olivier-Larkin/ThruZeroFlanger/FaustThruZeroFlanger.html").then(function (node) {
+  host.load("./../oliver-Larkin/ThruZeroFlanger/FaustThruZeroFlanger.html").then(function (node) {
     console.log(node);
     try {
       if (node instanceof AudioWorkletNode) mediaSource.connect(node);
