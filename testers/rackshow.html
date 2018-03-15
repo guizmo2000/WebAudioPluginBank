@@ -22,6 +22,7 @@
   try {
       if (node[0] instanceof AudioWorkletNode) mediaSource.connect(node[0]);
       else mediaSource.connect(node[0].getInput(0));
+
     } catch (error) {
       console.log(error, "no correct input for this plugin")
     }
