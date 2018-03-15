@@ -1,15 +1,15 @@
-<script src="./../faust-DPS-aw-files/FaustDualPitchShifter.js"></script>
-<script src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script src="./FaustBlipper.js"></script>
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
   WebAudioControlsOptions = {
     useMidi: 1,
   };
 </script>
-<script src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template id="wc-dualpitchshifter">
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<template id="wc-blipper">
   <style>
     :host {
-      background: linear-gradient( rgb(77, 74, 78),rgb(194, 165, 36));
+      background: linear-gradient( rgb(77, 74, 78),rgb(35, 173, 77));
       box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
       width: 150px;
       height: 180px;
@@ -102,50 +102,50 @@
   </style>
   <div class="row">
     <div class="column">
-      <webaudio-knob id="knob1" class="knob" sprites="99" value="0.5" min="0" max="1" step="0.01" midilearn="true" width="40" height="40"
-        src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/img/nux_black_white_stripe.png"></webaudio-knob>
-      <span class="knob-label" id="knob1-label">Mix</span>
+      <webaudio-knob id="knob1" class="knob" sprites="99" value="60" min="24" max="96" step="0.1" midilearn="true" width="40" height="40"
+        src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"></webaudio-knob>
+      <span class="knob-label" id="knob1-label">BasePitch</span>
     </div>
     <div class="column">
-      <webaudio-knob id="knob2" class="knob" sprites="99" value="0" min="-12" max="12" step="0.1" midilearn="true" width="40"
-        height="40" src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/img/nux_black_white_stripe.png"></webaudio-knob>
-      <span class="knob-label" id="knob2-label">Shift L</span>
+      <webaudio-knob id="knob2" class="knob" sprites="99" value="0.5" min="0" max="1" step="0.01" midilearn="true" width="40"
+        height="40" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"></webaudio-knob>
+      <span class="knob-label" id="knob2-label">Mix</span>
     </div>
   </div>
   <div class="row">
     <div class="column">
-      <webaudio-knob id="knob3" class="knob" sprites="99" value="0" min="-12" max="12" step="0.1" midilearn="true" width="40" height="40"
-        src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/img/nux_black_white_stripe.png" data-role="L_R-offset"></webaudio-knob>
-      <span class="knob-label" id="knob10-label">Shift R</span>
+      <webaudio-knob id="knob3" class="knob" sprites="99" value="24" min="-64" max="64" step="1" midilearn="true" width="40" height="40"
+        src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" data-role="L_R-offset"></webaudio-knob>
+      <span class="knob-label" id="knob10-label">PitchMod</span>
     </div>
     <div class="column">
-      <webaudio-knob id="knob4" class="knob" sprites="99" value="50" min="20" max="1000" step="1" midilearn="true" width="40"
-        height="40" src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/img/nux_black_white_stripe.png"
+      <webaudio-knob id="knob4" class="knob" sprites="99" value="20" min="2" max="100" step="1" midilearn="true" width="40"
+        height="40" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
         data-role="Rate"></webaudio-knob>
-      <span class="knob-label" id="knob11-label">Window Size</span>
+      <span class="knob-label" id="knob11-label">Release</span>
     </div>
   </div>
   <div class="row">
     <div class="column">
-      <webaudio-switch midilearn="true" src="https://wasabi.i3s.unice.fr/plugins/delay-plugin/WebAudioPluginBank/img/switch_1.png"
+      <webaudio-switch midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
         class="switch" id="switch1" width="40" height="25"></webaudio-switch>
     </div>
   </div>
   <div class="row">
     <div class="column">
-      <span class="pedalLabel">FAUST Dual Pitch Shifter</span>
+      <span class="pedalLabel">FAUST blipper</span>
     </div>
   </div>
 </template>
 <script>
-  let dualpitchshifterTemp = document.currentScript.ownerDocument.querySelector("#wc-dualpitchshifter");
-  class DualpitchshifterGui extends HTMLElement {
-    static get is() { return 'wc-dualpitchshifter'; }
+  let blipperTemp = document.currentScript.ownerDocument.querySelector("#wc-blipper");
+  class BlipperGui extends HTMLElement {
+    static get is() { return 'wc-blipper'; }
 
     constructor() {
       super();
       this._root = this.attachShadow({ mode: 'open' });
-      this._root.appendChild(dualpitchshifterTemp.content.cloneNode(true));
+      this._root.appendChild(blipperTemp.content.cloneNode(true));
       this.isOn = true;
     }
 
@@ -172,10 +172,10 @@
     }
 
     setKnobs() {
-      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("/Dual_Pitch_Shifter/Mix", e.target.value));
-      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("/Dual_Pitch_Shifter/Shift_L", e.target.value));
-      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("/Dual_Pitch_Shifter/Shift_R", e.target.value));
-      this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("/Dual_Pitch_Shifter/Window_Size", e.target.value));
+      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("/Blipper/BasePitch", e.target.value));
+      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("/Blipper/Mix", e.target.value));
+      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("/Blipper/PitchMod", e.target.value));
+      this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("/Blipper/Release", e.target.value));
     
     }
 
@@ -201,17 +201,17 @@
     }
 
     bypass() {
-      this._plug.setParam("/Dual_Pitch_Shifter/bypass",1);
+      this._plug.setParam("/Blipper/bypass",1);
       console.log("disabled");
     }
 
     reactivate() {
-      this._plug.setParam("/Dual_Pitch_Shifter/bypass",0);
+      this._plug.setParam("/Blipper/bypass",0);
 
     }
 
 
   }
   // Register the x-custom element with the browser
-  customElements.define('wc-dualpitchshifter', DualpitchshifterGui);
+  customElements.define('wc-blipper', BlipperGui);
 </script>

@@ -4,7 +4,7 @@
 <head>
   <title>rack show</title>
   <meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
-  <link rel="import" href="../wasabi-host.html">
+  <link rel="import" href="../PluginLoader/wasabi-host.html">
 </head>
 
 <body>
@@ -18,7 +18,7 @@
   var mediaSource = ctx.createMediaElementSource(player);
   var host = document.querySelector("#loader");
 
-  Promise.all([host.load("./../modules/FaustZitaRev.html"), host.load("./../modules/FaustThruZeroFlanger.html"),host.load("./../modules/FaustWeirdPhaser.html"),host.load("./../modules/FaustStereoFreqShifter.html"),host.load("./../modules/FaustBlipper.html"),host.load("./../modules/FaustDualPitchShifter.html")]).then(function (node){
+  Promise.all([host.load("./../Faust/ZitaRev/FaustZitaRev.html"), host.load("./../Olivier-Larkin/ThruZeroFlanger/FaustThruZeroFlanger.html"),host.load("./../Olivier-Larkin/WeirdPhaser/FaustWeirdPhaser.html"),host.load("./../Olivier-Larkin/StereoFrequencyShifter/FaustStereoFreqShifter.html"),host.load("./../Olivier-Larkin/Blipper/FaustBlipper.html"),host.load("./../Olivier-Larkin/DualPitchShifter/FaustDualPitchShifter.html")]).then(function (node){
   try {
       if (node[0] instanceof AudioWorkletNode) mediaSource.connect(node[0]);
       else mediaSource.connect(node[0].getInput(0));
