@@ -1,11 +1,11 @@
 {
   "FaustZitaRev" :{
-    "version":"",
+    "version":"1.0",
     "author":"",
     "documentation":"",
-    "processor":"",
-    "GUI":"",
-    "loader":"",
-    "thumbnail":""    
+    "processor":"https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRev/FaustZitaRev.js",
+    "GUI":"https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRev/FaustZitaRev.html",
+    "loader":"view-source:https://wasabi.i3s.unice.fr/WebAudioPluginBank/PluginLoader/wasabi-host.html",
+    "thumbnail":"https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRev/FaustZitaRev.png"    
   }
 }
