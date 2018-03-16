@@ -8,8 +8,14 @@
 </head>
 
 <body>
-  <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
-  <wasabi-host id="loader"></wasabi-host>
+  <section id="controls">
+    <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
+    <button id="toggleGuitarIn" onclick="toggleGuitarInput(event)">Guitar input:
+      <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!</button>
+  </section>
+  <section id="audioModules">
+    <wasabi-host id="loader"></wasabi-host>
+  </section>
 
 </body>
 <script>
@@ -17,24 +23,25 @@
   var player = document.getElementById("soundSample");
   var mediaSource = ctx.createMediaElementSource(player);
   var host = document.querySelector("#loader");
+  var guitarPluggedIn = false;
   var userMedia;
   var splitter;
   var merger;
 
   player.onplay = () => {
-        ctx.resume().then(() => {
-          console.log('Playback resumed successfully');
-        });
-      }
+    ctx.resume().then(() => {
+      console.log('Playback resumed successfully');
+    });
+  }
 
   var constraints = {
-            audio: {
-              echoCancellation: false,
-              mozNoiseSuppression: false,
-              mozAutoGainControl: false,
-              //deviceId: id ? {exact: id} : undefined
-            }
-          };
+    audio: {
+      echoCancellation: false,
+      mozNoiseSuppression: false,
+      mozAutoGainControl: false,
+      //deviceId: id ? {exact: id} : undefined
+    }
+  };
 
   // User input part 
   navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
@@ -44,7 +51,6 @@
     // To get a stereo sound from just one input
     splitter = ctx.createChannelSplitter(2);
     merger = ctx.createChannelMerger(2);
-    userMedia.connect(splitter);
     splitter.connect(merger, 0, 0);
     splitter.connect(merger, 0, 1);
     splitter.connect(merger, 1, 0);
@@ -52,8 +58,21 @@
 
   })
 
+  function toggleGuitarInput(event) {
+    var button = document.querySelector("#toggleGuitarIn");
 
-  Promise.all([host.load("./../Faust/ZitaRev/FaustZitaRev.html"),host.load("./../Oliver-Larkin/ThruZeroFlanger/FaustThruZeroFlanger.html"),host.load("./../Oliver-Larkin/WeirdPhaser/FaustWeirdPhaser.html"),host.load("./../Oliver-Larkin/StereoFrequencyShifter/FaustStereoFreqShifter.html"),host.load("./../Oliver-Larkin/Blipper/FaustBlipper.html"),host.load("./../Oliver-Larkin/DualPitchShifter/FaustDualPitchShifter.html")]).then(function (node){
+    if (!guitarPluggedIn) {
+      userMedia.connect(splitter);
+      button.innerHTML = "Guitar input: <span style='color:green;'>ACTIVATED</span>, click to toggle on/off!";
+    } else {
+      userMedia.disconnect(splitter);
+      button.innerHTML = "Guitar input: <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!";
+    }
+    guitarPluggedIn = !guitarPluggedIn;
+  }
+
+
+  Promise.all([host.load("./../Faust/ZitaRev/FaustZitaRev.html"), host.load("./../Oliver-Larkin/ThruZeroFlanger/FaustThruZeroFlanger.html"), host.load("./../Oliver-Larkin/WeirdPhaser/FaustWeirdPhaser.html"), host.load("./../Oliver-Larkin/StereoFrequencyShifter/FaustStereoFreqShifter.html"), host.load("./../Oliver-Larkin/Blipper/FaustBlipper.html"), host.load("./../Oliver-Larkin/DualPitchShifter/FaustDualPitchShifter.html")]).then(function (node) {
     try {
       if (node[0] instanceof AudioWorkletNode) {
         mediaSource.connect(node[0]);

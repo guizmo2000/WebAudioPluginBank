@@ -92,6 +92,8 @@ hosts.FaustZitaRev = class zitaRev extends AudioWorkletNode {
         
         // Set message handler
         this.port.onmessage = this.handleMessage.bind(this);
+
+        this.setPatch("init");
     }
     
     getMetadata()
@@ -183,6 +185,34 @@ hosts.FaustZitaRev = class zitaRev extends AudioWorkletNode {
             this.output_handler(msg.path, msg.value);
         }
     }
+    /*
+    *Guillaume : method which should evolve into setPatch(patch) where param is the name of a json file 
+    */
+   setPatch(patch) {
+    var controlTypes = [];
+    var controls = [];
+
+    var listeTypeControl = this.json_object.ui[0].items[0].items;
+    listeTypeControl.forEach(element => {
+            controlTypes.push(element);
+    });
+
+    for (var i = 0 ; i<controlTypes.length;i++){
+        for (var j=0 ; j<controlTypes[i].items.length; j++){
+            controls.push(controlTypes[i].items[j]);
+        }
+    }
+
+
+    if(patch === "init"){
+        controls.forEach(item => {
+            this.setParam(item.address,item.init);
+        });
+    }else{
+        console.log("not implemented yet");
+    }
+    
+}
     
 }
 
