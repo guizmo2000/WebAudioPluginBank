@@ -168,6 +168,7 @@ hosts.PingPongDelay = class PingPongDelay {
     this.createNodes();
     this.connectNodes();
     this.linktoParams();
+    this.setState("disable");
   }
 
   createIO(){

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>wam show</title>
+</head>
+<meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
+<link rel="import" href="../PluginLoader/wam-host.html">
+
+<body>
+  <wam-host id="loader"></wam-host>
+
+</body>
+<script>
+  var ctx = new AudioContext();
+  var player = document.getElementById("soundSample");
+  var host = document.querySelector("#loader");
+  host.ctx = ctx;
+  host.load("https://webaudiomodules.org/synths/obxd.html").then(function (node) {
+    console.log(node);
+    node.connect(ctx.destination);
+  });
+</script>
+
+</html>

@@ -147,12 +147,13 @@
       if (this._plug) this._plug.disconnect();
       return new Promise( function (resolve,reject) {
 
-        if (!WAM.webComponentsReady) {
+       /* if (!WAM.webComponentsReady) {
+          console.log("here");
           var lazy = { host:self, url:url, className:className }
           lazy.promise = { resolve:resolve, reject:reject }
           WAM.lazyloads.push(lazy);
           return;
-        }
+        }*/
         
         function loaded () {
           if (!className) {

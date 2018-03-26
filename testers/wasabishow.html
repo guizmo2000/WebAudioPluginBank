@@ -72,7 +72,7 @@
   }
 
 
-  Promise.all([host.load("./../WASABI/QuadraFuzz/QuadraFuzz.html"),host.load("./../Faust/ZitaRev/FaustZitaRev.html"), host.load("./../Oliver-Larkin/ThruZeroFlanger/FaustThruZeroFlanger.html"), host.load("./../Oliver-Larkin/WeirdPhaser/FaustWeirdPhaser.html"), host.load("./../Oliver-Larkin/StereoFrequencyShifter/FaustStereoFreqShifter.html"), host.load("./../Oliver-Larkin/Blipper/FaustBlipper.html"), host.load("./../Oliver-Larkin/DualPitchShifter/FaustDualPitchShifter.html")]).then(function (node) {
+  Promise.all([host.load("./../WASABI/QuadraFuzz/QuadraFuzz.html"),host.load("./../WASABI/PingPongDelay/PingPongDelay.html")]).then(function (node) {
     try {
       if (node[0] instanceof AudioWorkletNode) {
         mediaSource.connect(node[0]);
@@ -85,12 +85,8 @@
     } catch (error) {
       console.log(error, "no correct input for this plugin")
     }
-    node[0].connect(node[1]);
-    node[1].connect(node[2]);
-    node[2].connect(node[3]);
-    node[3].connect(node[4]);
-    node[4].connect(node[5]);
-    node[5].connect(ctx.destination);
+    node[0].connect(node[1].getInput(0));
+    node[1].connect(ctx.destination);
   });
 </script>
 

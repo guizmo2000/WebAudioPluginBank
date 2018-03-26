@@ -1,4 +1,4 @@
-<script src="./PingPongDelay.js"></script>
+<script src="./QuadraFuzz.js"></script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
   WebAudioControlsOptions = {
@@ -6,14 +6,14 @@
   };
 </script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template id="wc-pingpongdelay">
+<template id="wc-quadrafuzz">
   <style>
     :host {
-      background: linear-gradient( rgb(77, 74, 78),rgb(194, 68, 36));
+      background: linear-gradient( rgb(77, 74, 78),rgb(194, 120, 36));
       box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 
-      width: 120px;
+      width: 140px;
       height: 180px;
       display: block;
       user-select: none;
@@ -102,21 +102,26 @@
   </style>
   <div class="row">
     <div class="column">
-      <webaudio-knob id="knob1" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" data-role="feedback" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob1-label">FEEDBACK</span>
+      <webaudio-knob id="knob1" class="knob" sprites="99" value="0.6" min="0" max="1" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+        width="40" height="40"  diameter="24"></webaudio-knob>
+      <span class="knob-label" id="knob1-label">Low Gain</span>
     </div>
     <div class="column">
-      <webaudio-knob id="knob2" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" data-role="time" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob2-label">TIME</span>
+      <webaudio-knob id="knob2" class="knob" sprites="99" value="0.8" min="0" max="1" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+        width="40" height="40"  diameter="24"></webaudio-knob>
+      <span class="knob-label" id="knob2-label">Mid Low Gain</span>
     </div>
   </div>
   <div class="row">
     <div class="column">
-      <webaudio-knob id="knob3" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" data-role="mix" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob3-label">MIX</span>
+      <webaudio-knob id="knob3" class="knob" sprites="99" value="0.5" min="0" max="1" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+        width="40" height="40"  diameter="24"></webaudio-knob>
+      <span class="knob-label" id="knob3-label">Mid High Gain</span>
+    </div>
+    <div class="column">
+      <webaudio-knob id="knob4" class="knob" sprites="99" value="0.6" min="0" max="1" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+        width="40" height="40" diameter="24"></webaudio-knob>
+      <span class="knob-label" id="knob4-label">High Gain</span>
     </div>
   </div>
 
@@ -126,28 +131,28 @@
         width="32" height="20"></webaudio-switch>
     </div>
   </div>
-
   <div class="row">
     <div class="column">
-      <span class="pedalLabel">Ping Pong Delay</span>
+      <span class="pedalLabel">Quadrafuzz</span>
     </div>
   </div>
 
 </template>
 <script>
-  let wctemp = document.currentScript.ownerDocument.querySelector("#wc-pingpongdelay");
-  class PingPongDelayGui extends HTMLElement {
+  let quadratemp = document.currentScript.ownerDocument.querySelector("#wc-quadrafuzz");
+  class QuadraFuzzGui extends HTMLElement {
 
     constructor() {
       super();
       this._root = this.attachShadow({ mode: 'open' });
-      this._root.appendChild(wctemp.content.cloneNode(true));
+      this._root.appendChild(quadratemp.content.cloneNode(true));
       this.isOn = false;
     }
     set plug(p) {
       this._plug = p
       console.log(this._plug);
       this.setKnobs();
+      //this.setActive(false);
       this.setSwitchListener();
     }
 
@@ -168,11 +173,15 @@
 
     setKnobs() {
       console.log('setknobs');
-      this._root.querySelector("#knob1").addEventListener('change', (e) => this._plug.setParam("feedback", e.target.value / 100));
-      this._root.querySelector("#knob2").addEventListener('change', (e) => this._plug.setParam("time", e.target.value / 100));
-      this._root.querySelector("#knob3").addEventListener('change', (e) => this._plug.setParam("mix", e.target.value / 100));
+      this._root.querySelector("#knob1").addEventListener('change', (e) => this._plug.setParam("lowGain", e.target.value));
+      this._root.querySelector("#knob2").addEventListener('change', (e) => this._plug.setParam("midLowGain", e.target.value));
+      this._root.querySelector("#knob3").addEventListener('change', (e) => this._plug.setParam("midHighGain", e.target.value));
+      this._root.querySelector("#knob4").addEventListener('change', (e) => this._plug.setParam("highGain", e.target.value));
+
 
     }
+
+
 
     setSwitchListener() {
       console.log("setswitch");
@@ -192,5 +201,5 @@
 
   }
   // Register the x-custom element with the browser
-  window.customElements.define('wc-pingpongdelay', PingPongDelayGui);
+  window.customElements.define('wc-quadrafuzz', QuadraFuzzGui);
 </script>
