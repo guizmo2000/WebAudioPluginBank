@@ -224,7 +224,8 @@ console.log(midimenu);
       }
     }
   }
-
+try {
+  
   customElements.define("webaudio-knob", class WebAudioKnob extends WebAudioControlsWidget {
     constructor(){
       super();
@@ -506,7 +507,9 @@ webaudio-knob{
       return false;
     }
   });
-
+} catch (error) {
+  console.log("warning",error);
+}
   customElements.define("webaudio-slider", class WebAudioSlider extends WebAudioControlsWidget {
     constructor(){
       super();
