@@ -1255,7 +1255,7 @@ webaudio-param{
 } catch (error) {
   console.log("warning",error);
 }
-
+try{
   customElements.define("webaudio-keyboard", class WebAudioKeyboard extends WebAudioControlsWidget {
     constructor(){
       super();
@@ -1571,6 +1571,9 @@ webaudio-keyboard{
       this.redraw();
     }
   });
+} catch (error) {
+  console.log("warning",error);
+}
 
   // FOR MIDI LEARN
   class WebAudioControlsMidiManager {
