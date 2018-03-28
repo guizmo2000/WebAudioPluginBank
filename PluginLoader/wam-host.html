@@ -222,6 +222,7 @@
         // -- audiocontext
         let actx = self._actx;
         if (!actx) {
+          console.log("pas de ctx?")
           if (AWPF.isAudioWorkletPolyfilled) actx = AWPF.context;
           else actx = new AudioContext();
           self._actx = actx;

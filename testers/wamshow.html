@@ -15,7 +15,8 @@
   var ctx = new AudioContext();
   var player = document.getElementById("soundSample");
   var host = document.querySelector("#loader");
-  host.ctx = ctx;
+  host.context = ctx;
+  console.log(host.ctx);
   host.load("https://webaudiomodules.org/synths/obxd.html").then(function (node) {
     console.log(node);
     node.connect(ctx.destination);

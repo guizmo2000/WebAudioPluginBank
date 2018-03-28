@@ -110,7 +110,6 @@ hosts.PingPongDelay = class PingPongDelay {
   }
 
   getParam(key) {
-    console.log("act");
     if (key == "time") {
       this.getTime();
     } else if (key == "feedback") {

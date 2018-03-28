@@ -17,6 +17,8 @@
   var player = document.getElementById("soundSample");
   var mediaSource = ctx.createMediaElementSource(player);
   var host = document.querySelector("#loader");
+  host.context = ctx;
+
 
   player.onplay = () => {
         ctx.resume().then(() => {

@@ -1,11 +1,10 @@
 {
-  "FaustDualPitchShifter" :{
+  "name":"FaustDualPitchShifter",
     "version":"",
     "author":"",
     "documentation":"",
     "processor":"",
     "GUI":"",
     "loader":"",
-    "thumbnail":""    
+    "thumbnail":"./FaustDualPitchShifter.png"    
   }
-}

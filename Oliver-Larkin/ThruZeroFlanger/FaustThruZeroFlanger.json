@@ -1,11 +1,10 @@
 {
-  "FaustThruZeroFlanger" :{
+  "name":"FaustThruZeroFlanger",
     "version":"",
     "author":"",
     "documentation":"",
     "processor":"",
     "GUI":"",
     "loader":"",
-    "thumbnail":""    
+    "thumbnail":"./FaustThruZeroFlanger.png"    
   }
-}

@@ -1,11 +1,11 @@
 {
-  "FaustWeirdPhaser" :{
+  "name":"FaustWeirdPhaser",
     "version":"",
     "author":"",
     "documentation":"",
     "processor":"",
     "GUI":"",
     "loader":"",
-    "thumbnail":""    
-  }
+    "thumbnail":"./FaustWeirdPhaser.png"    
+  
 }

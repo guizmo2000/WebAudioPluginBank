@@ -17,6 +17,7 @@
   var player = document.getElementById("soundSample");
   var mediaSource = ctx.createMediaElementSource(player);
   var host = document.querySelector("#loader");
+  host.context=ctx;
   host.load("./../Faust/ZitaRev/FaustZitaRev.html").then(function (node) {
     console.log(node);
     try {
