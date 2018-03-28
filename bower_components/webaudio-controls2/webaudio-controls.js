@@ -510,6 +510,8 @@ webaudio-knob{
 } catch (error) {
   console.log("warning",error);
 }
+
+try {
   customElements.define("webaudio-slider", class WebAudioSlider extends WebAudioControlsWidget {
     constructor(){
       super();
@@ -834,6 +836,11 @@ webaudio-slider{
     }
   });
 
+} catch (error) {
+  console.log("warning",error);
+}
+
+try{
   customElements.define("webaudio-switch", class WebAudioSwitch extends WebAudioControlsWidget {
     constructor(){
       super();
@@ -1245,6 +1252,9 @@ webaudio-param{
       return false;
     }
   });
+} catch (error) {
+  console.log("warning",error);
+}
 
   customElements.define("webaudio-keyboard", class WebAudioKeyboard extends WebAudioControlsWidget {
     constructor(){
