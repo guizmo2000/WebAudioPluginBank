@@ -26,7 +26,7 @@
       this._inited = false;
     }
 
-    set context (ctx) { this.ctx = ctx; }
+    set context (ctx) { this.ctx = ctx; console.log("context set")}
     get context () { return this.ctx; }
 
 
@@ -34,7 +34,7 @@
     *Instanciation of the audio module loaded
     */
     init(className) {
-      console.log(className);
+      self = this;
       return new Promise(function (resolve, reject) {
        let ctx = self.ctx;
         if (!ctx) {
@@ -92,7 +92,7 @@
       var plug;
       return new Promise(function (resolve, reject) {
         function loaded() {
-            
+
           // Get the name of the file to know which module has to be instanciated.
             var tokens = url.split("/");
             className = tokens[tokens.length - 1].split(".")[0];
@@ -124,6 +124,7 @@
               resolve(webaudioNode);
             });
           } else {
+
             self.init(className).then((webaudioNode) => {
 
                // Loading of the GUI (if html file)
