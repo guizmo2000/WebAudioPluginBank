@@ -36,12 +36,12 @@
     init(className) {
       console.log(className);
       return new Promise(function (resolve, reject) {
-        let ctx = self.ctx;
+       /* let ctx = self.ctx;
         if (!ctx) {
           ctx = new AudioContext();
-        } else {
+        } else {*/
           self.ctx = ctx;
-        }
+        //}
         var hostsClass = hosts[className];
         var plug = new hostsClass(ctx);
         resolve(plug);
