@@ -36,8 +36,8 @@
     init(className) {
       console.log(className);
       return new Promise(function (resolve, reject) {
-       /* let ctx = self.ctx;
-        if (!ctx) {
+       let ctx = self.ctx;
+        /*if (!ctx) {
           ctx = new AudioContext();
         } else {*/
           self.ctx = ctx;
