@@ -68,12 +68,12 @@
         var plug;
         // The main global scope
         var processor;
-        if(className.includes("Zita")) processor = "../Faust/ZitaRev/zitaRev-processor.js";
-        else if(className.includes("Thru")) processor = "../Oliver-Larkin/ThruZeroFlanger/ThruZeroFlanger-processor.js";
-        else if(className.includes("Blipper")) processor = "../Oliver-Larkin/Blipper/Blipper-processor.js";
-        else if(className.includes("WeirdPhaser")) processor = "../Oliver-Larkin/WeirdPhaser/WeirdPhaser-processor.js";
-        else if(className.includes("StereoFreqShifter")) processor = "../Oliver-Larkin/StereoFrequencyShifter/StereoFreqShifter-processor.js";
-        else if(className.includes("DualPitchShifter")) processor = "../Oliver-Larkin/DualPitchShifter/DualPitchShifter-processor.js";
+        if(className.includes("Zita")) processor = "./../Faust/ZitaRev/zitaRev-processor.js";
+        else if(className.includes("Thru")) processor = "./../Oliver-Larkin/ThruZeroFlanger/ThruZeroFlanger-processor.js";
+        else if(className.includes("Blipper")) processor = "./../Oliver-Larkin/Blipper/Blipper-processor.js";
+        else if(className.includes("WeirdPhaser")) processor = "./../Oliver-Larkin/WeirdPhaser/WeirdPhaser-processor.js";
+        else if(className.includes("StereoFreqShifter")) processor = "./../Oliver-Larkin/StereoFrequencyShifter/StereoFreqShifter-processor.js";
+        else if(className.includes("DualPitchShifter")) processor = "./../Oliver-Larkin/DualPitchShifter/DualPitchShifter-processor.js";
         faust = self.ctx.audioWorklet.addModule(processor).then(function () {
           try {
             plug = new hostsClass(self.ctx, {});
