@@ -12,8 +12,8 @@
 * hosts : global variable used to instanciate dynamically the audio modules loaded
 */
   var hosts = hosts || {};
-  let importDoc = document.currentScript.ownerDocument;
-  let template = importDoc.querySelector("#wasabi-host");
+  let importD = document.currentScript.ownerDocument;
+  let template2 = importD.querySelector("#wasabi-host");
 
 
 
@@ -21,7 +21,7 @@
     constructor() {
       super();
       this._root = this.attachShadow({ mode: 'open' });
-      this._root.appendChild(template.content.cloneNode(true));
+      this._root.appendChild(template2.content.cloneNode(true));
       this.ctx = "";
       this._inited = false;
     }
