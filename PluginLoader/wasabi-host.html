@@ -54,6 +54,7 @@
     */
     initFaust(className) {
       console.log("initFaust");
+      self = this;
       // The main global scope
       return new Promise(function (resolve, reject) {
         let ctx = self.ctx;
