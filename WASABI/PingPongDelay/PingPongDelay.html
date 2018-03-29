@@ -145,13 +145,13 @@
       this.isOn = false;
     }
     set plug(p) {
-      this._plug = p
+      this._plug = p;
       console.log(this._plug);
       this.setKnobs();
       this.setSwitchListener();
     }
 
-    static get properties() {
+    get properties() {
       this.boundingRect = {
         dataWidth: {
           type: Number,
