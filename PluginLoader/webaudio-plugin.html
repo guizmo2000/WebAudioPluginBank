@@ -1,0 +1,187 @@
+<!-- Here is a loader for both pure JS WebAudio and FAUST modules -->
+<!-- The load system is inspired from the https://www.webaudiomodules.org/wam-host.html one -->
+
+<!-- Template for the HTML Element which will include the WC loaded -->
+<template id="webaudio-plugin">
+  <div id="wasabi-content" style="display : flex">
+  </div>
+</template>
+<script>
+
+/*
+* hosts : global variable used to instanciate dynamically the audio modules loaded
+*/
+  var hosts = hosts || {};
+  let importD = document.currentScript.ownerDocument;
+  let template2 = importD.querySelector("#webaudio-plugin");
+
+
+
+  class WebaudioPlugin extends HTMLElement {
+    constructor() {
+      super();
+      this._root = this.attachShadow({ mode: 'open' });
+      this._root.appendChild(template2.content.cloneNode(true));
+      this.ctx = "";
+      this._inited = false;
+    }
+
+    set context (ctx) { this.ctx = ctx; console.log("context set")}
+    get context () { return this.ctx; }
+
+
+    /*
+    *Instanciation of the audio module loaded
+    */
+    init(className) {
+      self = this;
+      return new Promise(function (resolve, reject) {
+       let ctx = self.ctx;
+        if (!ctx) {
+          console.log("no ctx?")
+          ctx = new AudioContext();
+          self.ctx = ctx;
+        } 
+        var hostsClass = hosts[className];
+        var plug = new hostsClass(ctx);
+        resolve(plug);
+      });
+    }
+
+    /*
+    * Faust does not have "generic processor" so here is a special instanciation based on name of the modules....
+    *  --> this part has to be fixed by calling a generic faust processor.
+    */
+    initFaust(className) {
+      console.log("initFaust");
+      self = this;
+      // The main global scope
+      return new Promise(function (resolve, reject) {
+        let ctx = self.ctx;
+        if (!ctx) {
+          ctx = new AudioContext();
+        } else {
+          self.ctx = ctx;
+        }
+        var hostsClass = hosts[className];
+        console.log(className);
+        var plug;
+        // The main global scope
+        var processor;
+        if(className.includes("Zita")) processor = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRev/zitaRev-processor.js";
+        else if(className.includes("Thru")) processor = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin/ThruZeroFlanger/ThruZeroFlanger-processor.js";
+        else if(className.includes("Blipper")) processor = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin/Blipper/Blipper-processor.js";
+        else if(className.includes("WeirdPhaser")) processor = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin/WeirdPhaser/WeirdPhaser-processor.js";
+        else if(className.includes("StereoFreqShifter")) processor = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin/StereoFrequencyShifter/StereoFreqShifter-processor.js";
+        else if(className.includes("DualPitchShifter")) processor = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin/DualPitchShifter/DualPitchShifter-processor.js";
+        faust = self.ctx.audioWorklet.addModule(processor).then(function () {
+          try {
+            plug = new hostsClass(self.ctx, {});
+            console.log(plug.getMetadata());
+            return (plug);
+          } catch (error) {
+            console.log(error); console.log("Faust module cannot be loaded or compiled");
+          }
+        });
+        resolve(faust);
+      });
+    }
+
+
+    load(url, className, flag) {
+      var self = this;
+      var plug;
+      return new Promise(function (resolve, reject) {
+        function loaded() {
+
+          // Get the name of the file to know which module has to be instanciated.
+            var tokens = url.split("/");
+            className = tokens[tokens.length - 1].split(".")[0];
+
+          // temporary distinction before unifying the code
+          if (url.includes("Faust") || url.includes("faust")) {
+            self.initFaust(className).then((webaudioNode) => {
+
+              // Loading of the GUI (if html file)
+              var detail = { url: url, webaudioNode: webaudioNode, status: 200 }
+              var event = new CustomEvent("load", { detail: detail });
+              self.dispatchEvent(event);
+              if (url.endsWith(".html")) {
+
+                /* Here we get the name of the wc to instanciate in the template element of the file included:
+                * <template id="wc-mymodule">
+                * --> every html web audio module loaded with this "wasabi-host" must have this id matching the name of
+                * his WC
+                */
+                let wc = document.createElement(this.import.head.querySelector("template").id);
+
+                /*
+                * Once created the element is added the the <div id="wasabi-content">
+                */
+                let content = self.shadowRoot.getElementById("wasabi-content");
+                wc.plug = webaudioNode;
+                content.appendChild(wc);
+              }
+              resolve(webaudioNode);
+            });
+          } else {
+
+            self.init(className).then((webaudioNode) => {
+
+               // Loading of the GUI (if html file)
+              var detail = { url: url, webaudioNode: webaudioNode, status: 200 }
+              var event = new CustomEvent("load", { detail: detail });
+              self.dispatchEvent(event);
+              if (url.endsWith(".html")) {
+
+                /* Here we get the name of the wc to instanciate in the template element of the file included:
+                * <template id="wc-mymodule">
+                * --> every html web audio module loaded with this "wasabi-host" must have this id matching the name of
+                * his WC
+                */
+                let wc = document.createElement(this.import.head.querySelector("template").id);
+                console.log(wc.is);
+
+                /*
+                * Once created the element is added the the <div id="wasabi-content">
+                */
+                let content = self.shadowRoot.getElementById("wasabi-content");
+                wc.plug = webaudioNode;
+                content.appendChild(wc);
+              }
+              resolve(webaudioNode);
+            });
+
+          }
+
+        }
+
+        /*
+        * Here is chosen how the modules are loaded (link or script) 
+        */
+        if (url.endsWith(".js")) {
+          var script = document.createElement('script');
+          script.src = url;
+          script.onload = loaded;
+          document.head.appendChild(script);
+        }
+        else if (url.endsWith(".html")) {
+          var link = document.createElement('link');
+          link.rel = 'import';
+          link.id = 'urlPlugin';
+          link.href = url;
+          link.onload = loaded;
+          document.head.appendChild(link);
+        }
+        else reject("invalid argument");
+      });
+    }
+  }
+
+
+
+
+  window.customElements.define('webaudio-plugin', WebaudioPlugin);
+
+
+</script>

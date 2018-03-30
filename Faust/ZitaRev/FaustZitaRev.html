@@ -179,14 +179,15 @@
 <script>
   let zitaRevTemp = document.currentScript.ownerDocument.querySelector("#wc-zitarev");
   class ZitaRevGui extends HTMLElement {
-    static get is() { return 'wc-zitarev'; }
+     get is() { return 'wc-zitarev'; }
 
     constructor() {
       super();
       this._root = this.attachShadow({ mode: 'open' });
       this._root.appendChild(zitaRevTemp.content.cloneNode(true));
       this.isOn ;
-    }
+
+      }
 
      get properties() {
       this.boundingRect = {
