@@ -221,15 +221,15 @@ faust.create = function (context, callback) {
 
 class FaustZitaRev {
 
-    constructor(context) {
+    constructor(context, baseUrl) {
         this.context = context;
+        this.baseUrl = baseUrl;
     }
 
     load() {
         return new Promise((resolve, reject) => {
-            this.context.audioWorklet.addModule("https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRev/zitaRev-processor.js").then(() => {
+            this.context.audioWorklet.addModule(this.baseUrl + "/zitaRev-processor.js").then(() => {
                 this.plug = new zitaRev(this.context, {});
-                console.log(this.plug.getMetadata());
                 return (this.plug);
             }).then((faust) => {
                 resolve(faust);
@@ -240,18 +240,21 @@ class FaustZitaRev {
     }
 
     loadGui() {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
+            try {
+                var link = document.createElement('link');
+                link.rel = 'import';
+                link.id = 'urlPlugin';
+                link.href = this.baseUrl + "/main.html";
+                document.head.appendChild(link);
+                var element = document.createElement("faust-zitarev");
+                element._plug = this.plug;
+                resolve(element);
 
-            var link = document.createElement('link');
-            link.rel = 'import';
-            link.id = 'urlPlugin';
-            link.href = "./../Faust/ZitaRevV2/main.html";
-            document.head.appendChild(link);
-            var element = document.createElement("faust-zitarev");
-            element._plug = this.plug;
-            element.onload = (evt)=> {console.log("heon")};
-            resolve(element);
-
+            } catch (e) {
+                console.log(e);
+                reject(e);
+            }
         });
-    }
+    };
 }

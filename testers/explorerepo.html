@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>empty host</title>
+</head>
+<meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
+<!-- <script src="./../Faust/ZitaRevV2/main.js"></script> -->
+
+<body>
+  <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
+</body>
+<script>
+  var ctx = new AudioContext();
+  var player = document.getElementById("soundSample");
+  var mediaSource = ctx.createMediaElementSource(player);
+
+  var repo = {
+   "name": "mainRepo",
+   "root": "optional_abs_url",
+   "plugs": {
+    "zitaRev":"./../Faust/zitaRevV2",
+    "plugin2":"./../Faust/zitaRevV2"
+   }
+}
+
+// On scanne le repo
+Object.keys(repo.plugs).map((key) => {
+  console.log("Decouvert plugin : " + key + " url : " + repo.plugs[key]);
+
+  let url = repo.plugs[key] + "/main.json";
+  // get the main.json for this plugin
+  let metadata;
+
+  fetch("http://127.0.0.1:8887/Faust/zitaRevV2/main.json")
+  .then(responseJSON => {
+    console.log("RESPONSE = " + responseJSON);
+    return responseJSON.json();
+  }).then(data => {  
+    metadata =data;
+    console.log("Lu depuis main.json nom = " + metadata.name);
+
+    let vendor = metadata.vendor;
+    let name = metadata.name;
+
+    let className = window[vendor][name];
+    console.log("classname = " + className);
+    var plugin = new className(ctx, "./../Faust/ZitaRevV2");
+    plugin.load().then((node) => {
+      plugin.loadGui().then((elem) => {
+        document.body.appendChild(elem);
+      });
+      mediaSource.connect(node);
+      node.connect(ctx.destination);
+    });
+  }).catch((e) => {
+    console.log(e);
+  });
+  
+})
+
+
+
+
+   
+</script>
+
+</html>

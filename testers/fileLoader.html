@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>filescanner</title>
+</head>
+
+<body>
+  <h1>File scanner</h1>
+  <p>Enter URL of a repository
+    <input type="url" id="url">
+  </p>
+  <p>
+    <input type="button" id="send" value="send">
+  </p>
+  <div id="content"></div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+  var content = document.querySelector("#content");
+  window.onload =  () => {
+    document.querySelector("#send").addEventListener('click', () => {
+      sendUrlToScan();
+      });
+    
+  };
+    var sendUrlToScan = function () {
+    var targetUrl = document.querySelector("#url").value;
+    
+    $.get('http://localhost:8080/pluginList',{target: targetUrl},(data,status) => {
+      console.log(data.length);
+      var results = document.createElement("p");
+      for (var i = 0; i < data.length; i++) {
+        results.innerHTML += "\n"+data[i];
+      }
+      content.appendChild(results);
+    });
+
+
+  }
+
+
+</script>
+
+</html>
