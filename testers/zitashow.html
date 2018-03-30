@@ -15,8 +15,8 @@
   var ctx = new AudioContext();
   var player = document.getElementById("soundSample");
   var mediaSource = ctx.createMediaElementSource(player);
-  var plugin = new FaustZitaRev;
-  plugin.load(ctx).then((node)=>{
+  var plugin = new FaustZitaRev(ctx);
+  plugin.load().then((node)=>{
     mediaSource.connect(node);
     node.connect(ctx.destination);
   });
