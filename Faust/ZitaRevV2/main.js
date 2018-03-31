@@ -228,6 +228,7 @@ class FaustZitaRev {
 
     load() {
         return new Promise((resolve, reject) => {
+            console.log("URL : " + (this.baseUrl + "/zitaRev-processor.js"));
             this.context.audioWorklet.addModule(this.baseUrl + "/zitaRev-processor.js").then(() => {
                 this.plug = new zitaRev(this.context, {});
                 return (this.plug);
