@@ -44,6 +44,9 @@ Object.keys(repo.plugs).map((key) => {
     let vendor = metadata.vendor;
     let name = metadata.name;
 
+    // M.BUFFA ICI inserer le <script src = ></script> !!!
+    // TODO sinon on ne peut instancier la classe
+
     let className = window[vendor][name];
     console.log("classname = " + className);
     var plugin = new className(ctx, "./../Faust/ZitaRevV2");
