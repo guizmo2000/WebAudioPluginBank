@@ -218,8 +218,9 @@ faust.create = function (context, callback) {
         .catch(function (error) { console.log(error); console.log("Faust zitaRev cannot be loaded or compiled"); });
 }
 
+var WAPlugin = Plugin || {};
 
-class FaustZitaRev {
+WAPlugin.FaustZitaRev = class FaustZitaRev {
 
     constructor(context, baseUrl) {
         this.context = context;
@@ -243,11 +244,18 @@ class FaustZitaRev {
     loadGui() {
         return new Promise((resolve, reject) => {
             try {
-                var link = document.createElement('link');
-                link.rel = 'import';
-                link.id = 'urlPlugin';
-                link.href = this.baseUrl + "/main.html";
-                document.head.appendChild(link);
+                // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
+                let url = this.baseUrl + "/main.html";
+
+                if (!this.linkExists(url)) {
+                    var link = document.createElement('link');
+                    link.rel = 'import';
+                    link.id = 'urlPlugin';
+                    link.href = url;
+                    document.head.appendChild(link);
+                }  else {
+                    console.log("LINK EXISTS!");
+                }
                 var element = document.createElement("faust-zitarev");
                 element._plug = this.plug;
                 resolve(element);
@@ -258,4 +266,9 @@ class FaustZitaRev {
             }
         });
     };
+
+    linkExists(url) {
+        return document.querySelectorAll(`link[href="${url}"]`).length > 0;
+
+    }
 }
