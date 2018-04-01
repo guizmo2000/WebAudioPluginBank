@@ -253,12 +253,19 @@ WAPlugin.FaustZitaRev = class FaustZitaRev {
                     link.id = 'urlPlugin';
                     link.href = url;
                     document.head.appendChild(link);
+
+                    link.onload = (e) => {
+                        var element = createFaustZitaRevGUI(this.plug);
+                        //element._plug = this.plug;
+                        resolve(element);
+                    }
                 }  else {
                     console.log("LINK EXISTS!");
+                    var element = createFaustZitaRevGUI(this.plug);
+                        //element._plug = this.plug;
+                        resolve(element);
                 }
-                var element = document.createElement("faust-zitarev");
-                element._plug = this.plug;
-                resolve(element);
+                
 
             } catch (e) {
                 console.log(e);

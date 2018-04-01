@@ -8,10 +8,10 @@
 <template id="faust-zitarev">
   <style>
     :host {
-      background: linear-gradient( rgb(77, 74, 78),rgb(67, 48, 238));
+      background: linear-gradient( rgb(77, 74, 78), rgb(67, 48, 238));
       box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
       width: 300px;
-      height: 180px; 
+      height: 180px;
       display: block;
       user-select: none;
       cursor: move;
@@ -107,8 +107,7 @@
     </div>
     <div class="column">
       <webaudio-knob id="knob2" class="knob" sprites="99" value="200" min="50" max="1000" step="1" midilearn="true" width="40"
-        height="40" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="LF_X"></webaudio-knob>
+        height="40" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" data-role="LF_X"></webaudio-knob>
       <span class="knob-label" id="knob2-label">LF_X</span>
     </div>
     <div class="column">
@@ -123,16 +122,14 @@
     </div>
     <div class="column">
       <webaudio-knob id="knob5" class="knob" sprites="99" value="6000" min="1500" max="23520" step="1" midilearn="true" width="40"
-        height="40" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="HF_Damping"></webaudio-knob>
+        height="40" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" data-role="HF_Damping"></webaudio-knob>
       <span class="knob-label" id="knob5-label">HF_Damping</span>
     </div>
   </div>
   <div class="row">
     <div class="column">
       <webaudio-knob id="knob6" class="knob" sprites="99" value="315" min="40" max="2500" step="1" midilearn="true" width="40"
-        height="40" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="Eq1_Freq"></webaudio-knob>
+        height="40" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" data-role="Eq1_Freq"></webaudio-knob>
       <span class="knob-label" id="knob6-label">Eq1_Freq</span>
     </div>
     <div class="column">
@@ -142,8 +139,7 @@
     </div>
     <div class="column">
       <webaudio-knob id="knob8" class="knob" sprites="99" value="1500" min="160" max="10000" step="1" midilearn="true" width="40"
-        height="40" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="Eq2_Freq"></webaudio-knob>
+        height="40" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" data-role="Eq2_Freq"></webaudio-knob>
       <span class="knob-label" id="knob8-label">Eq2_Freq</span>
     </div>
     <div class="column">
@@ -158,15 +154,14 @@
     </div>
     <div class="column">
       <webaudio-knob id="knob11" class="knob" sprites="99" value="10" min="-70" max="40" step="0.1" midilearn="true" width="40"
-        height="40" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="Level"></webaudio-knob>
+        height="40" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" data-role="Level"></webaudio-knob>
       <span class="knob-label" id="knob11-label">Level</span>
     </div>
   </div>
   <div class="row">
     <div class="column">
-      <webaudio-switch midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-        class="switch" id="switch1" width="40" height="25"></webaudio-switch>
+      <webaudio-switch midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png" class="switch" id="switch1"
+        width="40" height="25"></webaudio-switch>
     </div>
   </div>
   <div class="row">
@@ -177,50 +172,60 @@
 </template>
 <script>
   let zitaRevTemp = document.currentScript.ownerDocument.querySelector("#faust-zitarev");
-  class ZitaRevGui extends HTMLElement {
-     get is() { return 'faust-zitarev'; }
 
-    constructor() {
-      super();
-      this._root = this.attachShadow({ mode: 'open' });
-      this._root.appendChild(zitaRevTemp.content.cloneNode(true));
-      this.isOn ;
-      this.setKnobs();
-      this.setActive(false);
-      this.setSwitchListener();
+  // Ecapsulate the WebComponent class into a function, like this we can pass
+  // a parameter to its constructor (the audio node/audio processor)
+  const createFaustZitaRevGUI = (p) => {
+
+    class ZitaRevGui extends HTMLElement {
+      get is() { return 'faust-zitarev'; }
+
+      // This is the trick : copy function's argument to the constructor param
+      // See http://jsbin.com/zeninem/edit?html,js,console as a simple example
+      // of this technique
+      constructor(plug = p) {
+        super();
+        this._plug = plug; // store for later use
+
+        this._root = this.attachShadow({ mode: 'open' });
+        this._root.appendChild(zitaRevTemp.content.cloneNode(true));
+        this.isOn;
+        this.setKnobs();
+        this.setActive(false);
+        this.setSwitchListener();
       }
 
-     get properties() {
-      this.boundingRect = {
-        dataWidth: {
-          type: Number,
-          value: 300
-        },
-        dataHeight: {
-          type: Number,
-          value: 180
-        }
-      };
-      return this.boundingRect;
-    }
-    
-
-    setKnobs() {
-      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Input/In_Delay", e.target.value),false);
-      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X", e.target.value));
-      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60", e.target.value));
-      this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60", e.target.value));
-      this._root.querySelector("#knob5").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping", e.target.value));
-      this._root.querySelector("#knob6").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq", e.target.value));
-      this._root.querySelector("#knob7").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level", e.target.value));
-      this._root.querySelector("#knob8").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq", e.target.value));
-      this._root.querySelector("#knob9").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level", e.target.value));
-      this._root.querySelector("#knob10").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Output/Dry/Wet_Mix", e.target.value));
-      this._root.querySelector("#knob11").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Output/Level", e.target.value),false);
-    }
+      get properties() {
+        this.boundingRect = {
+          dataWidth: {
+            type: Number,
+            value: 300
+          },
+          dataHeight: {
+            type: Number,
+            value: 180
+          }
+        };
+        return this.boundingRect;
+      }
 
 
-    setActive(active) {
+      setKnobs() {
+        this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Input/In_Delay", e.target.value), false);
+        this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X", e.target.value));
+        this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60", e.target.value));
+        this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60", e.target.value));
+        this._root.querySelector("#knob5").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping", e.target.value));
+        this._root.querySelector("#knob6").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq", e.target.value));
+        this._root.querySelector("#knob7").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level", e.target.value));
+        this._root.querySelector("#knob8").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq", e.target.value));
+        this._root.querySelector("#knob9").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level", e.target.value));
+        this._root.querySelector("#knob10").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Output/Dry/Wet_Mix", e.target.value));
+        this._root.querySelector("#knob11").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Output/Level", e.target.value), false);
+      }
+
+
+      setActive(active) {
         if (active == undefined || active == false) {
           this.isOn = false;
           this.bypass();
@@ -232,27 +237,37 @@
         }
       }
 
-    setSwitchListener() {
-      console.log("setswitch");
-      this._root.querySelector("#switch1").addEventListener('change', (e) => {
-        if (this.isOn) this.bypass()
-        else this.reactivate();
-        this.isOn = !this.isOn;
-      });
+      setSwitchListener() {
+        console.log("setswitch");
+        this._root.querySelector("#switch1").addEventListener('change', (e) => {
+          if (this.isOn) this.bypass()
+          else this.reactivate();
+          this.isOn = !this.isOn;
+        });
+      }
+
+      bypass() {
+        this._plug.setParam("/zitaRev/bypass", 1);
+        console.log("disabled");
+      }
+
+      reactivate() {
+        this._plug.setParam("/zitaRev/bypass", 0);
+
+      }
+
+
     }
-
-    bypass() {
-      this._plug.setParam("/zitaRev/bypass",1);
-      console.log("disabled");
+    // Register the x-custom element with the browser
+    // we use a try catch here as if multiple instances of this GUI
+    // are created we must define the custom element only ONCE
+    try {
+      customElements.define('faust-zitarev', ZitaRevGui);
+    } catch {
+      console.log("Element already defined");
     }
-
-    reactivate() {
-      this._plug.setParam("/zitaRev/bypass",0);
-
-    }
-
-
+   
+    // We return the HTML element. This calls the class constructor.
+    return document.createElement("faust-zitarev");
   }
-  // Register the x-custom element with the browser
-  customElements.define('faust-zitarev', ZitaRevGui);
 </script>
