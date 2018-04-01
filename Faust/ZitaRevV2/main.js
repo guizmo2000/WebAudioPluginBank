@@ -248,25 +248,28 @@ WAPlugin.FaustZitaRev = class FaustZitaRev {
                 let url = this.baseUrl + "/main.html";
 
                 if (!this.linkExists(url)) {
+                    // LINK DOES NOT EXIST, let's add it to the document
                     var link = document.createElement('link');
                     link.rel = 'import';
-                    link.id = 'urlPlugin';
+                    //link.id = 'urlPlugin';
                     link.href = url;
                     document.head.appendChild(link);
 
                     link.onload = (e) => {
+                        // the file has been loaded, instanciate GUI
+                        // and get back the HTML elem
+                        // HERE WE COULD REMOVE THE HARD CODED NAME
                         var element = createFaustZitaRevGUI(this.plug);
                         //element._plug = this.plug;
                         resolve(element);
                     }
-                }  else {
-                    console.log("LINK EXISTS!");
+                } else {
+                    // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
+                    // so we can create another instance
                     var element = createFaustZitaRevGUI(this.plug);
-                        //element._plug = this.plug;
-                        resolve(element);
+                    //element._plug = this.plug;
+                    resolve(element);
                 }
-                
-
             } catch (e) {
                 console.log(e);
                 reject(e);
