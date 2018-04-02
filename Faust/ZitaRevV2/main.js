@@ -218,7 +218,7 @@ faust.create = function (context, callback) {
         .catch(function (error) { console.log(error); console.log("Faust zitaRev cannot be loaded or compiled"); });
 }
 
-var WAPlugin = Plugin || {};
+var WAPlugin = WAPlugin || {};
 
 WAPlugin.FaustZitaRev = class FaustZitaRev {
 
