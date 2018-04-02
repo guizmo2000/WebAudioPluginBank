@@ -16,6 +16,8 @@
   var ctx = new AudioContext();
   var player = document.getElementById("soundSample");
   var mediaSource = ctx.createMediaElementSource(player);
+  var lastPlugin;
+  var pluginArray = [];
 
   var repo = {
     "name": "mainRepo",
@@ -47,7 +49,6 @@
       }).catch((e) => {
         console.log(e);
       });
-
   })
 
   /* This function adds a clickable thumbnail to the document.
@@ -64,7 +65,6 @@
       //console.log("plugin clicked: " + evt.target.dataset.className);
       addPlugin(className, baseURL);
     })
-
     document.body.append(img);
   }
 
@@ -104,19 +104,69 @@
     // We can instanciate the audio processor
     var plugin = new WAPlugin[className](ctx, baseURL);
 
-    plugin.load().then((node) => { // loads and initialize the audio processor part
+    plugin.load().then((node) => { 
+      // loads and initialize the audio processor part
       // Then use the factory to create the HTML custom elem that holds the GUI
       // The loadGUI method takes care of inserting the link rel=import part,
       // not doing it twice, and associate the node with its GUI.
+
       plugin.loadGui().then((elem) => {
         console.log("ADDING PLUGIN");
         // show the GUI of the plugn, the audio part is ready to be used
         document.body.appendChild(elem);
-        mediaSource.connect(node);
-        node.connect(ctx.destination);
+        //mediaSource.connect(node);
+        //node.connect(ctx.destination);
+         // Add node to the chain of plugins
+        chainPlugin(node);
       });
-
     });
+
+
+    // CA BUGGE : des qu'on insere deux instances ca merde...
+    // deja la seconde instance est activee par defaut
+    // puis on dirait qu'il y a le dernier connect qui connecte
+    // la sortie sur l'entree du meme plugin, ca fait du feedback
+    function chainPlugin(plugin) {
+      //plugin.setParam("/zitaRev/bypass", 1);
+
+      // insert the new plugin at the end of the array
+      pluginArray.push(plugin);
+    
+      // rebuild the chain, first disconnect mediaSource
+      mediaSource.disconnect();
+
+      for(let i = 0; i < pluginArray.length; i++) {
+        let currentPlugin = pluginArray[i];
+        // be sure it's not connected
+        currentPlugin.disconnect();
+
+        if(i === 0) {
+          // first plugin
+          mediaSource.connect(plugin);
+        } else {
+          //connect previous plugin to current one
+          pluginArray[i-1].connect(currentPlugin);
+        }
+      }
+
+      // connect last plugin to destination
+      pluginArray[pluginArray.length -1].connect(ctx.destination);
+
+      /*
+
+      if (lastPlugin !== undefined) {
+        // deconnect lastPlugin from destination
+        lastPlugin.disconnect();
+        // insert current plugin at the end of the chain
+        console.log("PLUGIN=LASTPLUGIN: " + (plugin === lastPlugin))
+        lastPlugin.connect(plugin);
+      } else {
+        mediaSource.connect(plugin);
+      }
+      plugin.connect(ctx.destination);
+      lastPlugin = plugin;
+      */
+    }
   }
 
 </script>
