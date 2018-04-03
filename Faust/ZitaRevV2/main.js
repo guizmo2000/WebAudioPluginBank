@@ -218,8 +218,9 @@ faust.create = function (context, callback) {
         .catch(function (error) { console.log(error); console.log("Faust zitaRev cannot be loaded or compiled"); });
 }
 
+var WAPlugin = WAPlugin || {};
 
-class FaustZitaRev {
+WAPlugin.FaustZitaRev = class FaustZitaRev {
 
     constructor(context, baseUrl) {
         this.context = context;
@@ -228,6 +229,7 @@ class FaustZitaRev {
 
     load() {
         return new Promise((resolve, reject) => {
+            console.log("URL : " + (this.baseUrl + "/zitaRev-processor.js"));
             this.context.audioWorklet.addModule(this.baseUrl + "/zitaRev-processor.js").then(() => {
                 this.plug = new zitaRev(this.context, {});
                 return (this.plug);
@@ -242,19 +244,41 @@ class FaustZitaRev {
     loadGui() {
         return new Promise((resolve, reject) => {
             try {
-                var link = document.createElement('link');
-                link.rel = 'import';
-                link.id = 'urlPlugin';
-                link.href = this.baseUrl + "/main.html";
-                document.head.appendChild(link);
-                var element = document.createElement("faust-zitarev");
-                element._plug = this.plug;
-                resolve(element);
+                // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
+                let url = this.baseUrl + "/main.html";
 
+                if (!this.linkExists(url)) {
+                    // LINK DOES NOT EXIST, let's add it to the document
+                    var link = document.createElement('link');
+                    link.rel = 'import';
+                    //link.id = 'urlPlugin';
+                    link.href = url;
+                    document.head.appendChild(link);
+
+                    link.onload = (e) => {
+                        // the file has been loaded, instanciate GUI
+                        // and get back the HTML elem
+                        // HERE WE COULD REMOVE THE HARD CODED NAME
+                        var element = createFaustZitaRevGUI(this.plug);
+                        //element._plug = this.plug;
+                        resolve(element);
+                    }
+                } else {
+                    // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
+                    // so we can create another instance
+                    var element = createFaustZitaRevGUI(this.plug);
+                    //element._plug = this.plug;
+                    resolve(element);
+                }
             } catch (e) {
                 console.log(e);
                 reject(e);
             }
         });
     };
+
+    linkExists(url) {
+        return document.querySelectorAll(`link[href="${url}"]`).length > 0;
+
+    }
 }
