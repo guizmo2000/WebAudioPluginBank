@@ -24,7 +24,11 @@
     "root": "optional_abs_url",
     "plugs": {
       "zitaRev": "./../Faust/zitaRevV2", // THERE SHOULD NOT BE TWICE THE SAME URL, as the same class would ne imported twice. MUST PREVENT THIS
-      "zitaRev2": "./../Faust/zitaRevV2"
+      "zitaRev2": "./../Faust/zitaRevV3",
+      "thruFlanger": "./../Oliver-Larkin/ThruZeroFlanger2", // THERE SHOULD NOT BE TWICE THE SAME URL, as the same class would ne imported twice. MUST PREVENT THIS
+      "thruFlanger2": "./../Oliver-Larkin/ThruZeroFlanger2",
+      "quadrafuzz":"./../WASABI/Quadrafuzz2",
+      "quadrafuzz2":"./../WASABI/Quadrafuzz2"
     }
   }
 
@@ -131,6 +135,7 @@
 
       // insert the new plugin at the end of the array
       pluginArray.push(plugin);
+      console.log(pluginArray);
     
       // rebuild the chain, first disconnect mediaSource
       mediaSource.disconnect();
@@ -138,14 +143,34 @@
       for(let i = 0; i < pluginArray.length; i++) {
         let currentPlugin = pluginArray[i];
         // be sure it's not connected
+
         currentPlugin.disconnect();
+
+        // to handle mix with purejs and AW
+
+        // if(currentPlugin instanceof AudioWorkletNode) currentPlugin.disconnect();
+        // else currentPlugin.getOutput(0).disconnect();
 
         if(i === 0) {
           // first plugin
-          mediaSource.connect(plugin);
+          mediaSource.connect(currentPlugin);
+
+        // to handle mix with purejs and AW
+
+          // if(currentPlugin instanceof AudioWorkletNode) mediaSource.connect(currentPlugin);
+          // else mediaSource.connect(currentPlugin.getInput(0));
         } else {
           //connect previous plugin to current one
+
+          
           pluginArray[i-1].connect(currentPlugin);
+
+          // to handle mix with purejs and AW
+          // if(currentPlugin instanceof AudioWorkletNode || pluginArray[i-1] instanceof AudioWorkletNode) pluginArray[i-1].connect(plugin);
+          //  else if(currentPlugin instanceof AudioWorkletNode )pluginArray[i-1].getOutput(0).connect(plugin);
+          //  else if(pluginArray[i-1] instanceof AudioWorkletNode )pluginArray[i-1].connect(plugin.getInput(0));
+          //  else pluginArray[i-1].getOutput(0).connect(plugin.getInput(0));
+          
         }
       }
 
