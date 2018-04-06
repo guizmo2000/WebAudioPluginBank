@@ -429,7 +429,6 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
             try {
                 // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
                 let url = this.baseUrl + "/main.html";
-                console.log("tried");
 
                 if (!this.linkExists(url)) {
                     // LINK DOES NOT EXIST, let's add it to the document
@@ -443,6 +442,7 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
                         // the file has been loaded, instanciate GUI
                         // and get back the HTML elem
                         // HERE WE COULD REMOVE THE HARD CODED NAME
+                        console.log("there")
                         var element = createQuadraFuzzGui(this.plug);
                         //element._plug = this.plug;
                         resolve(element);
