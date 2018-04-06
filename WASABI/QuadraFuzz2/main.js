@@ -429,6 +429,7 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
             try {
                 // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
                 let url = this.baseUrl + "/main.html";
+                console.host("tried");
 
                 if (!this.linkExists(url)) {
                     // LINK DOES NOT EXIST, let's add it to the document
@@ -454,6 +455,7 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
                     resolve(element);
                 }
             } catch (e) {
+              console.log("what");
                 console.log(e);
                 reject(e);
             }
