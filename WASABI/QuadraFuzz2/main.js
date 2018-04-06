@@ -438,15 +438,19 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
                     link.href = url;
                     document.head.appendChild(link);
 
-                    link.onload = (e) => {
+
+
+                    link.onload = ((e) => {
                         // the file has been loaded, instanciate GUI
                         // and get back the HTML elem
                         // HERE WE COULD REMOVE THE HARD CODED NAME
                         console.log("there")
                         var element = createQuadraFuzzGui(this.plug);
                         //element._plug = this.plug;
-                        resolve(element);
-                    }
+                        
+                    }).then (element => {
+                      resolve(element);
+                    });
                 } else {
                     // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
                     // so we can create another instance
