@@ -440,7 +440,7 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
 
 
                   
-                   setTimeout( link.onload = (e) => {
+                    link.onload = (e) => {
                         // the file has been loaded, instanciate GUI
                         // and get back the HTML elem
                         // HERE WE COULD REMOVE THE HARD CODED NAME
@@ -448,8 +448,7 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
                         var element = createQuadraFuzzGui(this.plug);
                         //element._plug = this.plug;
                         resolve(element);
-                        
-                    },1000);
+                    }
                 } else {
                     // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
                     // so we can create another instance
