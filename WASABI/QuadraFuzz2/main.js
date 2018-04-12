@@ -401,7 +401,12 @@ class QuadraFuzz {
     this.getOutput(0).connect(audioNode);
   }
 
+  disconnect(audioNode){
+    this.getOutput(0).disconnect(audioNode);
+  }
+
 }
+
 
 var WAPlugin = WAPlugin || {};
 
@@ -429,6 +434,7 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
             try {
                 // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
                 let url = this.baseUrl + "/main.html";
+                
 
                 if (!this.linkExists(url)) {
                     // LINK DOES NOT EXIST, let's add it to the document
@@ -444,7 +450,7 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
                         // the file has been loaded, instanciate GUI
                         // and get back the HTML elem
                         // HERE WE COULD REMOVE THE HARD CODED NAME
-                        
+                        console.log("there")
                         var element = createQuadraFuzzGui(this.plug);
                         //element._plug = this.plug;
                         resolve(element);
@@ -457,7 +463,6 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
                     resolve(element);
                 }
             } catch (e) {
-              console.log("what");
                 console.log(e);
                 reject(e);
             }
