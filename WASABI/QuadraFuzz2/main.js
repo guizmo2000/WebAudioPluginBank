@@ -415,7 +415,6 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
     constructor(context, baseUrl) {
         this.context = context;
         this.baseUrl = baseUrl;
-        this.plug ;
     }
 
     load() {
@@ -451,7 +450,7 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
                         // the file has been loaded, instanciate GUI
                         // and get back the HTML elem
                         // HERE WE COULD REMOVE THE HARD CODED NAME
-                        console.log("there")
+                        console.log(this.plug);
                         var element = createQuadraFuzzGui(this.plug);
                         //element._plug = this.plug;
                         resolve(element);
@@ -459,6 +458,7 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
                 } else {
                     // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
                     // so we can create another instance
+                    console.log(this.plug);
                     var element = createQuadraFuzzGui(this.plug);
                     //element._plug = this.plug;
                     resolve(element);

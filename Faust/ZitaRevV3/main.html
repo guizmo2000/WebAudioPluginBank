@@ -186,7 +186,7 @@
       constructor(plug = p) {
         super();
         this._plug = plug; // store for later use
-
+        console.log(this._plug);
         this._root = this.attachShadow({ mode: 'open' });
         this._root.appendChild(zitaRevTemp2.content.cloneNode(true));
         this.isOn;
@@ -263,13 +263,13 @@
     // are created we must define the custom element only ONCE
     try {
       customElements.define('faust-zitarev2', ZitaRevGui2);
+      return document.createElement("faust-zitarev2");
     } catch {
       console.log("Element already defined");
+      customElements.define('faust-zitarev21', ZitaRevGui2);
+      return document.createElement("faust-zitarev21");
+      
     }
-   
-    // We return the HTML element. This calls the class constructor.
-    return document.createElement("faust-zitarev2");
-  }
 
   
 </script>
