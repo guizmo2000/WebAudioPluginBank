@@ -436,7 +436,7 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
                 let url = this.baseUrl + "/main.html";
                 
 
-                if (!this.linkExists(url)) {
+              //  if (!this.linkExists(url)) {
                     // LINK DOES NOT EXIST, let's add it to the document
                     var link = document.createElement('link');
                     link.rel = 'import';
@@ -455,13 +455,13 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
                         //element._plug = this.plug;
                         resolve(element);
                     }
-                } else {
-                    // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
-                    // so we can create another instance
-                    var element = createQuadraFuzzGui(this.plug);
-                    //element._plug = this.plug;
-                    resolve(element);
-                }
+                // } else {
+                //     // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
+                //     // so we can create another instance
+                //     var element = createQuadraFuzzGui(this.plug);
+                //     //element._plug = this.plug;
+                //     resolve(element);
+                // }
             } catch (e) {
                 console.log(e);
                 reject(e);
