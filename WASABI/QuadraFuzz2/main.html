@@ -141,11 +141,9 @@
   let quadratemp = document.currentScript.ownerDocument.querySelector("#wc-quadrafuzz");
   // Ecapsulate the WebComponent class into a function, like this we can pass
   // a parameter to its constructor (the audio node/audio processor)
-  const createQuadraFuzzGui = (p) => {
-    console.log(p); // ici on a le bon plugin --> enlever ce commentaire avant de push 
-    class QuadraFuzzGui extends HTMLElement {
+     class QuadraFuzzGui extends HTMLElement {
       
-      constructor(plug = p) {
+      constructor(plug) {
         super();
         console.log(plug);
         this._plug = plug;
@@ -201,35 +199,17 @@
       }
 
     }
-
-    // Register the x-custom element with the browser
     
-    var i=1;
-
-    if(customElements.get('wasabi-quadrafuzz') != undefined){
-
-      while (customElements.get('wasabi-quadrafuzz'+i) != undefined){
-        i++;
-      }
-      customElements.define('wasabi-quadrafuzz'+i, QuadraFuzzGui);
-      return document.createElement('wasabi-quadrafuzz'+i);
-    } else {
+    try {
       customElements.define('wasabi-quadrafuzz', QuadraFuzzGui);
-      return document.createElement("wasabi-quadrafuzz");
-
+      console.log("Element defined");
+    } catch {
+      console.log("Element already defined");      
     }
 
-    
 
-    // try {
-    //   customElements.define('wasabi-quadrafuzz', QuadraFuzzGui);
-    //   return document.createElement("wasabi-quadrafuzz");
-    // } catch {
-    //   console.log("Element already defined");
-    //   customElements.define('wasabi-quadrafuzz2', QuadraFuzzGui);
-    //   return document.createElement("wasabi-quadrafuzz2");
-      
-    // }
-    
+    createQuadraFuzzGui = (plug) => {
+      let elem = new QuadraFuzzGui(plug);
+      return elem; 
   }
 </script> 

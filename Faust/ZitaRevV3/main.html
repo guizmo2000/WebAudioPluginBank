@@ -175,7 +175,6 @@
 
   // Ecapsulate the WebComponent class into a function, like this we can pass
   // a parameter to its constructor (the audio node/audio processor)
-  const createFaustZitaRevGUI2 = (p) => {
 
     class ZitaRevGui2 extends HTMLElement {
       get is() { return 'faust-zitarev2'; }
@@ -183,7 +182,7 @@
       // This is the trick : copy function's argument to the constructor param
       // See http://jsbin.com/zeninem/edit?html,js,console as a simple example
       // of this technique
-      constructor(plug = p) {
+      constructor(plug) {
         super();
         this._plug = plug; // store for later use
         console.log(this._plug);
@@ -261,31 +260,18 @@
     // Register the x-custom element with the browser
     // we use a try catch here as if multiple instances of this GUI
     // are created we must define the custom element only ONCE
-    // try {
-    //   customElements.define('faust-zitarev2', ZitaRevGui2);
-    //   return document.createElement("faust-zitarev2");
-    // } catch {
-    //   console.log("Element already defined");
-    //   customElements.define('faust-zitarev21', ZitaRevGui2);
-    //   return document.createElement("faust-zitarev21");
 
-    // }
-
-
-    var i = 1;
-
-    if (customElements.get('faust-zitarev2') != undefined) {
-
-      while (customElements.get('faust-zitarev2' + i) != undefined) {
-        i++;
-      }
-      customElements.define('faust-zitarev2' + i, ZitaRevGui2);
-      return document.createElement('faust-zitarev2' + i);
-    } else {
+  try {
       customElements.define('faust-zitarev2', ZitaRevGui2);
-      return document.createElement("faust-zitarev2");
-
+      console.log("Element defined");
+    } catch {
+      console.log("Element already defined");      
     }
+
+
+     const createFaustZitaRevGUI2 = (plug) => {
+      let elem = new ZitaRevGui2(plug);
+      return elem; 
   }
 
 
