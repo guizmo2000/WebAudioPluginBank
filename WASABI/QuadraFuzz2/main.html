@@ -142,24 +142,20 @@
   // Ecapsulate the WebComponent class into a function, like this we can pass
   // a parameter to its constructor (the audio node/audio processor)
   const createQuadraFuzzGui = (p) => {
+    console.log(p); // ici on a le bon plugin --> enlever ce commentaire avant de push 
     class QuadraFuzzGui extends HTMLElement {
-
+      
       constructor(plug = p) {
         super();
-        this._plug = plug
+        console.log(plug);
+        this._plug = plug;
+        console.log(this._plug);
         this._root = this.attachShadow({ mode: 'open' });
         this._root.appendChild(quadratemp.content.cloneNode(true));
         this.isOn = false;
         this.setKnobs();
         this.setSwitchListener();
       }
-      // set plug(p) {
-      //   // this._plug = p
-      //   // console.log(this._plug);
-      //   this.setKnobs();
-      //   //this.setActive(false);
-      //   this.setSwitchListener();
-      // }
 
       get properties() {
         this.boundingRect = {
@@ -209,9 +205,13 @@
     // Register the x-custom element with the browser
     try {
       customElements.define('wasabi-quadrafuzz', QuadraFuzzGui);
+      return document.createElement("wasabi-quadrafuzz");
     } catch {
       console.log("Element already defined");
+      customElements.define('wasabi-quadrafuzz2', QuadraFuzzGui);
+      return document.createElement("wasabi-quadrafuzz2");
+      
     }
-    return document.createElement("wasabi-quadrafuzz");
+    
   }
 </script> 
