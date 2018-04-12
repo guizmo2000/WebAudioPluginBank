@@ -261,13 +261,29 @@
     // Register the x-custom element with the browser
     // we use a try catch here as if multiple instances of this GUI
     // are created we must define the custom element only ONCE
-    try {
+    // try {
+    //   customElements.define('faust-zitarev2', ZitaRevGui2);
+    //   return document.createElement("faust-zitarev2");
+    // } catch {
+    //   console.log("Element already defined");
+    //   customElements.define('faust-zitarev21', ZitaRevGui2);
+    //   return document.createElement("faust-zitarev21");
+
+    // }
+
+
+    var i = 1;
+
+    if (customElements.get('faust-zitarev2') != undefined) {
+
+      while (customElements.get('faust-zitarev2' + i) != undefined) {
+        i++;
+      }
+      customElements.define('faust-zitarev2' + i, ZitaRevGui2);
+      return document.createElement('faust-zitarev2' + i);
+    } else {
       customElements.define('faust-zitarev2', ZitaRevGui2);
       return document.createElement("faust-zitarev2");
-    } catch {
-      console.log("Element already defined");
-      customElements.define('faust-zitarev21', ZitaRevGui2);
-      return document.createElement("faust-zitarev21");
 
     }
   }

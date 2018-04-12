@@ -203,15 +203,33 @@
     }
 
     // Register the x-custom element with the browser
-    try {
+    
+    var i=1;
+
+    if(customElements.get('wasabi-quadrafuzz') != undefined){
+
+      while (customElements.get('wasabi-quadrafuzz'+i) != undefined){
+        i++;
+      }
+      customElements.define('wasabi-quadrafuzz'+i, QuadraFuzzGui);
+      return document.createElement('wasabi-quadrafuzz'+i);
+    } else {
       customElements.define('wasabi-quadrafuzz', QuadraFuzzGui);
       return document.createElement("wasabi-quadrafuzz");
-    } catch {
-      console.log("Element already defined");
-      customElements.define('wasabi-quadrafuzz2', QuadraFuzzGui);
-      return document.createElement("wasabi-quadrafuzz2");
-      
+
     }
+
+    
+
+    // try {
+    //   customElements.define('wasabi-quadrafuzz', QuadraFuzzGui);
+    //   return document.createElement("wasabi-quadrafuzz");
+    // } catch {
+    //   console.log("Element already defined");
+    //   customElements.define('wasabi-quadrafuzz2', QuadraFuzzGui);
+    //   return document.createElement("wasabi-quadrafuzz2");
+      
+    // }
     
   }
 </script> 
