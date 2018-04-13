@@ -91,7 +91,7 @@ class QuadraFuzz {
       "midLowGain": this.descriptor.midLowGain.default,
       "midHighGain": this.descriptor.midHighGain.default,
       "highGain": this.descriptor.highGain.default,
-      "status": this.state
+      "status": "disabled"
     }
     // p5 patchnames
     this.patchNames = ["patch1"];
@@ -152,11 +152,11 @@ class QuadraFuzz {
 
   // P7 state
   getState() {
-    return this.state;
+    return this.params.status;
   }
 
   setState(data) {
-    this.state = data;
+    this.params.status = data;
     if (data == "enable") {
       console.log("enable");
       this.inputNode.disconnect(this.outputNode);
@@ -166,6 +166,7 @@ class QuadraFuzz {
       this.inputNode.disconnect(this.dryGainNode);
       this.inputNode.disconnect(this.wetGainNode);
       this.inputNode.connect(this.outputNode);
+
     }
   }
 
