@@ -218,8 +218,8 @@ constructor(context, baseUrl) {
 
 load() {
     return new Promise((resolve, reject) => {
-        console.log("URL : " + (this.baseUrl + "/StereoFreqShifterNode-processor.js"));
-        this.context.audioWorklet.addModule(this.baseUrl + "/StereoFreqShifterNode-processor.js").then(() => {
+        console.log("URL : " + (this.baseUrl + "/StereoFreqShifter-processor.js"));
+        this.context.audioWorklet.addModule(this.baseUrl + "/StereoFreqShifter-processor.js").then(() => {
             this.plug = new StereoFreqShifterNode(this.context, {});
             return (this.plug);
         }).then((faust) => {
