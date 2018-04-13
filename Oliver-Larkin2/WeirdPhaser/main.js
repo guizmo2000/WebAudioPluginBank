@@ -118,7 +118,7 @@ class WeirdPhaserNode extends AudioWorkletNode {
      * @param path - a path to the control
      * @param val - the value to be set
      */
-    setParamValue(path, val)
+    setParam(path, val)
     {
         //this.port.postMessage({ type:"param", key:path, value:val });
         
@@ -131,7 +131,7 @@ class WeirdPhaserNode extends AudioWorkletNode {
      *
      * @return the current control value
      */
-    getParamValue(path)
+    getParam(path)
     {
         return this.parameters.get(path).value;
     }
