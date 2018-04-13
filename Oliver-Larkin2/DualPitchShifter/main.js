@@ -209,7 +209,7 @@ class DualPitchShifterNode extends AudioWorkletNode {
 
 var WAPlugin = WAPlugin || {};
 
-WAPlugin.LarkinBlipper = class LarkinDualPitchShifter {
+WAPlugin.LarkinDualPitchShifter = class LarkinDualPitchShifter {
 
 constructor(context, baseUrl) {
     this.context = context;
