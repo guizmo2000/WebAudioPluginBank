@@ -169,7 +169,7 @@ class WeirdPhaserNode extends AudioWorkletNode {
     /**
      * Returns an array of all input paths (to be used with setParamValue/getParamValue)
      */
-    getParams()
+    getDescriptor()
     {
         return this.inputs_items;
     }
