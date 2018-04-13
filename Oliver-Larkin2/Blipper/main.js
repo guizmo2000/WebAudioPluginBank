@@ -211,7 +211,7 @@ class BlipperNode extends AudioWorkletNode {
 
 var WAPlugin = WAPlugin || {};
 
-WAPlugin.FaustBlipper = class FaustBlipper {
+WAPlugin.LarkinBlipper = class LarkinBlipper {
 
 constructor(context, baseUrl) {
     this.context = context;
@@ -251,14 +251,14 @@ loadGui() {
                     // the file has been loaded, instanciate GUI
                     // and get back the HTML elem
                     // HERE WE COULD REMOVE THE HARD CODED NAME
-                    var element = createFaustBlipper(this.plug);
+                    var element = createLarkinBlipper(this.plug);
                     //element._plug = this.plug;
                     resolve(element);
                 }
             } else {
                 // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
                 // so we can create another instance
-                var element = createFaustBlipper(this.plug);
+                var element = createLarkinBlipper(this.plug);
                 //element._plug = this.plug;
                 resolve(element);
             }
