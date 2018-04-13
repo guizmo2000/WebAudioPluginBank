@@ -2,6 +2,7 @@
     "documentation": "BLAH BLAH",
     "name":"ThruZeroFlanger",
     "thumbnail": "FaustThruZeroFlanger.png",
-    "vendor": "Faust",
+    "vendor": "Larkin",
+    "category":"Modulation",
     "version": "1.0"
   } 

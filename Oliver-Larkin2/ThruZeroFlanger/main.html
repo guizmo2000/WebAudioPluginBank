@@ -139,15 +139,13 @@
 </template>
 <script>
   let thruZeroTemp = document.currentScript.ownerDocument.querySelector("#wc-thruzero");
-
-    const createThruZeroFlangerGui = (p) => {
   class ThruZeroFlangerGui extends HTMLElement {
-    static get is() { return 'wasabi-thruzero'; }
+    static get is() { return 'larkin-thruzero'; }
 
-    constructor(plug = p) {
+    constructor(plug) {
         super();
         this._plug = plug; // store for later use
-
+        console.log(this._plug);
         this._root = this.attachShadow({ mode: 'open' });
         this._root.appendChild(thruZeroTemp.content.cloneNode(true));
         this.isOn;
@@ -156,11 +154,11 @@
         this.setSwitchListener();
       }
 
-    static get properties() {
+    get properties() {
       this.boundingRect = {
         dataWidth: {
           type: Number,
-          value: 150
+          value: 140
         },
         dataHeight: {
           type: Number,
@@ -211,14 +209,17 @@
 
 
   }
-  // Register the x-custom element with the browser
-  try {
-    customElements.define('wasabi-thruzero', ThruZeroFlangerGui);
-    
-  } catch (error) {
-    console.log("Element already defined");
-  }
-  return document.createElement("wasabi-thruzero");
-
+   // Register the x-custom element with the browser
+   try {
+      customElements.define('larkin-thruzero', ThruZeroFlangerGui);
+      console.log("Element defined");
+    } catch {
+      console.log("Element already defined");      
     }
+
+
+     const createLarkinThruZeroFlanger = (plug) => {
+      let elem = new ThruZeroFlangerGui(plug);
+      return elem; 
+  }
 </script>
