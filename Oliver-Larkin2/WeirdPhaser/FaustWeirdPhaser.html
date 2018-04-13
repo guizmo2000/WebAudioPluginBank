@@ -1,4 +1,3 @@
-<script src="./FaustWeirdPhaser.js"></script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
   WebAudioControlsOptions = {
@@ -141,20 +140,25 @@
 <script>
   let weirdPhaserTemp = document.currentScript.ownerDocument.querySelector("#wc-weirdphaser");
   class WeirdPhaserGui extends HTMLElement {
-    static get is() { return 'wc-weirdphaser'; }
+    static get is() { return 'larkin-weirdphaser'; }
 
-    constructor() {
-      super();
-      this._root = this.attachShadow({ mode: 'open' });
-      this._root.appendChild(weirdPhaserTemp.content.cloneNode(true));
-      this.isOn = true;
-    }
+     constructor(plug) {
+        super();
+        this._plug = plug; // store for later use
+        console.log(this._plug);
+        this._root = this.attachShadow({ mode: 'open' });
+        this._root.appendChild(weirdPhaserTemp.content.cloneNode(true));
+        this.isOn;
+        this.setKnobs();
+        this.setActive(false);
+        this.setSwitchListener();
+      }
 
-    static get properties() {
+    get properties() {
       this.boundingRect = {
         dataWidth: {
           type: Number,
-          value: 150
+          value: 140
         },
         dataHeight: {
           type: Number,
@@ -162,14 +166,6 @@
         }
       };
       return this.boundingRect;
-    }
-    set plug(p) {
-      console.log(this);
-      this._plug = p;
-      this.setKnobs();
-      this.setActive(false);
-      this.setSwitchListener();
-
     }
 
     setKnobs() {
@@ -214,5 +210,16 @@
 
   }
   // Register the x-custom element with the browser
-  customElements.define('wc-weirdphaser', WeirdPhaserGui);
+  try {
+      customElements.define('larkin-weirdphaser', WeirdPhaserGui);
+      console.log("Element defined");
+    } catch {
+      console.log("Element already defined");      
+    }
+
+
+     const createLarkinWeirdPhaser = (plug) => {
+      let elem = new WeirdPhaserGui(plug);
+      return elem; 
+  }
 </script>
