@@ -149,7 +149,7 @@
       this.isOn = true;
     }
 
-    static get properties() {
+    get properties() {
       this.boundingRect = {
         dataWidth: {
           type: Number,
@@ -162,6 +162,7 @@
       };
       return this.boundingRect;
     }
+
     set plug(p) {
       console.log(this);
       this._plug = p;
