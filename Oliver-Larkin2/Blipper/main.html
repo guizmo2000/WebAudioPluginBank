@@ -167,15 +167,6 @@
       return this.boundingRect;
     }
 
-    set plug(p) {
-      console.log(this);
-      this._plug = p;
-      this.setKnobs();
-      this.setActive(false);
-      this.setSwitchListener();
-
-    }
-
     setKnobs() {
       this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("/Blipper/BasePitch", e.target.value));
       this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("/Blipper/Mix", e.target.value));
