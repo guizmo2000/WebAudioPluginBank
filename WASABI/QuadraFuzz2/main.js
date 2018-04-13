@@ -90,7 +90,8 @@ class QuadraFuzz {
       "lowGain": this.descriptor.lowGain.default,
       "midLowGain": this.descriptor.midLowGain.default,
       "midHighGain": this.descriptor.midHighGain.default,
-      "highGain": this.descriptor.highGain.default
+      "highGain": this.descriptor.highGain.default,
+      "status": this.state
     }
     // p5 patchnames
     this.patchNames = ["patch1"];
