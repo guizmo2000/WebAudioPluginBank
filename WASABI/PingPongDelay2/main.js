@@ -3,11 +3,7 @@
 /* ES6 web audio class following the API standard
 * Author : Guillaume Etevenard
 */
-var hosts = hosts || {};
-
-hosts.PingPongDelay = class PingPongDelay {
-
-  
+class PingPongDelay {
 
   constructor(ctx) {
     this.context = ctx ? ctx : new AudioContext;
