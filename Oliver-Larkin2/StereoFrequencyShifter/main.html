@@ -1,4 +1,3 @@
-<script src="./FaustStereoFreqShifter.js"></script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
   WebAudioControlsOptions = {
@@ -140,16 +139,21 @@
 <script>
   let freqShifterTemp = document.currentScript.ownerDocument.querySelector("#wc-freqshifter");
   class FreqShifterGui extends HTMLElement {
-    static get is() { return 'wc-freqshifter'; }
+    static get is() { return 'larkin-freqshifter'; }
 
-    constructor() {
-      super();
-      this._root = this.attachShadow({ mode: 'open' });
-      this._root.appendChild(freqShifterTemp.content.cloneNode(true));
-      this.isOn = true;
-    }
+    constructor(plug) {
+        super();
+        this._plug = plug; // store for later use
+        console.log(this._plug);
+        this._root = this.attachShadow({ mode: 'open' });
+        this._root.appendChild(freqShifterTemp.content.cloneNode(true));
+        this.isOn;
+        this.setKnobs();
+        this.setActive(false);
+        this.setSwitchListener();
+      }
 
-    static get properties() {
+    get properties() {
       this.boundingRect = {
         dataWidth: {
           type: Number,
@@ -161,14 +165,6 @@
         }
       };
       return this.boundingRect;
-    }
-    set plug(p) {
-      console.log(this);
-      this._plug = p;
-      this.setKnobs();
-      this.setActive(false);
-      this.setSwitchListener();
-
     }
 
     setKnobs() {
@@ -213,5 +209,16 @@
 
   }
   // Register the x-custom element with the browser
-  customElements.define('wc-freqshifter', FreqShifterGui);
-</script>
+  try {
+      customElements.define('larkin-freqshifter', FreqShifterGui);
+      console.log("Element defined");
+    } catch {
+      console.log("Element already defined");      
+    }
+
+
+     const createLarkinStereoFreqShifterGUI = (plug) => {
+      let elem = new FreqShifterGui(plug);
+      return elem; 
+  }
+  </script>
