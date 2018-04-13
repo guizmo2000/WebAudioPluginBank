@@ -179,12 +179,11 @@ class QuadraFuzz {
   /*  #########  Personnal code for the web audio graph  #########   */
 
   setup() {
-    console.log("delay setup");
+    console.log("Quadrafuzz setup");
     this.createIO();
     this.createNodes();
     this.connectNodes();
     this.linktoParams();
-    //this.setState('disable');
   }
 
   createIO() {
