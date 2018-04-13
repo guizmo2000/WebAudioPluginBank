@@ -141,12 +141,17 @@
   class BlipperGui extends HTMLElement {
     static get is() { return 'larkin-blipper'; }
 
-    constructor() {
-      super();
-      this._root = this.attachShadow({ mode: 'open' });
-      this._root.appendChild(blipperTemp.content.cloneNode(true));
-      this.isOn = true;
-    }
+    constructor(plug) {
+        super();
+        this._plug = plug; // store for later use
+        console.log(this._plug);
+        this._root = this.attachShadow({ mode: 'open' });
+        this._root.appendChild(blipperTemp.content.cloneNode(true));
+        this.isOn;
+        this.setKnobs();
+        this.setActive(false);
+        this.setSwitchListener();
+      }
 
     get properties() {
       this.boundingRect = {
