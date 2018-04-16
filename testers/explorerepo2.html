@@ -177,7 +177,10 @@
           // pluginArray[i-1].connect(currentPlugin);
 
           // to handle mix with purejs and AW
-          if(currentPlugin instanceof AudioWorkletNode || pluginArray[i-1] instanceof AudioWorkletNode) pluginArray[i-1].connect(currentPlugin);
+          console.log("current Plugin AW :",currentPlugin instanceof AudioWorkletNode);
+          console.log("previous Plugin AW :",pluginArray[i-1] instanceof AudioWorkletNode);
+
+          if(currentPlugin instanceof AudioWorkletNode && pluginArray[i-1] instanceof AudioWorkletNode) pluginArray[i-1].connect(currentPlugin);
            else if(currentPlugin instanceof AudioWorkletNode )pluginArray[i-1].getOutput(0).connect(currentPlugin);
            else if(pluginArray[i-1] instanceof AudioWorkletNode )pluginArray[i-1].connect(currentPlugin.getInput(0));
            else pluginArray[i-1].getOutput(0).connect(currentPlugin.getInput(0));
