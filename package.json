@@ -1,0 +1,28 @@
+{
+  "name": "webaudiopluginbank",
+  "version": "1.0.0",
+  "description": "This bank is a repository of standardised webaudio plugins.",
+  "main": "server.js",
+  "dependencies": {
+    "chai": "^4.1.2",
+    "express": "^4.16.3",
+    "file-system": "^2.2.2",
+    "node-fetch": "^2.1.2",
+    "socket.io": "^2.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guizmo2000/WebAudioPluginBank.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guizmo2000/WebAudioPluginBank/issues"
+  },
+  "homepage": "https://github.com/guizmo2000/WebAudioPluginBank#readme"
+}

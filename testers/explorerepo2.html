@@ -8,29 +8,34 @@
 
 <body>
   <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
+  <input id="repoUrl">
+  <button id="submit">Explore Repository</button>
   <p></p>
 
 </body>
 <script>
-  var ctx = new AudioContext();
-  var player = document.getElementById("soundSample");
-  var mediaSource = ctx.createMediaElementSource(player);
-  var lastPlugin;
-  var pluginArray = [];
+  window.onload = () =>{
+    var ctx = new AudioContext();
+    var player = document.getElementById("soundSample");
+    var mediaSource = ctx.createMediaElementSource(player);
+    var lastPlugin;
+    var pluginArray = [];
+    var input = document.querySelector('#repoUrl');
+    var repo;
+    document.querySelector('#submit').onclick = () =>{
+      explore(input.value).then((repo)=> {process(repo,ctx,pluginArray,mediaSource)});
 
-  var repo = {
-    "name": "mainRepo",
-    "root": "optional_abs_url",
-    "plugs": {
-      "zitaRev": "./../Faust/ZitaRevV2", // THERE SHOULD NOT BE TWICE THE SAME URL, as the same class would ne imported twice. MUST PREVENT THIS
-      "zitaRev2": "./../Faust/ZitaRevV3",
-      "thruFlanger": "./../Oliver-Larkin/ThruZeroFlanger2", // THERE SHOULD NOT BE TWICE THE SAME URL, as the same class would ne imported twice. MUST PREVENT THIS
-      "thruFlanger2": "./../Oliver-Larkin/ThruZeroFlanger2",
-      "quadrafuzz":"./../WASABI/QuadraFuzz2",
-      "quadrafuzz2":"./../WASABI/QuadraFuzz2"
     }
   }
+ 
+ var explore = async (url) => {
+   const reponse = await fetch(url);
+   repo = await reponse.json();
+   return repo;
 
+ }
+
+  var process = (repo,ctx,pluginArray,mediaSource) =>{
   // On scanne le repo
   Object.keys(repo.plugs).map((key) => {
 
@@ -82,7 +87,7 @@
 
     if (scriptExists(scriptURL)) {
       //script exists
-      console.log("SCRIPT EXISTS WE JUST INSTANCIATE THE PLUGIN");
+      console.log("SCRIPT EXISTS WE JUST INSTQNCIATE THE PLUGIN");
       loadPlugin(className, baseURL);
       return;
     }
@@ -106,6 +111,7 @@
     // The script has been loaded, thus, the class has been defined.
     // We can instanciate the audio processor
     var plugin = new WAPlugin[className](ctx, baseURL);
+    console.log(plugin);
 
     plugin.load().then((node) => { 
       // loads and initialize the audio processor part
@@ -192,6 +198,7 @@
       */
     }
   }
+}
 
 </script>
 

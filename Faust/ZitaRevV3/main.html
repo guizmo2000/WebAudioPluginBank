@@ -5,7 +5,7 @@
   };
 </script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template id="faust-zitarev">
+<template id="faust-zitarev2">
   <style>
     :host {
       background: linear-gradient( rgb(77, 74, 78), rgb(67, 48, 238));
@@ -171,24 +171,23 @@
   </div>
 </template>
 <script>
-  let zitaRevTemp = document.currentScript.ownerDocument.querySelector("#faust-zitarev");
+  let zitaRevTemp2 = document.currentScript.ownerDocument.querySelector("#faust-zitarev2");
 
   // Ecapsulate the WebComponent class into a function, like this we can pass
   // a parameter to its constructor (the audio node/audio processor)
-  const createFaustZitaRevGUI = (p) => {
 
-    class ZitaRevGui extends HTMLElement {
-      get is() { return 'faust-zitarev'; }
+    class ZitaRevGui2 extends HTMLElement {
+      get is() { return 'faust-zitarev2'; }
 
       // This is the trick : copy function's argument to the constructor param
       // See http://jsbin.com/zeninem/edit?html,js,console as a simple example
       // of this technique
-      constructor(plug = p) {
+      constructor(plug) {
         super();
         this._plug = plug; // store for later use
-
+        console.log(this._plug);
         this._root = this.attachShadow({ mode: 'open' });
-        this._root.appendChild(zitaRevTemp.content.cloneNode(true));
+        this._root.appendChild(zitaRevTemp2.content.cloneNode(true));
         this.isOn;
         this.setKnobs();
         this.setActive(false);
@@ -261,15 +260,19 @@
     // Register the x-custom element with the browser
     // we use a try catch here as if multiple instances of this GUI
     // are created we must define the custom element only ONCE
-    try {
-      customElements.define('faust-zitarev', ZitaRevGui);
+
+  try {
+      customElements.define('faust-zitarev2', ZitaRevGui2);
+      console.log("Element defined");
     } catch {
-      console.log("Element already defined");
+      console.log("Element already defined");      
     }
-   
-    // We return the HTML element. This calls the class constructor.
-    return document.createElement("faust-zitarev");
+
+
+     const createFaustZitaRevGUI2 = (plug) => {
+      let elem = new ZitaRevGui2(plug);
+      return elem; 
   }
 
-   
+
 </script>
