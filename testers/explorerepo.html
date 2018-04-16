@@ -106,6 +106,7 @@
     // The script has been loaded, thus, the class has been defined.
     // We can instanciate the audio processor
     var plugin = new WAPlugin[className](ctx, baseURL);
+    console.log(plugin);
 
     plugin.load().then((node) => { 
       // loads and initialize the audio processor part
