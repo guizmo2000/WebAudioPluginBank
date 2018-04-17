@@ -190,24 +190,10 @@
 
       // connect last plugin to destination
       pluginArray[pluginArray.length -1].connect(ctx.destination);
-
-      /*
-
-      if (lastPlugin !== undefined) {
-        // deconnect lastPlugin from destination
-        lastPlugin.disconnect();
-        // insert current plugin at the end of the chain
-        console.log("PLUGIN=LASTPLUGIN: " + (plugin === lastPlugin))
-        lastPlugin.connect(plugin);
-      } else {
-        mediaSource.connect(plugin);
-      }
-      plugin.connect(ctx.destination);
-      lastPlugin = plugin;
-      */
     }
   }
 }
+
 
 </script>
 
