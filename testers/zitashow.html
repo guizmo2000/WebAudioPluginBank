@@ -17,12 +17,8 @@
   var pluginURL = "./../Faust/ZitaRevV2";
 
   var plugin = new WAPlugin.FaustZitaRev(ctx, pluginURL);
-<<<<<<< HEAD
-  plugin.load().then((node) => {
-=======
 
   plugin.load().then((node)=>{
->>>>>>> c12b316c6406188ba2a6d09856c37ec2c35fe316
     mediaSource.connect(node);
     node.connect(ctx.destination);
   });

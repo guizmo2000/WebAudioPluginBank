@@ -212,7 +212,8 @@
   try {
       customElements.define('larkin-blipper', BlipperGui);
       console.log("Element defined");
-    } catch {
+    } catch(error){
+      console.log(error);
       console.log("Element already defined");      
     }
 

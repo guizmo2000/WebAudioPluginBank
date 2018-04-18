@@ -194,6 +194,8 @@
       bypass() {
         this._plug.setState("disable");
       }
+
+
       reactivate() {
         this._plug.setState("enable");
       }
@@ -203,7 +205,8 @@
     try {
       customElements.define('wasabi-quadrafuzz', QuadraFuzzGui);
       console.log("Element defined");
-    } catch {
+    } catch(error){
+      console.log(error);
       console.log("Element already defined");      
     }
 

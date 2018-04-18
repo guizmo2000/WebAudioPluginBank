@@ -191,10 +191,12 @@
 
   }
   // Register the x-custom element with the browser
+  
   try {
+    console.log("Element defined");
       customElements.define('wasabi-pingpongdelay', PingPongDelayGui);
-      console.log("Element defined");
-    } catch {
+    } catch(error){
+      console.log(error);
       console.log("Element already defined");      
     }
 

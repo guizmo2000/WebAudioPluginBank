@@ -264,7 +264,8 @@
   try {
       customElements.define('faust-zitarev2', ZitaRevGui2);
       console.log("Element defined");
-    } catch {
+    } catch(error){
+      console.log(error);
       console.log("Element already defined");      
     }
 
