@@ -167,9 +167,9 @@
 
     setKnobs() {
       console.log('setknobs');
-      this._root.querySelector("#knob1").addEventListener('change', (e) => this._plug.setParam("feedback", e.target.value / 100));
-      this._root.querySelector("#knob2").addEventListener('change', (e) => this._plug.setParam("time", e.target.value / 100));
-      this._root.querySelector("#knob3").addEventListener('change', (e) => this._plug.setParam("mix", e.target.value / 100));
+      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("feedback", e.target.value / 100));
+      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("time", e.target.value / 100));
+      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("mix", e.target.value / 100));
 
     }
 

@@ -172,10 +172,10 @@
 
       setKnobs() {
         console.log('setknobs');
-        this._root.querySelector("#knob1").addEventListener('change', (e) => this._plug.setParam("lowGain", e.target.value));
-        this._root.querySelector("#knob2").addEventListener('change', (e) => this._plug.setParam("midLowGain", e.target.value));
-        this._root.querySelector("#knob3").addEventListener('change', (e) => this._plug.setParam("midHighGain", e.target.value));
-        this._root.querySelector("#knob4").addEventListener('change', (e) => this._plug.setParam("highGain", e.target.value));
+        this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("lowGain", e.target.value));
+        this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("midLowGain", e.target.value));
+        this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("midHighGain", e.target.value));
+        this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("highGain", e.target.value));
 
 
       }
