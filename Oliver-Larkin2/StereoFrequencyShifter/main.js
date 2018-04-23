@@ -107,7 +107,7 @@ class StereoFreqShifterNode extends AudioWorkletNode {
     /**
      *  Returns a full JSON description of the DSP.
      */
-    getJSON()
+    getMetadata()
     {
         return getJSONStereoFreqShifter();
     }
@@ -156,7 +156,7 @@ class StereoFreqShifterNode extends AudioWorkletNode {
         return this.output_handler;
     }
     
-    getNumInputs()
+    inputChannelCount()
     {
         return parseInt(this.json_object.inputs);
     }

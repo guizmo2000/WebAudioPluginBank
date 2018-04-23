@@ -107,7 +107,7 @@ class ThruZeroFlangerNode extends AudioWorkletNode {
     /**
      *  Returns a full JSON description of the DSP.
      */
-    getJSON()
+    getMetadata()
     {
         return getJSONThruZeroFlanger();
     }
@@ -156,7 +156,7 @@ class ThruZeroFlangerNode extends AudioWorkletNode {
         return this.output_handler;
     }
     
-    getNumInputs()
+    inputChannelCount()
     {
         return parseInt(this.json_object.inputs);
     }
