@@ -22,8 +22,9 @@
  *	 limitations under the License.
  *
  * */
--->
+--> 
 if(window.customElements){
+  
   let styles=document.createElement("style");
   styles.innerHTML=
 `#webaudioctrl-context-menu {
