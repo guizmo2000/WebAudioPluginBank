@@ -334,6 +334,9 @@ class PingPongDelay {
   connect(audioNode){
     this.getOutput(0).connect(audioNode);
   }
+  disconnect(){
+    this.getOutput(0).disconnect();
+  }
 
 }
 

@@ -74,10 +74,10 @@ if(window.customElements){
 <li class="webaudioctrl-context-menu__item" onclick="webAudioControlsMidiManager.contextMenuClear()">Clear</li>
 <li class="webaudioctrl-context-menu__item" onclick="webAudioControlsMidiManager.contextMenuClose()">Close</li>
 `;
-console.log(midimenu);
   let opt={
     useMidi:0,
     midilearn:0,
+    mididump:0,
     outline:1,
     knobSrc:null,
     knobSprites:0,
@@ -214,18 +214,39 @@ console.log(midimenu);
       const channel = event.data[0] & 0xf;
       const controlNumber = event.data[1];
       if(this.midiMode == 'learn') {
-          this.setMidiController(channel, controlNumber);
-          webAudioControlsMidiManager.contextMenuClose();
-          this.midiMode = 'normal';
+        this.setMidiController(channel, controlNumber);
+        webAudioControlsMidiManager.contextMenuClose();
+        this.midiMode = 'normal';
       }
       if(this.listeningToThisMidiController(channel, controlNumber)) {
+        if(this.tagName=="WEBAUDIO-SWITCH"){
+          switch(this.type){
+          case "toggle":
+            if(event.data[2]>=64)
+              this.setValue(1-this.value,true);
+            break;
+          case "kick":
+            this.setValue(event.data[2]>=64?1:0);
+            break;
+          case "radio":
+            let els=document.querySelectorAll("webaudio-switch[type='radio'][group='"+this.group+"']");
+            for(let i=0;i<els.length;++i){
+              if(els[i]==this)
+                els[i].setValue(1);
+              else
+                els[i].setValue(0);
+            }
+            break;
+          }
+        }
+        else{
           const val = this.min+(this.max-this.min)*event.data[2]/127;
           this.setValue(val, true);
+        }
       }
     }
   }
-try {
-  
+
   customElements.define("webaudio-knob", class WebAudioKnob extends WebAudioControlsWidget {
     constructor(){
       super();
@@ -334,6 +355,8 @@ webaudio-knob{
     }
     disconnectedCallback(){}
     setupImage(){
+      this.kw=this.width||this.diameter;
+      this.kh=this.height||this.diameter;
       if(!this.src){
         if(this.colors)
           this.coltab = this.colors.split(";");
@@ -350,17 +373,18 @@ webaudio-knob{
         }
         svg += "</svg>";
         this.elem.style.backgroundImage = "url(data:image/svg+xml;base64,"+btoa(svg)+")";
-        this.elem.style.backgroundSize = "100% 10100%";
+//        this.elem.style.backgroundSize = "100% 10100%";
+        this.elem.style.backgroundSize = `${this.kw}px ${this.kh*101}px`;
       }
       else{
         this.elem.style.backgroundImage = "url("+(this.src)+")";
         if(!this.sprites)
           this.elem.style.backgroundSize = "100% 100%";
-        else
-          this.elem.style.backgroundSize = `100% ${(this.sprites+1)*100}%`;
+        else{
+//          this.elem.style.backgroundSize = `100% ${(this.sprites+1)*100}%`;
+          this.elem.style.backgroundSize = `${this.kw}px ${this.kh*(this.sprites+1)}px`;
+        }
       }
-      this.kw=this.width||this.diameter;
-      this.kh=this.height||this.diameter;
       this.elem.style.outline=this.outline?"":"none";
       this.elem.style.width=this.kw+"px";
       this.elem.style.height=this.kh+"px";
@@ -385,7 +409,7 @@ webaudio-knob{
       let sp = this.src?this.sprites:100;
       if(sp>=1){
         let offset = ((sp * (this.value - this.min) / range) | 0);
-        style.backgroundPosition = "0px -" + (offset*this.kh) + "px";
+        style.backgroundPosition = "0px " + (-offset*this.kh) + "px";
         style.transform = 'rotate(0deg)';
       } else {
         let deg = 270 * ((this.value - this.min) / range - 0.5);
@@ -507,11 +531,7 @@ webaudio-knob{
       return false;
     }
   });
-} catch (error) {
-  console.log("warning",error);
-}
 
-try {
   customElements.define("webaudio-slider", class WebAudioSlider extends WebAudioControlsWidget {
     constructor(){
       super();
@@ -836,11 +856,6 @@ webaudio-slider{
     }
   });
 
-} catch (error) {
-  console.log("warning",error);
-}
-
-try{
   customElements.define("webaudio-switch", class WebAudioSwitch extends WebAudioControlsWidget {
     constructor(){
       super();
@@ -916,7 +931,7 @@ webaudio-switch{
       this._height=this.getAttr("height",0); Object.defineProperty(this,"height",{get:()=>{return this._height},set:(v)=>{this._height=v;this.setupImage()}});
       this._diameter=this.getAttr("diameter",0); Object.defineProperty(this,"diameter",{get:()=>{return this._diameter},set:(v)=>{this._diameter=v;this.setupImage()}});
       this.invert=this.getAttr("invert",0);
-      this._colors=this.getAttr("colors","#e00;#000;#fcc"); Object.defineProperty(this,"colors",{get:()=>{return this._colors},set:(v)=>{this._colors=v;this.setupImage()}});
+      this._colors=this.getAttr("colors",opt.switchColors); Object.defineProperty(this,"colors",{get:()=>{return this._colors},set:(v)=>{this._colors=v;this.setupImage()}});
       this.outline=this.getAttr("outline",opt.outline);
       this.valuetip=0;
       this.tooltip=this.getAttr("tooltip",null);
@@ -973,6 +988,7 @@ webaudio-switch{
         style.backgroundPosition = "0px 0px";
     }
     setValue(v,f){
+      console.log(v,f)
       this.value=v;
       this.checked=(!!v);
       if(this.value!=this.oldvalue){
@@ -1041,7 +1057,7 @@ webaudio-switch{
         this.sendEvent("change");
         break;
       case "radio":
-        let els=document.querySelectorAll("webaudio-switch[type='radio'][group="+this.group+"]");
+        let els=document.querySelectorAll("webaudio-switch[type='radio'][group='"+this.group+"']");
         for(let i=0;i<els.length;++i){
           if(els[i]==this)
             els[i].setValue(1);
@@ -1252,10 +1268,7 @@ webaudio-param{
       return false;
     }
   });
-} catch (error) {
-  console.log("warning",error);
-}
-try{
+
   customElements.define("webaudio-keyboard", class WebAudioKeyboard extends WebAudioControlsWidget {
     constructor(){
       super();
@@ -1571,9 +1584,6 @@ webaudio-keyboard{
       this.redraw();
     }
   });
-} catch (error) {
-  console.log("warning",error);
-}
 
   // FOR MIDI LEARN
   class WebAudioControlsMidiManager {
@@ -1633,6 +1643,8 @@ webaudio-keyboard{
         if(w.processMidiEvent)
           w.processMidiEvent(event);
       }
+      if(opt.mididump)
+        console.log(event.data);
     }
     contextMenuOpen(e,knob){
       if(!this.midiAccess)

@@ -121,11 +121,14 @@
   var AudioContext = window.AudioContext || window.webkitAudioContext;
   var ctx = new AudioContext();
   var player = document.getElementById("soundSample");
+  var mediaSource = ctx.createMediaElementSource(player);
+  var bt_buildIt = document.querySelector('#bt_buildIt');
+
   window.onload = () => {
 
 
-    let bt_buildIt = document.querySelector('#bt_buildIt');
     bt_buildIt.addEventListener('click', () => {
+      
       checkMetadata(document.querySelector("#urlPlugin").value);
     });
 
@@ -182,7 +185,7 @@
 
   // instanciate the plugin 
   function buildPlugin(className, baseURL) {
-    var mediaSource = ctx.createMediaElementSource(player);
+   
     var plugin = new WAPlugin[className](ctx, baseURL);
     console.log(plugin);
 
@@ -204,6 +207,15 @@
       else mediaSource.connect(node.getInput(0));
       node.connect(ctx.destination);
 
+      bt_buildIt.addEventListener('click', () =>{
+        mediaSource.disconnect();
+        node.disconnect();
+        document.querySelector("#WAP").innerHTML="";
+        document.querySelector("#mocha").innerHTML="";
+
+        })
+
+
       testPlugin(node);
     });
 
@@ -216,8 +228,8 @@
   function testPlugin(param) {
     var expect = chai.expect;
     var assert = chai.assert;
-    var plugin = param;
-
+    let plugin = param;
+   
     describe('Metadata', function () {
       it('plugin should have a JSON getMetadata() method', function () {
         expect(plugin.getMetadata()).to.exist;
@@ -300,7 +312,7 @@
         expect(plugin.inputChannelCount()).to.exist;
       });
     });
-    mocha.run();
+    mocha.run()
   }
 </script>
 
