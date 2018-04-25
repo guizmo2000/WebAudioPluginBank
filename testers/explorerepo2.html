@@ -16,6 +16,8 @@
   <p></p>
   <label>Click on a thumbnail to create an instance of the plugin and add it to the signal chain</label>
   <label> Here the input default value is <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/repository.json">https://wasabi.i3s.unice.fr/WebAudioPluginBank/repository.json</a></label>
+  <label> You can try the WAM repository <a href="https://webaudiomodules.org/repository.json">https://webaudiomodules.org/repository.json</a></label>
+
   <p></p>
 
 </body>
@@ -73,7 +75,7 @@
     img.src = baseURL + "/" + thumbnaiFileName;
     // Use the dataset API to store the className. Useful for getting it back in the listener
     img.dataset.className = className;
-    img.width = 100;
+    img.height = 100;
 
     img.addEventListener("click", (evt) => {
       //console.log("plugin clicked: " + evt.target.dataset.className);
@@ -132,6 +134,7 @@
         //mediaSource.connect(node);
         //node.connect(ctx.destination);
          // Add node to the chain of plugins
+         console.log(node)
         chainPlugin(node);
       });
     });
@@ -142,8 +145,17 @@
     // puis on dirait qu'il y a le dernier connect qui connecte
     // la sortie sur l'entree du meme plugin, ca fait du feedback
     function chainPlugin(plugin) {
+      var nbInput
       //plugin.setParam("/zitaRev/bypass", 1);
+      try {
+        nbInput = plugin.inputChannelCount();
 
+        console.log(nbInput);
+      } catch (error) {
+        nbInput = plugin.numberOfInputs;
+        console.log("the naming convention has to be fix between wam and others",error);
+        
+      }
       // insert the new plugin at the end of the array
       pluginArray.push(plugin);
       console.log(pluginArray);
@@ -165,11 +177,15 @@
         if(i === 0) {
           // first plugin
           // mediaSource.connect(currentPlugin);
-
+          
+          //to handle with plugin with no inputs
+          if (nbInput > 0){
+            console.log("nbinput :",nbInput);
         // to handle mix with purejs and AW
-
+          
           if(currentPlugin instanceof AudioWorkletNode) mediaSource.connect(currentPlugin);
           else mediaSource.connect(currentPlugin.getInput(0));
+          }
         } else {
           //connect previous plugin to current one
 
