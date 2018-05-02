@@ -251,6 +251,8 @@ if(window.customElements){
   customElements.define("webaudio-knob", class WebAudioKnob extends WebAudioControlsWidget {
     constructor(){
       super();
+    document.body.appendChild(midimenu);
+      
     }
     connectedCallback(){
       let root;
@@ -1684,7 +1686,8 @@ webaudio-keyboard{
     }
   }
   window.addEventListener("load",()=>{
-    document.body.appendChild(midimenu);
+    //console.log("will be added")
+   // document.body.appendChild(midimenu);
   });
   if(window.UseWebAudioControlsMidi||opt.useMidi)
     window.webAudioControlsMidiManager = new WebAudioControlsMidiManager();
