@@ -14,11 +14,12 @@
 var ctx = new AudioContext();
   var player = document.getElementById("soundSample");
   var mediaSource = ctx.createMediaElementSource(player);
+
   var pluginURL = "./../WASABI/QuadraFuzz2";
   var plugin = new WAPlugin.WasabiQuadraFuzz(ctx, pluginURL);
+
   plugin.load().then((node)=>{
     plugin.loadGui().then((elem)=>{
-      console.log(elem);
       document.body.appendChild(elem);
     });
     mediaSource.connect(node.getInput(0));
