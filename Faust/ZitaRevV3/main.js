@@ -236,9 +236,11 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
             }
 
             try {
-                this.shadowRoot.querySelector('faust-zitarev2').setAttribute('presets', JSON.stringify(this.presets[patch]));
+                console.log(this);
+
+                this.gui.setAttribute('presets', JSON.stringify(this.presets[patch]));
             } catch (error) {
-                console.log(error)
+                console.log("Gui not defined",error)
                 try {
                     document.querySelector('faust-zitarev2').setAttribute('presets', JSON.stringify(this.presets[patch]));
                 } catch (error) {
