@@ -4,14 +4,14 @@
     useMidi: 1,
   };
 </script>
-<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<script src="./../../bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template id="faust-zitarev2">
   <style>
     :host {
       background: linear-gradient( rgb(77, 74, 78), rgb(67, 48, 238));
       box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
       width: 300px;
-      height: 180px;
+      height: 190px;
       display: block;
       user-select: none;
       cursor: move;
@@ -100,6 +100,12 @@
     }
   </style>
   <div class="row">
+    <select id ="presets">
+      <option value="aqua">Aqua</option>
+      <option value="init" selected>Init</option>
+    </select>
+  </div>
+  <div class="row">
     <div class="column">
       <webaudio-knob id="knob1" class="knob" sprites="99" value="60" min="20" max="100" step="1" midilearn="true" width="40" height="40"
         src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" data-role="in_Delay"></webaudio-knob>
@@ -176,103 +182,119 @@
   // Ecapsulate the WebComponent class into a function, like this we can pass
   // a parameter to its constructor (the audio node/audio processor)
 
-    class ZitaRevGui2 extends HTMLElement {
-      get is() { return 'faust-zitarev2'; }
-
-      // This is the trick : copy function's argument to the constructor param
-      // See http://jsbin.com/zeninem/edit?html,js,console as a simple example
-      // of this technique
-      constructor(plug) {
-        super();
-        this._plug = plug; // store for later use
-        console.log(this._plug);
-        this._root = this.attachShadow({ mode: 'open' });
-        this._root.appendChild(zitaRevTemp2.content.cloneNode(true));
-        this.isOn;
-        this.setKnobs();
-        this.setActive(false);
-        this.setSwitchListener();
-      }
-
-      get properties() {
-        this.boundingRect = {
-          dataWidth: {
-            type: Number,
-            value: 300
-          },
-          dataHeight: {
-            type: Number,
-            value: 180
-          }
-        };
-        return this.boundingRect;
-      }
+  class ZitaRevGui2 extends HTMLElement {
+    get is() { return 'faust-zitarev2'; }
 
 
-      setKnobs() {
-        this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Input/In_Delay", e.target.value), false);
-        this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X", e.target.value));
-        this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60", e.target.value));
-        this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60", e.target.value));
-        this._root.querySelector("#knob5").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping", e.target.value));
-        this._root.querySelector("#knob6").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq", e.target.value));
-        this._root.querySelector("#knob7").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level", e.target.value));
-        this._root.querySelector("#knob8").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq", e.target.value));
-        this._root.querySelector("#knob9").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level", e.target.value));
-        this._root.querySelector("#knob10").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Output/Dry/Wet_Mix", e.target.value));
-        this._root.querySelector("#knob11").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Output/Level", e.target.value), false);
-      }
+    // This is the trick : copy function's argument to the constructor param
+    // See http://jsbin.com/zeninem/edit?html,js,console as a simple example
+    // of this technique
+    constructor(plug) {
+      super();
+      this._plug = plug; // store for later use
+      console.log(this._plug);
+      this._root = this.attachShadow({ mode: 'open' });
+      this._root.appendChild(zitaRevTemp2.content.cloneNode(true));
+      this.isOn;
+      this.setKnobs();
+      this.setActive(false);
+      this.setSwitchListener();
+      this.presets = [];
+    }
 
-
-      setActive(active) {
-        if (active == undefined || active == false) {
-          this.isOn = false;
-          this.bypass();
-          this._root.querySelector("#switch1").value = 0;
-        } else if (active) {
-          this.isOn = true;
-          this.reactivate();
-          this._root.querySelector("#switch1").value = 1;
+    get properties() {
+      this.boundingRect = {
+        dataWidth: {
+          type: Number,
+          value: 300
+        },
+        dataHeight: {
+          type: Number,
+          value: 190
         }
+      };
+      return this.boundingRect;
+    }
+
+
+    static get observedAttributes() { return ['presets']; }
+
+    attributeChangedCallback() {
+      console.log(`Custom element ${this.is} attributes changed.`);
+      this.presets = JSON.parse(this.getAttribute('presets'));
+      this.knobs = this._root.querySelectorAll(".knob");
+      for (var i = 0; i<this.knobs.length;i++){
+        this.knobs[i].value = this.presets[i];
       }
+    }
 
-      setSwitchListener() {
-        console.log("setswitch");
-        this._root.querySelector("#switch1").addEventListener('change', (e) => {
-          if (this.isOn) this.bypass()
-          else this.reactivate();
-          this.isOn = !this.isOn;
-        });
+
+
+    setKnobs() {
+      this._root.querySelector("#presets").addEventListener('change',(e) => this._plug.setPatch(this._root.querySelector("#presets").value));
+      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Input/In_Delay", e.target.value), false);
+      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X", e.target.value));
+      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60", e.target.value));
+      this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60", e.target.value));
+      this._root.querySelector("#knob5").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping", e.target.value));
+      this._root.querySelector("#knob6").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq", e.target.value));
+      this._root.querySelector("#knob7").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level", e.target.value));
+      this._root.querySelector("#knob8").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq", e.target.value));
+      this._root.querySelector("#knob9").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level", e.target.value));
+      this._root.querySelector("#knob10").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Output/Dry/Wet_Mix", e.target.value));
+      this._root.querySelector("#knob11").addEventListener('input', (e) => this._plug.setParam("/zitaRev/Zita_Rev1/Output/Level", e.target.value), false);
+    }
+
+
+    setActive(active) {
+      if (active == undefined || active == false) {
+        this.isOn = false;
+        this.bypass();
+        this._root.querySelector("#switch1").value = 0;
+      } else if (active) {
+        this.isOn = true;
+        this.reactivate();
+        this._root.querySelector("#switch1").value = 1;
       }
+    }
 
-      bypass() {
-        this._plug.setParam("/zitaRev/bypass", 1);
-        console.log("disabled");
-      }
+    setSwitchListener() {
+      console.log("setswitch");
+      this._root.querySelector("#switch1").addEventListener('change', (e) => {
+        if (this.isOn) this.bypass()
+        else this.reactivate();
+        this.isOn = !this.isOn;
+      });
+    }
 
-      reactivate() {
-        this._plug.setParam("/zitaRev/bypass", 0);
+    bypass() {
+      this._plug.setParam("/zitaRev/bypass", 1);
+      console.log("disabled");
+    }
 
-      }
-
+    reactivate() {
+      this._plug.setParam("/zitaRev/bypass", 0);
 
     }
-    // Register the x-custom element with the browser
-    // we use a try catch here as if multiple instances of this GUI
-    // are created we must define the custom element only ONCE
+
+
+  }
+  // Register the x-custom element with the browser
+  // we use a try catch here as if multiple instances of this GUI
+  // are created we must define the custom element only ONCE
 
   try {
-      customElements.define('faust-zitarev2', ZitaRevGui2);
-      console.log("Element defined");
-    } catch(error){
-      console.log(error);
-      console.log("Element already defined");      
-    }
+    customElements.define('faust-zitarev2', ZitaRevGui2);
+    console.log("Element defined");
+  } catch (error) {
+    console.log(error);
+    console.log("Element already defined");
+  }
 
 
-     const createFaustZitaRevGUI2 = (plug) => {
-      let elem = new ZitaRevGui2(plug);
-      return elem; 
+  const createFaustZitaRevGUI2 = (plug) => {
+    let elem = new ZitaRevGui2(plug);
+    return elem;
   }
 
 

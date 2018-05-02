@@ -91,7 +91,12 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
         
         // Set message handler
         this.port.onmessage = this.handleMessage.bind(this);
-        this.setPatch("init");
+        this.presets = {
+            init:[60,200,3,2,6000,315,0,1500,0,0,10],
+            aqua: [80,800,6,6,18000,2000,13,8000,14,0.7,20]
+
+        }    
+        this.setPatch("begin");
     }
     
     // To be called by the message port with messages coming from the processor
@@ -121,9 +126,6 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
      */
     setParam(path, val)
     {
-        //this.port.postMessage({ type:"param", key:path, value:val });
-        
-        // Needed for sample accurate control
         this.parameters.get(path).setValueAtTime(val, 0);
     }
     
@@ -208,6 +210,7 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
 
 
     setPatch(patch) {
+        console.log("here");
         var controlTypes = [];
         var controls = [];
 
@@ -223,11 +226,26 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
         }
 
 
-        if (patch === "init") {
+        if (patch === "begin") {
             controls.forEach(item => {
                 this.setParam(item.address, item.init);
             });
-        } else {
+        } else if(this.presets.hasOwnProperty(patch)){
+            for (var i=0; i<controls.length;i++){
+                this.setParam(controls[i].address, this.presets[patch][i]);
+            }
+
+            try {
+                this.shadowRoot.querySelector('faust-zitarev2').setAttribute('presets', JSON.stringify(this.presets[patch]));
+            } catch (error) {
+                console.log(error)
+                try {
+                    document.querySelector('faust-zitarev2').setAttribute('presets', JSON.stringify(this.presets[patch]));
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }else {
             console.log("not implemented yet");
         }
 
