@@ -115,6 +115,9 @@ if(window.customElements){
       this.addEventListener("mouseout",this.pointerout);
       this.addEventListener("contextmenu",this.contextMenu);
       this.hover=this.drag=0;
+      document.body.appendChild(midimenu);
+
+      
     }
     sendEvent(ev){
       let event;
@@ -248,11 +251,12 @@ if(window.customElements){
     }
   }
 
+  try {
+    
+  
   customElements.define("webaudio-knob", class WebAudioKnob extends WebAudioControlsWidget {
     constructor(){
-      super();
-    document.body.appendChild(midimenu);
-      
+      super();      
     }
     connectedCallback(){
       let root;
@@ -534,6 +538,12 @@ webaudio-knob{
       return false;
     }
   });
+} catch (error) {
+    console.log("web audio knob already defined");
+}
+
+try {
+  
 
   customElements.define("webaudio-slider", class WebAudioSlider extends WebAudioControlsWidget {
     constructor(){
@@ -858,6 +868,13 @@ webaudio-slider{
       return false;
     }
   });
+} catch (error) {
+  console.log("webaudio slider already defined");
+  
+}
+
+try {
+  
 
   customElements.define("webaudio-switch", class WebAudioSwitch extends WebAudioControlsWidget {
     constructor(){
@@ -1081,6 +1098,12 @@ webaudio-switch{
       return false;
     }
   });
+} catch (error) {
+  console.log("webaudio switch already defined")
+}
+
+try {
+  
 
   customElements.define("webaudio-param", class WebAudioParam extends WebAudioControlsWidget {
     constructor(){
@@ -1271,6 +1294,13 @@ webaudio-param{
       return false;
     }
   });
+
+} catch (error) {
+  console.log("webaudio param already defined");
+}
+
+try {
+  
 
   customElements.define("webaudio-keyboard", class WebAudioKeyboard extends WebAudioControlsWidget {
     constructor(){
@@ -1587,6 +1617,9 @@ webaudio-keyboard{
       this.redraw();
     }
   });
+} catch (error) {
+ console.log("webaudio keyboard aulready defined"); 
+}
 
   // FOR MIDI LEARN
   class WebAudioControlsMidiManager {
@@ -1686,8 +1719,6 @@ webaudio-keyboard{
     }
   }
   window.addEventListener("load",()=>{
-    //console.log("will be added")
-   // document.body.appendChild(midimenu);
   });
   if(window.UseWebAudioControlsMidi||opt.useMidi)
     window.webAudioControlsMidiManager = new WebAudioControlsMidiManager();
