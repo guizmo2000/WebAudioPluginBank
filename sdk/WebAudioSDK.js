@@ -53,7 +53,7 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     this._descriptor = descriptor;
   }
   
-  get descriptor() {
+  getDescriptor() {
     return this._descriptor;
   }
   
@@ -61,7 +61,7 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     this._metadata = metadata;
   }
   
-  get metadata() {
+  getMetadata() {
     return this._metadata;
   }
   
