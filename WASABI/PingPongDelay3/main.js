@@ -249,18 +249,18 @@ class PingPongDelay extends WebAudioPluginCompositeNode {
     * Setters for each param
     */
   setTime(_time) {
-    if (_time < this.descriptor.time.range.max && _time > this.descriptor.time.range.min) this.params.time = _time;
+    if (_time < this._descriptor.time.range.max && _time > this.descriptor.time.range.min) this.params.time = _time;
     this.delayNodeLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
     this.delayNodeRight.delayTime.setValueAtTime(_time, this.context.currentTime);
   }
 
   setFeedback(_feedback) {
-    if (_feedback < this.descriptor.feedback.range.max && _feedback > this.descriptor.feedback.range.min) this.params.feedback = _feedback;
+    if (_feedback < this._descriptor.feedback.range.max && _feedback > this.descriptor.feedback.range.min) this.params.feedback = _feedback;
     this.feedbackGainNode.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
   }
 
   setMix(_mix) {
-    if (_mix < this.descriptor.mix.range.max && _mix > this.descriptor.mix.range.min) this.params.mix = _mix;
+    if (_mix < this._descriptor.mix.range.max && _mix > this.descriptor.mix.range.min) this.params.mix = _mix;
     this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
     this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
   }
