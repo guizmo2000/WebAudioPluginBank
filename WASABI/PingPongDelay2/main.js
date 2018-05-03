@@ -3,7 +3,7 @@
 /* ES6 web audio class following the API standard
 * Author : Guillaume Etevenard
 */
-class PingPongDelay {
+window.PingPongDelay = class PingPongDelay {
 
   constructor(ctx) {
     this.context = ctx ? ctx : new AudioContext;
@@ -347,16 +347,32 @@ WAPlugin.WasabiPingPongDelay = class WasabiPingPongDelay {
     constructor(context, baseUrl) {
         this.context = context;
         this.baseUrl = baseUrl;
+        this.MetadataFileURL = this.baseUrl + "/main.json";
+    }
+
+    fetchPlugin() {
+      return new Promise((resolve, reject) => {
+        fetch(this.MetadataFileURL)
+          .then(responseJSON => {
+            return responseJSON.json();
+          }).then(metadata => {
+            resolve(metadata.name);
+          });
+      });
     }
 
     load() {
         return new Promise((resolve, reject) => {
-          try{
-            this.plug = new PingPongDelay(this.context);
-            resolve(this.plug);
-          } catch (e){
-            reject(e);
-          }
+          this.fetchPlugin().then(classname =>{
+            try{
+              this.plug = new window[classname](this.context);
+              resolve(this.plug);
+            } catch (e){
+              reject(e);
+            }
+
+          })
+          
         });
     }
 
@@ -383,7 +399,7 @@ WAPlugin.WasabiPingPongDelay = class WasabiPingPongDelay {
                         // and get back the HTML elem
                         // HERE WE COULD REMOVE THE HARD CODED NAME
                         console.log(this.plug);
-                        var element = createPingPongDelay(this.plug);
+                        var element = createModule(this.plug);
                         //element._plug = this.plug;
                         resolve(element);
                     }
@@ -391,7 +407,7 @@ WAPlugin.WasabiPingPongDelay = class WasabiPingPongDelay {
                     // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
                     // so we can create another instance
                     console.log(this.plug);
-                    var element = createPingPongDelay(this.plug);
+                    var element = createModule(this.plug);
                     //element._plug = this.plug;
                     resolve(element);
                 }

@@ -9,6 +9,7 @@
 <script src="./../sdk/WebAudioSDK.js"></script>
 <script src="./../WASABI/PingPongDelay3/main.js"></script>
 
+
 <body>
   <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
 </body>
@@ -16,10 +17,9 @@
   var ctx = new AudioContext();
   var player = document.getElementById("soundSample");
   var mediaSource = ctx.createMediaElementSource(player);
-  var intermediateGain = ctx.createGain();
 
   var pluginURL = "./../WASABI/PingPongDelay3";
-  var plugin = new WAPlugin.WasabiPingPongDelay(ctx, pluginURL);
+  var plugin = new window.WasabiPingPongDelay(ctx, pluginURL);
 
   plugin.load().then((node)=>{
     console.log("node",node);

@@ -139,9 +139,7 @@
 
     constructor(plug) {
         super();
-        console.log(plug);
         this._plug = plug;
-        console.log(this._plug);
         this._root = this.attachShadow({ mode: 'open' });
         this._root.appendChild(delaytemp.content.cloneNode(true));
         this.isOn = false;
@@ -201,7 +199,7 @@
     }
 
 
-    createPingPongDelay = (plug) => {
+    createWAP = (plug) => {
       let elem = new PingPongDelayGui(plug);
       return elem; 
   }

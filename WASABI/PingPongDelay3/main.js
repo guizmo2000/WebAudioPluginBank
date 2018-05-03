@@ -3,7 +3,7 @@
 /* ES6 web audio class following the API standard
 * Author : Guillaume Etevenard
 */
-class PingPongDelay extends WebAudioPluginCompositeNode {
+window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
 
   constructor(ctx,options) {
     /*    ################     API PROPERTIES    ###############   */
@@ -268,74 +268,18 @@ class PingPongDelay extends WebAudioPluginCompositeNode {
 }
 
 
-
-var WAPlugin = WAPlugin || {};
-
-WAPlugin.WasabiPingPongDelay = class WasabiPingPongDelay {
+window.WasabiPingPongDelay = class WasabiPingPongDelay extends WebAudioPluginFactory {
 
     constructor(context, baseUrl) {
-        this.context = context;
-        this.baseUrl = baseUrl;
+        super(context,baseUrl);
     }
-
     load() {
-        return new Promise((resolve, reject) => {
-          try{
-            this.plug = new PingPongDelay(this.context);
-            resolve(this.plug);
-          } catch (e){
-            reject(e);
-          }
-        });
+        return super.load();
     }
-
     loadGui() {
-        return new Promise((resolve, reject) => {
-          this.plug.setState('disable');
-            try {
-                // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
-                let url = this.baseUrl + "/main.html";
-                
-
-                if (!this.linkExists(url)) {
-                    // LINK DOES NOT EXIST, let's add it to the document
-                    var link = document.createElement('link');
-                    link.rel = 'import';
-                    //link.id = 'urlPlugin';
-                    link.href = url;
-                    document.head.appendChild(link);
-
-
-                  
-                    link.onload = (e) => {
-                        // the file has been loaded, instanciate GUI
-                        // and get back the HTML elem
-                        // HERE WE COULD REMOVE THE HARD CODED NAME
-                        console.log(this.plug);
-                        var element = createPingPongDelay(this.plug);
-                        //element._plug = this.plug;
-                        resolve(element);
-                    }
-                } else {
-                    // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
-                    // so we can create another instance
-                    console.log(this.plug);
-                    var element = createPingPongDelay(this.plug);
-                    //element._plug = this.plug;
-                    resolve(element);
-                }
-            } catch (e) {
-                console.log(e);
-                reject(e);
-            }
-        });
-    };
-
-    linkExists(url) {
-        return document.querySelectorAll(`link[href="${url}"]`).length > 0;
+      return super.loadGui();
 
     }
-
 
 }
 
