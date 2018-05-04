@@ -18,16 +18,22 @@
 
   #main {
     float: left;
-    width: 70%
+    width: 70%;
+    text-align: center;
   }
 
   #layout {
     display: flex;
   }
+  #title {
+    padding-top: 50px;
+    text-align: center;
+    width:60%;
+  }
 
   #helper {
     float: left;
-    padding: 10px;
+    padding: 20px;
     width: 35%;
     margin-right: 5%
   }
@@ -36,29 +42,30 @@
     display: flex;
 
   }
+  .urlRepo{
+    color:blue;
+  }
 
   #appearZone {
     float: left;
-    width: 50%;
-    padding-top: 5%;
-    padding-left: 15%;
-
-
+    width: 65%;
+    display: flex;
+    padding-left: 5%;
   }
 
   #mocha {
     float: right;
-    width: 50%;
+    width: 40%;
     height: 400px;
     overflow: scroll;
-    padding: 0%;
+    margin-top: 0% !important;
   }
 </style>
 
 <body>
   <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
-  <input id="repoUrl" value="https://wasabi.i3s.unice.fr/WebAudioPluginBank/repository.json" size="200" style="width :400px">
-  GUI<input id="checkBox" type="checkbox" checked>
+  <input id="repoUrl" value="https://wasabi.i3s.unice.fr/WebAudioPluginBank/repository.json" size="200" style="width :400px"> GUI
+  <input id="checkBox" type="checkbox" checked>
   <button id="submit">Explore Repository and test your modules</button>
   <p></p>
   <p></p>
@@ -69,17 +76,19 @@
       <label>Enter the URL of a WebAudio plugin repository (path to the json file which describe it) and press the button to start
         doscovering/loading plugin thumbnails.</label>
       <p></p>
-      <label>Click on a thumbnail to create an instance of the plugin Test it's compatibility with the API</label>
-      <label> Here the input default value is
-        <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/repository.json">https://wasabi.i3s.unice.fr/WebAudioPluginBank/repository.json</a>
-      </label>
-      <label> You can try the WAM repository
-        <a href="https://webaudiomodules.org/repository.json">https://webaudiomodules.org/repository.json</a>
-      </label>
+      <label>You can try those repositories (webaudio-modules, wasabi plugin bank). A click on blue link will paste the URL on the input</label>
+      <label class="urlRepo" id='tmp' value="https://wasabi.i3s.unice.fr/WebAudioPluginBank/repository.json">https://wasabi.i3s.unice.fr/WebAudioPluginBank/repository.json</label>
+      <label class="urlRepo" value ="https://webaudiomodules.org/repository.json"> https://webaudiomodules.org/repository.json</label>
+      <p></p>
+      <label>The GUI checkbox allows you to choose between headless plugins(unchecked) and plugin with GUI(checked).</label>
+
+       
 
     </div>
 
   </div>
+  <div id="title"></div>
+  <br>
   <div id="onetest">
     <div id="appearZone"></div>
     <div id="mocha"></div>
@@ -89,21 +98,50 @@
 
 </body>
 <script>
-      var checkbox;
+  var checkbox;
+  var choice;
+  var mediaSource;
+  var ctx;
 
+  
   window.onload = () => {
-    var ctx = new AudioContext();
+    ctx = new AudioContext();
     var player = document.getElementById("soundSample");
-    var mediaSource = ctx.createMediaElementSource(player);
+    mediaSource = ctx.createMediaElementSource(player);
     var lastPlugin;
     var pluginArray = [];
     var input = document.querySelector('#repoUrl');
     checkbox = document.querySelector('#checkBox')
     var repo;
+
+    console.log(document.querySelectorAll("#appearZone").firstChild);
+    document.querySelectorAll(".urlRepo").forEach(elem =>{elem.onclick = () =>{
+      input.value = elem.innerHTML;
+    }})
+
+    try {
+   
+      process(JSON.parse(localStorage.repo),pluginArray, mediaSource);
+      addPlugin(JSON.parse(localStorage.plugin), JSON.parse(localStorage.url));
+
+    } catch (error) {
+      console.log(error);
+      console.log("First run");
+      
+    }
     document.querySelector('#submit').onclick = () => {
-      explore(input.value).then((repo) => { process(repo, ctx, pluginArray, mediaSource) });
+      document.querySelector("#appearZone").innerHTML = "";
+      document.querySelector("#main").innerHTML="";
+      document.querySelector("#mocha").innerHTML="";
+      document.body.querySelector("#title").innerHTML = "";
+      explore(input.value).then((repo) => { process(repo, getContext(), pluginArray, mediaSource) });
+      localStorage.clear();
 
     }
+  }
+
+  function getContext(){
+    return ctx;
   }
 
   var explore = async (url) => {
@@ -113,7 +151,8 @@
 
   }
 
-  var process = (repo, ctx, pluginArray, mediaSource) => {
+  var process = (repo,pluginArray, mediaSource) => {
+    localStorage.setItem('repo',JSON.stringify(repo));
     // On scanne le repo
     Object.keys(repo.plugs).map((key) => {
 
@@ -136,6 +175,7 @@
           console.log(e);
         });
     })
+  }
 
     /* This function adds a clickable thumbnail to the document.
        When a thumbnail is clicked it instanciate the plugin and add its GUI to the document
@@ -146,10 +186,13 @@
       // Use the dataset API to store the className. Useful for getting it back in the listener
       img.dataset.className = className;
       img.height = 150;
+      img.style = 'margin-left : 5px';
+      
 
       img.addEventListener("click", (evt) => {
-        //console.log("plugin clicked: " + evt.target.dataset.className);
-        addPlugin(className, baseURL);
+        localStorage.setItem('plugin', JSON.stringify(className));
+        localStorage.setItem('url', JSON.stringify(baseURL));
+          location.reload();
       })
       document.body.querySelector("#main").append(img);
     }
@@ -160,35 +203,13 @@
     }
 
     // Instanciate a plugin with its GUI. Avoids inserting twice the script tag
-    function addPlugin(className, baseURL) {
-      let scriptURL = baseURL + "/main.js";
-
-      if (scriptExists(scriptURL)) {
-        //script exists
-        console.log("SCRIPT EXISTS WE JUST INSTQNCIATE THE PLUGIN");
-        loadPlugin(className, baseURL);
-        return;
-      }
-
-      console.log("SCRIPT DOES NOT EXIST, ADD A SCRIPT SRC=, THEN INSTANCIATE PLUGIN")
-
-      // if we are here this means that the script is not present. Add it to the document
-      let script = document.createElement("script");
-      script.src = scriptURL;
-
-      script.onload = function () {
-        // Once the script has been loaded instanciate the plugin
-        loadPlugin(className, baseURL);
-      }
-
-      // will be executed before the onload above...
-      document.head.appendChild(script);
-    }
+    
 
     function loadPlugin(className, baseURL) {
+      console.log(localStorage.ctx);
       // The script has been loaded, thus, the class has been defined.
       // We can instanciate the audio processor
-      var plugin = new WAPlugin[className](ctx, baseURL);
+      var plugin = new WAPlugin[className](getContext(), baseURL);
       console.log(plugin);
 
       plugin.load().then((node) => {
@@ -211,23 +232,50 @@
             // show the GUI of the plugn, the audio part is ready to be used
 
             document.body.querySelector("#appearZone").appendChild(elem);
+            document.querySelector("#appearZone").firstChild.setAttribute('style','margin-left:auto; margin-right:auto');
 
           });
         }
+        document.body.querySelector("#title").innerHTML = "";
         document.body.querySelector("#appearZone").innerHTML = "";
         document.body.querySelector("#mocha").innerHTML = "";
-        document.body.querySelector("#appearZone").insertAdjacentHTML('afterbegin', '<h2>' + `${className}` + '</h2>')
+        document.body.querySelector("#title").insertAdjacentHTML('afterbegin', '<h2>' + `${className}` + '</h2>')
 
         if (nbInput > 0) {
           console.log("nbinput :", nbInput);
           if (node instanceof AudioWorkletNode) mediaSource.connect(node);
           else mediaSource.connect(node.getInput(0));
         }
-        node.connect(ctx.destination);
+        node.connect(getContext().destination);
         testPlugin(node);
       });
     }
-  }
+  
+
+  var addPlugin = (className, baseURL) => {
+let scriptURL = baseURL + "/main.js";
+
+if (scriptExists(scriptURL)) {
+  //script exists
+  console.log("SCRIPT EXISTS WE JUST INSTQNCIATE THE PLUGIN");
+  loadPlugin(className, baseURL);
+  return;
+}
+
+console.log("SCRIPT DOES NOT EXIST, ADD A SCRIPT SRC=, THEN INSTANCIATE PLUGIN")
+
+// if we are here this means that the script is not present. Add it to the document
+let script = document.createElement("script");
+script.src = scriptURL;
+
+script.onload = function () {
+  // Once the script has been loaded instanciate the plugin
+  loadPlugin(className, baseURL);
+}
+
+// will be executed before the onload above...
+document.head.appendChild(script);
+}
 
   /* 
       here we use mocha chai.js to apply unit test on the plugin. The test cases cover the existence and (soon) the type of the API calls.
@@ -323,6 +371,8 @@
       });
     });
     mocha.run();
+
+
   }
 
 
