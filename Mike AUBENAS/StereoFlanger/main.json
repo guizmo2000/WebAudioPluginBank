@@ -1,8 +1,8 @@
   {
-    "documentation": "BLAH BLAH",
-    "name": "PingPongDelay",
+    "documentation": "TODO", 
+    "name": "StereoFlanger",
     "thumbnail": "WasabiPingPongDelay.png",
     "vendor": "Wasabi",
-    "category":"Delay",
+    "category":"Flanger",
     "version": "1.0"
   }
