@@ -4,15 +4,14 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 {
 	constructor(ctx,options) 
 	{
-		/*    ################     API PROPERTIES    ###############   */
 		super(ctx,options)
+
 		this.state;
 		this.inputs = [];
 		this.outputs = [];
 		this._gui = document.createElement("wc-stereoflanger");
 		this._gui.plug = this;
 
-		// P2 : Json metadata
 		this._metadata = 
 		{
 			"name": "wasabi-StereoFlanger",
@@ -25,7 +24,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 			"authorInformation": "Mike AUBENAS, i3s intern in Nice - Sophia-Antipolis, France"
 		}
 
-		// P3 : Json descriptor
 		this._descriptor = 
 		{
 			"feedback": 
@@ -74,7 +72,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 			}
 		}
 
-		// params 
 		this.params = 
 		{
 			"feedback": this._descriptor.feedback.default,
@@ -83,18 +80,19 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 			"status": "disabled"
 		}
 
-		// p5 patchnames
 		this.patchNames = ["patch1"];
 
 		this.setup();
 	}
 
-	/*    ################     API METHODS    ###############   */
+	inputChannelCount()
+	{ return this.inputs.length; }
 
-	// p9 count inputs
-	inputChannelCount(){ return this.inputs.length; }
-	getPatch(index){ return this.patchNames[index]; }
-	setPatch(data, index) { this.patchNames[index] = data; }
+	getPatch(index)
+	{ return this.patchNames[index]; }
+
+	setPatch(data, index)
+	{ this.patchNames[index] = data; }
 
 	getParam(key) 
 	{
@@ -134,7 +132,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		}
 	}
 
-	// P7 state
 	getState() { return this.params.status; }
 
 	setState(data) 
@@ -154,11 +151,8 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		}
 	}
 
-	//web midi api ?
 	onMidi(msg)
 	{ return msg; }
-
-	/*  #########  Personnal code for the web audio graph  #########   */
 
 	setup()
 	{
@@ -177,41 +171,51 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 
 	createNodes() 
 	{
-		this.delayNodeLeft = this.context.createDelay();
-		this.delayNodeRight = this.context.createDelay();
-		this.dryGainNode = this.context.createGain();
-		this.wetGainNode = this.context.createGain();
-		this.feedbackGainNode = this.context.createGain();
-		this.channelMerger = this.context.createChannelMerger(2);
+		/* @see : https://github.com/cwilso/Audio-Input-Effects/blob/master/js/effects.js */
+
+		this.splitter = this.context.createChannelSplitter(2);
+		this.merger = this.context.createChannelMerger(2);
+		this.inputNode = this.context.createGain();
+		this.delayLNode = this.context.createDelay();
+		this.delayRNode = this.context.createDelay();
+		this.osc = this.context.createOscillator();
+		this.scldepth = this.context.createGain();
+		this.scrdepth = this.context.createGain();
 	}
 
 	connectNodes() 
 	{
-		// dry mix
-		this._input.connect(this.dryGainNode);
-		// dry mix out
-		this.dryGainNode.connect(this._output);
+		/* @see : https://github.com/cwilso/Audio-Input-Effects/blob/master/js/effects.js */
 
-		// the feedback loop
-		this.delayNodeLeft.connect(this.channelMerger, 0, 0);
-		this.delayNodeRight.connect(this.channelMerger, 0, 1);
-		
-		this.feedbackGainNode.connect(this.delayNodeLeft);
-		this.delayNodeRight.connect(this.feedbackGainNode);
+		inputNode.connect( this.splitter );
+		inputNode.connect( this.wetGain );
 
-		this.delayNodeLeft.connect(this.delayNodeRight);
+		this.delayLNode.delayTime.value = parseFloat( document.getElementById("scdelay").value );
+		this.delayRNode.delayTime.value = parseFloat( document.getElementById("scdelay").value );
+		this.scldelay = delayLNode;
+		this.scrdelay = delayRNode;
+		this.splitter.connect( delayLNode, 0 );
+		this.splitter.connect( delayRNode, 1 );
 
-		// wet mix
-		this._input.connect(this.feedbackGainNode);
 
-		// wet out
-		this.channelMerger.connect(this.wetGainNode);
-		this.wetGainNode.connect(this._output);
+		scldepth.gain.value = parseFloat( document.getElementById("scdepth").value ); // depth of change to the delay:
+		scrdepth.gain.value = - parseFloat( document.getElementById("scdepth").value ); // depth of change to the delay:
+
+		osc.type = 'triangle';
+		osc.frequency.value = parseFloat( document.getElementById("scspeed").value );
+		scspeed = osc;
+
+		osc.connect(scldepth);
+		osc.connect(scrdepth);
+
+		scldepth.connect(delayLNode.delayTime);
+		scrdepth.connect(delayRNode.delayTime);
+
+		delayLNode.connect( merger, 0, 0 );
+		delayRNode.connect( merger, 0, 1 );
+		merger.connect( wetGain );
 	}
 
-	/*
-		* set default value for parameters and assign it to the web audio nodes
-	*/
 	setInitialParamValues()
 	{
 		this.setTime(this.params.time);
@@ -227,11 +231,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 
 	getFeedback()
 	{ return this.params.feedback; }
-
-	// delay tools
-	/*
-		*Tools to build sounds 
-	*/
 
 	isNumber(arg)
 	{ return toString.call(arg) === '[object Number]' && arg === +arg; }
@@ -258,9 +257,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		return 1 - ((0.5 - mix) * 2);
 	}
 
-	/*
-	* Setters for each param
-	*/
 	setTime(_time) 
 	{
 		if (_time < this._descriptor.time.range.max && _time > this._descriptor.time.range.min) this.params.time = _time;
@@ -286,10 +282,12 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////
 
 window.WasabiStereoFlanger = class WasabiStereoFlanger extends WebAudioPluginFactory 
 {
-	constructor(context, baseUrl){ super(context,baseUrl); }
+	constructor(context, baseUrl)
+	{ super(context,baseUrl); }
 
 	load()
 	{ return super.load(); }
@@ -297,6 +295,8 @@ window.WasabiStereoFlanger = class WasabiStereoFlanger extends WebAudioPluginFac
 	loadGui() 
 	{ return super.loadGui(); }
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////
 
 AudioContext.prototype.createWasabiDelayCompositeNode = OfflineAudioContext.prototype.createWasabiDelayCompositeNode = function (options) 
 { return new StereoFlanger(this, options); };
