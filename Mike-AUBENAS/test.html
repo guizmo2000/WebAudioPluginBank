@@ -7,7 +7,7 @@
 	</head>
 
 	<script src="./../sdk/WebAudioSDK.js"></script>
-	<script src="./../Mike AUBENAS/StereoFlanger/main.js"></script>
+	<script src="./StereoFlanger/main.js"></script>
 
 	<body>
 		<audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
@@ -19,8 +19,8 @@
 		var player = document.getElementById("soundSample");
 		var mediaSource = ctx.createMediaElementSource(player);
 
-		var pluginURL = "./../Mike AUBENAS/StereoFlanger";
-		var plugin = new window.StereoFlanger(ctx, pluginURL);
+		var pluginURL = "./StereoFlanger";
+		var plugin = new WasabiStereoFlanger(ctx, pluginURL);
 
 		plugin.load().then((node)=>
 		{

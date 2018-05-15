@@ -287,7 +287,7 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 }
 
 
-window.WasabiPingPongDelay = class WasabiPingPongDelay extends WebAudioPluginFactory 
+window.WasabiStereoFlanger = class WasabiStereoFlanger extends WebAudioPluginFactory 
 {
 	constructor(context, baseUrl){ super(context,baseUrl); }
 
@@ -299,4 +299,4 @@ window.WasabiPingPongDelay = class WasabiPingPongDelay extends WebAudioPluginFac
 }
 
 AudioContext.prototype.createWasabiDelayCompositeNode = OfflineAudioContext.prototype.createWasabiDelayCompositeNode = function (options) 
-{ return new PingPongDelay(this, options); };
+{ return new StereoFlanger(this, options); };
