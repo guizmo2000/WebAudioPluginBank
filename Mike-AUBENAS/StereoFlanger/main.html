@@ -112,8 +112,8 @@
 		<div class="column">
 
 			<webaudio-knob id="knob2" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-			width="40" height="40" data-role="time" diameter="24"></webaudio-knob>
-			<span class="knob-label" id="knob2-label">TIME</span>
+			width="40" height="40" data-role="delay" diameter="24"></webaudio-knob>
+			<span class="knob-label" id="knob2-label">DELAY</span>
 
 		</div>
 
@@ -124,8 +124,15 @@
 		<div class="column">
 
 			<webaudio-knob id="knob3" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-			width="40" height="40" data-role="mix" diameter="24"></webaudio-knob>
-			<span class="knob-label" id="knob3-label">MIX</span>
+			width="40" height="40" data-role="depth" diameter="24"></webaudio-knob>
+			<span class="knob-label" id="knob3-label">DEPTH</span>
+
+		</div>
+		<div class="column">
+
+			<webaudio-knob id="knob4" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+			width="40" height="40" data-role="frequency" diameter="24"></webaudio-knob>
+			<span class="knob-label" id="knob3-label">FREQUENCY</span>
 
 		</div>
 
@@ -194,7 +201,6 @@
 
 		setKnobs() 
 		{
-			console.log('setknobs');
 			this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("feedback", e.target.value / 100));
 			this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("time", e.target.value / 100));
 			this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("mix", e.target.value / 100));
