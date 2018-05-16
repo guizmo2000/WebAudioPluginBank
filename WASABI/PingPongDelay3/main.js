@@ -273,13 +273,6 @@ window.WasabiPingPongDelay = class WasabiPingPongDelay extends WebAudioPluginFac
     constructor(context, baseUrl) {
         super(context,baseUrl);
     }
-    load() {
-        return super.load();
-    }
-    loadGui() {
-      return super.loadGui();
-
-    }
 
 }
 
