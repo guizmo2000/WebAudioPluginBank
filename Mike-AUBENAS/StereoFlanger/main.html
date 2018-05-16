@@ -201,10 +201,10 @@
 
 		setKnobs() 
 		{
-			this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("feedback", e.target.value / 100));
-			this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("delay", e.target.value / 100));
-			this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("depth", e.target.value / 100));
-			this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("frequency", e.target.value / 100));
+			this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("feedback", e.target.value));
+			this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("delay", e.target.value));
+			this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("depth", e.target.value));
+			this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("frequency", e.target.value));
 		}
 
 		setSwitchListener() 

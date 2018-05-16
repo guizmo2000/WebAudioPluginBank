@@ -164,7 +164,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		{
 			this.connectNodes();
 			this._input.disconnect(this._output);
-			this.oscillator.start();
 		} 
 		else if (data == "disable") 
 		{
@@ -183,6 +182,8 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		this.createNodes();
 		this.connectNodes();
 		this.setInitialParamValues();
+		this.oscillator.start();
+
 	}
 
 	createIO()
@@ -308,7 +309,7 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 			this.params.depth = _depth;
 
 		this.depthLeft.gain.setValueAtTime(parseFloat(this.params.depth, 10), this.context.currentTime);
-		this.depthRight.gain.setValueAtTime(parseFloat(this.params.depth, 10), this.context.currentTime);
+		this.depthRight.gain.setValueAtTime(- parseFloat(this.params.depth, 10), this.context.currentTime);
 	}
 
 	setFrequency(_frequency)
@@ -317,6 +318,8 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 			this.params.frequency = _frequency;
 
 		this.oscillator.frequency.setValueAtTime(parseFloat(this.params.frequency, 10), this.context.currentTime);
+
+		console.log("freq : " + this.oscillator.frequency.value);
 	}
 }
 
