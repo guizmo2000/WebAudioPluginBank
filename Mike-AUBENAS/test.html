@@ -14,6 +14,11 @@
 	</body>
 
 	<script>
+		player.onplay = () => {
+    ctx.resume().then(() => {
+      console.log('Playback resumed successfully');
+    });
+  }
 
 		var ctx = new AudioContext();
 		var player = document.getElementById("soundSample");
