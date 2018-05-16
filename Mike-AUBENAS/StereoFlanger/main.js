@@ -176,44 +176,46 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		this.splitter = this.context.createChannelSplitter(2);
 		this.merger = this.context.createChannelMerger(2);
 		this.inputNode = this.context.createGain();
-		this.delayLNode = this.context.createDelay();
-		this.delayRNode = this.context.createDelay();
-		this.osc = this.context.createOscillator();
-		this.scldepth = this.context.createGain();
-		this.scrdepth = this.context.createGain();
+		this.feedbackLeft = this.context.createGain();
+		this.feedbackRight = this.context.createGain();
+		this.oscillator = this.context.createOscillator();
+		this.depthLeft = this.context.createGain();
+		this.depthRight = this.context.createGain();
+		this.delayLeft = this.context.createDelay();
+		this.delayRight = this.context.createDelay();
+		this.wetGain = this.context.createGain();
+		this.dryGain = this.context.createGain();
 	}
 
 	connectNodes() 
 	{
 		/* @see : https://github.com/cwilso/Audio-Input-Effects/blob/master/js/effects.js */
 
-		inputNode.connect( this.splitter );
-		inputNode.connect( this.wetGain );
+		this.inputNode.connect( this.splitter );
+		this.inputNode.connect( this.wetGain );
 
-		this.delayLNode.delayTime.value = parseFloat( document.getElementById("scdelay").value );
-		this.delayRNode.delayTime.value = parseFloat( document.getElementById("scdelay").value );
-		this.scldelay = delayLNode;
-		this.scrdelay = delayRNode;
-		this.splitter.connect( delayLNode, 0 );
-		this.splitter.connect( delayRNode, 1 );
+		this.splitter.connect( this.delayLeft, 0 );
+		this.splitter.connect( this.delayRight, 1 );
 
+		this.delayLeft.connect( this.feedbackLeft );
+		this.delayRight.connect( this.feedbackRight );
 
-		scldepth.gain.value = parseFloat( document.getElementById("scdepth").value ); // depth of change to the delay:
-		scrdepth.gain.value = - parseFloat( document.getElementById("scdepth").value ); // depth of change to the delay:
+		this.feedbackLeft.connect( this.delayRight );
+		this.feedbackRight.connect( this.delayLeft );
 
-		osc.type = 'triangle';
-		osc.frequency.value = parseFloat( document.getElementById("scspeed").value );
-		scspeed = osc;
+		this.oscillator.type = 'triangle';
+		this.oscillator.connect( this.depthLeft );
+		this.oscillator.connect( this.depthRight );
 
-		osc.connect(scldepth);
-		osc.connect(scrdepth);
+		this.depthLeft.connect( this.delayLeft.delayTime );
+		this.depthRight.connect( this.delayRight.delayTime );
+		this.delayLeft.connect( this.merger, 0, 0 );
+		this.delayRight.connect( this.merger, 0, 1 );
 
-		scldepth.connect(delayLNode.delayTime);
-		scrdepth.connect(delayRNode.delayTime);
+		this.merger.connect( this.wetGain );
 
-		delayLNode.connect( merger, 0, 0 );
-		delayRNode.connect( merger, 0, 1 );
-		merger.connect( wetGain );
+		this.wetGain.connect(this.context.destination);
+		this.dryGain.connect(this.context.destination);
 	}
 
 	setInitialParamValues()
@@ -259,25 +261,29 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 
 	setTime(_time) 
 	{
-		if (_time < this._descriptor.time.range.max && _time > this._descriptor.time.range.min) this.params.time = _time;
+		if ( (_time < this._descriptor.time.range.max) && (_time > this._descriptor.time.range.min) )
+			this.params.time = _time;
 
-		this.delayNodeLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
-		this.delayNodeRight.delayTime.setValueAtTime(_time, this.context.currentTime);
+		this.delayLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
+		this.delayRight.delayTime.setValueAtTime(_time, this.context.currentTime);
 	}
 
 	setFeedback(_feedback) 
 	{
-		if (_feedback < this._descriptor.feedback.range.max && _feedback > this._descriptor.feedback.range.min) this.params.feedback = _feedback;
+		if ( (_feedback < this._descriptor.feedback.range.max) && (_feedback > this._descriptor.feedback.range.min) ) 
+			this.params.feedback = _feedback;
 
-		this.feedbackGainNode.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
+		this.feedbackLeft.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
+		this.feedbackRight.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
 	}
 
 	setMix(_mix) 
 	{
-		if (_mix < this._descriptor.mix.range.max && _mix > this._descriptor.mix.range.min) this.params.mix = _mix;
+		if ( (_mix < this._descriptor.mix.range.max) && (_mix > this._descriptor.mix.range.min) )
+			this.params.mix = _mix;
 
-		this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
-		this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
+		this.dryGain.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
+		this.wetGain.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
 	}
 
 }
