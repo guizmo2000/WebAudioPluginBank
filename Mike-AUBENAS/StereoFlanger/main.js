@@ -35,7 +35,7 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 					"min": 0,
 					"max": 1
 				},
-				"default": 0.5,
+				"default": 0.9,
 				"unit": "",
 				"label": "feedback",
 				"flag": ""
@@ -47,10 +47,10 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 				"type": "linear",
 				"range": 
 				{
-					"min": 0,
-					"max": 1
+					"min": 0.001,
+					"max": 0.02
 				},
-				"default": 0.5,
+				"default": 0.003,
 				"unit": "ms",
 				"label": "delay",
 				"flag": ""
@@ -62,10 +62,10 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 				"type": "linear",
 				"range": 
 				{
-					"min": 0,
-					"max": 1
+					"min": 0.0005,
+					"max": 0.02
 				},
-				"default": 0.5,
+				"default": 0.005,
 				"unit": "",
 				"label": "depth",
 				"flag": ""
@@ -77,10 +77,10 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 				"type": "linear",
 				"range": 
 				{
-					"min": 0,
-					"max": 1
+					"min": 0.05,
+					"max": 2
 				},
-				"default": 0.5,
+				"default": 0.15,
 				"unit": "",
 				"label": "frequency",
 				"flag": ""
