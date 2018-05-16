@@ -14,8 +14,12 @@
 <script>
   var ctx = new AudioContext();
   var player = document.getElementById("soundSample");
+  player.onplay = () => {
+		ctx.resume().then(() => {
+			console.log('Playback resumed successfully');
+		});
+	}
   var mediaSource = ctx.createMediaElementSource(player);
-  var intermediateGain = ctx.createGain();
 
   var pluginURL = "./../WASABI/PingPongDelay2";
   var plugin = new WAPlugin.WasabiPingPongDelay(ctx, pluginURL);

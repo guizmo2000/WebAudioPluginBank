@@ -25,6 +25,11 @@
   window.onload = () =>{
     var ctx = new AudioContext();
     var player = document.getElementById("soundSample");
+    player.onplay = () => {
+		ctx.resume().then(() => {
+			console.log('Playback resumed successfully');
+		});
+	}
     var mediaSource = ctx.createMediaElementSource(player);
     var lastPlugin;
     var pluginArray = [];

@@ -18,6 +18,11 @@
 <script>
   var ctx = new AudioContext();
   var player = document.getElementById("soundSample");
+  player.onplay = () => {
+		ctx.resume().then(() => {
+			console.log('Playback resumed successfully');
+		});
+	}
   var host = document.querySelector("#loader");
   var host2 = document.querySelector("#loader2");
 
