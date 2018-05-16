@@ -318,8 +318,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 			this.params.frequency = _frequency;
 
 		this.oscillator.frequency.setValueAtTime(parseFloat(this.params.frequency, 10), this.context.currentTime);
-
-		console.log("freq : " + this.oscillator.frequency.value);
 	}
 }
 
