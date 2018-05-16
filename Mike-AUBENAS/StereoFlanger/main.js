@@ -175,7 +175,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 
 		this.splitter = this.context.createChannelSplitter(2);
 		this.merger = this.context.createChannelMerger(2);
-		this.inputNode = this.context.createGain();
 		this.feedbackLeft = this.context.createGain();
 		this.feedbackRight = this.context.createGain();
 		this.oscillator = this.context.createOscillator();
@@ -184,15 +183,14 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		this.delayLeft = this.context.createDelay();
 		this.delayRight = this.context.createDelay();
 		this.wetGain = this.context.createGain();
-		this.dryGain = this.context.createGain();
 	}
 
 	connectNodes() 
 	{
 		/* @see : https://github.com/cwilso/Audio-Input-Effects/blob/master/js/effects.js */
 
-		this.inputNode.connect( this.splitter );
-		this.inputNode.connect( this.wetGain );
+		this._input.connect( this.splitter );
+		this._input.connect( this.wetGain );
 
 		this.splitter.connect( this.delayLeft, 0 );
 		this.splitter.connect( this.delayRight, 1 );
@@ -215,7 +213,8 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		this.merger.connect( this.wetGain );
 
 		this.wetGain.connect(this.context.destination);
-		this.dryGain.connect(this.context.destination);
+
+		this.oscillator.start(0);
 	}
 
 	setInitialParamValues()
@@ -282,7 +281,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		if ( (_mix < this._descriptor.mix.range.max) && (_mix > this._descriptor.mix.range.min) )
 			this.params.mix = _mix;
 
-		this.dryGain.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
 		this.wetGain.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
 	}
 
