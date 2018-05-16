@@ -41,9 +41,9 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 				"flag": ""
 			},
 
-			"time": 
+			"delay": 
 			{
-				"key": "time",
+				"key": "delay",
 				"type": "linear",
 				"range": 
 				{
@@ -52,13 +52,13 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 				},
 				"default": 0.5,
 				"unit": "ms",
-				"label": "time",
+				"label": "delay",
 				"flag": ""
 			},
 
-			"mix": 
+			"depth": 
 			{
-				"key": "mix",
+				"key": "depth",
 				"type": "linear",
 				"range": 
 				{
@@ -67,7 +67,22 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 				},
 				"default": 0.5,
 				"unit": "",
-				"label": "mix",
+				"label": "depth",
+				"flag": ""
+			},
+
+			"frequency": 
+			{
+				"key": "frequency",
+				"type": "linear",
+				"range": 
+				{
+					"min": 0,
+					"max": 1
+				},
+				"default": 0.5,
+				"unit": "",
+				"label": "frequency",
 				"flag": ""
 			}
 		}
@@ -75,8 +90,9 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		this.params = 
 		{
 			"feedback": this._descriptor.feedback.default,
-			"mix": this._descriptor.mix.default,
-			"time": this._descriptor.time.default,
+			"delay": this._descriptor.delay.default,
+			"depth": this._descriptor.depth.default,
+			"frequency": this._descriptor.frequency.default,
 			"status": "disabled"
 		}
 
@@ -117,14 +133,17 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 	{
 		switch(key)
 		{
-			case "time" :
-				this.getTime(value);
-				break;
 			case "feedback" :
 				this.getFeedback(value);
 				break;
-			case "mix" :
-				this.getMix(value);
+			case "delay" :
+				this.getTime(value); /* TODO make getDelay */
+				break;
+			case "depth" :
+				this.getMix(value); /* TODO make getDepth */
+				break;
+			case "frequency" :
+				this.getFrequency(value); /* TODO make getFrequency */
 				break;
 			default :
 				console.log("This parameter isn't used in Wasabi-StereoFlanger");
@@ -156,7 +175,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 
 	setup()
 	{
-		console.log("delay setup");
 		this.createIO();
 		this.createNodes();
 		this.connectNodes();
@@ -207,6 +225,7 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 
 		this.depthLeft.connect( this.delayLeft.delayTime );
 		this.depthRight.connect( this.delayRight.delayTime );
+
 		this.delayLeft.connect( this.merger, 0, 0 );
 		this.delayRight.connect( this.merger, 0, 1 );
 
@@ -219,19 +238,24 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 
 	setInitialParamValues()
 	{
-		this.setTime(this.params.time);
 		this.setFeedback(this.params.feedback);
-		this.setMix(this.params.mix);
+		this.setDelay(this.params.delay);
+		this.setDepth(this.params.depth);
+		this.setFrequency(this.params.frequency);
 	}
-
-	getTime()
-	{ return this.params.time; }
-
-	getMix()
-	{ return this.params.mix; }
 
 	getFeedback()
 	{ return this.params.feedback; }
+
+	getDelay()
+	{ return this.params.delay; }
+
+	getDepth()
+	{ return this.params.depth; }
+
+	getFrequency()
+	{ return this.params.frequency; }
+
 
 	isNumber(arg)
 	{ return toString.call(arg) === '[object Number]' && arg === +arg; }
@@ -258,15 +282,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		return 1 - ((0.5 - mix) * 2);
 	}
 
-	setTime(_time) 
-	{
-		if ( (_time < this._descriptor.time.range.max) && (_time > this._descriptor.time.range.min) )
-			this.params.time = _time;
-
-		this.delayLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
-		this.delayRight.delayTime.setValueAtTime(_time, this.context.currentTime);
-	}
-
 	setFeedback(_feedback) 
 	{
 		if ( (_feedback < this._descriptor.feedback.range.max) && (_feedback > this._descriptor.feedback.range.min) ) 
@@ -275,15 +290,32 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		this.feedbackLeft.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
 		this.feedbackRight.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
 	}
-
-	setMix(_mix) 
+	
+	setDelay(_delay)
 	{
-		if ( (_mix < this._descriptor.mix.range.max) && (_mix > this._descriptor.mix.range.min) )
-			this.params.mix = _mix;
+		if ( (_delay < this._descriptor.delay.range.max) && (_delay > this._descriptor.delay.range.min) )
+			this.params.delay = _delay;
 
-		this.wetGain.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
+		this.delayLeft.delayTime.setValueAtTime(parseFloat(this.params.delay, 10), this.context.currentTime);
+		this.delayRight.delayTime.setValueAtTime(parseFloat(this.params.delay, 10), this.context.currentTime);
 	}
 
+	setDepth(_depth) 
+	{
+		if ( (_depth < this._descriptor.depth.range.max) && (_depth > this._descriptor.depth.range.min) )
+			this.params.depth = _depth;
+
+		this.depthLeft.gain.setValueAtTime(parseFloat(this.params.depth, 10), this.context.currentTime);
+		this.depthRight.gain.setValueAtTime(parseFloat(this.params.depth, 10), this.context.currentTime);
+	}
+
+	setFrequency(_frequency)
+	{
+		if ( (_frequency < this._descriptor.frequency.range.max) && (_frequency > this._descriptor.frequency.range.min) )
+			this.params.frequency = _frequency;
+
+		this.oscillator.frequency.setValueAtTime(parseFloat(this.params.frequency, 10), this.context.currentTime);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
