@@ -114,14 +114,17 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 	{
 		switch(key)
 		{
-			case "time" :
-				this.getTime();
-				break;
 			case "feedback" :
 				this.getFeedback();
 				break;
-			case "mix" :
-				this.getMix();
+			case "delay" :
+				this.getDelay();
+				break;
+			case "depth" :
+				this.getDepth();
+				break;
+			case "frequency" :
+				this.getFrequency();
 				break;
 			default :
 				console.log("This parameter isn't used in Wasabi-StereoFlanger");
@@ -134,16 +137,16 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		switch(key)
 		{
 			case "feedback" :
-				this.getFeedback(value);
+				this.setFeedback(value);
 				break;
 			case "delay" :
-				this.getTime(value); /* TODO make getDelay */
+				this.setDelay(value); 
 				break;
 			case "depth" :
-				this.getMix(value); /* TODO make getDepth */
+				this.setDepth(value); 
 				break;
 			case "frequency" :
-				this.getFrequency(value); /* TODO make getFrequency */
+				this.setFrequency(value); 
 				break;
 			default :
 				console.log("This parameter isn't used in Wasabi-StereoFlanger");
@@ -161,6 +164,7 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		{
 			this.connectNodes();
 			this._input.disconnect(this._output);
+			this.oscillator.start();
 		} 
 		else if (data == "disable") 
 		{
@@ -232,8 +236,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		this.merger.connect( this.wetGain );
 
 		this.wetGain.connect(this.context.destination);
-
-		this.oscillator.start(0);
 	}
 
 	setInitialParamValues()
