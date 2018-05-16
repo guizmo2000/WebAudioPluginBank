@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -20,17 +19,33 @@
 
   var pluginURL = "./../WASABI/PingPongDelay3";
   var plugin = new window.WasabiPingPongDelay(ctx, pluginURL);
+  var plugin2 = new window.WasabiPingPongDelay(ctx, pluginURL);
 
-  plugin.load().then((node)=>{
-    console.log("node",node);
+  let _promise = new Promise((resolve, reject) => {
 
-    plugin.loadGui().then((elem)=>{
-      console.log("elem",elem);
-      document.body.appendChild(elem);
-    });
-    mediaSource.connect(node);
-    node.connect(ctx.destination);
-  });
+    plugin.load().then((node) => {
+
+      plugin.loadGui().then((elem) => {
+        document.body.appendChild(elem);
+        resolve(true);
+      });
+      mediaSource.connect(node);
+      node.connect(ctx.destination)
+    })
+  })
+  _promise.then(e => {
+
+    plugin2.load().then(node => {
+      plugin2.loadGui().then((elem) => {
+        document.body.appendChild(elem);
+      });
+      mediaSource.connect(node);
+      node.connect(ctx.destination)
+
+    })
+
+
+  })
 </script>
 
 </html>
