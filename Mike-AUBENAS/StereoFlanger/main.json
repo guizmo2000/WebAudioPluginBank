@@ -1,7 +1,7 @@
   {
     "documentation": "TODO", 
     "name": "StereoFlanger",
-    "thumbnail": "WasabiPingPongDelay.png",
+    "thumbnail": "WasabiStereoFlanger.png",
     "vendor": "Wasabi",
     "category":"Flanger",
     "version": "1.0"
