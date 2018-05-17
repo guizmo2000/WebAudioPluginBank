@@ -177,9 +177,9 @@
       this.state = JSON.parse(this.getAttribute('state'));
       this.knobs = this._root.querySelectorAll(".knob");
       let values = [];
-      Object.keys(state).map(
+      Object.keys(this.state).map(
       (elem, index) => {
-        values.push(state[elem]);
+        values.push(this.state[elem]);
       });
       for (var i = 0; i<this.knobs.length;i++){
         this.knobs[i].value = values[i];
