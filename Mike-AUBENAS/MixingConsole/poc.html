@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Host that loads a plugin with its GUI</title>
+	<meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
+</head>
+
+<script src="./../sdk/WebAudioSDK.js"></script>
+<!-- <script src="./StereoFlanger/main.js"></script> -->
+
+<body>
+    <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
+    
+    <div>
+        <p><b>Channel 1 :</b></p> 
+        <p>Gain <input id="gain1" type="range" min="0" max="100" value="50"></p>
+        <p>Pan <input id="pan1" type="range" min="0" max="100" value="50"></p>
+    </div>
+    <div>
+        <p><b>Channel 2 :</b></p> 
+        <p>Gain <input id="gain2" type="range" min="0" max="100" value="50"></p>
+        <p>Pan <input id="pan2" type="range" min="0" max="100" value="50"></p>
+    </div>
+    <div>
+        <p><b>Channel 3 :</b></p> 
+        <p>Gain <input id="gain3" type="range" min="0" max="100" value="50"></p>
+        <p>Pan <input id="pan3" type="range" min="0" max="100" value="50"></p>
+    </div>
+    <div>
+        <p><b>Channel 4 :</b></p> 
+        <p>Gain <input id="gain4" type="range" min="0" max="100" value="50"></p>
+        <p>Pan <input id="pan4" type="range" min="0" max="100" value="50"></p>
+    </div>
+    <div>
+        <p><b>Master :</b></p> 
+        <p>Gain <input id="gainMaster" type="range" min="0" max="100" value="50"></p>
+        <p>Pan <input id="panMaster" type="range" min="0" max="100" value="50"></p>
+    </div>
+
+</body>
