@@ -15,6 +15,8 @@ class QuadraFuzz {
     this.state;
     this.inputs = [];
     this.outputs = [];
+    this._gui = document.createElement("wasabi-quadrafuzz");
+    this._gui.plug = this;
 
 
     // P2 : Json metadata
@@ -169,7 +171,7 @@ class QuadraFuzz {
         console.log(error);
       }
     }
-    
+
     Object.keys(data).map(
       (elem, index) => {
         console.log(elem, data[elem]);
