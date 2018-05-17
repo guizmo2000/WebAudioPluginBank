@@ -182,12 +182,14 @@
       });
     }
 
-    bypass() {
-      this._plug.setState("disable");
-    }
-    reactivate() {
-      this._plug.setState("enable");
-    }
+     bypass() {
+        this._plug.setParam("status","disable");
+      }
+
+
+      reactivate() {
+        this._plug.setParam("status","enable");
+      }
 
   }
   // Register the x-custom element with the browser

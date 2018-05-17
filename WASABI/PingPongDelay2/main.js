@@ -113,6 +113,8 @@ window.PingPongDelay = class PingPongDelay {
       this.getFeedback();
     } else if (key == "mix") {
       this.getMix();
+    } else if (key == "status") {
+      return this.params.status;
     } else {
       console.log("this parameter isn't used in Wasabi-PingpongDelay");
     }
@@ -126,6 +128,8 @@ window.PingPongDelay = class PingPongDelay {
       this.setFeedback(value);
     } else if (key == "mix") {
       this.setMix(value);
+    } else if (key == "status") {
+      this.setStatus(value);
     } else {
       console.log("this parameter isn't used in Wasabi-PingpongDelay");
     }
@@ -133,22 +137,16 @@ window.PingPongDelay = class PingPongDelay {
 
   // P7 state
   getState() {
-    return this.params.status;
-
+    return this.params;
   }
 
   setState(data) {
-    this.params.status = data;
-    if (data == "enable") {
-      console.log("enable");
-      this.connectNodes();
-      this.inputNode.disconnect(this.outputNode);
-    } else if (data == "disable") {
-      console.log("disable");
-      this.inputNode.disconnect(this.feedbackGainNode);
-      this.inputNode.disconnect(this.dryGainNode);
-      this.inputNode.connect(this.outputNode);
-    }
+    Object.keys(data).map(
+      (elem, index) => {
+        console.log(elem, data[elem]);
+        this.setParam(elem, data[elem]);
+      }
+    )
   }
   
 
@@ -330,6 +328,20 @@ window.PingPongDelay = class PingPongDelay {
     this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
   }
 
+  setStatus(data){
+    this.params.status = data;
+    if (data == "enable") {
+      console.log("enable");
+      this.connectNodes();
+      this.inputNode.disconnect(this.outputNode);
+    } else if (data == "disable") {
+      console.log("disable");
+      this.inputNode.disconnect(this.feedbackGainNode);
+      this.inputNode.disconnect(this.dryGainNode);
+      this.inputNode.connect(this.outputNode);
+    }
+  }
+
 
   connect(audioNode){
     this.getOutput(0).connect(audioNode);
@@ -378,7 +390,7 @@ WAPlugin.WasabiPingPongDelay = class WasabiPingPongDelay {
 
     loadGui() {
         return new Promise((resolve, reject) => {
-          this.plug.setState('disable');
+          this.plug.setParam('status','disable');
             try {
                 // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
                 let url = this.baseUrl + "/main.html";

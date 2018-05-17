@@ -192,12 +192,12 @@
       }
 
       bypass() {
-        this._plug.setState("disable");
+        this._plug.setParam("status","disable");
       }
 
 
       reactivate() {
-        this._plug.setState("enable");
+        this._plug.setParam("status","enable");
       }
 
     }

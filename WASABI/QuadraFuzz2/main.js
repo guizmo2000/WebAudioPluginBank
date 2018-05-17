@@ -130,13 +130,14 @@ class QuadraFuzz {
       this.getMidHighGain();
     } else if (key == "highGain") {
       this.getHighGain();
+    } else if (key == "status") {
+      return this.params.status;
     } else {
       console.log("this parameter isn't used in Wasabi-Quadrafuzz");
     }
   }
 
   setParam(key, value) {
-    console.log("act");
     if (key == "lowGain") {
       this.setLowGain(value);
     } else if (key == "midLowGain") {
@@ -145,6 +146,8 @@ class QuadraFuzz {
       this.setMidHighGain(value);
     } else if (key == "highGain") {
       this.setHighGain(value);
+    } else if (key == "status") {
+      this.setStatus(value);
     } else {
       console.log("this parameter isn't used in Wasabi-Quadrafuzz");
     }
@@ -152,22 +155,16 @@ class QuadraFuzz {
 
   // P7 state
   getState() {
-    return this.params.status;
+    return this.params;
   }
 
   setState(data) {
-    this.params.status = data;
-    if (data == "enable") {
-      console.log("enable");
-      this.inputNode.disconnect(this.outputNode);
-      this.connectNodes();
-    } else if (data == "disable") {
-      console.log("disable");
-      this.inputNode.disconnect(this.dryGainNode);
-      this.inputNode.disconnect(this.wetGainNode);
-      this.inputNode.connect(this.outputNode);
-
-    }
+    Object.keys(data).map(
+      (elem, index) => {
+        console.log(elem, data[elem]);
+        this.setParam(elem, data[elem]);
+      }
+    )
   }
 
 
@@ -295,25 +292,14 @@ class QuadraFuzz {
     return curve;
   }
 
-  isString(arg) {
-    return toString.call(arg) === '[object String]';
-  }
+ 
 
-  isObject(arg) {
-    return toString.call(arg) === '[object Object]';
-  }
-
-  isFunction(arg) {
-    return toString.call(arg) === '[object Function]';
-  }
 
   isNumber(arg) {
     return toString.call(arg) === '[object Number]' && arg === +arg;
   }
 
-  isArray(arg) {
-    return toString.call(arg) === '[object Array]';
-  }
+
 
   isInRange(arg, min, max) {
     if (!this.isNumber(arg) || !this.isNumber(min) || !this.isNumber(max))
@@ -322,17 +308,6 @@ class QuadraFuzz {
     return arg >= min && arg <= max;
   }
 
-  isBool(arg) {
-    return typeof (arg) === "boolean";
-  }
-
-  isOscillator(audioNode) {
-    return (audioNode && audioNode.toString() === "[object OscillatorNode]");
-  }
-
-  isAudioBufferSourceNode(audioNode) {
-    return (audioNode && audioNode.toString() === "[object AudioBufferSourceNode]");
-  }
 
   // Takes a number from 0 to 1 and normalizes it to fit within range floor to ceiling
   normalize(num, floor, ceil) {
@@ -341,34 +316,13 @@ class QuadraFuzz {
 
     return ((ceil - floor) * num) / 1 + floor;
   }
-  getDryLevel(mix) {
-    if (!this.isNumber(mix) || mix > 1 || mix < 0)
-      return 0;
-
-    if (mix <= 0.5)
-      return 1;
-
-    return 1 - ((mix - 0.5) * 2);
-  }
-
-  getWetLevel(mix) {
-    if (!this.isNumber(mix) || mix > 1 || mix < 0)
-      return 0;
-
-    if (mix >= 0.5)
-      return 1;
-
-    return 1 - ((0.5 - mix) * 2);
-  }
 
   /*
     * Setters for each param
     *
-    * this.setLowGain(this.params.lowGain);
-    this.setMidLowGain(this.params.midLowGain);
-    this.setMidHighGain(this.params.midHighGain);
-    this.setHighGain(this.params.highGain);
+    * 
     */
+
    setLowGain(_lowGain) {
     if(!this.isInRange(_lowGain,0,1))
     return;
@@ -395,6 +349,21 @@ class QuadraFuzz {
     return;
     this.params.highGain = _highGain;
     this.overdrives[3].curve = this.getDistortionCurve(this.normalize(_highGain,0,150));
+  }
+
+  setStatus(data){
+    this.params.status = data;
+    if (data == "enable") {
+      console.log("enable");
+      this.inputNode.disconnect(this.outputNode);
+      this.connectNodes();
+    } else if (data == "disable") {
+      console.log("disable");
+      this.inputNode.disconnect(this.dryGainNode);
+      this.inputNode.disconnect(this.wetGainNode);
+      this.inputNode.connect(this.outputNode);
+
+    }
   }
 
 
@@ -431,7 +400,7 @@ WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
 
     loadGui() {
         return new Promise((resolve, reject) => {
-          this.plug.setState('disable');
+          this.plug.setParam('status','disable');
             try {
                 // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
                 let url = this.baseUrl + "/main.html";
