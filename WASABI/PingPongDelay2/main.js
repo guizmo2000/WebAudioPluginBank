@@ -142,7 +142,7 @@ window.PingPongDelay = class PingPongDelay {
 
   setState(data) {
     try {
-      this.gui.setAttribute('state', JSON.stringify(this.params));
+      this.gui.setAttribute('state', JSON.stringify(data));
     } catch (error) {
       console.log("Gui not defined", error)
       try {
@@ -151,12 +151,14 @@ window.PingPongDelay = class PingPongDelay {
         console.log(error);
       }
     }
+    
     Object.keys(data).map(
       (elem, index) => {
         console.log(elem, data[elem]);
         this.setParam(elem, data[elem]);
       }
     )
+
   }
   
 

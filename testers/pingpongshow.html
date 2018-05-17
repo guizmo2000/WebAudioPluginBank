@@ -20,6 +20,7 @@
 		});
 	}
   var mediaSource = ctx.createMediaElementSource(player);
+  var _settings = {feedback: 0.9, time: 0.9, mix: 0.9, status: "enable"};
 
   var pluginURL = "./../WASABI/PingPongDelay2";
   var plugin = new WAPlugin.WasabiPingPongDelay(ctx, pluginURL);
@@ -30,6 +31,8 @@
     plugin.loadGui().then((elem)=>{
       console.log("elem",elem);
       document.body.appendChild(elem);
+      node.setState(_settings);
+
     });
     mediaSource.connect(node.getInput(0));
     node.connect(ctx.destination);

@@ -162,22 +162,23 @@ class QuadraFuzz {
 
   setState(data) {
     try {
-      this.gui.setAttribute('state', JSON.stringify(this.params));
+      this.gui.setAttribute('state', JSON.stringify(data));
     } catch (error) {
       console.log("Gui not defined", error)
       try {
-        document.querySelector('wasabi-quadrafuzz').setAttribute('state', JSON.stringify(this.params));
+        document.querySelector('wasabi-pingpongdelay').setAttribute('state', JSON.stringify(this.params));
       } catch (error) {
         console.log(error);
       }
     }
-
+    
     Object.keys(data).map(
       (elem, index) => {
         console.log(elem, data[elem]);
         this.setParam(elem, data[elem]);
       }
     )
+
   }
 
 
