@@ -13,8 +13,8 @@ window.PingPongDelay = class PingPongDelay {
     this.state;
     this.inputs = [];
     this.outputs = [];
-    this._gui = document.createElement("wasabi-pingpongdelay");
-    this._gui.plug = this;
+    this.gui = document.createElement("wasabi-pingpongdelay");
+    this.gui._plug = this;
     
 
     // P2 : Json metadata

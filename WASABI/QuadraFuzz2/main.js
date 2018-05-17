@@ -15,8 +15,8 @@ class QuadraFuzz {
     this.state;
     this.inputs = [];
     this.outputs = [];
-    this._gui = document.createElement("wasabi-quadrafuzz");
-    this._gui.plug = this;
+    this.gui = document.createElement("wasabi-quadrafuzz");
+    this.gui._plug = this;
 
 
     // P2 : Json metadata

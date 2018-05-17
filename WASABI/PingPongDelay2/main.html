@@ -141,7 +141,7 @@
       super();
       console.log(plug);
       this._plug = plug;
-      console.log(this._plug);
+      this._plug.gui = this;
       this._root = this.attachShadow({ mode: 'open' });
       this._root.appendChild(delaytemp.content.cloneNode(true));
       this.isOn = false;
