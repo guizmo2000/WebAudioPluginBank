@@ -141,78 +141,95 @@
   let quadratemp = document.currentScript.ownerDocument.querySelector("#wc-quadrafuzz");
   // Ecapsulate the WebComponent class into a function, like this we can pass
   // a parameter to its constructor (the audio node/audio processor)
-     class QuadraFuzzGui extends HTMLElement {
+  class QuadraFuzzGui extends HTMLElement {
+
+    constructor(plug) {
+      super();
+      this._plug = plug;
+      this._plug.gui = this;
+      this._root = this.attachShadow({ mode: 'open' });
+      this._root.appendChild(quadratemp.content.cloneNode(true));
+      this.isOn = false;
+      this.state = new Object();
+      this.setKnobs();
+      this.setSwitchListener();
       
-      constructor(plug) {
-        super();
-        console.log(plug);
-        this._plug = plug;
-        console.log(this._plug);
-        this._root = this.attachShadow({ mode: 'open' });
-        this._root.appendChild(quadratemp.content.cloneNode(true));
-        this.isOn = false;
-        this.setKnobs();
-        this.setSwitchListener();
-      }
-
-      get properties() {
-        this.boundingRect = {
-          dataWidth: {
-            type: Number,
-            value: 120
-          },
-          dataHeight: {
-            type: Number,
-            value: 180
-          }
-        };
-        return this.boundingRect;
-      }
-
-
-      setKnobs() {
-        console.log('setknobs');
-        this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("lowGain", e.target.value));
-        this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("midLowGain", e.target.value));
-        this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("midHighGain", e.target.value));
-        this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("highGain", e.target.value));
-
-
-      }
-
-
-
-      setSwitchListener() {
-        console.log("setswitch");
-        this._root.querySelector("#switch1").addEventListener('change', (e) => {
-          if (this.isOn) this.bypass()
-          else this.reactivate();
-          this.isOn = !this.isOn;
-        });
-      }
-
-      bypass() {
-        this._plug.setParam("status","disable");
-      }
-
-
-      reactivate() {
-        this._plug.setParam("status","enable");
-      }
-
     }
-    
-    try {
-      customElements.define('wasabi-quadrafuzz', QuadraFuzzGui);
-      console.log("Element defined");
-    } catch(error){
-      console.log(error);
-      console.log("Element already defined");      
+
+    get properties() {
+      this.boundingRect = {
+        dataWidth: {
+          type: Number,
+          value: 120
+        },
+        dataHeight: {
+          type: Number,
+          value: 180
+        }
+      };
+      return this.boundingRect;
+    }
+
+    static get observedAttributes() { return ['state']; }
+
+    attributeChangedCallback() {
+      console.log(`Custom element ${this.is} attributes changed.`);
+      this.state = JSON.parse(this.getAttribute('state'));
+      this.knobs = this._root.querySelectorAll(".knob");
+      let values = [];
+      Object.keys(state).map(
+      (elem, index) => {
+        values.push(state[elem]);
+      });
+      for (var i = 0; i<this.knobs.length;i++){
+        this.knobs[i].value = values[i];
+      }
     }
 
 
-    createQuadraFuzzGui = (plug) => {
-      let elem = new QuadraFuzzGui(plug);
-      return elem; 
+    setKnobs() {
+      console.log('setknobs');
+      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("lowGain", e.target.value));
+      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("midLowGain", e.target.value));
+      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("midHighGain", e.target.value));
+      this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("highGain", e.target.value));
+
+
+    }
+
+
+
+    setSwitchListener() {
+      console.log("setswitch");
+      this._root.querySelector("#switch1").addEventListener('change', (e) => {
+        if (this.isOn) this.bypass()
+        else this.reactivate();
+        this.isOn = !this.isOn;
+      });
+    }
+
+    bypass() {
+      this._plug.setParam("status", "disable");
+    }
+
+
+    reactivate() {
+      this._plug.setParam("status", "enable");
+    }
+
   }
-</script> 
+
+  try {
+    customElements.define('wasabi-quadrafuzz', QuadraFuzzGui);
+    console.log("Element defined");
+  } catch (error) {
+    console.log(error);
+    console.log("Element already defined");
+  }
+
+
+  createQuadraFuzzGui = (plug) => {
+    let elem = new QuadraFuzzGui(plug);
+    return elem;
+  }
+</script>

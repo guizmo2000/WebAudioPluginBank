@@ -159,6 +159,17 @@ class QuadraFuzz {
   }
 
   setState(data) {
+    try {
+      this.gui.setAttribute('state', JSON.stringify(this.params));
+    } catch (error) {
+      console.log("Gui not defined", error)
+      try {
+        document.querySelector('wasabi-quadrafuzz').setAttribute('state', JSON.stringify(this.params));
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    
     Object.keys(data).map(
       (elem, index) => {
         console.log(elem, data[elem]);
@@ -225,15 +236,15 @@ class QuadraFuzz {
 
   connectNodes() {
     this.inputNode.connect(this.wetGainNode);
-		this.inputNode.connect(this.dryGainNode);
+    this.inputNode.connect(this.dryGainNode);
     this.dryGainNode.connect(this.outputNode);
-    
+
     var filters = [this.lowpassLeft, this.bandpass1Left, this.bandpass2Left, this.highpassLeft];
-		for (var i = 0; i < filters.length; i++) {
-			this.wetGainNode.connect(filters[i]);
-			filters[i].connect(this.overdrives[i]);
-			this.overdrives[i].connect(this.outputNode);
-		}
+    for (var i = 0; i < filters.length; i++) {
+      this.wetGainNode.connect(filters[i]);
+      filters[i].connect(this.overdrives[i]);
+      this.overdrives[i].connect(this.outputNode);
+    }
 
   }
 
@@ -292,7 +303,7 @@ class QuadraFuzz {
     return curve;
   }
 
- 
+
 
 
   isNumber(arg) {
@@ -323,35 +334,35 @@ class QuadraFuzz {
     * 
     */
 
-   setLowGain(_lowGain) {
-    if(!this.isInRange(_lowGain,0,1))
-    return;
+  setLowGain(_lowGain) {
+    if (!this.isInRange(_lowGain, 0, 1))
+      return;
     this.params.lowGain = _lowGain;
-    this.overdrives[0].curve = this.getDistortionCurve(this.normalize(_lowGain,0,150));
+    this.overdrives[0].curve = this.getDistortionCurve(this.normalize(_lowGain, 0, 150));
   }
 
   setMidLowGain(_midLowGain) {
-    if(!this.isInRange(_midLowGain,0,1))
-    return;
+    if (!this.isInRange(_midLowGain, 0, 1))
+      return;
     this.params.midLowGain = _midLowGain;
-    this.overdrives[1].curve = this.getDistortionCurve(this.normalize(_midLowGain,0,150));
+    this.overdrives[1].curve = this.getDistortionCurve(this.normalize(_midLowGain, 0, 150));
 
   }
 
   setMidHighGain(_midHighGain) {
-    if(!this.isInRange(_midHighGain,0,1))
-    return;
+    if (!this.isInRange(_midHighGain, 0, 1))
+      return;
     this.params.midHighGain = _midHighGain;
-    this.overdrives[2].curve = this.getDistortionCurve(this.normalize(_midHighGain,0,150));
+    this.overdrives[2].curve = this.getDistortionCurve(this.normalize(_midHighGain, 0, 150));
   }
   setHighGain(_highGain) {
-    if(!this.isInRange(_highGain,0,1))
-    return;
+    if (!this.isInRange(_highGain, 0, 1))
+      return;
     this.params.highGain = _highGain;
-    this.overdrives[3].curve = this.getDistortionCurve(this.normalize(_highGain,0,150));
+    this.overdrives[3].curve = this.getDistortionCurve(this.normalize(_highGain, 0, 150));
   }
 
-  setStatus(data){
+  setStatus(data) {
     this.params.status = data;
     if (data == "enable") {
       console.log("enable");
@@ -371,7 +382,7 @@ class QuadraFuzz {
     this.getOutput(0).connect(audioNode);
   }
 
-  disconnect(audioNode){
+  disconnect(audioNode) {
     this.getOutput(0).disconnect(audioNode);
   }
 
@@ -382,68 +393,68 @@ var WAPlugin = WAPlugin || {};
 
 WAPlugin.WasabiQuadraFuzz = class WasabiQuadraFuzz {
 
-    constructor(context, baseUrl) {
-        this.context = context;
-        this.baseUrl = baseUrl;
-    }
+  constructor(context, baseUrl) {
+    this.context = context;
+    this.baseUrl = baseUrl;
+  }
 
-    load() {
-        return new Promise((resolve, reject) => {
-          try{
-            this.plug = new QuadraFuzz(this.context);
-            resolve(this.plug);
-          } catch (e){
-            reject(e);
+  load() {
+    return new Promise((resolve, reject) => {
+      try {
+        this.plug = new QuadraFuzz(this.context);
+        resolve(this.plug);
+      } catch (e) {
+        reject(e);
+      }
+    });
+  }
+
+  loadGui() {
+    return new Promise((resolve, reject) => {
+      this.plug.setParam('status', 'disable');
+      try {
+        // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
+        let url = this.baseUrl + "/main.html";
+
+
+        if (!this.linkExists(url)) {
+          // LINK DOES NOT EXIST, let's add it to the document
+          var link = document.createElement('link');
+          link.rel = 'import';
+          //link.id = 'urlPlugin';
+          link.href = url;
+          document.head.appendChild(link);
+
+
+
+          link.onload = (e) => {
+            // the file has been loaded, instanciate GUI
+            // and get back the HTML elem
+            // HERE WE COULD REMOVE THE HARD CODED NAME
+            console.log(this.plug);
+            var element = createQuadraFuzzGui(this.plug);
+            //element._plug = this.plug;
+            resolve(element);
           }
-        });
-    }
+        } else {
+          // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
+          // so we can create another instance
+          console.log(this.plug);
+          var element = createQuadraFuzzGui(this.plug);
+          //element._plug = this.plug;
+          resolve(element);
+        }
+      } catch (e) {
+        console.log(e);
+        reject(e);
+      }
+    });
+  };
 
-    loadGui() {
-        return new Promise((resolve, reject) => {
-          this.plug.setParam('status','disable');
-            try {
-                // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
-                let url = this.baseUrl + "/main.html";
-                
+  linkExists(url) {
+    return document.querySelectorAll(`link[href="${url}"]`).length > 0;
 
-                if (!this.linkExists(url)) {
-                    // LINK DOES NOT EXIST, let's add it to the document
-                    var link = document.createElement('link');
-                    link.rel = 'import';
-                    //link.id = 'urlPlugin';
-                    link.href = url;
-                    document.head.appendChild(link);
-
-
-                  
-                    link.onload = (e) => {
-                        // the file has been loaded, instanciate GUI
-                        // and get back the HTML elem
-                        // HERE WE COULD REMOVE THE HARD CODED NAME
-                        console.log(this.plug);
-                        var element = createQuadraFuzzGui(this.plug);
-                        //element._plug = this.plug;
-                        resolve(element);
-                    }
-                } else {
-                    // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
-                    // so we can create another instance
-                    console.log(this.plug);
-                    var element = createQuadraFuzzGui(this.plug);
-                    //element._plug = this.plug;
-                    resolve(element);
-                }
-            } catch (e) {
-                console.log(e);
-                reject(e);
-            }
-        });
-    };
-
-    linkExists(url) {
-        return document.querySelectorAll(`link[href="${url}"]`).length > 0;
-
-    }
+  }
 
 
 }

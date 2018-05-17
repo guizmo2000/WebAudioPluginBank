@@ -141,6 +141,16 @@ window.PingPongDelay = class PingPongDelay {
   }
 
   setState(data) {
+    try {
+      this.gui.setAttribute('state', JSON.stringify(this.params));
+    } catch (error) {
+      console.log("Gui not defined", error)
+      try {
+        document.querySelector('wasabi-pingpongdelay').setAttribute('state', JSON.stringify(this.params));
+      } catch (error) {
+        console.log(error);
+      }
+    }
     Object.keys(data).map(
       (elem, index) => {
         console.log(elem, data[elem]);
