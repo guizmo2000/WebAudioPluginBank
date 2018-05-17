@@ -168,6 +168,7 @@
     attributeChangedCallback() {
       console.log(`Custom element ${this.is} attributes changed.`);
       this.state = JSON.parse(this.getAttribute('state'));
+      if(this.state.status =="enable") this._root.querySelector("#switch1").value = 1;
       this.knobs = this._root.querySelectorAll(".knob");
       let values = [];
       Object.keys(this.state).map(
