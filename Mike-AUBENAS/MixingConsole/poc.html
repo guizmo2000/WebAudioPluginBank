@@ -2,15 +2,15 @@
 <html>
 
 <head>
-	<title>Host that loads a plugin with its GUI</title>
+	<title>Mixing Console Test</title>
 	<meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
 </head>
 
-<script src="./../sdk/WebAudioSDK.js"></script>
+<script src="./../../sdk/WebAudioSDK.js"></script>
 <!-- <script src="./StereoFlanger/main.js"></script> -->
 
 <body>
-    <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
+    <audio src="./../../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
     
     <div>
         <p><b>Channel 1 :</b></p> 
@@ -39,3 +39,85 @@
     </div>
 
 </body>
+
+
+<script>
+
+    let delaytemp = document.currentScript.ownerDocument.querySelector("#wc-stereoflanger");
+
+    class MixingConsoleGUI extends HTMLElement 
+    {
+        constructor(plug) 
+        { 
+            super();
+            this._plug = plug;
+            this._root = this.attachShadow({ mode: 'open' });
+            this._root.appendChild(delaytemp.content.cloneNode(true));
+            this.isOn = false;
+            this.setup();
+        }
+
+        get properties() 
+        {
+            this.boundingRect = 
+            {
+                dataWidth: 
+                {
+                    type: Number,
+                    value: 120
+                },
+                dataHeight: 
+                {
+                    type: Number,
+                    value: 180
+                }
+            };
+
+            return this.boundingRect;
+        }
+
+        setup()
+        {
+            setGain();
+            setPan();
+        }
+
+        setGain() 
+        {
+            this._root.querySelector("#gain1").addEventListener('input', (e) => this._plug.setParam("gain1", e.target.value));
+            this._root.querySelector("#gain2").addEventListener('input', (e) => this._plug.setParam("gain2", e.target.value));
+            this._root.querySelector("#gain3").addEventListener('input', (e) => this._plug.setParam("gain3", e.target.value));
+            this._root.querySelector("#gain4").addEventListener('input', (e) => this._plug.setParam("gain4", e.target.value));
+            this._root.querySelector("#gainMaster").addEventListener('input', (e) => this._plug.setParam("gainMaster", e.target.value));
+        }
+
+        setPan()
+        {
+            this._root.querySelector("#pan1").addEventListener('input', (e) => this._plug.setParam("pan1", e.target.value));
+            this._root.querySelector("#pan2").addEventListener('input', (e) => this._plug.setParam("pan2", e.target.value));
+            this._root.querySelector("#pan3").addEventListener('input', (e) => this._plug.setParam("pan3", e.target.value));
+            this._root.querySelector("#pan4").addEventListener('input', (e) => this._plug.setParam("pan4", e.target.value));
+            this._root.querySelector("#panMaster").addEventListener('input', (e) => this._plug.setParam("panMaster", e.target.value));
+        }
+    }
+    // Register the x-custom element with the browser
+
+    try 
+    {
+        console.log("Element defined");
+        customElements.define('wasabi-mixingconsole', MixingConsoleGUI);
+    } 
+    catch(error)
+    {
+        console.log(error);
+        console.log("Element already defined");      
+    }
+
+
+    createWAP = (plug) => 
+    {
+        let elem = new MixingConsoleGUI(plug);
+        return elem; 
+    }
+
+</script>
