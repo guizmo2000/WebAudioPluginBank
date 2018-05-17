@@ -170,6 +170,7 @@
       this.state = JSON.parse(this.getAttribute('state'));
       if (this.state.status == "enable") {
         this._root.querySelector("#switch1").value = 1;
+        this.isOn = true;
       }
       this.knobs = this._root.querySelectorAll(".knob");
       for (var i = 0; i < this.knobs.length; i++) {
