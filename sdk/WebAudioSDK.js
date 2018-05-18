@@ -86,8 +86,6 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
   setState(data) { };
 
   onMidi(msg) { };
-
-
 }
 
 
@@ -121,7 +119,6 @@ class WebAudioPluginFactory {
           }
 
         })
-        
       });
   }
 
