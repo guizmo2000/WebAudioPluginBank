@@ -13,8 +13,8 @@ window.PingPongDelay = class PingPongDelay {
     this.state;
     this.inputs = [];
     this.outputs = [];
-    this.gui = document.createElement("wasabi-pingpongdelay");
-    this.gui._plug = this;
+    //this.gui = document.createElement("wasabi-pingpongdelay");
+    //this.gui._plug = this;
     
 
     // P2 : Json metadata
@@ -148,6 +148,7 @@ window.PingPongDelay = class PingPongDelay {
 
   setState(data) {
     try {
+      
       this.gui.setAttribute('state', JSON.stringify(data));
     } catch (error) {
       console.log("Gui not defined", error)
