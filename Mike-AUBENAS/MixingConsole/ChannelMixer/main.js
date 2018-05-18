@@ -30,7 +30,7 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		{
 			"gain" : 0,
 			"pan" : 0,
-			"status": "disables"
+			"status": "disable"
 		}
 
 		this.setup();
@@ -90,7 +90,6 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		this.createIO();
 		this.createNodes();
 		this.connectNodes();
-		//this.oscillator.start();
 	}
 
 	createIO()
@@ -101,12 +100,17 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 
 	createNodes() 
 	{
-		// todo
+		this.gain = this.context.createGain();
+		this.pan = this.context.createPanner();
+		this.analyser = this.context.createAnalyser();
 	}
 
 	connectNodes() 
 	{
-		// todo
+		this._input.connect( this.gain );
+		this.gain.connect( this.pan );
+		this.pan.connect( this.analyser );
+		this.analyser.connect( this._output ); 
     }
 
 	isNumber(arg)
@@ -141,12 +145,6 @@ window.WasabiChannelMixer = class WasabiChannelMixer extends WebAudioPluginFacto
 {
 	constructor(context, baseUrl)
 	{ super(context,baseUrl); }
-
-	load()
-	{ return super.load(); }
-
-	loadGui() 
-	{ return super.loadGui(); }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
