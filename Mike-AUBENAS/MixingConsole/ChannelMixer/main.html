@@ -49,7 +49,7 @@
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(delaytemp.content.cloneNode(true));
             this.isOn = false;
-            this.setListeners();
+            this.setListener();
             this.setSwitchListener();
         }
 
