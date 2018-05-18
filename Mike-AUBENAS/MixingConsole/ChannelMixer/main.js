@@ -39,10 +39,10 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 			},
 			"pan" :
 			{
-				"value" : 1,
+				"value" : 0,
 				"range" :
 				{
-					"min" : -9,
+					"min" : -10,
 					"max" : 10
 				}
 			},
