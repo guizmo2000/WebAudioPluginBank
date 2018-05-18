@@ -28,30 +28,58 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		
 		this.params = 
 		{
-			"gain" : 0,
-			"pan" : 0,
+			"gain" : 
+			{
+				"value" : 20,
+				"range" :
+				{
+					"min" : 0,
+					"max" : 100
+				}
+			},
+			"pan" :
+			{
+				"value" : 0,
+				"range" :
+				{
+					"min" : -10,
+					"max" : 10
+				}
+			},
 			"status": "disable"
 		}
 
 		this.setup();
-    }
-    
+	}
+	
+	setInitialParamValues() 
+	{
+		this.setGain(this.params.gain.value);
+		this.setPan(this.params.pan.value);
+	}
+	
     getGain()
-    { return this.params.gain; }
+    { return this.params.gain.value; }
 
     setGain(value)
     {
-        if( (value > 0) && (value < 100) )
-            this.params.gain = value;
+		if( (value >= this.params.gain.range.min) && (value <= this.params.gain.range.max) )
+		{
+			this.params.gain.value = value;
+			this.gain.gain.setValueAtTime(parseFloat(value, 10), this.context.currentTime);	
+		}
     }
 
     getPan()
     { return this.params.pan;}
 
-    setPan()
+    setPan(value)
     {
-        if( (value > 0) && (value < 100) )
-            this.params.pan = value;
+		if( (value >= this.params.pan.range.min) && (value <= this.params.pan.range.min) )
+		{
+			this.params.pan = value;
+			this.pan.positionX(parseFloat(this.params.pan, 10), this.context.currentTime);	
+		}
     }
 
 	inputChannelCount()
@@ -90,6 +118,7 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		this.createIO();
 		this.createNodes();
 		this.connectNodes();
+		this.setInitialParamValues();
 	}
 
 	createIO()
