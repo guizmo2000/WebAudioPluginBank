@@ -30,20 +30,20 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		{
 			"gain" : 
 			{
-				"value" : 20,
+				"value" : 1,
 				"range" :
 				{
 					"min" : 0,
-					"max" : 100
+					"max" : 10
 				}
 			},
 			"pan" :
 			{
-				"value" : 50,
+				"value" : 1,
 				"range" :
 				{
-					"min" : 1,
-					"max" : 99
+					"min" : -9,
+					"max" : 10
 				}
 			},
 			"status": "disable"
@@ -75,11 +75,11 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 
     setPan(value)
     {
-		value = value -49; // Just beacause the default value is one
 		if( (value >= this.params.pan.range.min) && (value <= this.params.pan.range.max) )
 		{
-			this.params.pan = value;
-			this.pan.positionX.setValueAtTime(parseFloat(this.params.pan, 10), this.context.currentTime);	
+			this.params.pan.value = value;
+			console.log(value);
+			this.pan.positionX.setValueAtTime(parseFloat(value, 10), this.context.currentTime);	
 		}
     }
 
