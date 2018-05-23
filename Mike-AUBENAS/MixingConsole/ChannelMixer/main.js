@@ -80,6 +80,7 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 			this.params.pan.value = value;
 			console.log(value);
 			this.pan.positionX.setValueAtTime(parseFloat(value, 10), this.context.currentTime);	
+			this.gain.gain.setValueAtTime(parseFloat( (value * 2), 10), this.context.currentTime);
 		}
     }
 
