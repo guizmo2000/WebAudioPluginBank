@@ -29,6 +29,89 @@
     <div id="main"> 
         <p id="channelNumber"><b></b></p>  
         <p>Gain <input id="gain" type="range" min="0" max="10" value="2" step="0.1"></p> 
+        <webaudio-slider id="slider1" midilearn="true" units="Db" 
+            style="position:absolute;left:731px;top:64px" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png" 
+            knobsrc="./MixingConsole/ChannelMixer/Image//vsliderknob.png" value="0" min="-12" max="12" step="1" basewidth="24" height="128" 
+            knobwidth="24" knobheight="24" ditchlength="100" tooltip="Slider1">
+
+                <style>
+
+                    .webaudioctrl-tooltip
+                    {
+                        display:inline-block;
+                        position:absolute;
+                        margin:0 -1000px;
+                        z-index: 999;
+                        background:#eee;
+                        color:#000;
+                        border:1px solid #666;
+                        border-radius:4px;
+                        padding:5px 10px;
+                        text-align:center;
+                        left:0; top:0;
+                        font-size:11px;
+                        opacity:0;
+                        visibility:hidden;
+                    }
+                    .webaudioctrl-tooltip:before
+                    {
+                        content: "";
+                        position: absolute;
+                        top: 100%;
+                        left: 50%;
+                        margin-left: -8px;
+                        border: 8px solid transparent;
+                        border-top: 8px solid #666;
+                    }
+                    .webaudioctrl-tooltip:after
+                    {
+                        content: "";
+                        position: absolute;
+                        top: 100%;
+                        left: 50%;
+                        margin-left: -6px;
+                        border: 6px solid transparent;
+                        border-top: 6px solid #eee;
+                    }
+                    
+                    webaudio-slider
+                    {
+                        display:inline-block;
+                        position:relative;
+                        margin:0;
+                        padding:0;
+                        font-family: sans-serif;
+                        font-size: 11px;
+                        cursor:pointer;
+                    }
+                    .webaudio-slider-body
+                    {
+                        display:inline-block;
+                        position:relative;
+                        margin:0;
+                        padding:0;
+                    }
+                    .webaudio-slider-knob
+                    {
+                        display:inline-block;
+                        position:absolute;
+                        margin:0;
+                        padding:0;
+                    }
+                </style>
+
+                <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; 
+                    background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
+                    <div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; 
+                    background-image: url(./MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
+                    </div>
+                </div>
+                <div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 
+                    0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
+                </div>
+
+            </webaudio-slider>
+            
         <p>Pan <input id="pan" type="range" min="-10" max="10" value="0" step="0.01"></p> 
         <p>Enable ?<input type="checkbox" id="switch1"></p>
     </div>
