@@ -175,25 +175,27 @@
     attributeChangedCallback() {
       console.log(`Custom element ${this.is} attributes changed.`);
       this.state = JSON.parse(this.getAttribute('state'));
+      console.log(this.state);
       if (this.state.status == "enable") {
         this._root.querySelector("#switch1").value = 1;
         this.isOn = true;
       }
       this.knobs = this._root.querySelectorAll(".knob");
-      for (var i = 0; i < this.knobs.length; i++) {
-        this.knobs[i].value = Object.values(this.state)[i];
-      }
-      console.log(this.knobs);
+      this.labels = this._root.querySelectorAll(".knob-label");
+      console.log(this.labels);
 
+      for (var i = 0; i < this.knobs.length; i++) {
+        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")];
+      }
     }
 
 
     setKnobs() {
       console.log('setknobs');
-      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("lowGain", e.target.value));
-      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("midLowGain", e.target.value));
-      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("midHighGain", e.target.value));
-      this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("highGain", e.target.value));
+      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("lowgain", e.target.value));
+      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("midlowgain", e.target.value));
+      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("midhighgain", e.target.value));
+      this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("highgain", e.target.value));
 
 
     }
