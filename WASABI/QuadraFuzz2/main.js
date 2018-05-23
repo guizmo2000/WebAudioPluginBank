@@ -147,7 +147,13 @@ class QuadraFuzz {
     } else if (key == "highGain") {
       this.setHighGain(value);
     } else if (key == "status") {
-      this.setStatus(value);
+      try {
+        this.setStatus(value);
+
+      } catch (error) {
+       // default position is disable for pedals, so trying restore in a disable state throw an error.
+       console.log(error,"but this is normal don't worry")
+      }
     } else {
       console.log("this parameter isn't used in Wasabi-Quadrafuzz");
     }
