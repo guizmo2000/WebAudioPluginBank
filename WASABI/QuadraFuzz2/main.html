@@ -184,7 +184,7 @@
       this.labels = this._root.querySelectorAll(".knob-label");
 
       for (var i = 0; i < this.knobs.length; i++) {
-        this.knobs[i].value = this.state[this.labels[i].innerHTML.trim()];
+        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().trim()];
       }
       console.log(this.knobs);
 
@@ -193,10 +193,10 @@
 
     setKnobs() {
       console.log('setknobs');
-      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("lowGain", e.target.value));
-      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("midLowGain", e.target.value));
-      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("midHighGain", e.target.value));
-      this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("highGain", e.target.value));
+      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("lowgain", e.target.value));
+      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("midlowgain", e.target.value));
+      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("midhighgain", e.target.value));
+      this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("highgain", e.target.value));
 
 
     }

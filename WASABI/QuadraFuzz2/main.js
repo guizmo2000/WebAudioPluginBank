@@ -87,10 +87,10 @@ class QuadraFuzz {
     }
     // params 
     this.params = {
-      "lowGain": this.descriptor.lowGain.default,
-      "midLowGain": this.descriptor.midLowGain.default,
-      "midHighGain": this.descriptor.midHighGain.default,
-      "highGain": this.descriptor.highGain.default,
+      "lowgain": this.descriptor.lowGain.default,
+      "midlowgain": this.descriptor.midLowGain.default,
+      "midhighgain": this.descriptor.midHighGain.default,
+      "highgain": this.descriptor.highGain.default,
       "status": "disabled"
     }
     // p5 patchnames
@@ -122,13 +122,13 @@ class QuadraFuzz {
 
   getParam(key) {
     console.log("act");
-    if (key == "lowGain") {
+    if (key == "lowgain") {
       this.getLowGain();
-    } else if (key == "midLowGain") {
+    } else if (key == "midlowgain") {
       this.getMidLowGain();
-    } else if (key == "midHighGain") {
+    } else if (key == "midhighgain") {
       this.getMidHighGain();
-    } else if (key == "highGain") {
+    } else if (key == "highgain") {
       this.getHighGain();
     } else if (key == "status") {
       return this.params.status;
@@ -138,13 +138,13 @@ class QuadraFuzz {
   }
 
   setParam(key, value) {
-    if (key == "lowGain") {
+    if (key == "lowgain") {
       this.setLowGain(value);
-    } else if (key == "midLowGain") {
+    } else if (key == "midlowgain") {
       this.setMidLowGain(value);
-    } else if (key == "midHighGain") {
+    } else if (key == "midhighgain") {
       this.setMidHighGain(value);
-    } else if (key == "highGain") {
+    } else if (key == "highgain") {
       this.setHighGain(value);
     } else if (key == "status") {
       try {
@@ -259,10 +259,10 @@ class QuadraFuzz {
     /*
      * set default value for parameters and assign it to the web audio nodes
      */
-    this.setLowGain(this.params.lowGain);
-    this.setMidLowGain(this.params.midLowGain);
-    this.setMidHighGain(this.params.midHighGain);
-    this.setHighGain(this.params.highGain);
+    this.setLowGain(this.params.lowgain);
+    this.setMidLowGain(this.params.midlowgain);
+    this.setMidHighGain(this.params.midhighgain);
+    this.setHighGain(this.params.highgain);
   }
 
 
@@ -278,13 +278,13 @@ class QuadraFuzz {
   }
 
   getMidLowGain() {
-    return this.params.midLowGain;
+    return this.params.midlowgain;
   }
   getMidHighGain() {
-    return this.params.midHighGain;
+    return this.params.midhighgain;
   }
   getHighGain() {
-    return this.params.highGain;
+    return this.params.highgain;
   }
 
 
@@ -344,14 +344,14 @@ class QuadraFuzz {
   setLowGain(_lowGain) {
     if (!this.isInRange(_lowGain, 0, 1))
       return;
-    this.params.lowGain = _lowGain;
+    this.params.lowgain = _lowGain;
     this.overdrives[0].curve = this.getDistortionCurve(this.normalize(_lowGain, 0, 150));
   }
 
   setMidLowGain(_midLowGain) {
     if (!this.isInRange(_midLowGain, 0, 1))
       return;
-    this.params.midLowGain = _midLowGain;
+    this.params.midlowgain = _midLowGain;
     this.overdrives[1].curve = this.getDistortionCurve(this.normalize(_midLowGain, 0, 150));
 
   }
@@ -359,13 +359,13 @@ class QuadraFuzz {
   setMidHighGain(_midHighGain) {
     if (!this.isInRange(_midHighGain, 0, 1))
       return;
-    this.params.midHighGain = _midHighGain;
+    this.params.midhighgain = _midHighGain;
     this.overdrives[2].curve = this.getDistortionCurve(this.normalize(_midHighGain, 0, 150));
   }
   setHighGain(_highGain) {
     if (!this.isInRange(_highGain, 0, 1))
       return;
-    this.params.highGain = _highGain;
+    this.params.highgain = _highGain;
     this.overdrives[3].curve = this.getDistortionCurve(this.normalize(_highGain, 0, 150));
   }
 
