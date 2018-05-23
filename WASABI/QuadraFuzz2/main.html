@@ -184,7 +184,7 @@
       this.labels = this._root.querySelectorAll(".knob-label");
 
       for (var i = 0; i < this.knobs.length; i++) {
-        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase()];
+        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().trim()];
       }
       console.log(this.knobs);
 
