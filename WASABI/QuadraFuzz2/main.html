@@ -182,12 +182,11 @@
       }
       this.knobs = this._root.querySelectorAll(".knob");
       this.labels = this._root.querySelectorAll(".knob-label");
+      console.log(this.labels);
 
       for (var i = 0; i < this.knobs.length; i++) {
-        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().trim()];
+        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")];
       }
-      console.log(this.knobs);
-
     }
 
 
