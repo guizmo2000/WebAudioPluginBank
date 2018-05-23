@@ -175,13 +175,16 @@
     attributeChangedCallback() {
       console.log(`Custom element ${this.is} attributes changed.`);
       this.state = JSON.parse(this.getAttribute('state'));
+      console.log(this.state);
       if (this.state.status == "enable") {
         this._root.querySelector("#switch1").value = 1;
         this.isOn = true;
       }
       this.knobs = this._root.querySelectorAll(".knob");
+      this.labels = this._root.querySelectorAll(".knob-label");
+
       for (var i = 0; i < this.knobs.length; i++) {
-        this.knobs[i].value = Object.values(this.state)[i];
+        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase()];
       }
       console.log(this.knobs);
 
