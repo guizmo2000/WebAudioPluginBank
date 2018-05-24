@@ -6,7 +6,7 @@
     <style>
         :host 
 		{
-			background: linear-gradient( rgb(77, 74, 78),rgb(136, 5, 129));
+			background: linear-gradient( rgb(77, 74, 78),rgb(251, 166, 75));
 			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), 
 						inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), 
 						inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 
@@ -14,106 +14,211 @@
 						0 2px 1px 0 rgba(0, 0, 0, 0.9), 
 						1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
-			width: 135px;
-			height: 180px;
+			width: 90px;
+			height: 245px;
 			display: block;
 			user-select: none;
 			cursor: move;
 			z-index: 9;
 
+			border-top-left-radius: 8px;
+			border-top-right-radius: 8px;
 			border-bottom-left-radius: 8px;
 			border-bottom-right-radius: 8px;
 		}
+
+        .pedalLabel 
+		{
+			/* background: rgba(0, 0, 0, 0.4); */
+			box-shadow: inset 0px 1px 5px #111;
+			border: 1px solid #000;
+			color: #000;
+			/* border:2px solid #aaa; */
+			padding: 4px 10px;
+			margin: 2px 0px;
+
+			font-size: 10px;
+			text-align: center;
+			user-select: none;
+			/* font-family: Lemon\/Milk; */
+			font-family: helvetica;
+			text-transform: uppercase;
+		}
+
+        .column 
+		{
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: center;
+
+			flex: 1;
+			margin: 3px;
+		}
+
+		.row 
+		{
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-start;
+			align-items: stretch;
+		}
+
+        .label
+        {
+            text-align: center;
+            font-family: helvetica;
+            text-transform: uppercase;
+            font-size: 10px;
+        }
+
+        .webaudioctrl-tooltip
+        {
+            display:inline-block;
+            position:absolute;
+            margin:0 -1000px;
+            z-index: 999;
+            background:#eee;
+            color:#000;
+            border:1px solid #666;
+            border-radius:4px;
+            padding:5px 10px;
+            text-align:center;
+            left:0; top:0;
+            font-size:11px;
+            opacity:0;
+            visibility:hidden;
+        }
+        .webaudioctrl-tooltip:before
+        {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -8px;
+            border: 8px solid transparent;
+            border-top: 8px solid #666;
+        }
+        .webaudioctrl-tooltip:after
+        {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border: 6px solid transparent;
+            border-top: 6px solid #eee;
+        }
+        
+        webaudio-slider
+        {
+            display:inline-block;
+            position:relative;
+            margin:0;
+            padding:0;
+            font-family: sans-serif;
+            font-size: 11px;
+            cursor:pointer;
+        }
+        .webaudio-slider-body
+        {
+            display:inline-block;
+            position:relative;
+            margin:0;
+            padding:0;
+        }
+        .webaudio-slider-knob
+        {
+            display:inline-block;
+            position:absolute;
+            margin:0;
+            padding:0;
+        }
+
     </style>
 
-    <div id="main"> 
-        <p id="channelNumber"><b></b></p>  
-        <p>Gain <input id="gain" type="range" min="0" max="10" value="2" step="0.1"></p> 
-        <webaudio-slider id="slider1" midilearn="true" units="Db" 
-            style="position:absolute;left:731px;top:64px" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png" 
-            knobsrc="./MixingConsole/ChannelMixer/Image//vsliderknob.png" value="0" min="-12" max="12" step="1" basewidth="24" height="128" 
-            knobwidth="24" knobheight="24" ditchlength="100" tooltip="Slider1">
+    <div class="row" style="padding-top: 5px"> 
 
-                <style>
+        <div class="column">
 
-                    .webaudioctrl-tooltip
-                    {
-                        display:inline-block;
-                        position:absolute;
-                        margin:0 -1000px;
-                        z-index: 999;
-                        background:#eee;
-                        color:#000;
-                        border:1px solid #666;
-                        border-radius:4px;
-                        padding:5px 10px;
-                        text-align:center;
-                        left:0; top:0;
-                        font-size:11px;
-                        opacity:0;
-                        visibility:hidden;
-                    }
-                    .webaudioctrl-tooltip:before
-                    {
-                        content: "";
-                        position: absolute;
-                        top: 100%;
-                        left: 50%;
-                        margin-left: -8px;
-                        border: 8px solid transparent;
-                        border-top: 8px solid #666;
-                    }
-                    .webaudioctrl-tooltip:after
-                    {
-                        content: "";
-                        position: absolute;
-                        top: 100%;
-                        left: 50%;
-                        margin-left: -6px;
-                        border: 6px solid transparent;
-                        border-top: 6px solid #eee;
-                    }
-                    
-                    webaudio-slider
-                    {
-                        display:inline-block;
-                        position:relative;
-                        margin:0;
-                        padding:0;
-                        font-family: sans-serif;
-                        font-size: 11px;
-                        cursor:pointer;
-                    }
-                    .webaudio-slider-body
-                    {
-                        display:inline-block;
-                        position:relative;
-                        margin:0;
-                        padding:0;
-                    }
-                    .webaudio-slider-knob
-                    {
-                        display:inline-block;
-                        position:absolute;
-                        margin:0;
-                        padding:0;
-                    }
-                </style>
+            <webaudio-slider id="gain" midilearn="true" units="Db" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png" 
+                knobsrc="./MixingConsole/ChannelMixer/Image/vsliderknob.png" value="2" min="0" max="10" step="0.1" basewidth="24" height="128" 
+                knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;" tooltip="Gain">
 
-                <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; 
-                    background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
-                    <div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; 
-                    background-image: url(./MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
+                    <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; 
+                        background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
+                        <div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; 
+                        background-image: url(./MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
+                        </div>
                     </div>
-                </div>
-                <div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 
-                    0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
-                </div>
+                    <div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 
+                        0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
+                    </div>
 
             </webaudio-slider>
-            
-        <p>Pan <input id="pan" type="range" min="-10" max="10" value="0" step="0.01"></p> 
-        <p>Enable ?<input type="checkbox" id="switch1"></p>
+
+        </div>
+
+        <div class="column">
+
+            <webaudio-slider id="pan" midilearn="true" units="Db" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png" 
+                knobsrc="./MixingConsole/ChannelMixer/Image/vsliderknob.png" value="0" min="-10" max="10" step="0.1" basewidth="24" height="128" 
+                knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;" tooltip="Pan">
+
+                    <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; 
+                        background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
+
+                        <div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; 
+                            background-image: url(./MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
+                        </div>
+
+                    </div>
+
+                    <div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 
+                        0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
+                    </div>
+
+            </webaudio-slider>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="column">
+
+            <p class="label">Gain</p> 
+
+        </div>
+
+        <div class="column">
+
+            <p class="label">Pan</p> 
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+            <div class="column">
+
+                <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+                    width="32" height="20" oncontextmenu="return false;"></webaudio-switch>
+
+            </div>
+
+    </div>
+
+    <div class="row">
+
+            <div class="column">
+    
+                <span class="pedalLabel" id="channelNumber">Channel 1</span>
+    
+            </div>
+        
     </div>
 
 </template>
@@ -132,6 +237,7 @@
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(delaytemp.content.cloneNode(true));
             this.isOn = false;
+            this.affectChannel();
             this.setListener();
             this.setSwitchListener();
         }
@@ -143,16 +249,27 @@
                 dataWidth: 
                 {
                     type: Number,
-                    value: 120
+                    value: 90
                 },
                 dataHeight: 
                 {
                     type: Number,
-                    value: 180
+                    value: 245
                 }
             };
 
             return this.boundingRect;
+        }
+
+        affectChannel()
+        {
+            window.addEventListener("load", (e) =>
+            {
+                const stringChannel = this._root.querySelector("#channelNumber").innerHTML;
+                const number = stringChannel.replace(" ", "").toLowerCase().replace("channel", "");
+
+                this._plug.setChannelNumber(number);
+            });
         }
 
         setListener() 
