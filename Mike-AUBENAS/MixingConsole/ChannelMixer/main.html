@@ -21,6 +21,8 @@
 			cursor: move;
 			z-index: 9;
 
+			border-top-left-radius: 8px;
+			border-top-right-radius: 8px;
 			border-bottom-left-radius: 8px;
 			border-bottom-right-radius: 8px;
 		}
@@ -213,7 +215,7 @@
 
             <div class="column">
     
-                <span class="pedalLabel">Channel 1</span>
+                <span class="pedalLabel" id="channelNumber">Channel 1</span>
     
             </div>
         
@@ -235,6 +237,7 @@
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(delaytemp.content.cloneNode(true));
             this.isOn = false;
+            this.affectChannel();
             this.setListener();
             this.setSwitchListener();
         }
@@ -256,6 +259,17 @@
             };
 
             return this.boundingRect;
+        }
+
+        affectChannel()
+        {
+            window.addEventListener("load", (e) =>
+            {
+                const stringChannel = this._root.querySelector("#channelNumber").innerHTML;
+                const number = stringChannel.replace(" ", "").toLowerCase().replace("channel", "");
+
+                this._plug.setChannelNumber(number);
+            });
         }
 
         setListener() 

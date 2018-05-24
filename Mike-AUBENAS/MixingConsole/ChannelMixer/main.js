@@ -46,7 +46,8 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 					"max" : 10
 				}
 			},
-			"status": "disable"
+			"status": "disable",
+			"channelNumber" : 0 //It's going to be initialise through the HTML
 		}
 
 		this.setup();
@@ -68,7 +69,13 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 			this.params.gain.value = value;
 			this.gain.gain.setValueAtTime(parseFloat(value, 10), this.context.currentTime);	
 		}
-    }
+	}
+	
+	getChannelNumber()
+	{ return this.params.channelNumber; }
+
+	setChannelNumber(value)
+	{ this.params.channelNumber = value; }
 
     getPan()
     { return this.params.pan;}
@@ -78,7 +85,6 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		if( (value >= this.params.pan.range.min) && (value <= this.params.pan.range.max) )
 		{
 			this.params.pan.value = value;
-			console.log(value);
 			this.pan.positionX.setValueAtTime(parseFloat(value, 10), this.context.currentTime);	
 			this.gain.gain.setValueAtTime(parseFloat( (value * 2), 10), this.context.currentTime);
 		}
