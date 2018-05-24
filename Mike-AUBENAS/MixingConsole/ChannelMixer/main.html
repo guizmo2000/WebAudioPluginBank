@@ -116,51 +116,90 @@
 
     </style>
 
-    <div id="main"> 
-        <p id="channelNumber"><b></b></p>  
+    <div class="row"> 
 
-        <webaudio-slider id="gain" midilearn="true" units="Db" 
-            style="position:absolute;left:20px;top:70px" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png" 
-            knobsrc="./MixingConsole/ChannelMixer/Image/vsliderknob.png" value="2" min="0" max="10" step="0.1" basewidth="24" height="128" 
-            knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;" tooltip="Gain">
+        <div class="column">
 
-                <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; 
-                    background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
-                    <div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; 
-                    background-image: url(./MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
+            <webaudio-slider id="gain" midilearn="true" units="Db" 
+                style="position:absolute;left:20px;top:70px" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png" 
+                knobsrc="./MixingConsole/ChannelMixer/Image/vsliderknob.png" value="2" min="0" max="10" step="0.1" basewidth="24" height="128" 
+                knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;" tooltip="Gain">
+
+                    <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; 
+                        background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
+                        <div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; 
+                        background-image: url(./MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
+                        </div>
                     </div>
-                </div>
-                <div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 
-                    0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
-                </div>
+                    <div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 
+                        0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
+                    </div>
 
             </webaudio-slider>
+
+        </div>
+
+        <div class="column">
+
+            <webaudio-slider id="pan" midilearn="true" units="Db" 
+                style="position:absolute;left:60px;top:70px" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png" 
+                knobsrc="./MixingConsole/ChannelMixer/Image/vsliderknob.png" value="0" min="-10" max="10" step="0.1" basewidth="24" height="128" 
+                knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;" tooltip="Pan">
+
+                    <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; 
+                        background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
+
+                        <div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; 
+                            background-image: url(./MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
+                        </div>
+
+                    </div>
+
+                    <div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 
+                        0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
+                    </div>
+
+            </webaudio-slider>
+
+        </div>
+
+    </div>
+
+    <div class="row">
+
+            <div class="column">
+
+                <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+                    width="32" height="20" style="position: absolute;left : 35px; top : 225px" oncontextmenu="return false;"></webaudio-switch>
+
+            </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="column">
 
             <p style="position:absolute;left:20px;top:195px" class="label">Gain</p> 
-            
-        <p style="position:absolute;left:60px;top:195px" class="label">Pan</p> 
 
-        <webaudio-slider id="pan" midilearn="true" units="Db" 
-            style="position:absolute;left:60px;top:70px" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png" 
-            knobsrc="./MixingConsole/ChannelMixer/Image/vsliderknob.png" value="0" min="-10" max="10" step="0.1" basewidth="24" height="128" 
-            knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;" tooltip="Pan">
+        </div>
 
-                <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; 
-                    background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
-                    <div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; 
-                    background-image: url(./MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
-                    </div>
-                </div>
-                <div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 
-                    0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
-                </div>
+        <div class="column">
 
-            </webaudio-slider>
+            <p style="position:absolute;left:60px;top:195px" class="label">Pan</p> 
 
-        <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-            width="32" height="20" style="position: absolute;left : 35px; top : 225px" oncontextmenu="return false;"></webaudio-switch>
-            
-        <span class="pedalLabel" style="position: absolute;left : 15px; top : 250px">Channel 1</span>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+            <div class="column">
+    
+                <span class="pedalLabel">Channel 1</span>
+    
+            </div>
+        
     </div>
 
 </template>
