@@ -1,19 +1,18 @@
-/*  ################################## PingPongDelay ########################################  */
+/*  ################################## Minilogue emulation ########################################  */
 
 /* ES6 web audio class following the API standard
 * Author : Guillaume Etevenard
 */
-class Minilogue extends WebAudioPluginCompositeNode {
 
-  constructor(ctx,options) {
+window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
+
+  constructor(ctx, options) {
     /*    ################     API PROPERTIES    ###############   */
-    super(ctx,options)
+    super(ctx, options)
     this.state;
     this.inputs = [];
     this.outputs = [];
-    this._gui = document.createElement("wc-minilogue");
-    this._gui.plug = this;
-    
+
     // P2 : Json metadata
     this._metadata = {
       "name": "etev-minilogue",
@@ -41,6 +40,33 @@ class Minilogue extends WebAudioPluginCompositeNode {
         "flag": ""
       },
 
+      "time": {
+        "key": "time",
+        "type": "linear",
+        "range": {
+          "min": 0,
+          "max": 1
+        },
+        "default": 0.5,
+        "unit": "ms",
+        "label": "time",
+        "flag": ""
+      },
+
+      "mix": {
+        "key": "mix",
+        "type": "linear",
+        "range": {
+          "min": 0,
+          "max": 1
+        },
+        "default": 0.5,
+        "unit": "",
+        "label": "mix",
+        "flag": ""
+      }
+
+
     }
     // params 
     this.params = {
@@ -58,7 +84,7 @@ class Minilogue extends WebAudioPluginCompositeNode {
   /*    ################     API METHODS    ###############   */
 
   // p9 count inputs
-  inputChannelCount(){
+  inputChannelCount() {
     return this.inputs.length;
   }
   getPatch(index) {
@@ -95,22 +121,31 @@ class Minilogue extends WebAudioPluginCompositeNode {
 
   // P7 state
   getState() {
-    return this.params.status;
-
+    return this.params;
   }
 
   setState(data) {
-    this.params.status = data;
-    if (data == "enable") {
-      this.connectNodes();
-      this._input.disconnect(this._output);
-    } else if (data == "disable") {
-      this._input.disconnect(this.feedbackGainNode);
-      this._input.disconnect(this.dryGainNode);
-      this._input.connect(this._output);
+    try {
+      
+      this.gui.setAttribute('state', JSON.stringify(data));
+    } catch (error) {
+      console.log("Gui not defined", error)
+      try {
+        document.querySelector('wasabi-pingpongdelay').setAttribute('state', JSON.stringify(this.params));
+      } catch (error) {
+        console.log(error);
+      }
     }
+    
+    Object.keys(data).map(
+      (elem, index) => {
+        console.log(elem, data[elem]);
+        this.setParam(elem, data[elem]);
+      }
+    )
+
   }
-  
+
 
   onMidi(msg) {
     return msg;
@@ -120,14 +155,14 @@ class Minilogue extends WebAudioPluginCompositeNode {
   /*  #########  Personnal code for the web audio graph  #########   */
 
   setup() {
-    console.log("delay setup");
+    console.log("setup");
     this.createIO();
     this.createNodes();
     this.connectNodes();
     this.setInitialParamValues();
   }
 
-  createIO(){
+  createIO() {
     this.inputs.push(this._input);
     this.outputs.push(this._output);
   }
@@ -137,8 +172,7 @@ class Minilogue extends WebAudioPluginCompositeNode {
     // OSC stages
     this.osc1 = this.context.createOscillator();
     this.osc2 = this.context.createOscillator();
-    this.osc1.type = this.osc2.type = 'sawtooth';
-
+    this.noise = this.context.createOscillator();
     this.lfo = this.context.createOscillator();
 
     // Waveshapers stage
@@ -146,10 +180,27 @@ class Minilogue extends WebAudioPluginCompositeNode {
     this.wshape2 = this.context.createWaveShaper();
 
     // Filter stage
-    this.filter = this.context.createBiquadFilter();
-    this.equalizer = this.context.createBiquadFilter();
+    this.lowPassfilter = this.context.createBiquadFilter();
 
+    //Enveloppe stage
+    this.ampEnveloppe = ADSRNode(this.context, {
+      attack: 0.1, // seconds until hitting 1.0
+      decay: 0.2, // seconds until hitting sustain value
+      sustain: 0.5, // sustain value
+      release: 0.3  // seconds until returning back to 0.0
+    });
 
+    this.enveloppeGenerator = ADSRNode(this.context, {
+      attack: 0.1, // seconds until hitting 1.0
+      decay: 0.2, // seconds until hitting sustain value
+      sustain: 0.5, // sustain value
+      release: 0.3  // seconds until returning back to 0.0
+    })
+
+    // gain stage 
+    this.gainOsc1 = this.context.createGain();
+    this.gainOsc2 = this.context.createGain();
+    this.gainNoise = this.context.createGain();
 
     // Delay stage (from stereowasabidelay)
     this.delayNodeLeft = this.context.createDelay();
@@ -159,35 +210,44 @@ class Minilogue extends WebAudioPluginCompositeNode {
     this.feedbackGainNode = this.context.createGain();
     this.channelMerger = this.context.createChannelMerger(2);
 
+    // merger
+    this.oscMerger = this.context.createChannelMerger(3);
+
   }
 
   connectNodes() {
 
+    this.osc1.connect(this.wshape1);
+    this.osc2.connect(this.wshape2);
 
+    this.wshape1.connect(this.gainOsc1);
+    this.wshape2.connect(this.gainOsc2);
+    this.noise.connect(this.gainNoise);
 
+    this.gainOsc1.connect(this.oscMerger, 0, 0);
+    this.gainOsc2.connect(this.oscMerger, 0, 1);
+    this.gainNoise.connect(this.oscMerger, 0, 2);
 
+    this.oscMerger.connect(this.lowPassfilter);
+    //this.lowPassfilter.connect(this.ampEnveloppe); --> has to be done by setter
+    //this.lowPassfilter.connect(this.enveloppeGenerator);--> has to be done by setter
 
-
-
-
-
-
-
+    //this.enveloppeGenerator.connect(this.lfo);--> has to be done by setter
 
     // stereo delay parts
-    this._input.connect(this.dryGainNode);
+    this.lowPassfilter.connect(this.dryGainNode);
     // dry mix out
     this.dryGainNode.connect(this._output);
 
     // the feedback loop
-     this.delayNodeLeft.connect(this.channelMerger, 0, 0);
-     this.delayNodeRight.connect(this.channelMerger, 0, 1);
-     this.feedbackGainNode.connect(this.delayNodeLeft);
-     this.delayNodeRight.connect(this.feedbackGainNode);
+    this.delayNodeLeft.connect(this.channelMerger, 0, 0);
+    this.delayNodeRight.connect(this.channelMerger, 0, 1);
+    this.feedbackGainNode.connect(this.delayNodeLeft);
+    this.delayNodeRight.connect(this.feedbackGainNode);
 
-     this.delayNodeLeft.connect(this.delayNodeRight);
+    this.delayNodeLeft.connect(this.delayNodeRight);
     // wet mix
-     this._input.connect(this.feedbackGainNode);
+    this._input.connect(this.feedbackGainNode);
     // wet out
     this.channelMerger.connect(this.wetGainNode);
     this.wetGainNode.connect(this._output);
@@ -251,18 +311,18 @@ class Minilogue extends WebAudioPluginCompositeNode {
     * Setters for each param
     */
   setTime(_time) {
-    if (_time < this.descriptor.time.range.max && _time > this.descriptor.time.range.min) this.params.time = _time;
+    if (_time < this._descriptor.time.range.max && _time > this._descriptor.time.range.min) this.params.time = _time;
     this.delayNodeLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
     this.delayNodeRight.delayTime.setValueAtTime(_time, this.context.currentTime);
   }
 
   setFeedback(_feedback) {
-    if (_feedback < this.descriptor.feedback.range.max && _feedback > this.descriptor.feedback.range.min) this.params.feedback = _feedback;
+    if (_feedback < this._descriptor.feedback.range.max && _feedback > this._descriptor.feedback.range.min) this.params.feedback = _feedback;
     this.feedbackGainNode.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
   }
 
   setMix(_mix) {
-    if (_mix < this.descriptor.mix.range.max && _mix > this.descriptor.mix.range.min) this.params.mix = _mix;
+    if (_mix < this._descriptor.mix.range.max && _mix > this._descriptor.mix.range.min) this.params.mix = _mix;
     this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
     this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
   }
@@ -270,78 +330,229 @@ class Minilogue extends WebAudioPluginCompositeNode {
 }
 
 
+function ADSRNode(ctx, opts) {
+  // `ctx` is the AudioContext
+  // `opts` is an object in the format:
+  // {
+  //   base:         <number>, // output     optional    default: 0
+  //   attack:       <number>, // seconds    optional    default: 0
+  //   attackCurve:  <number>, // bend       optional    default: 0
+  //   peak:         <number>, // output     optional    default: 1
+  //   hold:         <number>, // seconds    optional    default: 0
+  //   decay:        <number>, // seconds    optional    default: 0
+  //   decayCurve:   <number>, // bend       optional    default: 0
+  //   sustain:      <number>, // output     required
+  //   release:      <number>, // seconds    optional    default: 0
+  //   releaseCurve: <number>  // bend       optional    default: 0
+  // }
 
-var WAPlugin = WAPlugin || {};
+  function getNum(opts, key, def) {
+    if (typeof def === 'number' && typeof opts[key] === 'undefined')
+      return def;
+    if (typeof opts[key] === 'number')
+      return opts[key];
+    throw new Error('[ADSRNode] Expecting "' + key + '" to be a number');
+  }
 
-WAPlugin.WasabiPingPongDelay = class WasabiPingPongDelay {
+  var attack = 0, decay = 0, sustain, sustain_adj, release = 0;
+  var base = 0, acurve = 0, peak = 1, hold = 0, dcurve = 0, rcurve = 0;
 
-    constructor(context, baseUrl) {
-        this.context = context;
-        this.baseUrl = baseUrl;
+  function update(opts) {
+    base = getNum(opts, 'base', base);
+    attack = getNum(opts, 'attack', attack);
+    acurve = getNum(opts, 'attackCurve', acurve);
+    peak = getNum(opts, 'peak', peak);
+    hold = getNum(opts, 'hold', hold);
+    decay = getNum(opts, 'decay', decay);
+    dcurve = getNum(opts, 'decayCurve', dcurve);
+    sustain = getNum(opts, 'sustain', sustain);
+    release = getNum(opts, 'release', release);
+    rcurve = getNum(opts, 'releaseCurve', rcurve);
+    sustain_adj = adjustCurve(dcurve, peak, sustain);
+  }
+
+  // extract options
+  update(opts);
+
+  // create the node and inject the new methods
+  var node = ctx.createConstantSource();
+  node.offset.value = base;
+
+  // unfortunately, I can't seem to figure out how to use cancelAndHoldAtTime, so I have to have
+  // code that calculates the ADSR curve in order to figure out the value at a given time, if an
+  // interruption occurs
+  //
+  // the curve functions (linearRampToValueAtTime and setTargetAtTime) require an *event*
+  // preceding the curve in order to calculate the correct start value... inserting the event
+  // *should* work with cancelAndHoldAtTime, but it doesn't (or I misunderstand the API).
+  //
+  // therefore, for the curves to start at the correct location, I need to be able to calculate
+  // the entire ADSR curve myself, so that I can correctly interrupt the curve at any moment.
+  //
+  // these values track the state of the trigger/release moments, in order to calculate the final
+  // curve
+  var lastTrigger = false;
+  var lastRelease = false;
+
+  // small epsilon value to check for divide by zero
+  var eps = 0.00001;
+
+  function curveValue(type, startValue, endValue, curTime, maxTime) {
+    if (type === 0)
+      return startValue + (endValue - startValue) * Math.min(curTime / maxTime, 1);
+    // otherwise, exponential
+    return endValue + (startValue - endValue) * Math.exp(-curTime * type / maxTime);
+  }
+
+  function adjustCurve(type, startValue, endValue) {
+    // the exponential curve will never hit its target... but we can calculate an adjusted
+    // target so that it will miss the adjusted value, but end up hitting the actual target
+    if (type === 0)
+      return endValue; // linear hits its target, so no worries
+    var endExp = Math.exp(-type);
+    return (endValue - startValue * endExp) / (1 - endExp);
+  }
+
+  function triggeredValue(time) {
+    // calculates the actual value of the envelope at a given time, where `time` is the number
+    // of seconds after a trigger (but before a release)
+    var atktime = lastTrigger.atktime;
+    if (time < atktime) {
+      return curveValue(acurve, lastTrigger.v,
+        adjustCurve(acurve, lastTrigger.v, peak), time, atktime);
+    }
+    if (time < atktime + hold)
+      return peak;
+    if (time < atktime + hold + decay)
+      return curveValue(dcurve, peak, sustain_adj, time - atktime - hold, decay);
+    return sustain;
+  }
+
+  function releasedValue(time) {
+    // calculates the actual value of the envelope at a given time, where `time` is the number
+    // of seconds after a release
+    if (time < 0)
+      return sustain;
+    if (time > lastRelease.reltime)
+      return base;
+    return curveValue(rcurve, lastRelease.v,
+      adjustCurve(rcurve, lastRelease.v, base), time, lastRelease.reltime);
+  }
+
+  function curveTo(param, type, value, time, duration) {
+    if (type === 0 || duration <= 0)
+      param.linearRampToValueAtTime(value, time + duration);
+    else // exponential
+      param.setTargetAtTime(value, time, duration / type);
+  }
+
+  node.trigger = function (when) {
+    if (typeof when === 'undefined')
+      when = this.context.currentTime;
+
+    if (lastTrigger !== false) {
+      if (when < lastTrigger.when)
+        throw new Error('[ADSRNode] Cannot trigger before future trigger');
+      this.release(when);
+    }
+    var v = base;
+    var interruptedLine = false;
+    if (lastRelease !== false) {
+      var now = when - lastRelease.when;
+      v = releasedValue(now);
+      // check if a linear release has been interrupted by this attack
+      interruptedLine = rcurve === 0 && now >= 0 && now <= lastRelease.reltime;
+      lastRelease = false;
+    }
+    var atktime = attack;
+    if (Math.abs(base - peak) > eps)
+      atktime = attack * (v - peak) / (base - peak);
+    lastTrigger = { when: when, v: v, atktime: atktime };
+
+    this.offset.cancelScheduledValues(when);
+
+    if (DEBUG) {
+      // simulate curve using triggeredValue (debug purposes)
+      for (var i = 0; i < 10; i += 0.01)
+        this.offset.setValueAtTime(triggeredValue(i), when + i);
+      return this;
     }
 
-    load() {
-        return new Promise((resolve, reject) => {
-          try{
-            this.plug = new PingPongDelay(this.context);
-            resolve(this.plug);
-          } catch (e){
-            reject(e);
-          }
-        });
-    }
+    if (interruptedLine)
+      this.offset.linearRampToValueAtTime(v, when);
+    else
+      this.offset.setTargetAtTime(v, when, 0.001);
+    curveTo(this.offset, acurve, adjustCurve(acurve, v, peak), when, atktime);
+    this.offset.setTargetAtTime(peak, when + atktime, 0.001);
+    if (hold > 0)
+      this.offset.setTargetAtTime(peak, when + atktime + hold, 0.001);
+    curveTo(this.offset, dcurve, sustain_adj, when + atktime + hold, decay);
+    this.offset.setTargetAtTime(sustain, when + atktime + hold + decay, 0.001);
+    return this;
+  };
 
-    loadGui() {
-        return new Promise((resolve, reject) => {
-          this.plug.setState('disable');
-            try {
-                // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
-                let url = this.baseUrl + "/main.html";
-                
+  node.release = function (when) {
+    if (typeof when === 'undefined')
+      when = this.context.currentTime;
 
-                if (!this.linkExists(url)) {
-                    // LINK DOES NOT EXIST, let's add it to the document
-                    var link = document.createElement('link');
-                    link.rel = 'import';
-                    //link.id = 'urlPlugin';
-                    link.href = url;
-                    document.head.appendChild(link);
+    if (lastTrigger === false)
+      throw new Error('[ADSRNode] Cannot release without a trigger');
+    if (when < lastTrigger.when)
+      throw new Error('[ADSRNode] Cannot release before the last trigger');
+    var tnow = when - lastTrigger.when;
+    var v = triggeredValue(tnow);
+    var reltime = release;
+    if (Math.abs(sustain - base) > eps)
+      reltime = release * (v - base) / (sustain - base);
+    lastRelease = { when: when, v: v, reltime: reltime };
+    var atktime = lastTrigger.atktime;
+    // check if a linear attack or a linear decay has been interrupted by this release
+    var interruptedLine =
+      (acurve === 0 && tnow >= 0 && tnow <= atktime) ||
+      (dcurve === 0 && tnow >= atktime + hold && tnow <= atktime + hold + decay);
+    lastTrigger = false;
 
+    this.offset.cancelScheduledValues(when);
+    node.baseTime = when + reltime;
 
-                  
-                    link.onload = (e) => {
-                        // the file has been loaded, instanciate GUI
-                        // and get back the HTML elem
-                        // HERE WE COULD REMOVE THE HARD CODED NAME
-                        console.log(this.plug);
-                        var element = createPingPongDelay(this.plug);
-                        //element._plug = this.plug;
-                        resolve(element);
-                    }
-                } else {
-                    // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
-                    // so we can create another instance
-                    console.log(this.plug);
-                    var element = createPingPongDelay(this.plug);
-                    //element._plug = this.plug;
-                    resolve(element);
-                }
-            } catch (e) {
-                console.log(e);
-                reject(e);
-            }
-        });
-    };
+    if (interruptedLine)
+      this.offset.linearRampToValueAtTime(v, when);
+    else
+      this.offset.setTargetAtTime(v, when, 0.001);
+    curveTo(this.offset, rcurve, adjustCurve(rcurve, v, base), when, reltime);
+    this.offset.setTargetAtTime(base, when + reltime, 0.001);
+    return this;
+  };
 
-    linkExists(url) {
-        return document.querySelectorAll(`link[href="${url}"]`).length > 0;
+  node.reset = function () {
+    lastTrigger = false;
+    lastRelease = false;
+    var now = this.context.currentTime;
+    this.offset.cancelScheduledValues(now);
+    this.offset.setTargetAtTime(base, now, 0.001);
+    node.baseTime = now;
+    return this;
+  };
 
-    }
+  node.update = function (opts) {
+    update(opts);
+    return this.reset();
+  };
 
+  node.baseTime = 0;
 
+  return node;
 }
 
-AudioContext.prototype.createWasabiDelayCompositeNode =
-OfflineAudioContext.prototype.createWasabiDelayCompositeNode = function (options) {
-  return new PingPongDelay(this, options);
-};
+
+window.Wasabiminilogue = class Wasabiminilogue extends WebAudioPluginFactory {
+
+  constructor(context, baseUrl) {
+    super(context, baseUrl);
+  }
+}
+
+AudioContext.prototype.createWasabiminilogueCompositeNode =
+  OfflineAudioContext.prototype.createWasabiminilogueCompositeNode = function (options) {
+    return new Minilogue(this, options);
+  };
