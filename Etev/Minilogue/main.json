@@ -1,8 +1,8 @@
   {
     "documentation": "BLAH BLAH",
-    "name": "PingPongDelay",
+    "name": "Minilogue",
     "thumbnail": "WasabiPingPongDelay.png",
     "vendor": "Wasabi",
-    "category":"Delay",
+    "category":"Synth",
     "version": "1.0"
   }

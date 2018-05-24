@@ -11,8 +11,6 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
     this.state;
     this.inputs = [];
     this.outputs = [];
-    this._gui = document.createElement("wc-pingpongdelay");
-    this._gui.plug = this;
     
     // P2 : Json metadata
     this._metadata = {
