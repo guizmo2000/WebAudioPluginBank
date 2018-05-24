@@ -50,6 +50,70 @@
             text-transform: uppercase;
             font-size: 10px;
         }
+
+        .webaudioctrl-tooltip
+        {
+            display:inline-block;
+            position:absolute;
+            margin:0 -1000px;
+            z-index: 999;
+            background:#eee;
+            color:#000;
+            border:1px solid #666;
+            border-radius:4px;
+            padding:5px 10px;
+            text-align:center;
+            left:0; top:0;
+            font-size:11px;
+            opacity:0;
+            visibility:hidden;
+        }
+        .webaudioctrl-tooltip:before
+        {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -8px;
+            border: 8px solid transparent;
+            border-top: 8px solid #666;
+        }
+        .webaudioctrl-tooltip:after
+        {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border: 6px solid transparent;
+            border-top: 6px solid #eee;
+        }
+        
+        webaudio-slider
+        {
+            display:inline-block;
+            position:relative;
+            margin:0;
+            padding:0;
+            font-family: sans-serif;
+            font-size: 11px;
+            cursor:pointer;
+        }
+        .webaudio-slider-body
+        {
+            display:inline-block;
+            position:relative;
+            margin:0;
+            padding:0;
+        }
+        .webaudio-slider-knob
+        {
+            display:inline-block;
+            position:absolute;
+            margin:0;
+            padding:0;
+        }
+
     </style>
 
     <div id="main"> 
@@ -59,72 +123,6 @@
             style="position:absolute;left:20px;top:70px" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png" 
             knobsrc="./MixingConsole/ChannelMixer/Image/vsliderknob.png" value="2" min="0" max="10" step="0.1" basewidth="24" height="128" 
             knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;" tooltip="Gain">
-
-                <style>
-
-                    .webaudioctrl-tooltip
-                    {
-                        display:inline-block;
-                        position:absolute;
-                        margin:0 -1000px;
-                        z-index: 999;
-                        background:#eee;
-                        color:#000;
-                        border:1px solid #666;
-                        border-radius:4px;
-                        padding:5px 10px;
-                        text-align:center;
-                        left:0; top:0;
-                        font-size:11px;
-                        opacity:0;
-                        visibility:hidden;
-                    }
-                    .webaudioctrl-tooltip:before
-                    {
-                        content: "";
-                        position: absolute;
-                        top: 100%;
-                        left: 50%;
-                        margin-left: -8px;
-                        border: 8px solid transparent;
-                        border-top: 8px solid #666;
-                    }
-                    .webaudioctrl-tooltip:after
-                    {
-                        content: "";
-                        position: absolute;
-                        top: 100%;
-                        left: 50%;
-                        margin-left: -6px;
-                        border: 6px solid transparent;
-                        border-top: 6px solid #eee;
-                    }
-                    
-                    webaudio-slider
-                    {
-                        display:inline-block;
-                        position:relative;
-                        margin:0;
-                        padding:0;
-                        font-family: sans-serif;
-                        font-size: 11px;
-                        cursor:pointer;
-                    }
-                    .webaudio-slider-body
-                    {
-                        display:inline-block;
-                        position:relative;
-                        margin:0;
-                        padding:0;
-                    }
-                    .webaudio-slider-knob
-                    {
-                        display:inline-block;
-                        position:absolute;
-                        margin:0;
-                        padding:0;
-                    }
-                </style>
 
                 <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; 
                     background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
@@ -146,72 +144,6 @@
             style="position:absolute;left:60px;top:70px" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png" 
             knobsrc="./MixingConsole/ChannelMixer/Image/vsliderknob.png" value="0" min="-10" max="10" step="0.1" basewidth="24" height="128" 
             knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;" tooltip="Pan">
-
-                <style>
-
-                    .webaudioctrl-tooltip
-                    {
-                        display:inline-block;
-                        position:absolute;
-                        margin:0 -1000px;
-                        z-index: 999;
-                        background:#eee;
-                        color:#000;
-                        border:1px solid #666;
-                        border-radius:4px;
-                        padding:5px 10px;
-                        text-align:center;
-                        left:0; top:0;
-                        font-size:11px;
-                        opacity:0;
-                        visibility:hidden;
-                    }
-                    .webaudioctrl-tooltip:before
-                    {
-                        content: "";
-                        position: absolute;
-                        top: 100%;
-                        left: 50%;
-                        margin-left: -8px;
-                        border: 8px solid transparent;
-                        border-top: 8px solid #666;
-                    }
-                    .webaudioctrl-tooltip:after
-                    {
-                        content: "";
-                        position: absolute;
-                        top: 100%;
-                        left: 50%;
-                        margin-left: -6px;
-                        border: 6px solid transparent;
-                        border-top: 6px solid #eee;
-                    }
-                    
-                    webaudio-slider
-                    {
-                        display:inline-block;
-                        position:relative;
-                        margin:0;
-                        padding:0;
-                        font-family: sans-serif;
-                        font-size: 11px;
-                        cursor:pointer;
-                    }
-                    .webaudio-slider-body
-                    {
-                        display:inline-block;
-                        position:relative;
-                        margin:0;
-                        padding:0;
-                    }
-                    .webaudio-slider-knob
-                    {
-                        display:inline-block;
-                        position:absolute;
-                        margin:0;
-                        padding:0;
-                    }
-                </style>
 
                 <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; 
                     background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
