@@ -28,7 +28,7 @@
 	}
 	var mediaSource = ctx.createMediaElementSource(player);
 
-	var pluginURL = ".//MixingConsole/ChannelMixer";
+	var pluginURL = "./MixingConsole/ChannelMixer";
 	var plugin = new window.WasabiChannelMixer(ctx, pluginURL);
 
     plugin.load().then((node) => 
