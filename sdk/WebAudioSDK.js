@@ -124,7 +124,12 @@ class WebAudioPluginFactory {
 
   loadGui() {
     return new Promise((resolve, reject) => {
-      this.plug.setState('disable');
+      try {
+        this.plug.setParam('status','disable');
+
+      } catch (error) {
+        console.log("plugin with no on/ off state")
+      }
       try {
         // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
         let url = this.baseUrl + "/main.html";

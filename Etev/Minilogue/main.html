@@ -106,81 +106,88 @@
   </div>
   <div class="row">
     <div class="column">
-      <webaudio-knob id="knob1" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="feedback" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob1-label">firstbutton</span>
+      <webaudio-knob id="master" class="knob" sprites="99" min="0" max="1" value="0.5" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+        diameter="24"></webaudio-knob>
+      <span class="knob-label" id="master-label">Master</span>
     </div>
     <div class="column">
-      <webaudio-knob id="knob2" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="time" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob2-label">secondbutton</span>
+        <webaudio-knob id="osc1pitch" class="knob" min="0.5" max="2" sprites="99" value="1" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+          data-role="feedback" diameter="24"></webaudio-knob>
+        <span class="knob-label" id="osc1pitch-label">Osc1 pitch</span>
+      </div>
+    <div class="column">
+        <webaudio-knob id="osc1shape" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+          data-role="feedback" diameter="24"></webaudio-knob>
+        <span class="knob-label" id="osc1shape-label">Osc1 shape</span>
+      </div>
+      <div class="column">
+          <webaudio-knob id="osc1gain" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+             diameter="24"></webaudio-knob>
+          <span class="knob-label" id="osc1gain-label">Osc1 Gain</span>
+        </div>
+    <div class="column">
+      <webaudio-knob id="lowpass" class="knob" min="30" max="23500" sprites="99" value="15000" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+       diameter="40"></webaudio-knob>
+      <span class="knob-label" id="lowpass-label">cutoff</span>
     </div>
     <div class="column">
-      <webaudio-knob id="knob1" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="feedback" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob1-label">firstbutton</span>
+      <webaudio-knob id="highpass" class="knob" min="30" max="23500" sprites="99" value="30" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+       diameter="24"></webaudio-knob>
+      <span class="knob-label" id="highpass-label">High pass</span>
     </div>
     <div class="column">
-      <webaudio-knob id="knob2" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="time" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob2-label">secondbutton</span>
+      <webaudio-knob id="time" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+         diameter="24"></webaudio-knob>
+      <span class="knob-label" id="time-label">delay time</span>
     </div>
     <div class="column">
-      <webaudio-knob id="knob1" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="feedback" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob1-label">firstbutton</span>
+      <webaudio-knob id="feedback" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+         diameter="24"></webaudio-knob>
+      <span class="knob-label" id="feedback-label">delay feedback</span>
     </div>
-    <div class="column">
-      <webaudio-knob id="knob2" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="time" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob2-label">secondbutton</span>
-    </div>
-    <div class="column">
-      <webaudio-knob id="knob1" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="feedback" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob1-label">firstbutton</span>
-    </div>
-    <div class="column">
-      <webaudio-knob id="knob2" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="time" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob2-label">secondbutton</span>
-    </div>
+    
   </div>
   <div class="row">
     <div class="column">
-      <webaudio-knob id="knob3" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="mix" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob3-label">thirdbutton</span>
+      <webaudio-knob id="noise" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+        diameter="24"></webaudio-knob>
+      <span class="knob-label" id="noise-label">Noise</span>
     </div>
     <div class="column">
-      <webaudio-knob id="knob3" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="mix" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob3-label">thirdbutton</span>
-    </div>
-    <div class="column">
-      <webaudio-knob id="knob3" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="mix" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob3-label">thirdbutton</span>
-    </div>
-    <div class="column">
-      <webaudio-knob id="knob3" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="mix" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob3-label">thirdbutton</span>
-    </div>
-    <div class="column">
-      <webaudio-knob id="knob3" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="mix" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob3-label">thirdbutton</span>
-    </div>
-    <div class="column">
-      <webaudio-knob id="knob3" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        data-role="mix" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob3-label">thirdbutton</span>
-    </div>
-    <div class="column">
-        <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_2.png"
-          width="24" height="20"></webaudio-switch>
+        <webaudio-knob id="osc2pitch" class="knob" min="0.5" max="2" sprites="99" value="1" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+          diameter="24"></webaudio-knob>
+        <span class="knob-label" id="osc2pitch-label">Osc2 pitch</span>
       </div>
+    <div class="column">
+      <webaudio-knob id="osc2shape" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+        diameter="24"></webaudio-knob>
+      <span class="knob-label" id="osc2shape-label">Osc2 Shape</span>
+    </div>
+    <div class="column">
+        <webaudio-knob id="osc2gain" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+           diameter="24"></webaudio-knob>
+        <span class="knob-label" id="osc2gain-label">Osc2 Gain</span>
+      </div>
+    <div class="column">
+      <webaudio-knob id="resonance" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+         diameter="24"></webaudio-knob>
+      <span class="knob-label" id="resonance-label">Resonance</span>
+    </div>
+    <div class="column">
+      <webaudio-knob id="lforate" class="knob" min="30" max="500" sprites="99" value="100" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+        diameter="24"></webaudio-knob>
+      <span class="knob-label" id="lforate-label">lfo rate</span>
+    </div>
+    <div class="column">
+      <webaudio-knob id="lfoint" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+        diameter="24"></webaudio-knob>
+      <span class="knob-label" id="lfoint-label">lfo int</span>
+    </div>
+    <div class="column">
+      <webaudio-switch id="switchDelay" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_2.png"
+        width="80" height="40"></webaudio-switch>
+      <span class="knob-label" id="switchDelay-label">Delay</span>
+    </div>
 
   </div>
   <div class="row">
@@ -200,8 +207,12 @@
       console.log(this._plug);
       this._root = this.attachShadow({ mode: 'open' });
       this._root.appendChild(minitemp.content.cloneNode(true));
-      this.isOn = false;
+      this.knobs = this._root.querySelectorAll(".knob");
+      this.bypassDelay();
+      this.isDelayOn = false;
       this.setKnobs();
+      this.setSwitchListener();
+
     }
 
     get properties() {
@@ -225,13 +236,12 @@
       console.log(this.state);
       if (this.state.status == "enable") {
         this._root.querySelector("#switch1").value = 1;
-        this.isOn = true;
+        this.isDelayOn = true;
       }
-      this.knobs = this._root.querySelectorAll(".knob");
       this.labels = this._root.querySelectorAll(".knob-label");
 
       for (var i = 0; i < this.knobs.length; i++) {
-        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")] * 100;
+        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")];
       }
       console.log(this.knobs);
 
@@ -240,28 +250,51 @@
 
 
     setKnobs() {
-      console.log('setknobs');
-      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("feedback", e.target.value / 100));
-      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("time", e.target.value / 100));
-      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("mix", e.target.value / 100));
+    this._root.querySelector('#master').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#master').id, e.target.value));
+    this._root.querySelector('#osc1pitch').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#osc1pitch').id, e.target.value));
+    this._root.querySelector('#osc1shape').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#osc1shape').id, e.target.value));
+    this._root.querySelector('#osc1gain').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#osc1gain').id, e.target.value));
+    this._root.querySelector('#lowpass').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#lowpass').id, e.target.value));
+    this._root.querySelector('#highpass').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#highpass').id, e.target.value));
+    this._root.querySelector('#time').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#time').id, e.target.value));
+    this._root.querySelector('#feedback').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#feedback').id, e.target.value));
+    this._root.querySelector('#noise').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#noise').id, e.target.value));
+    this._root.querySelector('#osc2pitch').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#osc2pitch').id, e.target.value));
+    this._root.querySelector('#osc2shape').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#osc2shape').id, e.target.value));
+    this._root.querySelector('#osc2gain').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#osc2gain').id, e.target.value));
+    this._root.querySelector('#resonance').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#resonance').id, e.target.value));
+    this._root.querySelector('#lforate').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#lforate').id, e.target.value));
+    this._root.querySelector('#lfoint').addEventListener('input', (e) => this._plug.setParam(this._root.querySelector('#lfoint').id, e.target.value));
+
+    //    console.log('setknobs');
+    //    var ids = []
+    //    for (var i = 0; i<this.knobs.length;i++) {
+    //     ids.push(this.knobs[i].id);
+    //    }
+    //    console.log(ids);
+    //  for (var i = 0; i<this.knobs.length;i++) {
+    //    this.knobs[i].addEventListener('input', (e) => this._plug.setParam(ids[i], e.target.value));
+    //   }
+
+    // mettre l'ajout dans une fonction
 
     }
     setSwitchListener() {
       console.log("setswitch");
       this._root.querySelector("#switchDelay").addEventListener('change', (e) => {
-        if (this.isOn) this.bypassDelay()
+        if (this.isDelayOn) this.bypassDelay()
         else this.reactivateDelay();
-        this.isOn = !this.isOn;
+        this.isDelayOn = !this.isDelayOn;
       });
     }
 
 
 
     bypassDelay() {
-      //this._plug.setState("disable");
+      this._plug.setParam("delay", "disable");
     }
-    bypassDelay() {
-      //this._plug.setState("enable");
+    reactivateDelay() {
+      this._plug.setParam("delay", "enable");
     }
 
   }
