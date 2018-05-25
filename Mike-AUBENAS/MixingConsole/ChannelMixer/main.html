@@ -236,7 +236,6 @@
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(leMixer.content.cloneNode(true));
             this.isOn = false;
-            this.affectChannel();
             this.setListener();
             this.setSwitchListener();
         }
@@ -260,15 +259,10 @@
             return this.boundingRect;
         }
 
-        affectChannel() // TODO
+        setChannelNumber(number) 
         {
-            window.addEventListener("load", (e) =>
-            {
-                const stringChannel = this._root.querySelector("#channelNumber").innerHTML;
-                const number = stringChannel.replace(" ", "").toLowerCase().replace("channel", "");
-
-                this._plug.setChannelNumber(number);
-            });
+            this._plug.setChannelNumber(number);
+            this._root.querySelector("#channelNumber").innerHTML = "Channel " + number;
         }
 
         setListener() 
@@ -321,16 +315,24 @@
     {
         let elem = new ChannelMixerGUI(plug);
 
-        if(!elem.hasAttribute("channelNumber"))
-            elem.setAttribute("channelNumber", 0);
+        (function channelNumber()
+        {
+            if(!elem.hasAttribute("channelNumber"))
+                elem.setAttribute("channelNumber", 0);
 
-        let channel = elem.getAttribute("channelNumber");
+            return elem.getAttribute("channelNumber");
+        })()
 
-        console.log(elem.querySelector("#channelNumber"));
+        elem.setChannelNumber(
+        (
+            function channelNumber()
+            {
+                if(!elem.hasAttribute("channelNumber"))
+                    elem.setAttribute("channelNumber", 0);
 
-        //elem.querySelector("#channelNumber").innerHTML = "Channel " + elem.getAttribute("channelNumber");
-
-        //elem.setChannelNumber(); 
+                return elem.getAttribute("channelNumber");
+            }
+        )());
 
         return elem; 
     }
