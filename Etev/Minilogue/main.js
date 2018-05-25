@@ -107,15 +107,12 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   }
 
   setParam(key, value) {
-    console.log("act");
-    if (key == "time") {
-      this.setTime(value);
-    } else if (key == "feedback") {
-      this.setFeedback(value);
-    } else if (key == "mix") {
-      this.setMix(value);
-    } else {
-      console.log("this parameter isn't used in Wasabi-PingpongDelay");
+    console.log(key);
+    try {
+      this[key] = (value);
+    } catch (error) {
+
+      console.log(error)
     }
   }
 
@@ -126,7 +123,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
   setState(data) {
     try {
-      
+
       this.gui.setAttribute('state', JSON.stringify(data));
     } catch (error) {
       console.log("Gui not defined", error)
@@ -136,7 +133,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
         console.log(error);
       }
     }
-    
+
     Object.keys(data).map(
       (elem, index) => {
         console.log(elem, data[elem]);
@@ -172,8 +169,13 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     // OSC stages
     this.osc1 = this.context.createOscillator();
     this.osc2 = this.context.createOscillator();
-    this.noise = this.context.createOscillator();
+    this.oscNoise = this.context.createOscillator();
     this.lfo = this.context.createOscillator();
+
+    this.osc1.type = "sawtooth";
+    this.osc2.type = "sawtooth";
+    this.oscNoise.type = "random";
+    this.lfo.type = "sine";
 
     // Waveshapers stage
     this.wshape1 = this.context.createWaveShaper();
@@ -181,6 +183,9 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
     // Filter stage
     this.lowPassfilter = this.context.createBiquadFilter();
+    this.lowPassfilter.type = "lowpass";
+    this.highpassfilter = this.context.createBiquadFilter();
+    this.highpassfilter.type = "highpass";
 
     //Enveloppe stage
     this.ampEnveloppe = ADSRNode(this.context, {
@@ -201,6 +206,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.gainOsc1 = this.context.createGain();
     this.gainOsc2 = this.context.createGain();
     this.gainNoise = this.context.createGain();
+    this.amp = this.context.createGain();
 
     // Delay stage (from stereowasabidelay)
     this.delayNodeLeft = this.context.createDelay();
@@ -222,20 +228,23 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
     this.wshape1.connect(this.gainOsc1);
     this.wshape2.connect(this.gainOsc2);
-    this.noise.connect(this.gainNoise);
+    this.oscNoise.connect(this.gainNoise);
 
     this.gainOsc1.connect(this.oscMerger, 0, 0);
     this.gainOsc2.connect(this.oscMerger, 0, 1);
     this.gainNoise.connect(this.oscMerger, 0, 2);
 
     this.oscMerger.connect(this.lowPassfilter);
+    this.lowPassfilter.connect(this.highpassfilter);
     //this.lowPassfilter.connect(this.ampEnveloppe); --> has to be done by setter
     //this.lowPassfilter.connect(this.enveloppeGenerator);--> has to be done by setter
 
     //this.enveloppeGenerator.connect(this.lfo);--> has to be done by setter
 
     // stereo delay parts
-    this.lowPassfilter.connect(this.dryGainNode);
+    this.highpassfilter.connect(this.amp);
+    this.amp.connect(this.dryGainNode);
+    this.ampEnveloppe.connect(this.amp);
     // dry mix out
     this.dryGainNode.connect(this._output);
 
@@ -247,41 +256,121 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
     this.delayNodeLeft.connect(this.delayNodeRight);
     // wet mix
-    this._input.connect(this.feedbackGainNode);
+    this.amp.connect(this.feedbackGainNode);
     // wet out
     this.channelMerger.connect(this.wetGainNode);
     this.wetGainNode.connect(this._output);
+    // this.osc1.start();
+    // this.osc2.start();
+    // this.oscNoise.start();
   }
 
   setInitialParamValues() {
     /*
      * set default value for parameters and assign it to the web audio nodes
      */
-    this.setTime(this.params.time);
-    this.setFeedback(this.params.feedback);
-    this.setMix(this.params.mix);
+    this.time = (this.params.time);
+    this.feedback = (this.params.feedback);
+    this.mix = (this.params.mix);
   }
-
-  getTime() {
-    return this.params.time;
-  }
-
-  getMix() {
-    return this.params.mix;
-  }
-  getFeedback() {
-    return this.params.feedback;
-  }
-
-
-
-  // delay tools
 
 
   /*
-      *
-      *Tools to build sounds 
-      */
+   * Getter for each param
+   */
+
+  get time() {
+    return this.params.time;
+  }
+
+  get mix() {
+    return this.params.mix;
+  }
+  get feedback() {
+    return this.params.feedback;
+  }
+  /*
+   * Setters for each param
+   */
+
+  set resonance(_resonance){
+    this.lowPassfilter.Q.value = _resonance;
+  }
+  set master(_master){
+    this._output.gain.setValueAtTime(_master,this.context.currentTime);
+  }
+  set lowpass(_cutoff){
+    this.lowPassfilter.frequency.value = _cutoff;
+  }
+  set highpass(_cutoff){
+    this.highpassfilter.frequency.value = _cutoff;
+  }
+  set osc1gain(_gain){
+    this.gainOsc1.gain.setValueAtTime(_gain /100,this.context.currentTime);
+  }
+  set osc2gain(_gain){
+    this.gainOsc2.gain.setValueAtTime(_gain /100,this.context.currentTime);
+  }
+  set osc1pitch(_pitch){
+    this.osc1.frequency.setValueAtTime(440 * _pitch,this.context.currentTime);
+  }
+  set osc2pitch(_pitch){
+    this.osc2.frequency.setValueAtTime(440 * _pitch,this.context.currentTime);
+  }
+  set lforate(_rate){
+    if (!this.isInRange(_rate, 30, 500))
+    return;
+    this.lfo.frequency.value = _rate;
+  }
+  set lfoint(_int){
+    if (!this.isInRange(_int, 0, 1))
+    return;
+    this.lfo.gain.value = _int;
+  }
+  set noise(_gain){
+    this.gainNoise.gain.setValueAtTime(_gain,this.context.currentTime);
+  }
+  set osc1shape(_gain) {
+    this.wshape1.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
+  }
+  set osc2shape(_gain) {
+    this.wshape2.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
+  }
+
+  set time(_time) {
+    if (_time < this._descriptor.time.range.max && _time > this._descriptor.time.range.min) this.params.time = _time;
+    this.delayNodeLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
+    this.delayNodeRight.delayTime.setValueAtTime(_time, this.context.currentTime);
+  }
+
+  set feedback(_feedback) {
+    if (_feedback < this._descriptor.feedback.range.max && _feedback > this._descriptor.feedback.range.min) this.params.feedback = _feedback;
+    this.feedbackGainNode.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
+  }
+
+  set mix(_mix) {
+    if (_mix < this._descriptor.mix.range.max && _mix > this._descriptor.mix.range.min) this.params.mix = _mix;
+    this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
+    this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
+  }
+
+  set delay(_sig){
+    if(_sig==="enable"){
+      this.amp.disconnect(this._output);
+      this.amp.connect(this.feedbackGainNode);
+      this.amp.connect(this.dryGainNode);
+    }
+    else if(_sig==="disable"){
+      this.amp.disconnect(this.feedbackGainNode);
+      this.amp.disconnect(this.dryGainNode);
+      this.amp.connect(this._output);
+    }
+  }
+
+
+
+  // tools
+
 
   isNumber(arg) {
     return toString.call(arg) === '[object Number]' && arg === +arg;
@@ -306,25 +395,22 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
     return 1 - ((0.5 - mix) * 2);
   }
+  getDistortionCurve(gain) {
+    var sampleRate = this.context.sampleRate;
+    var curve = new Float32Array(sampleRate);
+    var deg = Math.PI / 180;
 
-  /*
-    * Setters for each param
-    */
-  setTime(_time) {
-    if (_time < this._descriptor.time.range.max && _time > this._descriptor.time.range.min) this.params.time = _time;
-    this.delayNodeLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
-    this.delayNodeRight.delayTime.setValueAtTime(_time, this.context.currentTime);
+    for (var i = 0; i < sampleRate; i++) {
+      var x = i * 2 / sampleRate - 1;
+      curve[i] = (3 + gain) * x * 20 * deg / (Math.PI + gain * Math.abs(x));
+    }
+    return curve;
   }
+  normalize(num, floor, ceil) {
+    if (!this.isNumber(num) || !this.isNumber(floor) || !this.isNumber(ceil))
+      return;
 
-  setFeedback(_feedback) {
-    if (_feedback < this._descriptor.feedback.range.max && _feedback > this._descriptor.feedback.range.min) this.params.feedback = _feedback;
-    this.feedbackGainNode.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
-  }
-
-  setMix(_mix) {
-    if (_mix < this._descriptor.mix.range.max && _mix > this._descriptor.mix.range.min) this.params.mix = _mix;
-    this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
-    this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
+    return ((ceil - floor) * num) / 1 + floor;
   }
 
 }
