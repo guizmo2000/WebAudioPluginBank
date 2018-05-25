@@ -1,0 +1,80 @@
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script> WebAudioControlsOptions = { useMidi: 1 }; </script>
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<script src="../ChannelMixer/main.js"></script>
+<link rel="import" href="../ChannelMixer/main.html"></link>
+
+<template id="wc-mixer">
+
+	<style>
+
+		:host 
+		{
+		}
+		
+
+	</style>
+
+    <wasabi-channelmixer channelNumber="3"></wc-channelmixer>
+
+</template>
+
+<script>
+
+    let delaytemp = document.currentScript.ownerDocument.querySelector("#wc-mixer");
+
+	class MixerGUI extends HTMLElement 
+	{
+		constructor(plug) 
+		{ 
+			super();
+			this._plug = plug;
+			this._root = this.attachShadow({ mode: 'open' });
+			this._root.appendChild(delaytemp.content.cloneNode(true));
+			this._plug.setState("enable");
+		}
+
+		get properties() 
+		{
+			this.boundingRect = 
+			{
+				dataWidth: 
+				{
+					type: Number,
+					value: 120
+				},
+				dataHeight: 
+				{
+					type: Number,
+					value: 180
+				}
+			};
+
+			return this.boundingRect;
+		}
+
+		setKnobs() 
+		{
+            
+		}	
+	}
+
+	try 
+	{
+		console.log("Element defined");
+		customElements.define('wasabi-mixer', MixerGUI);
+	} 
+	catch(error)
+	{
+		console.log(error);
+		console.log("Element already defined");      
+	}
+
+
+	createWAP = (plug) => 
+	{
+		let elem = new MixerGUI(plug);
+		return elem; 
+	}
+
+</script>
