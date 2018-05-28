@@ -88,7 +88,7 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
     return this.inputs.length;
   }
 
-  get numberOfOuputs(){
+  get numberOfOutputs(){
     return this.outputs.length;
   }
   inputChannelCount(){

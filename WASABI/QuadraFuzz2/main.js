@@ -107,7 +107,7 @@ class QuadraFuzz {
     return this.inputs.length;
   }
 
-  get numberOfOuputs(){
+  get numberOfOutputs(){
     return this.outputs.length;
   }
 
