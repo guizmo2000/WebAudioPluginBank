@@ -161,7 +161,7 @@ class WeirdPhaserNode extends AudioWorkletNode {
         return parseInt(this.json_object.inputs);
     }
     
-    getNumOutputs()
+    outputChannelCount()
     {
         return parseInt(this.json_object.outputs);
     }
