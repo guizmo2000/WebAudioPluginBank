@@ -105,6 +105,9 @@ class QuadraFuzz {
   inputChannelCount() {
     return this.inputs.length;
   }
+  outputChannelCount(){
+    return this.outputs.length;
+  }
   getMetadata() {
     return this.metadata;
   }
