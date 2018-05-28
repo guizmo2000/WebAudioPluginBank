@@ -73,6 +73,10 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     return this._params;
   }
 
+  get numberOfInputs(){};
+
+  get numberOfOuputs(){};
+
   inputChannelCount(){ };
   outputChannelCount(){ };
 

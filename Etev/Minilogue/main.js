@@ -84,16 +84,19 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   /*    ################     API METHODS    ###############   */
 
   // p9 count inputs
-  inputChannelCount() {
+  get numberOfInputs() {
     return this.inputs.length;
   }
-  getPatch(index) {
-    return this.patchNames[index];
-  }
-  setPatch(data, index) {
-    this.patchNames[index] = data;
-  }
 
+  get numberOfOuputs() {
+    return this.outputs.length;
+  }
+  inputChannelCount() {
+    return 1;
+  }
+  outputChannelCount() {
+    return 1
+  }
   getParam(key) {
     if (key == "time") {
       this.getTime();
@@ -293,42 +296,42 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
    * Setters for each param
    */
 
-  set resonance(_resonance){
+  set resonance(_resonance) {
     this.lowPassfilter.Q.value = _resonance;
   }
-  set master(_master){
-    this._output.gain.setValueAtTime(_master,this.context.currentTime);
+  set master(_master) {
+    this._output.gain.setValueAtTime(_master, this.context.currentTime);
   }
-  set lowpass(_cutoff){
+  set lowpass(_cutoff) {
     this.lowPassfilter.frequency.value = _cutoff;
   }
-  set highpass(_cutoff){
+  set highpass(_cutoff) {
     this.highpassfilter.frequency.value = _cutoff;
   }
-  set osc1gain(_gain){
-    this.gainOsc1.gain.setValueAtTime(_gain /100,this.context.currentTime);
+  set osc1gain(_gain) {
+    this.gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
   }
-  set osc2gain(_gain){
-    this.gainOsc2.gain.setValueAtTime(_gain /100,this.context.currentTime);
+  set osc2gain(_gain) {
+    this.gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
   }
-  set osc1pitch(_pitch){
-    this.osc1.frequency.setValueAtTime(440 * _pitch,this.context.currentTime);
+  set osc1pitch(_pitch) {
+    this.osc1.frequency.setValueAtTime(440 * _pitch, this.context.currentTime);
   }
-  set osc2pitch(_pitch){
-    this.osc2.frequency.setValueAtTime(440 * _pitch,this.context.currentTime);
+  set osc2pitch(_pitch) {
+    this.osc2.frequency.setValueAtTime(440 * _pitch, this.context.currentTime);
   }
-  set lforate(_rate){
+  set lforate(_rate) {
     if (!this.isInRange(_rate, 30, 500))
-    return;
+      return;
     this.lfo.frequency.value = _rate;
   }
-  set lfoint(_int){
+  set lfoint(_int) {
     if (!this.isInRange(_int, 0, 1))
-    return;
+      return;
     this.lfo.gain.value = _int;
   }
-  set noise(_gain){
-    this.gainNoise.gain.setValueAtTime(_gain,this.context.currentTime);
+  set noise(_gain) {
+    this.gainNoise.gain.setValueAtTime(_gain, this.context.currentTime);
   }
   set osc1shape(_gain) {
     this.wshape1.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
@@ -354,13 +357,13 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
   }
 
-  set delay(_sig){
-    if(_sig==="enable"){
+  set delay(_sig) {
+    if (_sig === "enable") {
       this.amp.disconnect(this._output);
       this.amp.connect(this.feedbackGainNode);
       this.amp.connect(this.dryGainNode);
     }
-    else if(_sig==="disable"){
+    else if (_sig === "disable") {
       this.amp.disconnect(this.feedbackGainNode);
       this.amp.disconnect(this.dryGainNode);
       this.amp.connect(this._output);
