@@ -94,6 +94,7 @@ class WebAudioPluginFactory {
   constructor(context, baseUrl) {
     this.context = context;
     this.baseUrl = baseUrl;
+    console.log(this.baseUrl);
     this.MetadataFileURL = this.baseUrl + "/main.json";
   }
 
@@ -134,7 +135,6 @@ class WebAudioPluginFactory {
         // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
         let url = this.baseUrl + "/main.html";
 
-
         if (!this.linkExists(url)) {
           // LINK DOES NOT EXIST, let's add it to the document
           var link = document.createElement('link');
@@ -146,6 +146,7 @@ class WebAudioPluginFactory {
 
 
           link.onload = (e) => {
+            console.log("link : ",link);
             // the file has been loaded, instanciate GUI
             // and get back the HTML elem
             // HERE WE COULD REMOVE THE HARD CODED NAME
@@ -155,7 +156,6 @@ class WebAudioPluginFactory {
         } else {
           // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
           // so we can create another instance
-          console.log(this.plug);
           var element = createWAP(this.plug);
           resolve(element);
         }

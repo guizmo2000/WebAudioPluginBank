@@ -225,7 +225,7 @@
 
 <script>
 
-    let leMixer = document.currentScript.ownerDocument.querySelector("#wc-channelmixer");
+    let leChannel = document.currentScript.ownerDocument.querySelector("#wc-channelmixer");
 
     class ChannelMixerGUI extends HTMLElement 
     {
@@ -234,7 +234,7 @@
             super();
             this._plug = plug;
             this._root = this.attachShadow({ mode: 'open' });
-            this._root.appendChild(leMixer.content.cloneNode(true));
+            this._root.appendChild(leChannel.content.cloneNode(true));
             this.isOn = false;
             this.setListener();
             this.setSwitchListener();
@@ -313,6 +313,7 @@
 
     createWAP = (plug) => 
     {
+        console.log("channel",this.plug);
         let elem = new ChannelMixerGUI(plug);
 
         (function channelNumber()
