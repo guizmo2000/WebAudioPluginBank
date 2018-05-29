@@ -92,7 +92,7 @@ window.PingPongDelay = class PingPongDelay {
     return this.inputs.length;
   }
 
-  get numberOfOuputs(){
+  get numberOfOutputs(){
     return this.outputs.length;
   }
   inputChannelCount(){
