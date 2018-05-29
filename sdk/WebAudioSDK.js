@@ -11,8 +11,11 @@ class CompositeAudioNode {
 
   constructor(context, options) {
     this.context = context;
-    this._input = this.context.createGain();
-    this._output = this.context.createGain();
+    this.numberOfInputs = options.numberOfInputs ? options.numberOfInputs : 1;
+    this.numberOfOuputs = options.numberOfOuputs ? options.numberOfOuputs : 1;
+    this.channelCount = options.channelCount ? options.channelCount : 2;
+    this.channelCountMode = options.channelCountMode ? options.channelCountMode : "Max";
+    this.channelInterpretation = options.channelInterpretation ? options.channelInterpretation : "speakers";
   }
 
   connect() {
@@ -49,11 +52,19 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     // Do stuffs below.
   }
 
-  set descriptor(descriptor) {
-    this._descriptor = descriptor;
+  static get parameterDescriptors() {
+    return this._descriptor;
   }
 
-  getDescriptor() {
+  addParam(param) {
+    try{
+      this._discriptor.push({ name: param.name, defaultValue: param.defaultValue, minValue: param.minValue, maxValue: param.maxValue})
+    }catch(error){
+      console.err("The structure given does not match with the AudioParam :{ name: 'name', defaultValue: 0.25, minValue: 0, maxValue: 1} Doc : https://webaudio.github.io/web-audio-api/#parameterdescriptors ");
+    }
+  }
+
+  getDescriptor() { // will be discarded
     return this._descriptor;
   }
 
@@ -73,12 +84,12 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     return this._params;
   }
 
-  get numberOfInputs(){};
+  get numberOfInputs() { };
 
-  get numberOfOuputs(){};
+  get numberOfOuputs() { };
 
-  inputChannelCount(){ };
-  outputChannelCount(){ };
+  inputChannelCount() { };
+  outputChannelCount() { };
 
   getPatch(index) { };
 
@@ -121,23 +132,23 @@ class WebAudioPluginFactory {
   }
 
   load() {
-      return new Promise((resolve, reject) => {
-        this.fetchPlugin().then(classname =>{
-          try{
-            this.plug = new window[classname](this.context, this.options);
-            resolve(this.plug);
-          } catch (e){
-            reject(e);
-          }
+    return new Promise((resolve, reject) => {
+      this.fetchPlugin().then(classname => {
+        try {
+          this.plug = new window[classname](this.context, this.options);
+          resolve(this.plug);
+        } catch (e) {
+          reject(e);
+        }
 
-        })
-      });
+      })
+    });
   }
 
   loadGui() {
     return new Promise((resolve, reject) => {
       try {
-        this.plug.setParam('status','disable');
+        this.plug.setParam('status', 'disable');
 
       } catch (error) {
         console.log("plugin with no on/ off state")

@@ -72,7 +72,7 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
       "feedback": this._descriptor.feedback.default,
       "mix": this._descriptor.mix.default,
       "time": this._descriptor.time.default,
-      "status": "disabled"
+      "status": "disable"
     }
     // p5 patchnames
     this.patchNames = ["patch1"];
