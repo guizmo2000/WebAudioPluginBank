@@ -40,10 +40,12 @@
 			this.arrayNodeToConnectChannel = this._plug.getArrayNodeToConnect();
 			/* this.channels = this.setInitialChannelsGUI(); */
 
-			(async () => {
-				for (let i = 0; i < this.arrayNodeToConnectChannel.length; i++) {
-				await this.setInitialChannelsGUI(i,this.arrayNodeToConnectChannel);
-			}
+			(async () => 
+			{
+				for (let i = 0; i < this.arrayNodeToConnectChannel.length; i++) 
+				{
+					await this.setInitialChannelsGUI(i,this.arrayNodeToConnectChannel);
+				}
 			})();
 		}
 
@@ -66,107 +68,23 @@
 			return this.boundingRect;
 		}
 
-		setInitialChannelsGUI(i,araie)
+		setInitialChannelsGUI(i, araie)
 		{
 			var plugin = new window.WasabiChannelMixer(ctx, this.urlChannel, {"channelNumber" : i+1});
 
-			return new Promise((resolve, reject) => {
-
-				plugin.load().then((node) => {
-
-				plugin.loadGui().then((elem) => {
-				document.body.appendChild(elem);
-				resolve(true);
-				});
-				araie[i].connect(node);
-				node.connect(ctx.destination)
-				})
-				})
-			}
-
-			/* let divLine = this._root.querySelector("#arrayOfChannels");
-			let divColumn = document.createElement("div");
-			let divColumn2 = document.createElement("div");
-			/* divColumn.className = "column";
-			divColumn2.className = "column"; 
-			divLine.appendChild(divColumn);
-			divLine.appendChild(divColumn2);
-			
-			var plugin = new window.WasabiChannelMixer(ctx, this.urlChannel, {"channelNumber" : 1});
-			var plugin2 = new window.WasabiChannelMixer(ctx, this.urlChannel,{"channelNumber" : 2});
-
-			let _promise = new Promise((resolve, reject) => {
-
-			plugin.load().then((node) => {
-
-			plugin.loadGui().then((elem) => {
-			divLine.appendChild(elem);
-			resolve(true);
-			});
-			this.arrayNodeToConnectChannel[0].connect(node);
-			node.connect(ctx.destination)
-			})
-			})
-
-
-			_promise.then(e => {
-
-			plugin2.load().then(node => {
-			plugin2.loadGui().then((elem) => {
-				divLine.appendChild(elem);
-			});
-			this.arrayNodeToConnectChannel[1].connect(node);
-			node.connect(ctx.destination)
-
-			}) 
-
-
-			}) */
-			/* let divLine = this._root.querySelector("#arrayOfChannels");
-			let divColumn = document.createElement("div");
-			divColumn.className = "column";
-			divLine.appendChild(divColumn);
-
-			var plugin = new window.WasabiChannelMixer(ctx, this.urlChannel);
-
-			plugin.load().then((node) => 
+			return new Promise((resolve, reject) => 
 			{
-				plugin.loadGui().then((elem) => 
+				plugin.load().then((node) => 
 				{
-					divColumn.appendChild(elem);
-				});
-			}); */
-
-			/* let i = 0; */
-			/* for(let i = 0; i < this._plug.getNumberOfChannels(); i++)
-			{ 
-				let _promise = new Promise((resolve, reject) => 
-				{
-					const options = {"channelNumber" : i + 1};
-					const nodeToDeploy = this.arrayNodeToConnectChannel[i];
-
-					const plugin = new window.WasabiChannelMixer(ctx, this.urlChannel, options);
-
-					let divLine = this._root.querySelector("#arrayOfChannels");
-					let divColumn = document.createElement("div");
-					divColumn.className = "column";
-					divLine.appendChild(divColumn);
-
-					plugin.load().then((node) => 
-					{
-						plugin.loadGui().then((elem) => 
-						{
-							divColumn.appendChild(elem);
-						});
-						resolve(true);
-						nodeToDeploy.connect(node);
-						node.connect(ctx.destination);
+					plugin.loadGui().then((elem) => {
+					document.body.appendChild(elem);
+					resolve(true);
 					});
-				});
-
-				// _promise.then( () => { i++ });
-			} */
-			/* while(i < this._plug.getNumberOfChannels() ); */
+					araie[i].connect(node);
+					node.connect(ctx.destination)
+				})
+			})
+		}
 	}
 
 	try 
