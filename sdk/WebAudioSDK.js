@@ -16,6 +16,9 @@ class CompositeAudioNode {
     this.channelCount = options.channelCount ? options.channelCount : 2;
     this.channelCountMode = options.channelCountMode ? options.channelCountMode : "Max";
     this.channelInterpretation = options.channelInterpretation ? options.channelInterpretation : "speakers";
+
+    this._input = context.createGain();
+    this._output = context.createGain();
   }
 
   connect() {
@@ -85,8 +88,10 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
   }
 
   get numberOfInputs() { };
+  set numberOfInputs(number){}
 
   get numberOfOuputs() { };
+  set numberOfOuputs(number){}
 
   inputChannelCount() { };
   outputChannelCount() { };

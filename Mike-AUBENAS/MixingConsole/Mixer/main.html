@@ -77,7 +77,7 @@
 				plugin.load().then((node) => 
 				{
 					plugin.loadGui().then((elem) => {
-					document.body.appendChild(elem);
+					this._root.querySelector('#arrayOfChannels').appendChild(elem);
 					resolve(true);
 					});
 					araie[i].connect(node);
