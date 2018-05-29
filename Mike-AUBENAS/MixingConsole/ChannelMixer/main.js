@@ -15,7 +15,7 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		if(options)
 			this.channelNumber = options.channelNumber ? options.channelNumber : 0;
 		else
-		this.channelNumber = 0;
+			this.channelNumber = 0;
 
 		this._metadata = 
 		{
@@ -153,42 +153,17 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		this.pan.connect( this.analyser );
 		this.analyser.connect( this._output ); 
     }
-
-	isNumber(arg)
-	{ return toString.call(arg) === '[object Number]' && arg === +arg; }
-
-	getDryLevel(mix) 
-	{
-		if (!this.isNumber(mix) || mix > 1 || mix < 0)
-			return 0;
-
-		if (mix <= 0.5)
-			return 1;
-
-		return 1 - ((mix - 0.5) * 2);
-	}
-
-	getWetLevel(mix) 
-	{
-		if (!this.isNumber(mix) || mix > 1 || mix < 0)
-			return 0;
-
-		if (mix >= 0.5)
-			return 1;
-
-		return 1 - ((0.5 - mix) * 2);
-	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
 window.WasabiChannelMixer = class WasabiChannelMixer extends WebAudioPluginFactory 
 {
-	constructor(context, baseUrl,options)
+	constructor(context, baseUrl, options)
 	{ 
 		super(context,baseUrl);
 		this.options = options; 
-}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

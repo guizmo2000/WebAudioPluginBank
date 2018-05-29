@@ -23,8 +23,9 @@
 	var ctx = new AudioContext();
 	let arrayMediaSources = new Array();
 	let arrayPlayers = new Array();
+	let regarde = document.querySelectorAll("audio").length;
 
-	for(let i = 0; i < 4; i++)
+	for(let i = 0; i < regarde; i++)
 	{
 		var player = document.getElementById("soundSample" + i);
 		arrayPlayers.push(player);
@@ -39,12 +40,11 @@
 
 		let mediaSource = ctx.createMediaElementSource(player);
 		arrayMediaSources.push(mediaSource);
-		mediaSource.connect(ctx.destination);
 	}
 
-
-	/* var pluginURL = "./MixingConsole/Mixer";
-	var plugin = new window.WasabiMixer(ctx, pluginURL);
+	var pluginURL = "./MixingConsole/Mixer";
+	let options = {"arrayNodeToConnect" : arrayMediaSources};
+	var plugin = new window.WasabiMixer(ctx, pluginURL, options);
 
     plugin.load().then((node) => 
     {
@@ -54,10 +54,7 @@
 			console.log("elem", elem);
 			document.body.appendChild(elem);
 		});
-
-		mediaSource.connect(node);
-		node.connect(ctx.destination);
-	}); */
+	});
 
 	window.addEventListener("keydown", (event) =>
 	{
