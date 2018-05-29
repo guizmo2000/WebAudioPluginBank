@@ -12,6 +12,11 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		this._gui = document.createElement("wc-channelmixer");
 		this._gui.plug = this;
 
+		if(options)
+			this.channelNumber = options.channelNumber ? options.channelNumber : 0;
+		else
+		this.channelNumber = 0;
+
 		this._metadata = 
 		{
 			"name": "wasabi-ChannelMixer",
@@ -47,7 +52,6 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 				}
 			},
 			"status": "disable",
-			"channelNumber" : 0 //It's going to be initialise through the HTML
 		}
 
 		this.setup();
@@ -72,10 +76,10 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 	}
 	
 	getChannelNumber()
-	{ return this.params.channelNumber; }
+	{ return this.channelNumber; }
 
 	setChannelNumber(value)
-	{ this.params.channelNumber = value; }
+	{ this.channelNumber = value;}
 
     getPan()
     { return this.params.pan;}
@@ -180,8 +184,11 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 
 window.WasabiChannelMixer = class WasabiChannelMixer extends WebAudioPluginFactory 
 {
-	constructor(context, baseUrl)
-	{ super(context,baseUrl); }
+	constructor(context, baseUrl,options)
+	{ 
+		super(context,baseUrl);
+		this.options = options; 
+}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

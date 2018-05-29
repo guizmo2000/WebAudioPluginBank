@@ -29,7 +29,9 @@
 	var mediaSource = ctx.createMediaElementSource(player);
 
 	var pluginURL = "./MixingConsole/ChannelMixer";
-	var plugin = new window.WasabiChannelMixer(ctx, pluginURL);
+	
+	const options = {"channelNumber" : 5}; 
+	var plugin = new window.WasabiChannelMixer(ctx, pluginURL, options);
 
     plugin.load().then((node) => 
     {

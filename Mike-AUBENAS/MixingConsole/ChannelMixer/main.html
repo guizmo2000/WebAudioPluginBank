@@ -233,6 +233,7 @@
         { 
             super();
             this._plug = plug;
+            this.channelNumber = this._plug.getChannelNumber();
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(leChannel.content.cloneNode(true));
             this.isOn = false;
@@ -313,27 +314,18 @@
 
     createWAP = (plug) => 
     {
-        console.log("channel",this.plug);
         let elem = new ChannelMixerGUI(plug);
 
-        (function channelNumber()
+        /**
+         * Makes the HTML attribute the same as the class attribute 
+         */
+        (function sychronizeChannelNumber()
         {
             if(!elem.hasAttribute("channelNumber"))
-                elem.setAttribute("channelNumber", 0);
-
-            return elem.getAttribute("channelNumber");
+                elem.setAttribute("channelNumber", elem._plug.getChannelNumber());
+            
+            elem.setChannelNumber(elem.getAttribute("channelNumber"));
         })()
-
-        elem.setChannelNumber(
-        (
-            function channelNumber()
-            {
-                if(!elem.hasAttribute("channelNumber"))
-                    elem.setAttribute("channelNumber", 0);
-
-                return elem.getAttribute("channelNumber");
-            }
-        )());
 
         return elem; 
     }
