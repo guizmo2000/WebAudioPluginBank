@@ -12,6 +12,11 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 		this._gui = document.createElement("wc-mixer");
 		this._gui.plug = this;
 
+		if(options)
+			this.arrayNodeToConnect = options.arrayNodeToConnect ? options.arrayNodeToConnect : 'no nodes';
+		else
+			this.arrayNodeToConnect = 'no nodes';
+
 		this._metadata = 
 		{
 			"name": "wasabi-Mixer",
@@ -26,16 +31,23 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 
         this.patchNames = ["patch1"];
 		
-		this.params = 
-		{
-			"numberOfChannels" : 4
-		}
+		this.getNumberOfChannels();
 
 		this.setup();
 	}
-	
-	
 
+	getNumberOfChannels()
+	{
+		if(this.arrayNodeToConnect != 'no nodes')
+			return this.arrayNodeToConnect.length;
+	}
+
+	getArrayNodeToConnect()
+	{ return this.arrayNodeToConnect; }
+
+	setArrayNodeToConnect(arrayMedia)
+	{  this.arrayNodeToConnect = arrayMedia; }
+	
 	getPatch(index)
 	{ return this.patchNames[index]; }
 
@@ -65,59 +77,24 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 	{ return msg; }
 
 	setup()
-	{
-		this.createIO();
-		this.createNodes();
-		this.connectNodes();
+	{}	
+
+	createMaster()
+	{ 
+		// TODO 
 	}
 
-	createIO()
-	{
-		// TODO
-	}
-
-	createNodes() 
-	{
-		// TODO
-	}
-
-	connectNodes() 
-	{
-		// TODO
-    }
-
-	isNumber(arg)
-	{ return toString.call(arg) === '[object Number]' && arg === +arg; }
-
-	getDryLevel(mix) 
-	{
-		if (!this.isNumber(mix) || mix > 1 || mix < 0)
-			return 0;
-
-		if (mix <= 0.5)
-			return 1;
-
-		return 1 - ((mix - 0.5) * 2);
-	}
-
-	getWetLevel(mix) 
-	{
-		if (!this.isNumber(mix) || mix > 1 || mix < 0)
-			return 0;
-
-		if (mix >= 0.5)
-			return 1;
-
-		return 1 - ((0.5 - mix) * 2);
-	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
 window.WasabiMixer = class WasabiMixer extends WebAudioPluginFactory 
 {
-	constructor(context, baseUrl)
-	{ super(context,baseUrl); }
+	constructor(context, baseUrl,options)
+	{ 
+		super(context,baseUrl);
+		this.options = options; 
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

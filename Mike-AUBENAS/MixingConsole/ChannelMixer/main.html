@@ -322,7 +322,13 @@
         (function sychronizeChannelNumber()
         {
             if(!elem.hasAttribute("channelNumber"))
-                elem.setAttribute("channelNumber", elem._plug.getChannelNumber());
+            {
+                console.log("plug", plug);
+                console.log("channelNumber", elem._plug.getChannelNumber());
+                
+                channelNumber = elem._plug.getChannelNumber();
+                elem.setAttribute("channelNumber", channelNumber);
+            }
             
             elem.setChannelNumber(elem.getAttribute("channelNumber"));
         })()

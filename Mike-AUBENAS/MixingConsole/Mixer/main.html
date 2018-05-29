@@ -1,7 +1,7 @@
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script> WebAudioControlsOptions = { useMidi: 1 }; </script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<script src="./../ChannelMixer/main.js"></script>
+<script src="../ChannelMixer/main.js"></script>
 
 <template id="wc-mixer">
 
@@ -13,29 +13,14 @@
 			height:500px;
 		}
 
-		.column 
+		#arrayOfChannels
 		{
 			display: flex;
-			flex-direction: column;
-			justify-content: flex-start;
-			align-items: center;
-
-			flex: 1;
-			margin: 3px;
 		}
-
-		.row 
-		{
-			display: flex;
-			flex-direction: row;
-			justify-content: flex-start;
-			align-items: stretch;
-		}
-		
 
 	</style>
 
-    <div class="row" id="arrayOfChannels"></div>
+    <div id="arrayOfChannels"></div>
 
 </template>
 
@@ -52,7 +37,16 @@
 			this._root = this.attachShadow({ mode: 'open' });
 			this._root.appendChild(leMixer.content.cloneNode(true));
 			this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
-			this.channels = this.setInitialChannelsGUI();
+			this.arrayNodeToConnectChannel = this._plug.getArrayNodeToConnect();
+			/* this.channels = this.setInitialChannelsGUI(); */
+
+			(async () => 
+			{
+				for (let i = 0; i < this.arrayNodeToConnectChannel.length; i++) 
+				{
+					await this.setInitialChannelsGUI(i,this.arrayNodeToConnectChannel);
+				}
+			})();
 		}
 
 		get properties() 
@@ -74,58 +68,23 @@
 			return this.boundingRect;
 		}
 
-		setInitialChannelsGUI()
+		setInitialChannelsGUI(i, araie)
 		{
-			let divLine = this._root.querySelector("#arrayOfChannels");
-			let divColumn = document.createElement("div");
-			divColumn.className = "row";
-			divLine.appendChild(divColumn);
+			var plugin = new window.WasabiChannelMixer(ctx, this.urlChannel, {"channelNumber" : i+1});
 
-			var plugin = new window.WasabiChannelMixer(ctx, this.urlChannel);
-
-			plugin.load().then((node) => 
+			return new Promise((resolve, reject) => 
 			{
-				plugin.loadGui().then((elem) => 
-				{
-					divColumn.appendChild(elem);
-				});
-			});
-		}
-
-		bindMediaSourceToChannel(audioElement, channelNumber)
-		{
-			audioElement.onplay = () => 
-			{
-				ctx.resume().then(() => 
-				{
-					console.log('Playback resumed successfully');
-				});
-			}
-
-			var mediaSource = ctx.createMediaElementSource(audioElement);
-
-			(function createChannel()
-			{
-				var plugin = new window.WasabiChannelMixer(ctx, this.urlChannel);
-
-				
-
 				plugin.load().then((node) => 
 				{
-					plugin.loadGui().then((elem) => 
-					{
-						
+					plugin.loadGui().then((elem) => {
+					document.body.appendChild(elem);
+					resolve(true);
 					});
-					mediaSource.connect(node);
-					node.connect(ctx.destination);
-				});
-			})();;
+					araie[i].connect(node);
+					node.connect(ctx.destination)
+				})
+			})
 		}
-
-		setKnobs() 
-		{
-            
-		}		
 	}
 
 	try 
