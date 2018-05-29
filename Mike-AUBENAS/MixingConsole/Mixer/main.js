@@ -34,8 +34,6 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 		this.setup();
 	}
 	
-	
-
 	getPatch(index)
 	{ return this.patchNames[index]; }
 
@@ -85,31 +83,6 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 	{
 		// TODO
     }
-
-	isNumber(arg)
-	{ return toString.call(arg) === '[object Number]' && arg === +arg; }
-
-	getDryLevel(mix) 
-	{
-		if (!this.isNumber(mix) || mix > 1 || mix < 0)
-			return 0;
-
-		if (mix <= 0.5)
-			return 1;
-
-		return 1 - ((mix - 0.5) * 2);
-	}
-
-	getWetLevel(mix) 
-	{
-		if (!this.isNumber(mix) || mix > 1 || mix < 0)
-			return 0;
-
-		if (mix >= 0.5)
-			return 1;
-
-		return 1 - ((0.5 - mix) * 2);
-	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

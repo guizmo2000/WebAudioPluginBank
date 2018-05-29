@@ -11,24 +11,39 @@
 
 <body>
 
-	<audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
+	<audio src="./Samples/0004-Record-Maschine.mp3" id="soundSample0" controls loop></audio>
+	<audio src="./Samples/0005-Record-Maschine.mp3" id="soundSample1" controls loop></audio>
+	<audio src="./Samples/0006-Record-Maschine.mp3" id="soundSample2" controls loop></audio>
+	<audio src="./Samples/0007-Record-Maschine.mp3" id="soundSample3" controls loop></audio>
 
 </body>
 
 <script>
 
 	var ctx = new AudioContext();
-	var player = document.getElementById("soundSample");
-    player.onplay = () => 
-    {
-        ctx.resume().then(() => 
-        {
-			console.log('Playback resumed successfully');
-		});
-	}
-	var mediaSource = ctx.createMediaElementSource(player);
+	let arrayMediaSources = new Array();
+	let arrayPlayers = new Array();
 
-	var pluginURL = "./MixingConsole/Mixer";
+	for(let i = 0; i < 4; i++)
+	{
+		var player = document.getElementById("soundSample" + i);
+		arrayPlayers.push(player);
+
+		player.onplay = () => 
+		{
+			ctx.resume().then(() => 
+			{
+				console.log('Playback resumed successfully');
+			});
+		}
+
+		let mediaSource = ctx.createMediaElementSource(player);
+		arrayMediaSources.push(mediaSource);
+		mediaSource.connect(ctx.destination);
+	}
+
+
+	/* var pluginURL = "./MixingConsole/Mixer";
 	var plugin = new window.WasabiMixer(ctx, pluginURL);
 
     plugin.load().then((node) => 
@@ -39,9 +54,23 @@
 			console.log("elem", elem);
 			document.body.appendChild(elem);
 		});
+
 		mediaSource.connect(node);
 		node.connect(ctx.destination);
-	});
+	}); */
+
+	window.addEventListener("keydown", (event) =>
+	{
+		let asciiSpaceBar = 32;
+
+		if(event.keyCode == asciiSpaceBar)
+		{
+			if(arrayPlayers[0].paused)
+				arrayPlayers.forEach(element => { element.play(); });
+			else
+				arrayPlayers.forEach(element => { element.pause(); });
+		}
+	}, false);
 
 </script>
 
