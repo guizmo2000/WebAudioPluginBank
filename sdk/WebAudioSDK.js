@@ -96,10 +96,16 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
 
 class WebAudioPluginFactory {
 
-  constructor(context, baseUrl) {
+  /**
+   * 
+   * @param {AudioContext} context 
+   * @param {URI} baseUrl 
+   * @param {JSON} options 
+   */
+  constructor(context, baseUrl, options) {
     this.context = context;
     this.baseUrl = baseUrl;
-    console.log(this.baseUrl);
+    this.options = options;
     this.MetadataFileURL = this.baseUrl + "/main.json";
   }
 
@@ -118,7 +124,7 @@ class WebAudioPluginFactory {
       return new Promise((resolve, reject) => {
         this.fetchPlugin().then(classname =>{
           try{
-            this.plug = new window[classname](this.context);
+            this.plug = new window[classname](this.context, this.options);
             resolve(this.plug);
           } catch (e){
             reject(e);
@@ -151,7 +157,6 @@ class WebAudioPluginFactory {
 
 
           link.onload = (e) => {
-            console.log("link : ",link);
             // the file has been loaded, instanciate GUI
             // and get back the HTML elem
             // HERE WE COULD REMOVE THE HARD CODED NAME
