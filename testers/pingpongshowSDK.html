@@ -31,6 +31,7 @@
       document.body.appendChild(elem);
     });
     mediaSource.connect(node);
+    console.log(node.numberOfInputs);
     node.connect(ctx.destination)
   })
 </script>

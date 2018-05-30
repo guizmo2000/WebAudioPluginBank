@@ -9,8 +9,6 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
     /*    ################     API PROPERTIES    ###############   */
     super(ctx,options)
     this.state;
-    this.inputs = [];
-    this.outputs = [];
     
     // P2 : Json metadata
     this._metadata = {
@@ -84,13 +82,10 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
 
   // p9 count inputs
 
-  get numberOfInputs(){
-    return this.inputs.length;
-  }
-
   get numberOfOutputs(){
     return this.outputs.length;
   }
+
   inputChannelCount(){
     return 1;
   }
