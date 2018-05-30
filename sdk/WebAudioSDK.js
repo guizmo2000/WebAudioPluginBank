@@ -17,11 +17,16 @@ class CompositeAudioNode {
     this.channelCountMode = options.channelCountMode ? options.channelCountMode : "Max";
     this.channelInterpretation = options.channelInterpretation ? options.channelInterpretation : "speakers";
 
+    this.inputs =[];
+    this.outputs = [];
     this._input = context.createGain();
     this._output = context.createGain();
+    this.inputs.push(this._input);
+    this.outputs.push(this._output);
+
   }
 
-  connect() {
+  connect(destinationNode,output, input) {
     this._output.connect.apply(this._output, arguments);
   }
 
@@ -34,9 +39,8 @@ class CompositeAudioNode {
 AudioNode.prototype._connect = AudioNode.prototype.connect;
 AudioNode.prototype.connect = function () {
   var args = Array.prototype.slice.call(arguments);
-  if (args[0]._isCompositeAudioNode)
-    args[0] = args[0]._input;
-
+  if (args[0]._isCompositeAudioNode && !arg[2])  args[0] = args[0]._input;
+  else if(args[0]._isCompositeAudioNode) args[0] = args[2];
   this._connect.apply(this, args);
 };
 
@@ -51,6 +55,7 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
   constructor(context, options) {
     super(context, options);
     this.context = ctx ? ctx : new AudioContext;
+    this._descriptor =[];
 
     // Do stuffs below.
   }
@@ -61,7 +66,7 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
 
   addParam(param) {
     try{
-      this._discriptor.push({ name: param.name, defaultValue: param.defaultValue, minValue: param.minValue, maxValue: param.maxValue})
+      this._descriptor.push({ name: param.name, defaultValue: param.defaultValue, minValue: param.minValue, maxValue: param.maxValue})
     }catch(error){
       console.err("The structure given does not match with the AudioParam :{ name: 'name', defaultValue: 0.25, minValue: 0, maxValue: 1} Doc : https://webaudio.github.io/web-audio-api/#parameterdescriptors ");
     }
