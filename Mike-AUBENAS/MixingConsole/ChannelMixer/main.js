@@ -6,7 +6,6 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 	{
 		super(ctx,options)
 
-		this.state;
 		this.inputs = [];
 		this.outputs = [];
 		this._gui = document.createElement("wc-channelmixer");
@@ -51,8 +50,10 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 					"max" : 10
 				}
 			},
-			"status": "disable",
+			"status": "enable",
 		}
+
+		this.state = this.params.status;
 
 		this.setup();
 	}
@@ -89,8 +90,8 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		if( (value >= this.params.pan.range.min) && (value <= this.params.pan.range.max) )
 		{
 			this.params.pan.value = value;
-			this.pan.positionX.setValueAtTime(parseFloat(value, 10), this.context.currentTime);	
-			this.gain.gain.setValueAtTime(parseFloat( (value * 2), 10), this.context.currentTime);
+			this.pan.pan.setValueAtTime(parseFloat(value / 10), this.context.currentTime);	
+			/* this.gain.gain.setValueAtTime(parseFloat( (this.gain.gain.value / 2), 10), this.context.currentTime); */
 		}
     }
 
@@ -102,25 +103,6 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 
 	setPatch(data, index)
 	{ this.patchNames[index] = data; }
-
-	getState() { return this.params.status; }
-
-	setState(data) 
-	{
-		this.params.status = data;
-
-		if (data == "enable") 
-		{
-			this.connectNodes();
-			this._input.disconnect(this._output);
-		} 
-		else if (data == "disable") 
-		{
-			this._input.disconnect(this.feedbackGainNode);
-			this._input.disconnect(this.dryGainNode);
-			this._input.connect(this._output);
-		}
-	}
 
 	onMidi(msg)
 	{ return msg; }
@@ -142,7 +124,7 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 	createNodes() 
 	{
 		this.gain = this.context.createGain();
-		this.pan = this.context.createPanner();
+		this.pan = this.context.createStereoPanner();
 		this.analyser = this.context.createAnalyser();
 	}
 
