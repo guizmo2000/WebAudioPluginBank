@@ -167,16 +167,26 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.outputs.push(this._output);
   }
 
-  createNodes() {
+  
 
-    // OSC stages
+  createNodes() {
     this.osc1 = this.context.createOscillator();
     this.osc2 = this.context.createOscillator();
+    this.osc1v2 = this.context.createOscillator();
+    this.osc2v2 = this.context.createOscillator();
+    this.osc1.type = "sawtooth";
+    this.osc2.type = "square";
+    this.osc1v2.type = "sawtooth";
+    this.osc2v2.type = "square";
+    
+
+
+
+    // OSC stages
     this.oscNoise = this.context.createOscillator();
     this.lfo = this.context.createOscillator();
 
-    this.osc1.type = "sawtooth";
-    this.osc2.type = "sawtooth";
+    
     this.oscNoise.type = "random";
     this.lfo.type = "sine";
 
@@ -208,6 +218,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     // gain stage 
     this.gainOsc1 = this.context.createGain();
     this.gainOsc2 = this.context.createGain();
+    this.gainOsc1.gain.setValueAtTime(0,this.context.currentTime);
+    this.gainOsc2.gain.setValueAtTime(0,this.context.currentTime);
     this.gainNoise = this.context.createGain();
     this.amp = this.context.createGain();
 
@@ -228,6 +240,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
     this.osc1.connect(this.wshape1);
     this.osc2.connect(this.wshape2);
+    this.osc1v2.connect(this.wshape1);
+    this.osc2v2.connect(this.wshape2);
 
     this.wshape1.connect(this.gainOsc1);
     this.wshape2.connect(this.gainOsc2);
@@ -263,8 +277,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     // wet out
     this.channelMerger.connect(this.wetGainNode);
     this.wetGainNode.connect(this._output);
-    // this.osc1.start();
-    // this.osc2.start();
+    this.osc1.start();
+    this.osc2.start();
     // this.oscNoise.start();
   }
 
@@ -275,6 +289,23 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.time = (this.params.time);
     this.feedback = (this.params.feedback);
     this.mix = (this.params.mix);
+  }
+
+  noteOn(key){
+    let note = key % 12;
+    let octave = Math.floor(key / 12);
+    this.osc1.frequency.setValueAtTime(Math.pow(2,(note / 12)) * octave * 65.41,this.context.currentTime);
+    this.osc2.frequency.setValueAtTime(Math.pow(2,(note / 12)) * octave * 65.41,this.context.currentTime);
+    this.osc1v2.frequency.setValueAtTime(Math.pow(2,(note / 12)) * octave * 65.41,this.context.currentTime);
+    this.osc2v2.frequency.setValueAtTime(Math.pow(2,(note / 12)) * octave * 65.41,this.context.currentTime);
+    this.gainOsc1.gain.linearRampToValueAtTime(1, this.context.currentTime + 0.2);
+    this.gainOsc2.gain.linearRampToValueAtTime(1, this.context.currentTime + 0.2);
+
+  }
+
+  noteOff(){
+    this.gainOsc1.gain.linearRampToValueAtTime(0, this.context.currentTime + 0.5);
+    this.gainOsc2.gain.linearRampToValueAtTime(0, this.context.currentTime + 0.5);
   }
 
 

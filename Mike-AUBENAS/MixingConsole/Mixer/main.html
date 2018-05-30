@@ -75,9 +75,8 @@
 			{
 				plugin.load().then((node) => 
 				{
-					plugin.loadGui().then((elem) => 
-					{
-					document.body.appendChild(elem);
+					plugin.loadGui().then((elem) => {
+					this._root.querySelector('#arrayOfChannels').appendChild(elem);
 					resolve(true);
 					});
 
