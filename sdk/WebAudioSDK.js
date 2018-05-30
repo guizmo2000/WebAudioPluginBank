@@ -11,11 +11,12 @@ class CompositeAudioNode {
 
   constructor(context, options) {
     this.context = context;
-    this.numberOfInputs = options.numberOfInputs ? options.numberOfInputs : 1;
-    this.numberOfOuputs = options.numberOfOuputs ? options.numberOfOuputs : 1;
-    this.channelCount = options.channelCount ? options.channelCount : 2;
-    this.channelCountMode = options.channelCountMode ? options.channelCountMode : "Max";
-    this.channelInterpretation = options.channelInterpretation ? options.channelInterpretation : "speakers";
+    let defaultOptions = options ? options : {numberOfInputs: 1, numberOfOuputs: 1, channelCount : 2,channelCountMode : "Max",channelInterpretation : "speakers"};
+    this._numberOfInputs = defaultOptions.numberOfInputs;
+    this._numberOfOuputs =  defaultOptions.numberOfOuputs;
+    this._channelCount =  defaultOptions.channelCount;
+    this._channelCountMode =  defaultOptions.channelCountMode;
+    this._channelInterpretation = defaultOptions.channelInterpretation;
 
     this.inputs =[];
     this.outputs = [];
@@ -39,7 +40,7 @@ class CompositeAudioNode {
 AudioNode.prototype._connect = AudioNode.prototype.connect;
 AudioNode.prototype.connect = function () {
   var args = Array.prototype.slice.call(arguments);
-  if (args[0]._isCompositeAudioNode && !arg[2])  args[0] = args[0]._input;
+  if (args[0]._isCompositeAudioNode && !args[2])  args[0] = args[0]._input;
   else if(args[0]._isCompositeAudioNode) args[0] = args[2];
   this._connect.apply(this, args);
 };
@@ -92,11 +93,19 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     return this._params;
   }
 
-  get numberOfInputs() { };
-  set numberOfInputs(number){}
+  get numberOfInputs(){
+    return this._numberOfInputs;
+  }
+  set numberOfInputs(number){
+    this._numberOfInputs= number;
+  }
 
-  get numberOfOuputs() { };
-  set numberOfOuputs(number){}
+  get numberOfOuputs() { 
+    return this._numberOfOuputs;
+  }
+  set numberOfOuputs(number){
+    this._numberOfOuputs = number;
+  }
 
   inputChannelCount() { };
   outputChannelCount() { };
