@@ -43,6 +43,25 @@
 		node.connect(ctx.destination);
 	});
 
+	(function spaceToPlayAndPause()
+	{
+		const arrayAudio = document.querySelectorAll("audio");
+
+		window.addEventListener("keydown", (event) =>
+		{
+			let asciiSpaceBar = 32;
+
+			if(event.keyCode == asciiSpaceBar)
+			{
+				if(arrayAudio[0].paused)
+					arrayAudio.forEach(element => { element.play(); });
+				else
+					arrayAudio.forEach(element => { element.pause(); });
+			}
+		}, false);
+	})()
+
+
 </script>
 
 </html>

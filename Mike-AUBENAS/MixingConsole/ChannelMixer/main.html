@@ -15,7 +15,7 @@
 						1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 			width: 90px;
-			height: 245px;
+			height: 220px;
 			display: block;
 			user-select: none;
 			cursor: move;
@@ -203,17 +203,6 @@
     <div class="row">
 
             <div class="column">
-
-                <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-                    width="32" height="20" oncontextmenu="return false;"></webaudio-switch>
-
-            </div>
-
-    </div>
-
-    <div class="row">
-
-            <div class="column">
     
                 <span class="pedalLabel" id="channelNumber"></span>
     
@@ -236,9 +225,8 @@
             this.channelNumber = this._plug.getChannelNumber();
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(leChannel.content.cloneNode(true));
-            this.isOn = false;
             this.setListener();
-            this.setSwitchListener();
+            this._plug.setState("enable");
         }
 
         get properties() 
@@ -278,25 +266,6 @@
                 e.preventDefault();
             });
         }
-
-        setSwitchListener() 
-        {
-            this._root.querySelector("#switch1").addEventListener('change', (e) => 
-            {
-                if (this.isOn) 
-                    this.bypass()
-                else 
-                    this.reactivate();
-
-                this.isOn = !this.isOn;
-            });
-        }
-
-        bypass() 
-        { this._plug.setState("disable"); }
-
-        reactivate() 
-        { this._plug.setState("enable"); }
     }
 
     try 
@@ -316,16 +285,10 @@
     {
         let elem = new ChannelMixerGUI(plug);
 
-        /**
-         * Makes the HTML attribute the same as the class attribute 
-         */
         (function sychronizeChannelNumber()
         {
             if(!elem.hasAttribute("channelNumber"))
-            {
-                console.log("plug", plug);
-                console.log("channelNumber", elem._plug.getChannelNumber());
-                
+            {                
                 channelNumber = elem._plug.getChannelNumber();
                 elem.setAttribute("channelNumber", channelNumber);
             }

@@ -56,18 +56,23 @@
 		});
 	});
 
-	window.addEventListener("keydown", (event) =>
+	(function spaceToPlayAndPause()
 	{
-		let asciiSpaceBar = 32;
+		const arrayAudio = document.querySelectorAll("audio");
 
-		if(event.keyCode == asciiSpaceBar)
+		window.addEventListener("keydown", (event) =>
 		{
-			if(arrayPlayers[0].paused)
-				arrayPlayers.forEach(element => { element.play(); });
-			else
-				arrayPlayers.forEach(element => { element.pause(); });
-		}
-	}, false);
+			let asciiSpaceBar = 32;
+
+			if(event.keyCode == asciiSpaceBar)
+			{
+				if(arrayAudio[0].paused)
+					arrayAudio.forEach(element => { element.play(); });
+				else
+					arrayAudio.forEach(element => { element.pause(); });
+			}
+		}, false);
+	})()
 
 </script>
 
