@@ -38,13 +38,12 @@
 			this._root.appendChild(leMixer.content.cloneNode(true));
 			this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
 			this.arrayNodeToConnectChannel = this._plug.getArrayNodeToConnect();
-			/* this.channels = this.setInitialChannelsGUI(); */
 
 			(async () => 
 			{
-				for (let i = 0; i < this.arrayNodeToConnectChannel.length; i++) 
+				for (let position = 0; position < this.arrayNodeToConnectChannel.length; position++) 
 				{
-					await this.setInitialChannelsGUI(i,this.arrayNodeToConnectChannel);
+					await this.createAndConnectChannel(position, this.arrayNodeToConnectChannel);
 				}
 			})();
 		}
@@ -68,19 +67,21 @@
 			return this.boundingRect;
 		}
 
-		setInitialChannelsGUI(i, araie)
+		createAndConnectChannel(position, arrayAudioNodes)
 		{
-			var plugin = new window.WasabiChannelMixer(ctx, this.urlChannel, {"channelNumber" : i+1});
+			var plugin = new window.WasabiChannelMixer(ctx, this.urlChannel, {"channelNumber" : position + 1});
 
 			return new Promise((resolve, reject) => 
 			{
 				plugin.load().then((node) => 
 				{
-					plugin.loadGui().then((elem) => {
+					plugin.loadGui().then((elem) => 
+					{
 					document.body.appendChild(elem);
 					resolve(true);
 					});
-					araie[i].connect(node);
+
+					arrayAudioNodes[position].connect(node);
 					node.connect(ctx.destination)
 				})
 			})
