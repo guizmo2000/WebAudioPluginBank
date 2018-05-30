@@ -14,7 +14,7 @@
 						0 2px 1px 0 rgba(0, 0, 0, 0.9), 
 						1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
-			width: 90px;
+			width: 120px;
 			height: 220px;
 			display: block;
 			user-select: none;
@@ -135,6 +135,14 @@
             padding:0;
         }
 
+        
+
+
+
+
+
+        
+
     </style>
 
     <div class="row" style="padding-top: 5px"> 
@@ -161,24 +169,8 @@
 
         <div class="column">
 
-            <webaudio-slider id="pan" midilearn="true" units="Db" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png" 
-                knobsrc="./MixingConsole/ChannelMixer/Image/vsliderknob.png" value="0" min="-10" max="10" step="0.1" basewidth="24" height="128" 
-                knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;" tooltip="Pan">
-
-                    <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; 
-                        background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
-
-                        <div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; 
-                            background-image: url(./MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
-                        </div>
-
-                    </div>
-
-                    <div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 
-                        0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
-                    </div>
-
-            </webaudio-slider>
+            <webaudio-knob id="pan" class="knob" sprites="99" min="-10" max="10" step="0.1" value="0" midilearn="true" src="./MixingConsole/ChannelMixer/Image/circular-knob-strong.png" 
+			width="40" height="40" data-role="pan" diameter="24"></webaudio-knob>
 
         </div>
 
@@ -236,7 +228,7 @@
                 dataWidth: 
                 {
                     type: Number,
-                    value: 90
+                    value: 120
                 },
                 dataHeight: 
                 {
