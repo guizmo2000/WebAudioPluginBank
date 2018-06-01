@@ -31,14 +31,11 @@
 
 	var mediaSource = ctx.createMediaElementSource(player);
 
-	const analyser = ctx.createAnalyser();
-	analyser.connect(mediaSource);
-
-	const wcVuMeter = new VUMeter(analyser);
+	const wcVuMeter = new VUMeter(ctx, mediaSource);
+	document.body.appendChild(wcVuMeter);
 
 	wcVuMeter.analyse().then((elem) =>
 	{
-
 		document.body.appendChild(elem);
 		mediaSource.connect(node);
 		node.connect(ctx.destination);
