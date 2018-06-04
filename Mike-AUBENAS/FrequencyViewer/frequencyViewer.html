@@ -147,6 +147,7 @@
 
 				this.setUp();
 				this.draw();
+				this.setSwitchListener();
 
 				this.connectNodes();
 			}
@@ -168,7 +169,6 @@
 		draw()
 		{
 			this.drawing = requestAnimationFrame( () => this.draw());
-
 			this.audioAnalyser.getByteTimeDomainData(this.datasArray);
 
 			this.graphicContext.fillStyle = 'rgb(0, 0, 0)';
@@ -181,41 +181,38 @@
 			let sliceWidth = this.canvas.width * 1.0 / this.audioAnalyser.fftSize;
 			let coordinateX = 0;
 
-			for(let i = 0; i < this.audioAnalyser.fftSize; i++)
+			if (this.isOn)
 			{
-				let value = this.datasArray[i] / 128.0;
-				let coordinateY = value * this.canvas.height / 2;
+				for (let i = 0; i < this.audioAnalyser.fftSize; i++)
+				{
+					let value = this.datasArray[i] / 128.0;
+					let coordinateY = value * this.canvas.height / 2;
 
-				if(i === 0)
-					this.graphicContext.moveTo(coordinateX, coordinateY)
-				else
-					this.graphicContext.lineTo(coordinateX, coordinateY);
+					if (i === 0)
+						this.graphicContext.moveTo(coordinateX, coordinateY)
+					else
+						this.graphicContext.lineTo(coordinateX, coordinateY);
 
-				coordinateX += sliceWidth;
+					coordinateX += sliceWidth;
+				}
+
+				this.graphicContext.lineTo(this.canvas.width, this.canvas.height / 2);
+				this.graphicContext.stroke();
 			}
-
-			this.graphicContext.lineTo(this.canvas.width, this.canvas.height / 2);
-			this.graphicContext.stroke();
+			else
+			{
+				window.cancelAnimationFrame(this.drawing);
+			}
 		}
 
 		setSwitchListener()
 		{
 			this._root.querySelector("#switch").addEventListener('change', (e) =>
 			{
-				if (this.isOn)
-					this.bypass()
-				else
-					this.reactivate();
-
 				this.isOn = !this.isOn;
+				this.draw();
 			});
 		}
-
-		bypass()
-		{ this._plug.setState("disable"); }
-
-		reactivate()
-		{ this._plug.setState("enable"); }
 	}
 
 	try
