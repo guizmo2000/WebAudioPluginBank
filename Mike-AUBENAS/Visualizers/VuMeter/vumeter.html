@@ -8,9 +8,9 @@
 
 		canvas
 		{
-			padding-top: 10px;
-			width: 300px;
-			height: 150px;
+			background: black;
+			width: 10px;
+			height: 100px;
 		}
 
 	</style>
@@ -50,8 +50,10 @@
 
 				this.mediaSource = mediaSource;
 
-				this.colorBackground = '';
-				this.colorFrequency = '';
+				this.previousRectangleX1 = 0;
+				this.previousRectangleY1 = 0;
+				this.previousRectangleX2 = 0;
+				this.previousRectangleY2 = 0;
 
 				this.setUp();
 				this.draw();
@@ -78,7 +80,7 @@
 			this.drawing = requestAnimationFrame(() => this.draw());
 			this.audioAnalyser.getByteTimeDomainData(this.datasArray);
 
-			this.graphicContext.fillStyle = 'rgb(0, 0, 0)';
+			/* this.graphicContext.fillStyle = 'rgb(0, 0, 0)';
 			this.graphicContext.fillRect(0, 0, this.canvas.width, this.canvas.height);
 			this.graphicContext.lineWidth = 2;
 			this.graphicContext.strokeStyle = 'rgb(28, 149, 53)';
@@ -86,29 +88,43 @@
 			this.graphicContext.beginPath();
 
 			let sliceWidth = this.canvas.width * 1.0 / this.audioAnalyser.fftSize;
-			let coordinateX = 0;
+			let coordinateX = 0; */
+
+			let gradient = this.graphicContext.createLinearGradient(0, 0, 0, this.canvas.height);
+			gradient.addColorStop(0, "#e60000");
+			gradient.addColorStop(0.25, "#ffcc00");
+			gradient.addColorStop(1, "#33cc33");
+			this.graphicContext.fillStyle = gradient;
 
 			if (this.isOn)
 			{
 				for (let i = 0; i < this.audioAnalyser.fftSize; i++)
 				{
 					let value = this.datasArray[i] / 128.0;
-					let coordinateY = value * this.canvas.height / 2;
+					let coordinateY = value * this.canvas.height;
 
+					this.graphicContext.clearRect(this.previousRectangleX1, this.previousRectangleY1, this.previousRectangleX2, this.previousRectangleY2);
+
+					this.previousRectangleX1 = 0;
+					this.previousRectangleY1 = coordinateY;
+					this.previousRectangleX2 = this.canvas.width;
+					this.previousRectangleY2 = this.canvas.height;
+
+					this.graphicContext.fillRect(0, coordinateY, this.canvas.width, this.canvas.height);
+
+					/*
 					if (i === 0)
 						this.graphicContext.moveTo(coordinateX, coordinateY)
 					else
 						this.graphicContext.lineTo(coordinateX, coordinateY);
 
-					coordinateX += sliceWidth;
+					coordinateX += sliceWidth; */
 				}
-
-				this.graphicContext.lineTo(this.canvas.width, this.canvas.height / 2);
-				this.graphicContext.stroke();
 			}
 			else
 			{
 				window.cancelAnimationFrame(this.drawing);
+				// TODO draw black
 			}
 		}
 	}
