@@ -35,13 +35,6 @@
 	const wcVuMeter = new FrequencyViewer(ctx, mediaSource);
 	document.body.appendChild(wcVuMeter);
 
-	wcVuMeter.analyse().then((elem) =>
-	{
-		document.body.appendChild(elem);
-		mediaSource.connect(node);
-		node.connect(ctx.destination);
-	});
-
     (function spaceToPlayAndPause()
 	{
 		const arrayAudio = document.querySelectorAll("audio");
