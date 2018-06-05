@@ -10,8 +10,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     /*    ################     API PROPERTIES    ###############   */
     super(ctx, options)
     this.state;
-    this.inputs = [];
-    this.outputs = [];
 
     // P2 : Json metadata
     this._metadata = {
@@ -73,11 +71,9 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       "feedback": this._descriptor.feedback.default,
       "mix": this._descriptor.mix.default,
       "time": this._descriptor.time.default,
-      "status": "disabled"
+      "status": "disable"
     }
     // p5 patchnames
-    this.patchNames = ["patch1"];
-
     this.setup();
   }
 
@@ -179,9 +175,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.osc1v2.type = "sawtooth";
     this.osc2v2.type = "square";
     
-
-
-
     // OSC stages
     this.oscNoise = this.context.createOscillator();
     this.lfo = this.context.createOscillator();

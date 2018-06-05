@@ -4,6 +4,8 @@
 // has connect/disconnect methods
 // A custom composite node can be derived from this prototype.
 
+
+
 class CompositeAudioNode {
   get _isCompositeAudioNode() {
     return true;
@@ -11,14 +13,23 @@ class CompositeAudioNode {
 
   constructor(context, options) {
     this.context = context;
-    let defaultOptions = options ? options : {numberOfInputs: 1, numberOfOuputs: 1, channelCount : 2,channelCountMode : "Max",channelInterpretation : "speakers"};
-    this._numberOfInputs = defaultOptions.numberOfInputs;
-    this._numberOfOuputs =  defaultOptions.numberOfOuputs;
-    this._channelCount =  defaultOptions.channelCount;
-    this._channelCountMode =  defaultOptions.channelCountMode;
-    this._channelInterpretation = defaultOptions.channelInterpretation;
+    /**
+     * 
+     * @param {AudioContext} context  
+     * @param {JSON} options optional, if you want to set set alternate values from the defaultOptions below
+     */
+    let defaultValues = options ? options : { numberOfInputs: 1, numberOfOuputs: 1, channelCount: 2, channelCountMode: "Max", channelInterpretation: "speakers" };
+    this._numberOfInputs = defaultValues.numberOfInputs;
+    this._numberOfOuputs = defaultValues.numberOfOuputs;
+    this._channelCount = defaultValues.channelCount;
+    this._channelCountMode = defaultValues.channelCountMode;
+    this._channelInterpretation = defaultValues.channelInterpretation;
 
-    this.inputs =[];
+    /** 
+     * Initial I/O structur and and I/O  of the composite node
+     * 
+    */
+    this.inputs = [];
     this.outputs = [];
     this._input = context.createGain();
     this._output = context.createGain();
@@ -27,8 +38,10 @@ class CompositeAudioNode {
 
   }
 
-  connect(destinationNode,output, input) {
-    this._output.connect.apply(this._output, arguments);
+  connect() {
+    for (var i=0;i<this.outputs.length;i++){
+      this.outputs[i].connect.apply(this._output, arguments);
+    }
   }
 
   disconnect() {
@@ -36,14 +49,22 @@ class CompositeAudioNode {
   }
 }
 
+
+
 // (2) Override AudioNode.prototype.connect
+
 AudioNode.prototype._connect = AudioNode.prototype.connect;
-AudioNode.prototype.connect = function () {
+var that = this;
+AudioNode.prototype.connect = function (that) {
   var args = Array.prototype.slice.call(arguments);
-  if (args[0]._isCompositeAudioNode && !args[2])  args[0] = args[0]._input;
-  else if(args[0]._isCompositeAudioNode) args[0] = args[2];
+  if (args[0]._isCompositeAudioNode && !args[2] && !args[1]) {
+    args[0] = args[0]._input;
+    args[1] = that._output;
+  }
+  else if (args[0]._isCompositeAudioNode) args[0] = args[2];
   this._connect.apply(this, args);
 };
+
 
 
 // -----------------------
@@ -56,20 +77,19 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
   constructor(context, options) {
     super(context, options);
     this.context = ctx ? ctx : new AudioContext;
-    this._descriptor =[];
-
+    this._descriptor = new Object();
+    this.params = new Object();
     // Do stuffs below.
   }
-
   static get parameterDescriptors() {
     return this._descriptor;
   }
 
   addParam(param) {
-    try{
-      this._descriptor.push({ name: param.name, defaultValue: param.defaultValue, minValue: param.minValue, maxValue: param.maxValue})
-    }catch(error){
-      console.err("The structure given does not match with the AudioParam :{ name: 'name', defaultValue: 0.25, minValue: 0, maxValue: 1} Doc : https://webaudio.github.io/web-audio-api/#parameterdescriptors ");
+    try {
+      this._descriptor = Object.assign({ [param.name]: { minValue: param.minValue, maxValue: param.maxValue, defaultValue: param.defaultValue } }, this._descriptor)
+    } catch (error) {
+      console.err("The structure given does not match with the AudioParam :{ name:'name',defaultValue: 0.25, minValue: 0, maxValue: 1} Doc : https://webaudio.github.io/web-audio-api/#parameterdescriptors ");
     }
   }
 
@@ -77,38 +97,41 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     return this._descriptor;
   }
 
-  set metadata(metadata) {
-    this._metadata = metadata;
+  getMetadata() { // does not return the thing
+    return fetch(this._metadataFileURL).then(json => {
+        return(json);
+      })
+
   }
 
-  getMetadata() {
-    return this._metadata;
+  setParam(key,value) {
+    throw new Error('You have to implement the method setParam!')
   }
 
-  set params(params) {
-    this._params = params;
+  getParam() {
+    throw new Error('You have to implement the method getParam!')
   }
 
-  get params() {
-    return this._params;
-  }
-
-  get numberOfInputs(){
+  get numberOfInputs() {
     return this._numberOfInputs;
   }
-  set numberOfInputs(number){
-    this._numberOfInputs= number;
+  set numberOfInputs(number) {
+    this._numberOfInputs = number;
   }
 
-  get numberOfOuputs() { 
+  get numberOfOuputs() {
     return this._numberOfOuputs;
   }
-  set numberOfOuputs(number){
+  set numberOfOuputs(number) {
     this._numberOfOuputs = number;
   }
 
-  inputChannelCount() { };
-  outputChannelCount() { };
+  inputChannelCount() {
+    return 2;
+  };
+  outputChannelCount() {
+    return this._channelCount;
+  };
 
   getPatch(index) { };
 
@@ -155,6 +178,7 @@ class WebAudioPluginFactory {
       this.fetchPlugin().then(classname => {
         try {
           this.plug = new window[classname](this.context, this.options);
+          this.plug._metadataFileURL = this.MetadataFileURL;
           resolve(this.plug);
         } catch (e) {
           reject(e);
