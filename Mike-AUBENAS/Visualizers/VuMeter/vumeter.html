@@ -75,16 +75,6 @@
 			this.drawing = requestAnimationFrame(() => this.draw());
 			this.audioAnalyser.getByteTimeDomainData(this.datasArray);
 
-			/* this.graphicContext.fillStyle = 'rgb(0, 0, 0)';
-			this.graphicContext.fillRect(0, 0, this.canvas.width, this.canvas.height);
-			this.graphicContext.lineWidth = 2;
-			this.graphicContext.strokeStyle = 'rgb(28, 149, 53)';
-
-			this.graphicContext.beginPath();
-
-			let sliceWidth = this.canvas.width * 1.0 / this.audioAnalyser.fftSize;
-			let coordinateX = 0; */
-
 			let gradient = this.graphicContext.createLinearGradient(0, 0, 0, this.canvas.height);
 			gradient.addColorStop(0, "#e60000");
 			gradient.addColorStop(0.25, "#ffcc00");
@@ -106,7 +96,6 @@
 			else
 			{
 				window.cancelAnimationFrame(this.drawing);
-				// TODO draw black
 			}
 		}
 	}
