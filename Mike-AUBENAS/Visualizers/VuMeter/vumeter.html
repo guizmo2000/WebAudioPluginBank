@@ -50,11 +50,6 @@
 
 				this.mediaSource = mediaSource;
 
-				this.previousRectangleX1 = 0;
-				this.previousRectangleY1 = 0;
-				this.previousRectangleX2 = 0;
-				this.previousRectangleY2 = 0;
-
 				this.setUp();
 				this.draw();
 
@@ -101,24 +96,11 @@
 				for (let i = 0; i < this.audioAnalyser.fftSize; i++)
 				{
 					let value = this.datasArray[i] / 128.0;
-					let coordinateY = value * this.canvas.height;
+					let coordinateY = (value * this.canvas.height);
 
-					this.graphicContext.clearRect(this.previousRectangleX1, this.previousRectangleY1, this.previousRectangleX2, this.previousRectangleY2);
-
-					this.previousRectangleX1 = 0;
-					this.previousRectangleY1 = coordinateY;
-					this.previousRectangleX2 = this.canvas.width;
-					this.previousRectangleY2 = this.canvas.height;
+					this.graphicContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
 					this.graphicContext.fillRect(0, coordinateY, this.canvas.width, this.canvas.height);
-
-					/*
-					if (i === 0)
-						this.graphicContext.moveTo(coordinateX, coordinateY)
-					else
-						this.graphicContext.lineTo(coordinateX, coordinateY);
-
-					coordinateX += sliceWidth; */
 				}
 			}
 			else
