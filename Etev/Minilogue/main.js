@@ -25,18 +25,36 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     }
 
     // P3 : Json descriptor
-    this.addParam({name:'cutoff', defaultValue: 500, minValue: 30, maxValue: 22050 });
-    this.addParam({name:'resonance', defaultValue: 5, minValue: 0, maxValue: 50 });
+    this.addParam({name: 'mastergain',defaultValue: 5, minValue: 0, maxValue: 10 });
+    this.addParam({name:'resonance', defaultValue: 0.1, minValue: 0, maxValue: 30 });
+    this.addParam({name:'lowpass', defaultValue: 300, minValue: 30, maxValue: 22050 });
+    this.addParam({name:'highpass', defaultValue: 30, minValue: 30, maxValue: 22050 });
     this.addParam({name:'feedback', defaultValue: 0.5, minValue: 0, maxValue: 1 });
     this.addParam({name: 'time',defaultValue: 0.5, minValue: 0, maxValue: 1 });
     this.addParam({name: 'mix',defaultValue: 0.5, minValue: 0, maxValue: 1 });
+    this.addParam({name: 'pitch1',defaultValue: 1, minValue: 0.5, maxValue: 2 });
+    this.addParam({name: 'pitch2',defaultValue: 1, minValue: 0.5, maxValue: 2 });
+    this.addParam({name: 'osc1gain', minValue: 0, maxValue: 3 ,defaultValue: 3});
+    this.addParam({name: 'osc2gain',defaultValue: 3, minValue: 1, maxValue: 3 });
+    this.addParam({name: 'osc1shape', defaultValue: 0.5, minValue: 0, maxValue: 50 });
+    this.addParam({name: 'osc2shape',defaultValue: 0.5, minValue: 0, maxValue: 50 });
+
+
 
     this.params = {
+      highpass:this._descriptor.highpass.defaultValue,
       resonance:this._descriptor.resonance.defaultValue,
-      cutoff:this._descriptor.cutoff.defaultValue,
+      lowpass:this._descriptor.lowpass.defaultValue,
       feedback: this._descriptor.feedback.defaultValue,
       mix: this._descriptor.mix.defaultValue,
       time: this._descriptor.time.defaultValue,
+      pitch1:this._descriptor.pitch1.defaultValue,
+      pitch2:this._descriptor.pitch2.defaultValue,
+      osc1gain:this._descriptor.osc1gain.defaultValue,
+      osc2gain:this._descriptor.osc2gain.defaultValue,
+      osc1shape:this._descriptor.osc1shape.defaultValue,
+      osc2shape:this._descriptor.osc2shape.defaultValue,
+      mastergain:this._descriptor.mastergain.defaultValue,
       status: "disable"
     }
     // p5 patchnames
@@ -127,17 +145,19 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.outputs.push(this._output);
   }
 
-
-
-
-
-
   setInitialParamValues(voice) {
     /*
      * set default value for parameters and assign it to the web audio nodes
      */
-    this.lowpass = this.params.cutoff;
+    this.master = this.params.mastergain;
+    this.lowpass = this.params.lowpass;
     this.resonance = this.params.resonance;
+    this.highpass = this.params.highpass;
+    this.osc1pitch = this.params.pitch1;
+    this.osc2pitch = this.params.pitch2;
+    this.osc2gain = this.params.osc2gain;
+    this.osc1gain = this.params.osc1gain;
+
   }
 
   noteOn(key) {
@@ -190,28 +210,44 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     }
   }
   set master(_master) {
+    this.params.mastergain = _master;
     this._output.gain.setValueAtTime(_master, this.context.currentTime);
   }
   set lowpass(_cutoff) {
-    this.params.cutoff = _cutoff;
+    this.params.lowpass = _cutoff;
     for(let voice = 0; voice < this.voices.length ;voice ++){
       if(this.voices[voice]) this.voices[voice].lowPassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
     }
   }
   set highpass(_cutoff) {
-    this.highpassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
+    this.params.highpass = _cutoff;
+    for(let voice = 0; voice < this.voices.length ;voice ++){
+      if(this.voices[voice]) this.voices[voice].highpassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
+    }
   }
   set osc1gain(_gain) {
-    this.gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
+    this.params.osc1gain = _gain;
+    for(let voice = 0; voice < this.voices.length ;voice ++){
+    if(this.voices[voice]) this.voices[voice].gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
+    }
   }
   set osc2gain(_gain) {
-    this.gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
+    this.params.osc2gain = _gain;
+    for(let voice = 0; voice < this.voices.length ;voice ++){
+      if(this.voices[voice]) this.voices[voice].gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
+    }
   }
   set osc1pitch(_pitch) {
-    this.osc1.frequency.setValueAtTime(440 * _pitch, this.context.currentTime);
+    this.params.pitch1 = _pitch;
+    for(let voice = 0; voice < this.voices.length ;voice ++){
+      if(this.voices[voice]) this.voices[voice].osc1.frequency.setValueAtTime(this.voices[voice].basefrequency * (_pitch), this.context.currentTime);
+    }
   }
   set osc2pitch(_pitch) {
-    this.osc2.frequency.setValueAtTime(440 * _pitch, this.context.currentTime);
+    this.params.pitch2 = _pitch;
+    for(let voice = 0; voice < this.voices.length ;voice ++){
+      if(this.voices[voice]) this.voices[voice].osc2.frequency.setValueAtTime(this.voices[voice].basefrequency * (_pitch), this.context.currentTime);
+    }
   }
   set lforate(_rate) {
     if (!this.isInRange(_rate, 30, 500))
@@ -227,10 +263,17 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.gainNoise.gain.setValueAtTime(_gain, this.context.currentTime);
   }
   set osc1shape(_gain) {
-    this.wshape1.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
+    this.params.osc1shape = _gain;
+    for(let voice = 0; voice < this.voices.length ;voice ++){
+      if(this.voices[voice]) this.voices[voice].wshape1.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
+    }
   }
+  
   set osc2shape(_gain) {
-    this.wshape2.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
+    this.params.osc2shape = _gain;
+    for(let voice = 0; voice < this.voices.length ;voice ++){
+      if(this.voices[voice]) this.voices[voice].wshape2.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
+    }
   }
 
   set time(_time) {
@@ -326,8 +369,9 @@ class Voice {
     console.log("key", key)
     var note = key % 12;
     let octave = Math.floor(key / 12);
-    this.osc1.frequency.setValueAtTime(Math.pow(2, (note / 12)) * octave * 65.41, this.context.currentTime);
-    this.osc2.frequency.setValueAtTime(Math.pow(2, (note / 12)) * octave * 65.41, this.context.currentTime);
+    this.basefrequency = Math.pow(2, (note / 12)) * octave * 65.41
+    this.osc1.frequency.setValueAtTime(this.basefrequency, this.context.currentTime);
+    this.osc2.frequency.setValueAtTime(this.basefrequency, this.context.currentTime);
 
 
     // OSC stages
@@ -390,6 +434,8 @@ class Voice {
 
     this.gainOsc1.connect(this.oscMerger, 0, 0);
     this.gainOsc2.connect(this.oscMerger, 0, 1);
+    this.gainOsc1.connect(this.oscMerger, 0, 1);
+    this.gainOsc2.connect(this.oscMerger, 0, 0);
     this.gainNoise.connect(this.oscMerger, 0, 2);
 
     this.oscMerger.connect(this.lowPassfilter);
