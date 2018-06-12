@@ -149,8 +149,8 @@
         <div class="column">
 
             <webaudio-slider id="gain" midilearn="true" units="Db" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png"
-                knobsrc="./MixingConsole/ChannelMixer/Image/vsliderknob.png" value="2" min="0" max="10" step="0.1" basewidth="24" height="128"
-                knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;" defvalue="2" tooltip="Gain">
+                knobsrc="./MixingConsole/ChannelMixer/Image/vsliderknob.png" value="-10" min="-20" max="3" step="0.1" basewidth="24" height="128"
+                knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;" defvalue="-10" tooltip="Gain (dB)">
 
                     <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px;
                         background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
@@ -239,12 +239,12 @@
 		affectVUMeter()
 		{
 			const leftGain = this._plug.getLeftGain();
-			const wcVuMeterLeft = new VUMeter(ctx, leftGain);
-			this._root.querySelector("#vumeterLeft").appendChild(wcVuMeterLeft);
+			this.wcVuMeterLeft = new VUMeter(ctx, leftGain);
+			this._root.querySelector("#vumeterLeft").appendChild(this.wcVuMeterLeft);
 
 			const rightGain = this._plug.getRightGain();
-			const wcVuMeterRight = new VUMeter(ctx, rightGain);
-			this._root.querySelector("#vumeterRight").appendChild(wcVuMeterRight);
+			this.wcVuMeterRight = new VUMeter(ctx, rightGain);
+			this._root.querySelector("#vumeterRight").appendChild(this.wcVuMeterRight);
 		}
 
         setChannelNumber(number)
@@ -255,7 +255,12 @@
 
         setListener()
         {
-            this._root.querySelector("#gain").addEventListener('input', (e) => this._plug.setGain(e.target.value));
+			this._root.querySelector("#gain").addEventListener('input', (e) =>
+			{
+				this._plug.setGain(e.target.value);
+				this.wcVuMeterLeft.setGain(dBToGain(e.target.value));
+				this.wcVuMeterRight.setGain(dBToGain(e.target.value));
+			});
 
             this._root.querySelector("#pan").addEventListener('input', (e) => this._plug.setPan(e.target.value));
             this._root.querySelector("#pan").addEventListener('contextmenu', (e) =>
@@ -263,8 +268,18 @@
                 this._plug.setPan(0);
                 this._root.querySelector("#pan").value = 0;
                 e.preventDefault();
-            });
-        }
+			});
+
+			function dBToGain(decibel)
+			{
+				const maxDB = 3;
+				const minDB = -20;
+				const range = Math.abs(minDB) + Math.abs(maxDB);
+
+				// Value of gain is between 0 and 1 so
+				return ((Math.abs(minDB) + decibel) / range);
+			}
+		}
     }
 
     try
