@@ -142,7 +142,7 @@
 
 		<div class="column">
 
-			<wasabi-vumeter></wasabi-vumeter>
+			<wasabi-vumeter id="vumeterLeft"></wasabi-vumeter>
 
 		</div>
 
@@ -164,7 +164,13 @@
 
             </webaudio-slider>
 
-        </div>
+		</div>
+
+		<div class="column">
+
+			<wasabi-vumeter id="vumeterRight"></wasabi-vumeter>
+
+		</div>
 
     </div>
 
@@ -232,8 +238,13 @@
 
 		affectVUMeter()
 		{
-			const wcVuMeter = new VUMeter(ctx, mediaSource);
-			this._root.querySelector("wasabi-vumeter").appendChild(wcVuMeter);
+			const leftGain = this._plug.getLeftGain();
+			const wcVuMeterLeft = new VUMeter(ctx, leftGain);
+			this._root.querySelector("#vumeterLeft").appendChild(wcVuMeterLeft);
+
+			const rightGain = this._plug.getRightGain();
+			const wcVuMeterRight = new VUMeter(ctx, rightGain);
+			this._root.querySelector("#vumeterRight").appendChild(wcVuMeterRight);
 		}
 
         setChannelNumber(number)

@@ -85,7 +85,7 @@
 			{
 				for (let i = 0; i < this.audioAnalyser.fftSize; i++)
 				{
-					let value = this.datasArray[i] / 128.0;
+					let value = Math.abs(this.datasArray[i] / 128.0);
 					let coordinateY = (value * this.canvas.height);
 
 					this.graphicContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
