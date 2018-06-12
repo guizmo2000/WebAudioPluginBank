@@ -1,8 +1,8 @@
 //jslint:disable:one-line no-trailing-spaces
 
-window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode 
+window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 {
-	constructor(ctx,options) 
+	constructor(ctx,options)
 	{
 		super(ctx,options)
 
@@ -16,7 +16,7 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		else
 			this.channelNumber = 0;
 
-		this._metadata = 
+		this._metadata =
 		{
 			"name": "wasabi-ChannelMixer",
 			"version": 1,
@@ -29,10 +29,10 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		}
 
         this.patchNames = ["patch1"];
-		
-		this.params = 
+
+		this.params =
 		{
-			"gain" : 
+			"gain" :
 			{
 				"value" : 1,
 				"range" :
@@ -57,13 +57,13 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 
 		this.setup();
 	}
-	
-	setInitialParamValues() 
+
+	setInitialParamValues()
 	{
 		this.setGain(this.params.gain.value);
 		this.setPan(this.params.pan.value);
 	}
-	
+
     getGain()
     { return this.params.gain.value; }
 
@@ -72,26 +72,25 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		if( (value >= this.params.gain.range.min) && (value <= this.params.gain.range.max) )
 		{
 			this.params.gain.value = value;
-			this.gain.gain.setValueAtTime(parseFloat(value, 10), this.context.currentTime);	
+			this.gain.gain.setValueAtTime(parseFloat(value, 10), this.context.currentTime);
 		}
 	}
-	
+
 	getChannelNumber()
 	{ return this.channelNumber; }
 
 	setChannelNumber(value)
-	{ this.channelNumber = value;}
+	{ this.channelNumber = value; }
 
     getPan()
-    { return this.params.pan;}
+    { return this.params.pan; }
 
     setPan(value)
     {
 		if( (value >= this.params.pan.range.min) && (value <= this.params.pan.range.max) )
 		{
 			this.params.pan.value = value;
-			this.pan.pan.setValueAtTime(parseFloat(value / 10), this.context.currentTime);	
-			/* this.gain.gain.setValueAtTime(parseFloat( (this.gain.gain.value / 2), 10), this.context.currentTime); */
+			this.pan.pan.setValueAtTime(parseFloat(value / 10), this.context.currentTime);
 		}
     }
 
@@ -107,6 +106,12 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 	onMidi(msg)
 	{ return msg; }
 
+	getLeftGain()
+	{ return this.leftGain; }
+
+	getRightGain()
+	{ return this.rightGain; }
+
 	setup()
 	{
 		this.createIO();
@@ -121,34 +126,43 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		this.outputs.push(this._output);
 	}
 
-	createNodes() 
+	createNodes()
 	{
 		this.gain = this.context.createGain();
 		this.pan = this.context.createStereoPanner();
-		this.analyser = this.context.createAnalyser();
+		this.splitter = this.context.createChannelSplitter(2);
+		this.merger = this.context.createChannelMerger(2);
+		this.leftGain = this.context.createGain();
+		this.rightGain = this.context.createGain();
 	}
 
-	connectNodes() 
+	connectNodes()
 	{
 		this._input.connect( this.gain );
 		this.gain.connect( this.pan );
-		this.pan.connect( this.analyser );
-		this.analyser.connect( this._output ); 
+		this.pan.connect( this.splitter );
+
+		this.splitter.connect( this.leftGain, 0 );
+		this.splitter.connect( this.rightGain, 1 );
+		this.leftGain.connect( this.merger, 0, 0 );
+		this.rightGain.connect( this.merger, 0, 1 );
+
+		this.merger.connect( this._output );
     }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-window.WasabiChannelMixer = class WasabiChannelMixer extends WebAudioPluginFactory 
+window.WasabiChannelMixer = class WasabiChannelMixer extends WebAudioPluginFactory
 {
 	constructor(context, baseUrl, options)
-	{ 
+	{
 		super(context,baseUrl);
-		this.options = options; 
+		this.options = options;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-AudioContext.prototype.createWasabiDelayCompositeNode = OfflineAudioContext.prototype.createWasabiDelayCompositeNode = function (options) 
+AudioContext.prototype.createWasabiDelayCompositeNode = OfflineAudioContext.prototype.createWasabiDelayCompositeNode = function (options)
 { return new ChannelMixer(this, options); };
