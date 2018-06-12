@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
+    <title>testZoomConfigurations</title>
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="./waveform-playlist/dist/waveform-playlist/css/main.css">
+    <link rel="canonical" href="https://naomiaro.github.io/waveform-playlist/minimal.html">
+    <link rel="alternate" type="application/rss+xml" title="Waveform Playlist" href="https://naomiaro.github.io/waveform-playlist/feed.xml">
+</head>
+
+<body>
+
+    <h1>Zoom Configurations</h1>
+    <div class="post-content">
+        <div id="top-bar" class="playlist-top-bar">
+            <div class="playlist-toolbar">
+                <div class="btn-group">
+                    <span class="btn-pause btn btn-warning">
+                        <i class="fa fa-pause"></i>
+                    </span>
+                    <span class="btn-play btn btn-success">
+                        <i class="fa fa-play"></i>
+                    </span>
+                    <span class="btn-stop btn btn-danger">
+                        <i class="fa fa-stop"></i>
+                    </span>
+                </div>
+                <div class="btn-group">
+                    <span title="zoom in" class="btn-zoom-in btn btn-default">
+                        <i class="fa fa-search-plus"></i>
+                    </span>
+                    <span title="zoom out" class="btn-zoom-out btn btn-default">
+                        <i class="fa fa-search-minus"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div id="playlist"></div>
+        <div class="playlist-bottom-bar">
+            <form class="form-inline">
+                <select class="time-format form-control">
+                    <option value="seconds">seconds</option>
+                    <option value="thousandths">thousandths</option>
+                    <option value="hh:mm:ss">hh:mm:ss</option>
+                    <option value="hh:mm:ss.u">hh:mm:ss + tenths</option>
+                    <option value="hh:mm:ss.uu">hh:mm:ss + hundredths</option>
+                    <option value="hh:mm:ss.uuu" selected="selected">hh:mm:ss + milliseconds</option>
+                </select>
+                <input type="text" class="audio-start input-small form-control">
+                <input type="text" class="audio-end form-control">
+                <label class="audio-pos">00:00:00.0</label>
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="./waveform-playlist/dist/waveform-playlist/js/waveform-playlist.var.js"></script>
+    <script type="text/javascript" src="./waveform-playlist/dist/waveform-playlist/js/track-zoom.js"></script>
+    <script type="text/javascript" src="./waveform-playlist/dist/waveform-playlist/js/emitter.js"></script>
+
+</body>
+
+</html>
