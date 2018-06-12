@@ -72,31 +72,34 @@
 
 		draw()
 		{
-			this.drawing = requestAnimationFrame(() => this.draw());
-			this.audioAnalyser.getByteTimeDomainData(this.datasArray);
-
-			let gradient = this.graphicContext.createLinearGradient(0, 0, 0, this.canvas.height);
-			gradient.addColorStop(0, "#e60000");
-			gradient.addColorStop(0.25, "#ffcc00");
-			gradient.addColorStop(1, "#33cc33");
-			this.graphicContext.fillStyle = gradient;
-
-			if (this.isOn)
+			setTimeout( () =>
 			{
-				for (let i = 0; i < this.audioAnalyser.fftSize; i++)
+				this.drawing = requestAnimationFrame(() => this.draw());
+				this.audioAnalyser.getByteTimeDomainData(this.datasArray);
+
+				let gradient = this.graphicContext.createLinearGradient(0, 0, 0, this.canvas.height);
+				gradient.addColorStop(0, "#e60000");
+				gradient.addColorStop(0.25, "#ffcc00");
+				gradient.addColorStop(1, "#33cc33");
+				this.graphicContext.fillStyle = gradient;
+
+				if (this.isOn)
 				{
-					let value = this.datasArray[i] / 128.0;
-					let coordinateY = (value * this.canvas.height);
+					for (let i = 0; i < this.audioAnalyser.fftSize; i++)
+					{
+						let value = Math.abs(this.datasArray[i] / 128.0);
+						let coordinateY = (value * this.canvas.height);
 
-					this.graphicContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+						this.graphicContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-					this.graphicContext.fillRect(0, coordinateY, this.canvas.width, this.canvas.height);
+						this.graphicContext.fillRect(0, coordinateY, this.canvas.width, this.canvas.height);
+					}
 				}
-			}
-			else
-			{
-				window.cancelAnimationFrame(this.drawing);
-			}
+				else
+				{
+					window.cancelAnimationFrame(this.drawing);
+				}
+			}, 30);
 		}
 	}
 
