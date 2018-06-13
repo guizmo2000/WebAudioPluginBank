@@ -106,11 +106,11 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 	onMidi(msg)
 	{ return msg; }
 
-	getLeftGain()
-	{ return this.leftGain; }
+	getLeftAnalyser()
+	{ return this.leftAnalyser; }
 
-	getRightGain()
-	{ return this.rightGain; }
+	getRightAnalyser()
+	{ return this.rightAnalyser; }
 
 	setup()
 	{
