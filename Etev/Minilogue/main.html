@@ -236,14 +236,14 @@
       <span class="pedalLabel">LFO</span>
       <div class="row">
         <div class="column">
-          <webaudio-knob id="lforate" class="knob" min="30" max="500" sprites="99" value="100" step="1" midilearn="true" src="./../img/nux_black_white_stripe.png"
+          <webaudio-knob id="lforate" class="knob" min="0" max="20" sprites="99" value="0" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="lforate-label">lfo rate</span>
         </div>
       </div>
       <div class="row">
         <div class="column">
-          <webaudio-knob id="lfoint" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
+          <webaudio-knob id="lfoint" class="knob" min="1" max="1000" sprites="99" value="20" step="1" midilearn="true" src="./../img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="lfoint-label">lfo int</span>
         </div>
@@ -414,7 +414,7 @@
                 this._root.querySelector('#midiport').appendChild(e);
                 this.midiPort.push(i.value);
               }
-              if (this.midiPort.length > 0) this.SelectMidi(0);
+              if (this.midiPort.length > 0) this.SelectMidi(this.midiPort.length -1);
             }, 10);
           }, () => {
             console.log("MIDI is not available.");
