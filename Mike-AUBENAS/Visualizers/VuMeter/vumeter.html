@@ -33,11 +33,11 @@
 
 	class VUMeter extends HTMLElement
 	{
-		constructor(analyser)
+		constructor(audioContext, gain)
 		{
 			super();
 
-			if(analyser)
+			if(audioContext, gain)
 			{
 				this.previousValue = 0;
 
@@ -45,50 +45,45 @@
 				this._root.appendChild(vuMeter.content.cloneNode(true));
 				this.isOn = true;
 
-				this.analyser = analyser;
+				this.audioContext = audioContext;
+				this.gain = gain;
 
 				this.canvas = this._root.querySelector("canvas");
 				this.graphicContext = this.canvas.getContext("2d");
 
-				this._setup();
+				this.setup();
 
-				this._draw();
+				requestAnimationFrame(this.draw.bind(this)); // For making the 'this' understandable
 			}
 		}
 
-		_setup()
+		setup()
 		{
+			this.analyser = this.audioContext.createAnalyser();
+			this.gain.connect(this.analyser);
+
 			this.analyser.fftsize = 1024;
 			this.bufferLength = this.analyser.frequencyBinCount;
 			this.dataArray = new Uint8Array(this.bufferLength);
 		}
 
-		_draw()
+		draw()
 		{
-			setTimeout( () =>
-			{
-				if (this.isOn)
-				{
-					this._clearCanvas();
+			this.graphicContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
-					let gradient = this.graphicContext.createLinearGradient(0, 0, 0, this.canvas.height);
-					gradient.addColorStop(0, "#e60000");
-					gradient.addColorStop(0.25, "#ffcc00");
-					gradient.addColorStop(1, "#33cc33");
-					this.graphicContext.fillStyle = gradient;
+			let gradient = this.graphicContext.createLinearGradient(0, 0, 0, this.canvas.height);
+			gradient.addColorStop(0, "#e60000");
+			gradient.addColorStop(0.25, "#ffcc00");
+			gradient.addColorStop(1, "#33cc33");
+			this.graphicContext.fillStyle = gradient;
 
-					this.analyser.getByteFrequencyData(this.dataArray);
+			this.analyser.getByteFrequencyData(this.dataArray);
 
-					const averageFrequency = getAverageFrequency(this.dataArray);
-					this.graphicContext.fillRect(0, (this.canvas.height - averageFrequency), this.canvas.width, this.canvas.height);
+			const averageFrequency = getAverageFrequency(this.dataArray);
 
-					requestAnimationFrame(this._draw);
-				}
-				else
-				{
-					window.cancelAnimationFrame(this.drawing);
-				}
-			}, 30);
+			this.graphicContext.fillRect(0, (this.canvas.height - averageFrequency), this.canvas.width, this.canvas.height);
+
+			requestAnimationFrame(this.draw.bind(this)); // For making the 'this' understandable
 
 			//////////////////////////////////////////////////////
 
@@ -106,13 +101,6 @@
 				average = values / length;
 				return average;
 			}
-		}
-
-		_clearCanvas()
-		{
-			this.graphicContext.save();
-			this.graphicContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
-			this.graphicContext.restore();
 		}
 	}
 

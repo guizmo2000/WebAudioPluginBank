@@ -238,12 +238,14 @@
 
 		affectVUMeter()
 		{
-			const leftAnalyser = this._plug.getLeftAnalyser();
-			this.wcVuMeterLeft = new VUMeter(leftAnalyser);
+			const audioContext = this._plug.getAudioContext();
+
+			const leftGain = this._plug.getLeftGain();
+			this.wcVuMeterLeft = new VUMeter(audioContext, leftGain);
 			this._root.querySelector("#vumeterLeft").appendChild(this.wcVuMeterLeft);
 
-			const rightAnalyser = this._plug.getRightAnalyser();
-			this.wcVuMeterRight = new VUMeter(rightAnalyser);
+			const rightGain = this._plug.getRightGain();
+			this.wcVuMeterRight = new VUMeter(audioContext, rightGain);
 			this._root.querySelector("#vumeterRight").appendChild(this.wcVuMeterRight);
 		}
 

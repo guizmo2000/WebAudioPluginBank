@@ -106,11 +106,14 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 	onMidi(msg)
 	{ return msg; }
 
-	getLeftAnalyser()
-	{ return this.leftAnalyser; }
+	getLeftGain()
+	{ return this.leftGain; }
 
-	getRightAnalyser()
-	{ return this.rightAnalyser; }
+	getRightGain()
+	{ return this.rightGain; }
+
+	getAudioContext()
+	{ return this.context; }
 
 	setup()
 	{
@@ -136,9 +139,6 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 
 		this.leftGain = this.context.createGain();
 		this.rightGain = this.context.createGain();
-
-		this.leftAnalyser = this.context.createAnalyser();
-		this.rightAnalyser = this.context.createAnalyser();
 	}
 
 	connectNodes()
@@ -150,11 +150,8 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		this.splitter.connect( this.leftGain, 0 );
 		this.splitter.connect( this.rightGain, 1 );
 
-		this.leftGain.connect(this.leftAnalyser);
-		this.rightGain.connect( this.rightAnalyser);
-
-		this.leftAnalyser.connect( this.merger, 0, 0 );
-		this.rightAnalyser.connect( this.merger, 0, 1 );
+		this.leftGain.connect( this.merger, 0, 0 );
+		this.rightGain.connect( this.merger, 0, 1 );
 
 		this.merger.connect( this._output );
     }
