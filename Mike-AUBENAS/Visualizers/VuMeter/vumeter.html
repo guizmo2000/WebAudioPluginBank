@@ -26,82 +26,84 @@
 	 *	https://codepen.io/travisholliday/pen/gyaJk
 	 *	https://developer.mozilla.org/fr/docs/Web/API/AnalyserNode/fftSize
 	 *	https://fr.wikipedia.org/wiki/VU-m%C3%A8tre
+	 * http://jsbin.com/vejocav/edit?js,output
 	 */
 
 	let vuMeter = document.currentScript.ownerDocument.querySelector("#wc-vumeter");
 
 	class VUMeter extends HTMLElement
 	{
-		constructor(valueMin, valueMax)
+		constructor(audioContext, gain)
 		{
-			if(valueMin && valueMax)
+			super();
+
+			if(audioContext, gain)
 			{
-				super();
-
-				this.subscribedValue = 0;
-				this.previousValue = this.subscribedValue;
-
-				this.valueMin = valueMin;
-				this.valueMax = valueMax;
-
 				this._root = this.attachShadow({ mode: 'open' });
 				this._root.appendChild(vuMeter.content.cloneNode(true));
 				this.isOn = true;
 
+				this.audioContext = audioContext;
+				this.gain = gain;
+
 				this.canvas = this._root.querySelector("canvas");
 				this.graphicContext = this.canvas.getContext("2d");
 
+				this.setup();
 
-				this._draw();
+				requestAnimationFrame(this.draw.bind(this)); // For making the 'this' understandable
 			}
 		}
 
-		_draw()
+		setup()
 		{
-			setTimeout( () =>
-			{
-				this.drawing = requestAnimationFrame(() => this._draw());
+			this.analyser = this.audioContext.createAnalyser();
+			this.gain.connect(this.analyser);
 
-				let gradient = this.graphicContext.createLinearGradient(0, 0, 0, this.canvas.height);
-				gradient.addColorStop(0, "#e60000");
-				gradient.addColorStop(0.25, "#ffcc00");
-				gradient.addColorStop(1, "#33cc33");
-				this.graphicContext.fillStyle = gradient;
-
-				if (this.isOn)
-				{
-					let difference = this.subscribedValue - this.previousValue;
-
-					/* for(let i = 0; i < difference; i++)
-					{
-
-					} */
-					this.graphicContext.fillRect(0, ((this.previousValue) * this.canvas.height), this.canvas.width, this.canvas.height);
-
-					this.previousValue = this.subscribedValue;
-
-				/* 	for (let i = 0; i < this.gain.gain; i++)
-					{
-						let difference = coordinateY - this.previousValue;
-
-						for (let j = 0; j < difference; j++)
-						{
-							this.graphicContext.fillRect(0, (this.previousValue + 1), this.canvas.width, this.canvas.height);
-						}
-
-						this.previousValue = value;
-
-					} */
-				}
-				else
-				{
-					window.cancelAnimationFrame(this.drawing);
-				}
-			}, 30);
+			this.analyser.fftsize = 1024;
+			this.bufferLength = this.analyser.frequencyBinCount;
+			this.dataArray = new Uint8Array(this.bufferLength);
 		}
 
-		subscribeToChange(value)
-		{ this.subscribedValue = value; }
+		draw()
+		{
+			this.graphicContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+			let gradient = this.graphicContext.createLinearGradient(0, 0, 0, this.canvas.height);
+			gradient.addColorStop(0, "#e60000");
+			gradient.addColorStop(0.25, "#ffcc00");
+			gradient.addColorStop(1, "#33cc33");
+			this.graphicContext.fillStyle = gradient;
+
+			this.analyser.getByteFrequencyData(this.dataArray);
+
+			const averageFrequency = getAverageFrequency(this.dataArray);
+			let coordinateY = (this.canvas.height - averageFrequency);
+
+			if(coordinateY < 0)
+				coordinateY = 0;
+
+			this.graphicContext.fillRect(0, coordinateY, this.canvas.width, this.canvas.height);
+
+			requestAnimationFrame(this.draw.bind(this)); // For making the 'this' understandable
+
+			//////////////////////////////////////////////////////
+
+			function getAverageFrequency(arrayFrequencies)
+			{
+				let values = 0;
+				let average;
+
+				let length = arrayFrequencies.length;
+
+				for (let i = 0; i < length; i++) {
+					values += arrayFrequencies[i];
+				}
+
+				average = values / length;
+				return average;
+			}
+		}
 	}
 
 	try

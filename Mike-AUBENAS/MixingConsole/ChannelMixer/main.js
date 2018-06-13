@@ -72,7 +72,7 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		if( (value >= this.params.gain.range.min) && (value <= this.params.gain.range.max) )
 		{
 			this.params.gain.value = value;
-			this.gain.gain.setValueAtTime(parseFloat(value, 10), this.context.currentTime);
+			this._input.gain.setValueAtTime(parseFloat(value, 10), this.context.currentTime);
 		}
 	}
 
@@ -112,6 +112,9 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 	getRightGain()
 	{ return this.rightGain; }
 
+	getAudioContext()
+	{ return this.context; }
+
 	setup()
 	{
 		this.createIO();
@@ -128,22 +131,23 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 
 	createNodes()
 	{
-		this.gain = this.context.createGain();
 		this.pan = this.context.createStereoPanner();
+
 		this.splitter = this.context.createChannelSplitter(2);
 		this.merger = this.context.createChannelMerger(2);
+
 		this.leftGain = this.context.createGain();
 		this.rightGain = this.context.createGain();
 	}
 
 	connectNodes()
 	{
-		this._input.connect( this.gain );
-		this.gain.connect( this.pan );
+		this._input.connect( this.pan );
 		this.pan.connect( this.splitter );
 
 		this.splitter.connect( this.leftGain, 0 );
 		this.splitter.connect( this.rightGain, 1 );
+
 		this.leftGain.connect( this.merger, 0, 0 );
 		this.rightGain.connect( this.merger, 0, 1 );
 
