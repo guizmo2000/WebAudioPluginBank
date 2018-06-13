@@ -81,7 +81,14 @@
 
 			const averageFrequency = getAverageFrequency(this.dataArray);
 
-			this.graphicContext.fillRect(0, (this.canvas.height - averageFrequency), this.canvas.width, this.canvas.height);
+			const smoothItToTheTop = 3.7;
+
+			const coordinateY = (this.canvas.height - (averageFrequency * smoothItToTheTop));
+
+			if(coordinateY > this.canvas.height)
+				coordinateY = this.canvas.height;
+
+			this.graphicContext.fillRect(0, coordinateY, this.canvas.width, this.canvas.height);
 
 			requestAnimationFrame(this.draw.bind(this)); // For making the 'this' understandable
 
