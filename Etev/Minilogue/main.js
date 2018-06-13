@@ -11,6 +11,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     super(ctx, options)
     this.state;
     this.voices = new Array();
+    parent = this;
+    this.ppdelay = new Delay(parent, this.context);
 
     // P2 : Json metadata
     this._metadata = {
@@ -25,36 +27,40 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     }
 
     // P3 : Json descriptor
-    this.addParam({name: 'mastergain',defaultValue: 5, minValue: 0, maxValue: 10 });
-    this.addParam({name:'resonance', defaultValue: 0.1, minValue: 0, maxValue: 30 });
-    this.addParam({name:'lowpass', defaultValue: 300, minValue: 30, maxValue: 22050 });
-    this.addParam({name:'highpass', defaultValue: 30, minValue: 30, maxValue: 22050 });
-    this.addParam({name:'feedback', defaultValue: 0.5, minValue: 0, maxValue: 1 });
-    this.addParam({name: 'time',defaultValue: 0.5, minValue: 0, maxValue: 1 });
-    this.addParam({name: 'mix',defaultValue: 0.5, minValue: 0, maxValue: 1 });
-    this.addParam({name: 'pitch1',defaultValue: 1, minValue: 0.5, maxValue: 2 });
-    this.addParam({name: 'pitch2',defaultValue: 1, minValue: 0.5, maxValue: 2 });
-    this.addParam({name: 'osc1gain', minValue: 0, maxValue: 3 ,defaultValue: 3});
-    this.addParam({name: 'osc2gain',defaultValue: 3, minValue: 1, maxValue: 3 });
-    this.addParam({name: 'osc1shape', defaultValue: 0.5, minValue: 0, maxValue: 50 });
-    this.addParam({name: 'osc2shape',defaultValue: 0.5, minValue: 0, maxValue: 50 });
+    this.addParam({ name: 'lfoint', defaultValue: 20, minValue: 1, maxValue: 1000 });
+    this.addParam({ name: 'lforate', defaultValue: 0, minValue: 0, maxValue: 20 });
+    this.addParam({ name: 'mastergain', defaultValue: 5, minValue: 0, maxValue: 10 });
+    this.addParam({ name: 'resonance', defaultValue: 0.1, minValue: 0, maxValue: 30 });
+    this.addParam({ name: 'lowpass', defaultValue: 300, minValue: 30, maxValue: 22050 });
+    this.addParam({ name: 'highpass', defaultValue: 30, minValue: 30, maxValue: 22050 });
+    this.addParam({ name: 'feedback', defaultValue: 0.5, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'time', defaultValue: 0.5, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'mix', defaultValue: 0.5, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'pitch1', defaultValue: 1, minValue: 0.5, maxValue: 2 });
+    this.addParam({ name: 'pitch2', defaultValue: 1, minValue: 0.5, maxValue: 2 });
+    this.addParam({ name: 'osc1gain', minValue: 0, maxValue: 3, defaultValue: 3 });
+    this.addParam({ name: 'osc2gain', defaultValue: 3, minValue: 1, maxValue: 3 });
+    this.addParam({ name: 'osc1shape', defaultValue: 0.5, minValue: 0, maxValue: 50 });
+    this.addParam({ name: 'osc2shape', defaultValue: 0.5, minValue: 0, maxValue: 50 });
 
 
 
     this.params = {
-      highpass:this._descriptor.highpass.defaultValue,
-      resonance:this._descriptor.resonance.defaultValue,
-      lowpass:this._descriptor.lowpass.defaultValue,
+      lfoint: this._descriptor.lfoint.defaultValue,
+      lforate: this._descriptor.lforate.defaultValue,
+      highpass: this._descriptor.highpass.defaultValue,
+      resonance: this._descriptor.resonance.defaultValue,
+      lowpass: this._descriptor.lowpass.defaultValue,
       feedback: this._descriptor.feedback.defaultValue,
       mix: this._descriptor.mix.defaultValue,
       time: this._descriptor.time.defaultValue,
-      pitch1:this._descriptor.pitch1.defaultValue,
-      pitch2:this._descriptor.pitch2.defaultValue,
-      osc1gain:this._descriptor.osc1gain.defaultValue,
-      osc2gain:this._descriptor.osc2gain.defaultValue,
-      osc1shape:this._descriptor.osc1shape.defaultValue,
-      osc2shape:this._descriptor.osc2shape.defaultValue,
-      mastergain:this._descriptor.mastergain.defaultValue,
+      pitch1: this._descriptor.pitch1.defaultValue,
+      pitch2: this._descriptor.pitch2.defaultValue,
+      osc1gain: this._descriptor.osc1gain.defaultValue,
+      osc2gain: this._descriptor.osc2gain.defaultValue,
+      osc1shape: this._descriptor.osc1shape.defaultValue,
+      osc2shape: this._descriptor.osc2shape.defaultValue,
+      mastergain: this._descriptor.mastergain.defaultValue,
       status: "disable"
     }
     // p5 patchnames
@@ -137,7 +143,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   setup() {
     console.log("setup");
     this.createIO();
-    
   }
 
   createIO() {
@@ -145,7 +150,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.outputs.push(this._output);
   }
 
-  setInitialParamValues(voice) {
+  setInitialParamValues() {
     /*
      * set default value for parameters and assign it to the web audio nodes
      */
@@ -157,17 +162,24 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.osc2pitch = this.params.pitch2;
     this.osc2gain = this.params.osc2gain;
     this.osc1gain = this.params.osc1gain;
+    this.lforate = this.params.lforate;
+    this.lfoint = this.params.lfoint;
+    this.feedback = this.params.feedback;
+    this.time = this.params.time;
+    this.mix = this.params.mix;
 
   }
 
   noteOn(key) {
-
     if (this.voices[key] == null) {
       this.voices[key] = new Voice(this.context, key)
-      this.setInitialParamValues(this.voices[key]);
+      this.setInitialParamValues();
       this.voices[key].highpassfilter.connect(this._output);
-      //this.voices[key].wetGainNode.connect(this._output);
-
+      if (this.params.status == "disable") this.voices[key].highpassfilter.connect(this._output);
+      else if (this.params.status == "enable") {
+        this.voices[key].highpassfilter.connect(this.ppdelay.feedbackGainNode);
+        this.voices[key].highpassfilter.connect(this.ppdelay.dryGainNode);
+      }
 
     }
 
@@ -178,6 +190,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       // Shut off the note playing and clear it 
       this.voices[key].osc1.stop();
       this.voices[key].osc2.stop();
+      this.voices[key].lfo.stop();
       delete this.voices[key];
       this.voices[key] = null;
 
@@ -205,8 +218,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
   set resonance(_resonance) {
     this.params.resonance = _resonance;
-    for(let voice = 0; voice < this.voices.length ;voice ++){
-      if(this.voices[voice]) this.voices[voice].lowPassfilter.Q.setValueAtTime(_resonance, this.context.currentTime);
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].lowPassfilter.Q.setValueAtTime(_resonance, this.context.currentTime);
     }
   }
   set master(_master) {
@@ -215,95 +228,94 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   }
   set lowpass(_cutoff) {
     this.params.lowpass = _cutoff;
-    for(let voice = 0; voice < this.voices.length ;voice ++){
-      if(this.voices[voice]) this.voices[voice].lowPassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].lowPassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
     }
   }
   set highpass(_cutoff) {
     this.params.highpass = _cutoff;
-    for(let voice = 0; voice < this.voices.length ;voice ++){
-      if(this.voices[voice]) this.voices[voice].highpassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].highpassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
     }
   }
   set osc1gain(_gain) {
     this.params.osc1gain = _gain;
-    for(let voice = 0; voice < this.voices.length ;voice ++){
-    if(this.voices[voice]) this.voices[voice].gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
     }
   }
   set osc2gain(_gain) {
     this.params.osc2gain = _gain;
-    for(let voice = 0; voice < this.voices.length ;voice ++){
-      if(this.voices[voice]) this.voices[voice].gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
     }
   }
   set osc1pitch(_pitch) {
     this.params.pitch1 = _pitch;
-    for(let voice = 0; voice < this.voices.length ;voice ++){
-      if(this.voices[voice]) this.voices[voice].osc1.frequency.setValueAtTime(this.voices[voice].basefrequency * (_pitch), this.context.currentTime);
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].osc1.frequency.setValueAtTime(this.voices[voice].basefrequency * (_pitch), this.context.currentTime);
     }
   }
   set osc2pitch(_pitch) {
     this.params.pitch2 = _pitch;
-    for(let voice = 0; voice < this.voices.length ;voice ++){
-      if(this.voices[voice]) this.voices[voice].osc2.frequency.setValueAtTime(this.voices[voice].basefrequency * (_pitch), this.context.currentTime);
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].osc2.frequency.setValueAtTime(this.voices[voice].basefrequency * (_pitch), this.context.currentTime);
     }
   }
   set lforate(_rate) {
-    if (!this.isInRange(_rate, 30, 500))
-      return;
-    this.lfo.frequency.value = _rate;
+    this.params.lforate = _rate;
+
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].lfo.frequency.setValueAtTime(_rate, this.context.currentTime);
+    }
   }
   set lfoint(_int) {
-    if (!this.isInRange(_int, 0, 1))
-      return;
-    this.lfo.gain.value = _int;
+    this.params.lfoint = _int;
+
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].gainLfo.gain.setValueAtTime(_int, this.context.currentTime);
+    }
   }
   set noise(_gain) {
     this.gainNoise.gain.setValueAtTime(_gain, this.context.currentTime);
   }
   set osc1shape(_gain) {
     this.params.osc1shape = _gain;
-    for(let voice = 0; voice < this.voices.length ;voice ++){
-      if(this.voices[voice]) this.voices[voice].wshape1.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].wshape1.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
     }
   }
-  
+
   set osc2shape(_gain) {
     this.params.osc2shape = _gain;
-    for(let voice = 0; voice < this.voices.length ;voice ++){
-      if(this.voices[voice]) this.voices[voice].wshape2.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].wshape2.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
     }
   }
 
   set time(_time) {
-    if (_time < this._descriptor.time.range.max && _time > this._descriptor.time.range.min) this.params.time = _time;
-    this.delayNodeLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
-    this.delayNodeRight.delayTime.setValueAtTime(_time, this.context.currentTime);
+
+    if (_time < this._descriptor.time.max && _time > this._descriptor.time.min) this.params.time = _time;
+    this.ppdelay.delayNodeLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
+    this.ppdelay.delayNodeRight.delayTime.setValueAtTime(_time, this.context.currentTime);
+
   }
 
   set feedback(_feedback) {
-    if (_feedback < this._descriptor.feedback.range.max && _feedback > this._descriptor.feedback.range.min) this.params.feedback = _feedback;
-    this.feedbackGainNode.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
+    if (_feedback < this._descriptor.feedback.max && _feedback > this._descriptor.feedback.min) this.params.feedback = _feedback;
+    this.ppdelay.feedbackGainNode.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
+
   }
 
   set mix(_mix) {
-    if (_mix < this._descriptor.mix.range.max && _mix > this._descriptor.mix.range.min) this.params.mix = _mix;
-    this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
-    this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
+    if (_mix < this._descriptor.mix.max && _mix > this._descriptor.mix.min) this.params.mix = _mix;
+    this.ppdelay.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
+    this.ppdelay.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
+
   }
 
   set delay(_sig) {
-    if (_sig === "enable") {
-      this.amp.disconnect(this._output);
-      this.amp.connect(this.feedbackGainNode);
-      this.amp.connect(this.dryGainNode);
-    }
-    else if (_sig === "disable") {
-      this.amp.disconnect(this.feedbackGainNode);
-      this.amp.disconnect(this.dryGainNode);
-      this.amp.connect(this._output);
-    }
+      this.params.status = _sig
   }
 
 
@@ -354,6 +366,53 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
 }
 
+
+class Delay {
+  constructor(parent, ctx) {
+    this.parent = parent;
+    this.context = ctx;
+    this.buildNode()
+  }
+
+  buildNode() {
+    // Delay stage (from stereowasabidelay)
+    this.delayNodeLeft = this.context.createDelay();
+    this.delayNodeRight = this.context.createDelay();
+    this.dryGainNode = this.context.createGain();
+    this.wetGainNode = this.context.createGain();
+    this.feedbackGainNode = this.context.createGain();
+    this.channelMerger = this.context.createChannelMerger(2);
+
+
+    // WTFFF pourquoi ça ne baisse pas ???????
+    // this.feedbackGainNode.gain.setValueAtTime(0,this.context.currentTime)
+    // this.wetGainNode.gain.setValueAtTime(0,this.context.currentTime)
+    // this.dryGainNode.gain.setValueAtTime(0,this.context.currentTime)
+
+    this.feedbackGainNode.gain.value = 0;
+    this.wetGainNode.gain.value = 0;
+    this.dryGainNode.gain.value = 0;
+
+    this.delayNodeLeft.connect(this.channelMerger, 0, 0);
+    this.delayNodeRight.connect(this.channelMerger, 0, 1);
+    this.feedbackGainNode.connect(this.delayNodeLeft);
+    this.delayNodeRight.connect(this.feedbackGainNode);
+
+    this.delayNodeLeft.connect(this.delayNodeRight);
+    // // wet mix
+
+    // // wet out
+    this.channelMerger.connect(this.wetGainNode);
+
+
+
+    this.wetGainNode.connect(this.parent._output);
+    this.dryGainNode.connect(this.parent._output);
+  }
+}
+
+
+
 class Voice {
   constructor(ctx, key) {
     this.context = ctx;
@@ -366,7 +425,6 @@ class Voice {
 
     this.osc1.type = "sawtooth";
     this.osc2.type = "square";
-    console.log("key", key)
     var note = key % 12;
     let octave = Math.floor(key / 12);
     this.basefrequency = Math.pow(2, (note / 12)) * octave * 65.41
@@ -380,7 +438,7 @@ class Voice {
 
 
     //this.oscNoise.type = "random";
-    this.lfo.type = "sine";
+    this.lfo.type = "triangle";
 
     // Waveshapers stage
     this.wshape1 = this.context.createWaveShaper();
@@ -410,18 +468,9 @@ class Voice {
     // gain stage 
     this.gainOsc1 = this.context.createGain();
     this.gainOsc2 = this.context.createGain();
-    // this.gainOsc1.gain.setValueAtTime(0,this.context.currentTime);
-    // this.gainOsc2.gain.setValueAtTime(0,this.context.currentTime);
     this.gainNoise = this.context.createGain();
+    this.gainLfo = this.context.createGain();
     this.amp = this.context.createGain();
-
-    // Delay stage (from stereowasabidelay)
-    // this.delayNodeLeft = this.context.createDelay();
-    // this.delayNodeRight = this.context.createDelay();
-    // this.dryGainNode = this.context.createGain();
-    // this.wetGainNode = this.context.createGain();
-    // this.feedbackGainNode = this.context.createGain();
-    // this.channelMerger = this.context.createChannelMerger(2);
 
     // merger
     this.oscMerger = this.context.createChannelMerger(3);
@@ -431,6 +480,15 @@ class Voice {
     this.wshape1.connect(this.gainOsc1);
     this.wshape2.connect(this.gainOsc2);
     this.oscNoise.connect(this.gainNoise);
+    this.lfo.connect(this.gainLfo);
+
+
+    //mode 1 : cutoff
+    // mode 2 : lfo
+    // this.gainLfo.connect(this.osc2.detune);
+    // this.gainLfo.connect(this.osc1.detune);
+    this.gainLfo.connect(this.lowPassfilter.frequency);
+
 
     this.gainOsc1.connect(this.oscMerger, 0, 0);
     this.gainOsc2.connect(this.oscMerger, 0, 1);
@@ -446,25 +504,16 @@ class Voice {
     //this.enveloppeGenerator.connect(this.lfo);--> has to be done by setter
 
     // stereo delay parts
-    // this.highpassfilter.connect(this.amp);
+
+    // on externalise
     // this.amp.connect(this.dryGainNode);
     // this.ampEnveloppe.connect(this.amp);
-    // // dry mix out
 
-    // // the feedback loop
-    // this.delayNodeLeft.connect(this.channelMerger, 0, 0);
-    // this.delayNodeRight.connect(this.channelMerger, 0, 1);
-    // this.feedbackGainNode.connect(this.delayNodeLeft);
-    // this.delayNodeRight.connect(this.feedbackGainNode);
 
-    // this.delayNodeLeft.connect(this.delayNodeRight);
-    // // wet mix
-    // this.amp.connect(this.feedbackGainNode);
-    // // wet out
-    // this.channelMerger.connect(this.wetGainNode);
 
     this.osc1.start();
     this.osc2.start();
+    this.lfo.start();
   }
 
 }
