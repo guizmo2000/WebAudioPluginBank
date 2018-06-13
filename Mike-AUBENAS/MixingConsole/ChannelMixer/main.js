@@ -130,10 +130,15 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 	{
 		this.gain = this.context.createGain();
 		this.pan = this.context.createStereoPanner();
+
 		this.splitter = this.context.createChannelSplitter(2);
 		this.merger = this.context.createChannelMerger(2);
+
 		this.leftGain = this.context.createGain();
 		this.rightGain = this.context.createGain();
+
+		this.leftAnalyser = this.context.createAnalyser();
+		this.rightAnalyser = this.context.createAnalyser();
 	}
 
 	connectNodes()
@@ -144,8 +149,12 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 
 		this.splitter.connect( this.leftGain, 0 );
 		this.splitter.connect( this.rightGain, 1 );
-		this.leftGain.connect( this.merger, 0, 0 );
-		this.rightGain.connect( this.merger, 0, 1 );
+
+		this.leftAnalyser.connect( this.leftGain);
+		this.rightAnalyser.connect( this.rightGain);
+
+		this.leftAnalyser.connect( this.merger, 0, 0 );
+		this.rightAnalyser.connect( this.merger, 0, 1 );
 
 		this.merger.connect( this._output );
     }

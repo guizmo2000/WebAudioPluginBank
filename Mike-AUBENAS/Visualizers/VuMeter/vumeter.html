@@ -26,82 +26,98 @@
 	 *	https://codepen.io/travisholliday/pen/gyaJk
 	 *	https://developer.mozilla.org/fr/docs/Web/API/AnalyserNode/fftSize
 	 *	https://fr.wikipedia.org/wiki/VU-m%C3%A8tre
+	 * http://jsbin.com/vejocav/edit?js,output
 	 */
 
 	let vuMeter = document.currentScript.ownerDocument.querySelector("#wc-vumeter");
 
 	class VUMeter extends HTMLElement
 	{
-		constructor(valueMin, valueMax)
+		constructor(analyser)
 		{
-			if(valueMin && valueMax)
+			super();
+
+			if(analyser && (typeof analyser === AnalyserNode))
 			{
-				super();
-
-				this.subscribedValue = 0;
-				this.previousValue = this.subscribedValue;
-
-				this.valueMin = valueMin;
-				this.valueMax = valueMax;
+				this.previousValue = 0;
 
 				this._root = this.attachShadow({ mode: 'open' });
 				this._root.appendChild(vuMeter.content.cloneNode(true));
 				this.isOn = true;
 
+				this.analyser = analyser;
+
 				this.canvas = this._root.querySelector("canvas");
 				this.graphicContext = this.canvas.getContext("2d");
 
+				this._setup();
 
 				this._draw();
 			}
+		}
+
+		_setup()
+		{
+			this.analyser.fftsize = 1024;
+			this.bufferLength = this.analyser.frequencyBinCount;
+			this.dataArray = new Uint8Array(bufferLength);
 		}
 
 		_draw()
 		{
 			setTimeout( () =>
 			{
-				this.drawing = requestAnimationFrame(() => this._draw());
-
-				let gradient = this.graphicContext.createLinearGradient(0, 0, 0, this.canvas.height);
-				gradient.addColorStop(0, "#e60000");
-				gradient.addColorStop(0.25, "#ffcc00");
-				gradient.addColorStop(1, "#33cc33");
-				this.graphicContext.fillStyle = gradient;
-
 				if (this.isOn)
 				{
-					let difference = this.subscribedValue - this.previousValue;
+					this._clearCanvas();
 
-					/* for(let i = 0; i < difference; i++)
-					{
+					this.graphicContext.save();
 
-					} */
-					this.graphicContext.fillRect(0, ((this.previousValue) * this.canvas.height), this.canvas.width, this.canvas.height);
+					let gradient = this.graphicContext.createLinearGradient(0, 0, 0, this.canvas.height);
+					gradient.addColorStop(0, "#e60000");
+					gradient.addColorStop(0.25, "#ffcc00");
+					gradient.addColorStop(1, "#33cc33");
+					this.graphicContext.fillStyle = gradient;
 
-					this.previousValue = this.subscribedValue;
+					this.analyser.getByteFrequencyData(this.dataArray);
 
-				/* 	for (let i = 0; i < this.gain.gain; i++)
-					{
-						let difference = coordinateY - this.previousValue;
+					const averageFrequency = getAverageFrequency(dataArray);
+					this.graphicContext.fillRect(0, (this.canvas.height - averageFrequency), this.canvas.width, this.canvas.height);
 
-						for (let j = 0; j < difference; j++)
-						{
-							this.graphicContext.fillRect(0, (this.previousValue + 1), this.canvas.width, this.canvas.height);
-						}
+					this.graphicContext.restore();
 
-						this.previousValue = value;
-
-					} */
+					requestAnimationFrame(this._draw);
 				}
 				else
 				{
 					window.cancelAnimationFrame(this.drawing);
 				}
 			}, 30);
+
+			//////////////////////////////////////////////////////
+
+			function getAverageFrequency(arrayFrequencies)
+			{
+				let values = 0;
+				let average;
+
+				let length = arrayFrequencies.length;
+
+				for (let i = 0; i < length; i++) {
+					values += arrayFrequencies[i];
+				}
+
+				average = values / length;
+				return average;
+			}
 		}
 
-		subscribeToChange(value)
-		{ this.subscribedValue = value; }
+		_clearCanvas()
+		{
+			this.graphicContext.save();
+			this.graphicContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+			this.graphicContext.restore();
+		}
 	}
 
 	try
