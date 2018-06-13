@@ -39,8 +39,6 @@
 
 			if(audioContext, gain)
 			{
-				this.previousValue = 0;
-
 				this._root = this.attachShadow({ mode: 'open' });
 				this._root.appendChild(vuMeter.content.cloneNode(true));
 				this.isOn = true;
@@ -80,13 +78,11 @@
 			this.analyser.getByteFrequencyData(this.dataArray);
 
 			const averageFrequency = getAverageFrequency(this.dataArray);
-
 			const smoothItToTheTop = 3.7;
+			let coordinateY = (this.canvas.height - (averageFrequency * smoothItToTheTop));
 
-			const coordinateY = (this.canvas.height - (averageFrequency * smoothItToTheTop));
-
-			if(coordinateY > this.canvas.height)
-				coordinateY = this.canvas.height;
+			if(coordinateY < 0)
+				coordinateY = 0;
 
 			this.graphicContext.fillRect(0, coordinateY, this.canvas.width, this.canvas.height);
 
