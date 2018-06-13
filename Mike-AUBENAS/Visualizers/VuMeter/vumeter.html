@@ -32,12 +32,18 @@
 
 	class VUMeter extends HTMLElement
 	{
-		constructor(audioContext, mediaSource)
+		constructor(valueMin, valueMax)
 		{
-			super();
-
-			if (mediaSource && audioContext)
+			if(valueMin && valueMax)
 			{
+				super();
+
+				this.subscribedValue = 0;
+				this.previousValue = this.subscribedValue;
+
+				this.valueMin = valueMin;
+				this.valueMax = valueMax;
+
 				this._root = this.attachShadow({ mode: 'open' });
 				this._root.appendChild(vuMeter.content.cloneNode(true));
 				this.isOn = true;
@@ -45,37 +51,16 @@
 				this.canvas = this._root.querySelector("canvas");
 				this.graphicContext = this.canvas.getContext("2d");
 
-				this.audioContext = audioContext;
-				this.audioAnalyser = this.audioContext.createAnalyser();
 
-				this.mediaSource = mediaSource;
-
-				this.setUp();
-				this.draw();
-
-				this.connectNodes();
+				this._draw();
 			}
 		}
 
-		setUp()
-		{
-			this.audioAnalyser.fftSize = 2048;
-			this.datasArray = new Uint8Array(this.audioAnalyser.fftSize);
-			this.audioAnalyser.getByteTimeDomainData(this.datasArray);
-		}
-
-		connectNodes()
-		{
-			this.mediaSource.connect(this.audioAnalyser);
-			this.audioAnalyser.connect(this.audioContext.destination);
-		}
-
-		draw()
+		_draw()
 		{
 			setTimeout( () =>
 			{
-				this.drawing = requestAnimationFrame(() => this.draw());
-				this.audioAnalyser.getByteTimeDomainData(this.datasArray);
+				this.drawing = requestAnimationFrame(() => this._draw());
 
 				let gradient = this.graphicContext.createLinearGradient(0, 0, 0, this.canvas.height);
 				gradient.addColorStop(0, "#e60000");
@@ -85,15 +70,28 @@
 
 				if (this.isOn)
 				{
-					for (let i = 0; i < this.audioAnalyser.fftSize; i++)
+					let difference = this.subscribedValue - this.previousValue;
+
+					/* for(let i = 0; i < difference; i++)
 					{
-						let value = Math.abs(this.datasArray[i] / 128.0);
-						let coordinateY = (value * this.canvas.height);
 
-						this.graphicContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+					} */
+					this.graphicContext.fillRect(0, ((this.previousValue) * this.canvas.height), this.canvas.width, this.canvas.height);
 
-						this.graphicContext.fillRect(0, coordinateY, this.canvas.width, this.canvas.height);
-					}
+					this.previousValue = this.subscribedValue;
+
+				/* 	for (let i = 0; i < this.gain.gain; i++)
+					{
+						let difference = coordinateY - this.previousValue;
+
+						for (let j = 0; j < difference; j++)
+						{
+							this.graphicContext.fillRect(0, (this.previousValue + 1), this.canvas.width, this.canvas.height);
+						}
+
+						this.previousValue = value;
+
+					} */
 				}
 				else
 				{
@@ -101,6 +99,9 @@
 				}
 			}, 30);
 		}
+
+		subscribeToChange(value)
+		{ this.subscribedValue = value; }
 	}
 
 	try

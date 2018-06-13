@@ -239,11 +239,11 @@
 		affectVUMeter()
 		{
 			const leftGain = this._plug.getLeftGain();
-			this.wcVuMeterLeft = new VUMeter(ctx, leftGain);
+			this.wcVuMeterLeft = new VUMeter(-20, 3);
 			this._root.querySelector("#vumeterLeft").appendChild(this.wcVuMeterLeft);
 
 			const rightGain = this._plug.getRightGain();
-			this.wcVuMeterRight = new VUMeter(ctx, rightGain);
+			this.wcVuMeterRight = new VUMeter(-20, 3);
 			this._root.querySelector("#vumeterRight").appendChild(this.wcVuMeterRight);
 		}
 
@@ -258,8 +258,8 @@
 			this._root.querySelector("#gain").addEventListener('input', (e) =>
 			{
 				this._plug.setGain(e.target.value);
-				this.wcVuMeterLeft.setGain(dBToGain(e.target.value));
-				this.wcVuMeterRight.setGain(dBToGain(e.target.value));
+				this.wcVuMeterLeft.subscribeToChange(e.target.value);
+				this.wcVuMeterRight.subscribeToChange(e.target.value);
 			});
 
             this._root.querySelector("#pan").addEventListener('input', (e) => this._plug.setPan(e.target.value));
