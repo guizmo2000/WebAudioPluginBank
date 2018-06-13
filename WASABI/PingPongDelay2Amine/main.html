@@ -1,309 +1,354 @@
-
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
-WebAudioControlsOptions = {
-    useMidi: 1,
-};
+	WebAudioControlsOptions = {
+		useMidi: 1,
+	};
 </script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-        <template><style>	
-							.pedal{
-								display: block;
-								background-color: #269CAB;
-								width: 400px;
-								height: 650px;
-								border-radius: 10px;
-								position: relative;
-								/* bring your own prefixes */
-							}
-				
-							
-							#background-image {
-								//border: solid 2px black;
-								width: 400px;
-								height: 650px;
-								opacity: 1;
-							}
-
-							.knob, .switch, .icon{
-								position: absolute;
-								cursor: pointer;
-							}
-
-						
-
-							.selected {
-								border: 1px dashed black;
-								cursor: move;
-							}
-
-							.selected:hover {
-								border: 1px dashed black;
-								cursor: move;
-							}
-
-							.selected  webaudio-knob{
-								cursor: move;
-							}
-
-							.selected  webaudio-switch{
-								cursor: move;
-							}
-
-							.selected  webaudio-slider{
-								cursor: move;
-							}
-
-							.selected:hover webaudio-knob{
-								cursor: move;
-							}
-
-							.selected:hover webaudio-switch{
-								cursor: move;
-							}
-							
-							.selected:hover webaudio-slider{
-								cursor: move;
-							}
+<template>
+	<style>
+		:host {
+			display: block;
+			background-color: #269CAB;
+			width: 400px;
+			height: 650px;
+			border-radius: 10px;
+			position: relative;
+			/* bring your own prefixes */
+		}
 
 
-							#switch1 {
-								bottom: 10px;
-								right: 0px;
-							}
-							
-						#knob_444 {
-							left: 129px;
-							top: 40px;
-						}
+		#background-image {
+			//border: solid 2px black;
+			width: 400px;
+			height: 650px;
+			opacity: 1;
+		}
 
-						#knob_444 div {
-							color: #000000;
-							font-family: "Courier New";
-							font-size: 14px;
-							
-						}
-					
-						#knob_539 {
-							left: 77px;
-							top: 123px;
-						}
+		.knob,
+		.switch,
+		.icon {
+			position: absolute;
+			cursor: pointer;
+		}
 
-						#knob_539 div {
-							color: #000000;
-							font-family: "Courier New";
-							font-size: 14px;
-							
-						}
-					
-						#knob_938 {
-							left: 104px;
-							top: 226px;
-						}
 
-						#knob_938 div {
-							color: #000000;
-							font-family: "Courier New";
-							font-size: 14px;
-							
-						}
-					
-						#knob_189 {
-							left: 193px;
-							top: 241px;
-						}
 
-						#knob_189 div {
-							color: #000000;
-							font-family: "Courier New";
-							font-size: 14px;
-							
-						}
-					
-						#knob_826 {
-							left: 255px;
-							top: 147px;
-						}
+		.selected {
+			border: 1px dashed black;
+			cursor: move;
+		}
 
-						#knob_826 div {
-							color: #000000;
-							font-family: "Courier New";
-							font-size: 14px;
-							
-						}
-					
-						#knob_420 {
-							left: 130px;
-							top: 491px;
-						}
+		.selected:hover {
+			border: 1px dashed black;
+			cursor: move;
+		}
 
-						#knob_420 div {
-							color: #9E9E9E;
-							font-family: "Courier New";
-							font-size: 20px;
-							
-						}
-					
-							#icon_301 {
-								left: 7px;
-								top: 30px;
-								width: 380px;
-								height: 380px;
-							}
-						
-							#icon_73 {
-								left: 10px;
-								top: 10px;
-								width: 45px;
-								height: 45px;
-							}
-						
-							#icon_823 {
-								left: 347px;
-								top: 9px;
-								width: 45px;
-								height: 45px;
-							}
-						
-							#icon_90 {
-								left: 3px;
-								top: 407px;
-								width: 45px;
-								height: 45px;
-							}
-						
-							#icon_434 {
-								left: 349px;
-								top: 411px;
-								width: 45px;
-								height: 45px;
-							}
-						
-							#icon_213 {
-								left: 70px;
-								top: 457px;
-								width: 190px;
-								height: 190px;
-							}
-						
-							
-							.pedalLabel{
-								position: absolute;
-								top: 225px;
-								font-size: 25px;
-								font-family: Sansita;/*{font}*/
-								text-align: center;
-								line-height: 30px;/*{pedalfontsize}*/
-								width: 150px;
-								color: #6B0000;/*{fontcolor}*/
-							}
-							.knob-label{
-								position: absolute;
-								font-size: 12px;/*{knobfontsize}*/
-								line-height: 12px;
-								width:64px;
-								max-width:64px;
-								overflow: hidden;
-								text-align: center;
-								font-family: Sansita;/*{font}*/
-								color: #6B0000;/*{fontcolor}*/
-							}
-							#knob1-label{
-								top: 84px;
-								left: 43px;
-							}</style><div class="pedal">
-		
+		.selected webaudio-knob {
+			cursor: move;
+		}
+
+		.selected webaudio-switch {
+			cursor: move;
+		}
+
+		.selected webaudio-slider {
+			cursor: move;
+		}
+
+		.selected:hover webaudio-knob {
+			cursor: move;
+		}
+
+		.selected:hover webaudio-switch {
+			cursor: move;
+		}
+
+		.selected:hover webaudio-slider {
+			cursor: move;
+		}
+
+
+		#switch1 {
+			bottom: 10px;
+			right: 0px;
+		}
+
+		#knob_444 {
+			left: 129px;
+			top: 40px;
+		}
+
+		#knob_444 div {
+			color: #000000;
+			font-family: "Courier New";
+			font-size: 14px;
+
+		}
+
+		#knob_539 {
+			left: 77px;
+			top: 123px;
+		}
+
+		#knob_539 div {
+			color: #000000;
+			font-family: "Courier New";
+			font-size: 14px;
+
+		}
+
+		#knob_938 {
+			left: 104px;
+			top: 226px;
+		}
+
+		#knob_938 div {
+			color: #000000;
+			font-family: "Courier New";
+			font-size: 14px;
+
+		}
+
+		#knob_189 {
+			left: 193px;
+			top: 241px;
+		}
+
+		#knob_189 div {
+			color: #000000;
+			font-family: "Courier New";
+			font-size: 14px;
+
+		}
+
+		#knob_826 {
+			left: 255px;
+			top: 147px;
+		}
+
+		#knob_826 div {
+			color: #000000;
+			font-family: "Courier New";
+			font-size: 14px;
+
+		}
+
+		#knob_420 {
+			left: 130px;
+			top: 491px;
+		}
+
+		#knob_420 div {
+			color: #9E9E9E;
+			font-family: "Courier New";
+			font-size: 20px;
+
+		}
+
+		#icon_301 {
+			left: 7px;
+			top: 30px;
+			width: 380px;
+			height: 380px;
+		}
+
+		#icon_73 {
+			left: 10px;
+			top: 10px;
+			width: 45px;
+			height: 45px;
+		}
+
+		#icon_823 {
+			left: 347px;
+			top: 9px;
+			width: 45px;
+			height: 45px;
+		}
+
+		#icon_90 {
+			left: 3px;
+			top: 407px;
+			width: 45px;
+			height: 45px;
+		}
+
+		#icon_434 {
+			left: 349px;
+			top: 411px;
+			width: 45px;
+			height: 45px;
+		}
+
+		#icon_213 {
+			left: 70px;
+			top: 457px;
+			width: 190px;
+			height: 190px;
+		}
+
+
+		.pedalLabel {
+			position: absolute;
+			top: 225px;
+			font-size: 25px;
+			font-family: Sansita;
+			/*{font}*/
+			text-align: center;
+			line-height: 30px;
+			/*{pedalfontsize}*/
+			width: 150px;
+			color: #6B0000;
+			/*{fontcolor}*/
+		}
+
+		.knob-label {
+			position: absolute;
+			font-size: 12px;
+			/*{knobfontsize}*/
+			line-height: 12px;
+			width: 64px;
+			max-width: 64px;
+			overflow: hidden;
+			text-align: center;
+			font-family: Sansita;
+			/*{font}*/
+			color: #6B0000;
+			/*{fontcolor}*/
+		}
+
+		#knob1-label {
+			top: 84px;
+			left: 43px;
+		}
+	</style>
+	<!-- <div class="pedal"> -->
+
 		<!-- <p class="knob-label" id="knob1-label" contenteditable="true">FREQ</p> -->
-		<div class="switchCont" id="switch1">
-			<img id="background-image" src="./../img/background/null">
-			<webaudio-switch src="./../img/switches/switch_1.png" class="switch" id="switch1" height="64" width="128"></webaudio-switch>
+		<div class="switchCont" id="switch">
+			<!-- <img id="background-image" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/background/null"> -->
+			<webaudio-switch src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/switches/switch_1.png"
+			 class="switch" id="switch1" height="64" width="128"></webaudio-switch>
 		</div>
-		
-	<div class="knob " id="knob_444"><webaudio-knob src="./../img/knobs/Jambalaya.png" height="70" width="70" sprites="100" step="1" value="20"></webaudio-knob><div>Freq 1</div></div><div class="knob " id="knob_539"><webaudio-knob src="./../img/knobs/Jambalaya.png" height="70" width="70" sprites="100" step="1" value="20"></webaudio-knob><div>Freq 2</div></div><div class="knob " id="knob_938"><webaudio-knob src="../img/knobs/Jambalaya.png" height="70" width="70" sprites="100" step="1" value="20"></webaudio-knob><div>Freq 3</div></div><div class="knob " id="knob_189"><webaudio-knob src="../img/knobs/Jambalaya.png" height="70" width="70" sprites="100" step="1" value="20"></webaudio-knob><div>Freq 4</div></div><div class="knob " id="knob_826"><webaudio-knob src="../img/knobs/Jambalaya.png" height="70" width="70" sprites="100" step="1" value="20"></webaudio-knob><div>Freq 5</div></div><div class="knob " id="knob_420"><webaudio-knob src="../img/knobs/Carbon.png" height="70" width="70" sprites="100" step="1" value="20"></webaudio-knob><div>Volume</div></div><img class="icon " id="icon_301" src="../img/icons/1.png"><img class="icon " id="icon_73" src="../img/icons/icon.png"><img class="icon " id="icon_823" src="../img/icons/icon.png"><img class="icon " id="icon_90" src="../img/icons/icon.png"><img class="icon " id="icon_434" src="../img/icons/icon.png"><img class="icon selected" id="icon_213" src="../img/icons/1.png"></div></template><script>
-        let ThirdTemp = document.currentScript.ownerDocument.querySelector('template');
-        class ThirdGui extends HTMLElement {
-    
-        
-            constructor(plug) {
-               
-                super();
-                this._plug = plug; 
-                console.log(this._plug);
-                this._root = this.attachShadow({ mode: 'open' });
-                this._root.appendChild(ThirdTemp.content.cloneNode(true));
-                this.isOn;
-                this.setKnobs();
-                this.setActive(false);
-                this.setSwitchListener();
-        
-            }
-        
-            get properties() {
-               
-            this.boundingRect = {
-                dataWidth: {
-                type: Number,
-                value: 400
-                },
-                dataHeight: {
-                type: Number,
-                value: 650
-                }
-          };
-          return this.boundingRect;
-        
-            }
-        
-            setKnobs() {
-                this._root.querySelector("#knob_444").firstChild.addEventListener('input', (e) => this._plug.setParam("feedback", e.target.value / 100));
-               this._root.querySelector("#knob_539").firstChild.addEventListener('input', (e) => this._plug.setParam("time", e.target.value / 100));
-               this._root.querySelector("#knob_938").firstChild.addEventListener('input', (e) => this._plug.setParam("mix", e.target.value / 100));
-               //this._root.querySelector("#knob_189").firstChild.addEventListener('input', (e) => this._plug.setParam("", e.target.value));
-               //this._root.querySelector("#knob_826").firstChild.addEventListener('input', (e) => this._plug.setParam("", e.target.value));
-               //this._root.querySelector("#knob_420").firstChild.addEventListener('input', (e) => this._plug.setParam("", e.target.value));
 
-            }
-        
-            setActive(active) {
-               
-                if (active == undefined || active == false) {
-                    this.isOn = false;
-                    this.bypass();
-                    this._root.querySelector("#switch1").value = 0;
-                } else if (active) {
-                    this.isOn = true;
-                    this.reactivate();
-                    this._root.querySelector("#switch1").value = 1;
-                }
-        
-            }
-        
-            setSwitchListener() {
-               
-            }
-        
-            bypass() {
-               
-							this._plug.setParam("status", "disable");
-            console.log("disabled");
-        
-            }
-        
-            reactivate() {
-               
-							this._plug.setParam("status", "enable");
-        
-            }
-        }
-                try {
-                    customElements.define('amine-third', ThirdGui);
-                    console.log("Element defined");
-                } catch(error){
-                    console.log(error);
-                    console.log("Element already defined");      
-                }
-                const createThird = (plug) => {
-                    let elem = new ThirdGui(plug);
-                    return elem; 
-                }
-        </script>
+		<div class="knob " id="knob_444">
+			<webaudio-knob src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/knobs/Jambalaya.png"
+			 height="70" width="70" sprites="100" step="1" value="20"></webaudio-knob>
+			<div>Freq 1</div>
+		</div>
+		<div class="knob " id="knob_539">
+			<webaudio-knob src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/knobs/Jambalaya.png"
+			 height="70" width="70" sprites="100" step="1" value="20"></webaudio-knob>
+			<div>Freq 2</div>
+		</div>
+		<div class="knob " id="knob_938">
+			<webaudio-knob src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/knobs/Jambalaya.png"
+			 height="70" width="70" sprites="100" step="1" value="20"></webaudio-knob>
+			<div>Freq 3</div>
+		</div>
+		<div class="knob " id="knob_189">
+			<webaudio-knob src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/knobs/Jambalaya.png"
+			 height="70" width="70" sprites="100" step="1" value="20"></webaudio-knob>
+			<div>Freq 4</div>
+		</div>
+		<div class="knob " id="knob_826">
+			<webaudio-knob src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/knobs/Jambalaya.png"
+			 height="70" width="70" sprites="100" step="1" value="20"></webaudio-knob>
+			<div>Freq 5</div>
+		</div>
+		<div class="knob " id="knob_420">
+			<webaudio-knob src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/knobs/Carbon.png" height="70"
+			 width="70" sprites="100" step="1" value="20"></webaudio-knob>
+			<div>Volume</div>
+		</div>
+		<img class="icon " id="icon_301" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/icons/1.png">
+		<img class="icon " id="icon_73" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/icons/icon.png">
+		<img class="icon " id="icon_823" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/icons/icon.png">
+		<img class="icon " id="icon_90" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/icons/icon.png">
+		<img class="icon " id="icon_434" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/icons/icon.png">
+		<img class="icon selected" id="icon_213" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/icons/1.png">
+	<!-- </div> -->
+</template>
+<script>
+	let ThirdTemp = document.currentScript.ownerDocument.querySelector('template');
+	class ThirdGui extends HTMLElement {
+
+
+		constructor(plug) {
+
+			super();
+			this._plug = plug;
+			console.log(this._plug);
+			this._plug.gui = this;
+			this._root = this.attachShadow({ mode: 'open' });
+			this._root.appendChild(ThirdTemp.content.cloneNode(true));
+			this.isOn = false;
+			this.setKnobs();
+			this.setSwitchListener();
+
+		}
+
+		get properties() {
+
+			this.boundingRect = {
+				dataWidth: {
+					type: Number,
+					value: 400
+				},
+				dataHeight: {
+					type: Number,
+					value: 650
+				}
+			};
+			return this.boundingRect;
+
+		}
+
+		setKnobs() {
+			console.log("setKnobs");
+			this._root.querySelector("#knob_444").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("feedback", e.target.value / 100));
+			this._root.querySelector("#knob_539").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("time", e.target.value / 100));
+			this._root.querySelector("#knob_938").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("mix", e.target.value / 100));
+			//this._root.querySelector("#knob_189").firstChild.addEventListener('input', (e) => this._plug.setParam("", e.target.value));
+			//this._root.querySelector("#knob_826").firstChild.addEventListener('input', (e) => this._plug.setParam("", e.target.value));
+			//this._root.querySelector("#knob_420").firstChild.addEventListener('input', (e) => this._plug.setParam("", e.target.value));
+
+		}
+
+		
+
+		setSwitchListener() {
+			console.log("setswitch");
+			this._root.querySelector("#switch").querySelector("webaudio-switch").addEventListener('change', (e) => {
+				if (this.isOn) this.bypass()
+				else this.reactivate();
+				this.isOn = !this.isOn;
+			});
+		}
+
+		bypass() {
+
+			this._plug.setParam("status", "disable");
+			console.log("disabled");
+
+		}
+
+		reactivate() {
+
+			this._plug.setParam("status", "enable");
+
+		}
+	}
+	try {
+		customElements.define('amine-third', ThirdGui);
+		console.log("Element defined");
+	} catch (error) {
+		console.log(error);
+		console.log("Element already defined");
+	}
+	const createThird = (plug) => {
+		let elem = new ThirdGui(plug);
+		return elem;
+	}
+</script>
