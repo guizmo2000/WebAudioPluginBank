@@ -150,8 +150,8 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		this.splitter.connect( this.leftGain, 0 );
 		this.splitter.connect( this.rightGain, 1 );
 
-		this.leftAnalyser.connect( this.leftGain);
-		this.rightAnalyser.connect( this.rightGain);
+		this.leftGain.connect(this.leftAnalyser);
+		this.rightGain.connect( this.rightAnalyser);
 
 		this.leftAnalyser.connect( this.merger, 0, 0 );
 		this.rightAnalyser.connect( this.merger, 0, 1 );
