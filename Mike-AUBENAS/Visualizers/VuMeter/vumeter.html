@@ -78,8 +78,7 @@
 			this.analyser.getByteFrequencyData(this.dataArray);
 
 			const averageFrequency = getAverageFrequency(this.dataArray);
-			const smoothItToTheTop = 3.7;
-			let coordinateY = (this.canvas.height - (averageFrequency * smoothItToTheTop));
+			let coordinateY = (this.canvas.height - averageFrequency);
 
 			if(coordinateY < 0)
 				coordinateY = 0;
