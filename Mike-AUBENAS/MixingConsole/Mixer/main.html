@@ -7,7 +7,7 @@
 
 	<style>
 
-		:host 
+		:host
 		{
 			width:500px;
 			height:500px;
@@ -20,7 +20,7 @@
 
 	</style>
 
-    <div id="arrayOfChannels"></div>
+	<div id="arrayOfChannels"></div>
 
 </template>
 
@@ -28,10 +28,10 @@
 
     let leMixer = document.currentScript.ownerDocument.querySelector("#wc-mixer");
 
-	class MixerGUI extends HTMLElement 
+	class MixerGUI extends HTMLElement
 	{
-		constructor(plug) 
-		{ 
+		constructor(plug)
+		{
 			super();
 			this._plug = plug;
 			this._root = this.attachShadow({ mode: 'open' });
@@ -39,41 +39,22 @@
 			this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
 			this.arrayNodeToConnectChannel = this._plug.getArrayNodeToConnect();
 
-			(async () => 
+			(async () =>
 			{
-				for (let position = 0; position < this.arrayNodeToConnectChannel.length; position++) 
+				for (let position = 0; position < this.arrayNodeToConnectChannel.length; position++)
 				{
 					await this.createAndConnectChannel(position, this.arrayNodeToConnectChannel);
 				}
 			})();
 		}
 
-		get properties() 
-		{
-			this.boundingRect = 
-			{
-				dataWidth: 
-				{
-					type: Number,
-					value: 120
-				},
-				dataHeight: 
-				{
-					type: Number,
-					value: 180
-				}
-			};
-
-			return this.boundingRect;
-		}
-
 		createAndConnectChannel(position, arrayAudioNodes)
 		{
 			var plugin = new window.WasabiChannelMixer(ctx, this.urlChannel, {"channelNumber" : position + 1});
 
-			return new Promise((resolve, reject) => 
+			return new Promise((resolve, reject) =>
 			{
-				plugin.load().then((node) => 
+				plugin.load().then((node) =>
 				{
 					plugin.loadGui().then((elem) => {
 					this._root.querySelector('#arrayOfChannels').appendChild(elem);
@@ -87,23 +68,23 @@
 		}
 	}
 
-	try 
+	try
 	{
 		console.log("Element defined");
 		customElements.define('wasabi-mixer', MixerGUI);
-	} 
+	}
 	catch(error)
 	{
 		console.log(error);
-		console.log("Element already defined");      
+		console.log("Element already defined");
 	}
 
 
-	createWAP = (plug) => 
+	createWAP = (plug) =>
 	{
 		console.log("mixeur :",plug);
 		let elem = new MixerGUI(plug);
-		return elem; 
+		return elem;
 	}
 
 </script>

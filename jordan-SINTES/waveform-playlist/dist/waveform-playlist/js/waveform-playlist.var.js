@@ -1834,18 +1834,10 @@ var WaveformPlaylist =
 	        _this2.drawRequest();
 				});
 				
-				ee.on('deletetrack', function (track) {
-					var trackInfo = JSON.stringify(track.getTrackDetails());
-					var tracksInfo = JSON.stringify(playlist.getInfo());
-					var newPlaylist = tracksInfo.replace(trackInfo, '').replace(',,', ',');
-					if ( newPlaylist.charAt(newPlaylist.length - 2) == ',' ) {
-						newPlaylist = newPlaylist.slice(0,-2) + ']';
-					}
-					if ( newPlaylist.charAt(1) == ',' ) {
-						newPlaylist = '[' + newPlaylist.slice(2, newPlaylist.length);
-					}
-					ee.emit('clear');
-					playlist.load(JSON.parse(newPlaylist));
+				ee.on('deletetrack', function (trackElements) {
+					_this2.clearTrack(trackElements);
+					_this2.adjustTrackPlayout();
+					_this2.drawRequest();
 				});
 	
 	      ee.on('volumechange', function (volume, track) {
@@ -2358,7 +2350,7 @@ var WaveformPlaylist =
 	      var _this11 = this;
 	
 	      return this.stop().then(function () {
-	        _this11.tracks = [];
+					_this11.tracks = [];
 	        _this11.soloedTracks = [];
 	        _this11.mutedTracks = [];
 	        _this11.playoutPromises = [];
@@ -2369,6 +2361,27 @@ var WaveformPlaylist =
 	        _this11.scrollLeft = 0;
 	
 	        _this11.seek(0, 0, undefined);
+	      });
+	    }
+	  },{
+	    key: 'clearTrack',
+	    value: function clearTrack(trackElements) {
+	      var _this11 = this;
+				
+	      return this.stop().then(function () {
+					var index=_this11.tracks.indexOf(trackElements);
+					function array_move(arr, old_index, new_index) {
+						if (new_index >= arr.length) {
+								var k = new_index - arr.length + 1;
+								while (k--) {
+										arr.push(undefined);
+								}
+						}
+						arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+						return arr; // for testing
+					};
+					array_move(_this11.tracks, index, _this11.tracks.length-1); 
+					_this11.tracks.pop();  
 	      });
 	    }
 	  }, {
@@ -5855,7 +5868,7 @@ var WaveformPlaylist =
 	        onclick: function onclick() {
 	          _this2.ee.emit('deletetrack', _this2);
 	        }
-	      }, ['deletetrack'])]), (0, _h2.default)('label', [(0, _h2.default)('input.volume-slider', {
+	      }, ['Delete'])]), (0, _h2.default)('label', [(0, _h2.default)('input.volume-slider', {
 	        attributes: {
 	          type: 'range',
 	          min: 0,
