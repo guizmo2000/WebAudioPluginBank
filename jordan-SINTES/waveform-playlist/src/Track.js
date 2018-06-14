@@ -373,7 +373,7 @@ export default class {
               this.ee.emit('solo', this);
             },
           }, ['Solo']),
-          h(`span.btn.btn-default.btn-xs.btn-solo${deleteClass}`, {
+          h(`span.btn.btn-default.btn-xs.btn-delete${deleteClass}`, {
             onclick: () => {
               this.ee.emit('deletetrack', this);
             },
