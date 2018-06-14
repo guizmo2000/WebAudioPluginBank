@@ -11,10 +11,12 @@
 
 <body>
 
-	<audio src="./Samples/0004-Record-Maschine.mp3" id="soundSample0" controls loop></audio>
-	<audio src="./Samples/0005-Record-Maschine.mp3" id="soundSample1" controls loop></audio>
-	<audio src="./Samples/0006-Record-Maschine.mp3" id="soundSample2" controls loop></audio>
-	<audio src="./Samples/0007-Record-Maschine.mp3" id="soundSample3" controls loop></audio>
+	<audio src="./Samples/0004-Record-Maschine.mp3" controls loop></audio>
+	<audio src="./Samples/0004-Record-Maschine.mp3" controls loop></audio>
+	<audio src="./Samples/0005-Record-Maschine.mp3" controls loop></audio>
+	<audio src="./Samples/0006-Record-Maschine.mp3" controls loop></audio>
+	<audio src="./Samples/0007-Record-Maschine.mp3" controls loop></audio>
+	<audio src="./Samples/0007-Record-Maschine.mp3" controls loop></audio>
 
 </body>
 
@@ -23,16 +25,16 @@
 	var ctx = new AudioContext();
 	let arrayMediaSources = new Array();
 	let arrayPlayers = new Array();
-	let regarde = document.querySelectorAll("audio").length;
+	let listAudioElements = document.querySelectorAll("audio");
 
-	for(let i = 0; i < regarde; i++)
+	for(let i = 0; i < listAudioElements.length; i++)
 	{
-		var player = document.getElementById("soundSample" + i);
+		var player = listAudioElements[i];
 		arrayPlayers.push(player);
 
-		player.onplay = () => 
+		player.onplay = () =>
 		{
-			ctx.resume().then(() => 
+			ctx.resume(). then(() =>
 			{
 				console.log('Playback resumed successfully');
 			});
@@ -46,10 +48,10 @@
 	let options = {"arrayNodeToConnect" : arrayMediaSources};
 	var plugin = new window.WasabiMixer(ctx, pluginURL, options);
 
-    plugin.load().then((node) => 
+    plugin.load().then((node) =>
     {
 		console.log("node", node);
-        plugin.loadGui().then((elem) => 
+        plugin.loadGui().then((elem) =>
         {
 			console.log("elem", elem);
 			document.body.appendChild(elem);

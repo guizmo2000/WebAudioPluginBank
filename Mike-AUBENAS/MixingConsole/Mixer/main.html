@@ -18,18 +18,9 @@
 			display: flex;
 		}
 
-		#addButton
-		{
-			padding-top: 10px;
-			width: 25px;
-			height: 25px;
-		}
-
 	</style>
 
 	<div id="arrayOfChannels"></div>
-
-	<canvas id="addButton"></canvas>
 
 </template>
 
@@ -55,8 +46,6 @@
 					await this.createAndConnectChannel(position, this.arrayNodeToConnectChannel);
 				}
 			})();
-
-			this.createAddButton("black");
 		}
 
 		createAndConnectChannel(position, arrayAudioNodes)
@@ -77,36 +66,6 @@
 				})
 			})
 		}
-
-		createAddButton(color)
-		{
-			const canvas = this._root.querySelector("#addButton");
-			const graphicContext = canvas.getContext("2d");
-
-			graphicContext.strokeStyle = color;
-			graphicContext.lineWidth = 20;
-
-			graphicContext.beginPath();
-
-			graphicContext.moveTo( (canvas.width / 2), 0);
-			graphicContext.lineTo( (canvas.width / 2), canvas.height );
-
-			graphicContext.moveTo( 0, (canvas.height / 2))
-			graphicContext.lineTo( canvas.width, (canvas.height / 2) );
-
-			graphicContext.stroke();
-
-			//////////////////////////////////////////////////////////////////////////////////////////
-
-			(function setAddButtonListener()
-			{
-				canvas.addEventListener("click", () =>
-				{
-					this.createAndConnectChannel(// TODO);
-				});
-			}());
-		}
-
 	}
 
 	try
