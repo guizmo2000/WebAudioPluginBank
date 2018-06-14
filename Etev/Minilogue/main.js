@@ -42,6 +42,17 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.addParam({ name: 'osc2gain', defaultValue: 3, minValue: 1, maxValue: 3 });
     this.addParam({ name: 'osc1shape', defaultValue: 0.5, minValue: 0, maxValue: 50 });
     this.addParam({ name: 'osc2shape', defaultValue: 0.5, minValue: 0, maxValue: 50 });
+    this.addParam({ name: 'ampattack', defaultValue: 0.1, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'ampdecay', defaultValue: 0.1, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'ampsustain', defaultValue: 0.1, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'amprelease', defaultValue: 0.1, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'egattack', defaultValue: 0.1, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'egdecay', defaultValue: 0.1, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'egsustain', defaultValue: 0.1, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'egrelease', defaultValue: 0.1, minValue: 0, maxValue: 1 });
+
+
+
 
 
 
@@ -61,6 +72,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       osc1shape: this._descriptor.osc1shape.defaultValue,
       osc2shape: this._descriptor.osc2shape.defaultValue,
       mastergain: this._descriptor.mastergain.defaultValue,
+      ampattack:this._descriptor.ampattack.defaultValue,
       status: "disable"
     }
     // p5 patchnames
@@ -167,18 +179,25 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.feedback = this.params.feedback;
     this.time = this.params.time;
     this.mix = this.params.mix;
-
+    this.ampattack = this.params.ampattack;
+    this.ampdecay = this.params.ampdecay;
+    this.ampsustain = this.params.ampsustain;
+    this.amprelease = this.params.amprelease;
+    this.egattack = this.params.egattack;
+    this.egdecay = this.params.egdecay;
+    this.egsustain = this.params.egsustain;
+    this.egrelease = this.params.egrelease;
   }
 
   noteOn(key) {
     if (this.voices[key] == null) {
       this.voices[key] = new Voice(this.context, key)
       this.setInitialParamValues();
-      this.voices[key].highpassfilter.connect(this._output);
-      if (this.params.status == "disable") this.voices[key].highpassfilter.connect(this._output);
+      this.voices[key].amp.connect(this._output);
+      if (this.params.status == "disable") this.voices[key].amp.connect(this._output);
       else if (this.params.status == "enable") {
-        this.voices[key].highpassfilter.connect(this.ppdelay.feedbackGainNode);
-        this.voices[key].highpassfilter.connect(this.ppdelay.dryGainNode);
+        this.voices[key].amp.connect(this.ppdelay.feedbackGainNode);
+        this.voices[key].amp.connect(this.ppdelay.dryGainNode);
       }
 
     }
@@ -314,6 +333,64 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
   }
 
+  set ampattack(_attack){
+    this.params.ampattack = _attack;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({attack: _attack});
+      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
+    }
+  }
+  set ampdecay(_decay){
+    this.params.ampdecay = _decay;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({decay: _decay});
+      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
+    }
+  }
+  set ampsustain(_sustain){
+    this.params.ampsustain = _sustain;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({sustain: _sustain});
+      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
+    }
+  }
+  set amprelease(_release){
+    this.params.amprelease = _release;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({release: _release});
+      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
+    }
+  }
+  set egattack(_attack){
+    this.params.egattack = _attack;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({attack: _attack});
+      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
+    }
+  }
+  set egdecay(_decay){
+    this.params.egdecay = _decay;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({decay: _decay});
+      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
+    }
+  }
+  set egsustain(_sustain){
+    this.params.egsustain = _sustain;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({sustain: _sustain});
+      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
+    }
+  }
+  set egrelease(_release){
+    this.params.egrelease = _release;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({release: _release});
+      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
+    }
+  }
+  
+
   set delay(_sig) {
       this.params.status = _sig
   }
@@ -385,13 +462,10 @@ class Delay {
 
 
     // WTFFF pourquoi ça ne baisse pas ???????
-    // this.feedbackGainNode.gain.setValueAtTime(0,this.context.currentTime)
-    // this.wetGainNode.gain.setValueAtTime(0,this.context.currentTime)
-    // this.dryGainNode.gain.setValueAtTime(0,this.context.currentTime)
+    this.feedbackGainNode.gain.setValueAtTime(0,this.context.currentTime)
+    this.wetGainNode.gain.setValueAtTime(0,this.context.currentTime)
+    this.dryGainNode.gain.setValueAtTime(0,this.context.currentTime)
 
-    this.feedbackGainNode.gain.value = 0;
-    this.wetGainNode.gain.value = 0;
-    this.dryGainNode.gain.value = 0;
 
     this.delayNodeLeft.connect(this.channelMerger, 0, 0);
     this.delayNodeRight.connect(this.channelMerger, 0, 1);
@@ -455,14 +529,14 @@ class Voice {
       attack: 0.1, // seconds until hitting 1.0
       decay: 0.2, // seconds until hitting sustain value
       sustain: 0.5, // sustain value
-      release: 0.3  // seconds until returning back to 0.0
+      release: 0.8  // seconds until returning back to 0.0
     });
 
     this.enveloppeGenerator = ADSRNode(this.context, {
       attack: 0.1, // seconds until hitting 1.0
       decay: 0.2, // seconds until hitting sustain value
       sustain: 0.5, // sustain value
-      release: 0.3  // seconds until returning back to 0.0
+      release: 0.8  // seconds until returning back to 0.0
     })
 
     // gain stage 
@@ -498,22 +572,26 @@ class Voice {
 
     this.oscMerger.connect(this.lowPassfilter);
     this.lowPassfilter.connect(this.highpassfilter);
-    //this.lowPassfilter.connect(this.ampEnveloppe); --> has to be done by setter
+    this.highpassfilter.connect(this.amp);
+    this.ampEnveloppe.connect(this.amp.gain);
     //this.lowPassfilter.connect(this.enveloppeGenerator);--> has to be done by setter
 
     //this.enveloppeGenerator.connect(this.lfo);--> has to be done by setter
 
-    // stereo delay parts
 
     // on externalise
     // this.amp.connect(this.dryGainNode);
     // this.ampEnveloppe.connect(this.amp);
 
 
-
+    
     this.osc1.start();
     this.osc2.start();
     this.lfo.start();
+    this.ampEnveloppe.start();
+    this.ampEnveloppe.trigger(this.context.currentTime);
+    this.ampEnveloppe.stop(this.context.currentTime + 2);
+
   }
 
 }
@@ -660,12 +738,7 @@ function ADSRNode(ctx, opts) {
 
     this.offset.cancelScheduledValues(when);
 
-    if (DEBUG) {
-      // simulate curve using triggeredValue (debug purposes)
-      for (var i = 0; i < 10; i += 0.01)
-        this.offset.setValueAtTime(triggeredValue(i), when + i);
-      return this;
-    }
+   
 
     if (interruptedLine)
       this.offset.linearRampToValueAtTime(v, when);

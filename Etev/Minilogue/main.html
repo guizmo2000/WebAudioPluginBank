@@ -189,44 +189,44 @@
       <span class="pedalLabel">EG</span>
       <div class="row">
         <div class="column">
-          <webaudio-knob id="ampattack" class="knob" min="0.5" max="2" sprites="99" value="1" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
+          <webaudio-knob id="ampattack" class="knob" min="0" max="1" sprites="99" value="0.1" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc1pitch-label">Attack</span>
         </div>
         <div class="column">
-          <webaudio-knob id="ampdecay" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
+          <webaudio-knob id="ampdecay" class="knob" min="0" max="1" sprites="99" value="0.2" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc1shape-label">Decay</span>
         </div>
         <div class="column">
-          <webaudio-knob id="ampsustain" class="knob" sprites="99" value="50" step="1" midilearn="true" src="./../img/nux_black_white_stripe.png"
+          <webaudio-knob id="ampsustain" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc1gain-label">Sustain</span>
         </div>
         <div class="column">
-          <webaudio-knob id="amprelease" class="knob" sprites="99" value="50" step="1" midilearn="true" src="./../img/nux_black_white_stripe.png"
+          <webaudio-knob id="amprelease" class="knob" min="0" max="1" sprites="99" value="0.8" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc1gain-label">Release</span>
         </div>
       </div>
       <div class="row">
         <div class="column">
-          <webaudio-knob id="egattack" class="knob" min="0.5" max="2" sprites="99" value="1" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
+          <webaudio-knob id="egattack" class="knob" min="0" max="1" sprites="99" value="0.1" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc2pitch-label">Attack</span>
         </div>
         <div class="column">
-          <webaudio-knob id="egdecay" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
+          <webaudio-knob id="egdecay" class="knob" min="0" max="1" sprites="99" value="0.2" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc2shape-label">Decay</span>
         </div>
         <div class="column">
-          <webaudio-knob id="egsustain" class="knob" sprites="99" value="50" step="1" midilearn="true" src="./../img/nux_black_white_stripe.png"
+          <webaudio-knob id="egsustain" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc2gain-label">Sustain</span>
         </div>
         <div class="column">
-          <webaudio-knob id="egdecay" class="knob" sprites="99" value="50" step="1" midilearn="true" src="./../img/nux_black_white_stripe.png"
+          <webaudio-knob id="egrelease" class="knob" smin="0" max="1" sprites="99" value="0.8" step="0.01" midilearn="true" src="./../img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc1gain-label">Release</span>
         </div>
@@ -351,8 +351,6 @@
       var keyboard = this._root.querySelector('#keyboard');
       keyboard.addEventListener('change', (e) => {
         if (e.note[0]) {
-          console.log(e);
-
           this._plug.noteOn(e.note[1]);
         }
         else {
@@ -381,7 +379,6 @@
     }
 
     MidiIn(e) {
-      console.log(e);
       switch (e.data[0] & 0xf0) {
         case 0x90:
           this._plug.noteOn(e.data[1]-36);
