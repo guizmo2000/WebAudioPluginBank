@@ -32,6 +32,8 @@
 			margin-top: 20px;
 			display: none;
 			border-radius: 5px;
+
+			position: absolute;
 		}
 
 		#dropdown-change-position p
@@ -176,7 +178,7 @@
 					overlayElement.addEventListener("mouseover", () =>
 					{
 						menu.style.display = "inline-block";
-						menu.style.left = `${(channelNumber * 100) + 20}px`; // Pas bien
+						menu.style.left = `${(channelNumber * 100) + 10}px`;
 					});
 
 					overlayElement.addEventListener("mouseleave", () =>
