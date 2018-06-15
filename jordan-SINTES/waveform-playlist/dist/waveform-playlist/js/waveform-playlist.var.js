@@ -1631,20 +1631,20 @@ var WaveformPlaylist =
 	      this.mediaRecorder = new window.MediaRecorder(stream);
 	
 	      this.mediaRecorder.onstart = function () {
-	        var track = new _Track2.default();
-					track.setName("Test-Record");
+					var track = new _Track2.default();	
+					track.setName("Test-Record");	
 	        track.setEnabledStates();
-	        track.setEventEmitter(_this.ee);
-	
+					track.setEventEmitter(_this.ee);
+					
 	        _this.recordingTrack = track;
 	        _this.tracks.push(track);
-	
+					
 	        _this.chunks = [];
-	        _this.working = false;
+					_this.working = false;				
 	      };
 	
 	      this.mediaRecorder.ondataavailable = function (e) {
-	        _this.chunks.push(e.data);
+					_this.chunks.push(e.data);
 	
 	        // throttle peaks calculation
 	        if (!_this.working) {
@@ -1666,8 +1666,11 @@ var WaveformPlaylist =
 	      };
 	
 	      this.mediaRecorder.onstop = function () {
-	        _this.chunks = [];
-	        _this.working = false;
+					_this.chunks = [];
+					_this.working = false;
+
+					
+					
 	      };
 	
 	      this.recorderWorker = new _inlineWorker2.default(_recorderWorker2.default);
@@ -1834,8 +1837,14 @@ var WaveformPlaylist =
 	        _this2.drawRequest();
 				});
 				
-				ee.on('deletetrack', function (trackElements) {
-					_this2.clearTrack(trackElements);
+				ee.on('deletetrack', function (track) {
+					_this2.clearTrack(track);
+					_this2.adjustTrackPlayout();
+					_this2.drawRequest();
+				});
+
+				ee.on('renametrack', function (track){
+					_this2.renameTrack(track);
 					_this2.adjustTrackPlayout();
 					_this2.drawRequest();
 				});
@@ -2365,11 +2374,9 @@ var WaveformPlaylist =
 	    }
 	  },{
 	    key: 'clearTrack',
-	    value: function clearTrack(trackElements) {
+	    value: function clearTrack(track) {
 	      var _this11 = this;
-				
-	      return this.stop().then(function () {
-					var index=_this11.tracks.indexOf(trackElements);
+				var index=_this11.tracks.indexOf(track);
 					function array_move(arr, old_index, new_index) {
 						if (new_index >= arr.length) {
 								var k = new_index - arr.length + 1;
@@ -2380,8 +2387,27 @@ var WaveformPlaylist =
 						arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
 						return arr; // for testing
 					};
-					array_move(_this11.tracks, index, _this11.tracks.length-1); 
-					_this11.tracks.pop();  
+					array_move(_this11.tracks, index, _this11.tracks.length-1);
+					_this11.tracks.pop();
+	      return this.stop().then(function () {		
+	      });
+	    }
+	  },{
+	    key: 'renameTrack',
+	    value: function renameTrack(track) {
+	      var _this11 = this;
+				var index=_this11.tracks.indexOf(track);
+
+				track.name=prompt("Name");
+				/*
+				var element= document.querySelector("#title");
+					element.addEventListener('dblclick', function(){
+						console.log(document.element);
+						var rename=prompt("record name:");
+						element.innerHTML=rename;
+					});
+				*/
+	      return this.stop().then(function () {		
 	      });
 	    }
 	  }, {
@@ -5845,18 +5871,21 @@ var WaveformPlaylist =
 	  }, {
 	    key: 'renderControls',
 	    value: function renderControls(data) {
-	      var _this2 = this;
-	
+				var _this2 = this;
+			
 	      var muteClass = data.muted ? '.active' : '';
 				var soloClass = data.soloed ? '.active' : '';
 				var deleteClass = data.deleted ? '.active': '';
-	      var numChan = this.peaks.data.length;
+				var renameClass = data.renamed ? '.active': '';
+				var numChan = this.peaks.data.length;
+				
+			
 	
 	      return (0, _h2.default)('div.controls', {
 	        attributes: {
 	          style: 'height: ' + numChan * data.height + 'px; width: ' + data.controls.width + 'px; position: absolute; left: 0; z-index: 10;'
 	        }
-	      }, [(0, _h2.default)('header', [this.name]), (0, _h2.default)('div.btn-group', [(0, _h2.default)('span.btn.btn-default.btn-xs.btn-mute' + muteClass, {
+	      }, [(0, _h2.default)('header#title', this.name), (0, _h2.default)('div.btn-group', [(0, _h2.default)('span.btn.btn-default.btn-xs.btn-mute' + muteClass, {
 	        onclick: function onclick() {
 	          _this2.ee.emit('mute', _this2);
 	        }
@@ -5868,7 +5897,11 @@ var WaveformPlaylist =
 	        onclick: function onclick() {
 	          _this2.ee.emit('deletetrack', _this2);
 	        }
-	      }, ['Delete'])]), (0, _h2.default)('label', [(0, _h2.default)('input.volume-slider', {
+	      }, ['Delete']), (0, _h2.default)('span.btn.btn-default.btn-xs.btn-rename' + renameClass, {
+	        onclick: function onclick() {
+	          _this2.ee.emit('renametrack', _this2);
+	        }
+	      }, ['Rename'])]), (0, _h2.default)('label', [(0, _h2.default)('input.volume-slider', {
 	        attributes: {
 	          type: 'range',
 	          min: 0,
@@ -8699,3 +8732,5 @@ var WaveformPlaylist =
 /***/ })
 /******/ ]);
 //# sourceMappingURL=waveform-playlist.var.js.map
+
+
