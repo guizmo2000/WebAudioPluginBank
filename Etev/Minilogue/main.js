@@ -72,9 +72,15 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       osc1shape: this._descriptor.osc1shape.defaultValue,
       osc2shape: this._descriptor.osc2shape.defaultValue,
       mastergain: this._descriptor.mastergain.defaultValue,
-      ampattack:this._descriptor.ampattack.defaultValue,
+      ampattack: this._descriptor.ampattack.defaultValue,
+      ampdecay: this._descriptor.ampdecay.defaultValue,
+      ampsustain: this._descriptor.ampsustain.defaultValue,
+      amprelease: this._descriptor.amprelease.defaultValue,
+
       status: "disable"
     }
+
+
     // p5 patchnames
     this.setup();
   }
@@ -189,9 +195,12 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.egrelease = this.params.egrelease;
   }
 
+
+
   noteOn(key) {
+    that = this;
     if (this.voices[key] == null) {
-      this.voices[key] = new Voice(this.context, key)
+      this.voices[key] = new Voice(this.context, key, that)
       this.setInitialParamValues();
       this.voices[key].amp.connect(this._output);
       if (this.params.status == "disable") this.voices[key].amp.connect(this._output);
@@ -333,66 +342,87 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
   }
 
-  set ampattack(_attack){
+  set ampattack(_attack) {
     this.params.ampattack = _attack;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({attack: _attack});
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({
+        attack: this.params.ampattack,
+        decay: this.params.ampdecay,
+        sustain: this.params.ampsustain,
+        release: this.params.amprelease
+      });
       //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
     }
   }
-  set ampdecay(_decay){
+  set ampdecay(_decay) {
     this.params.ampdecay = _decay;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({decay: _decay});
-      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({
+        attack: this.params.ampattack,
+        decay: this.params.ampdecay,
+        sustain: this.params.ampsustain,
+        release: this.params.amprelease
+      });
     }
   }
-  set ampsustain(_sustain){
+  set ampsustain(_sustain) {
     this.params.ampsustain = _sustain;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({sustain: _sustain});
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({
+        attack: this.params.ampattack,
+        decay: this.params.ampdecay,
+        sustain: this.params.ampsustain,
+        release: this.params.amprelease
+      });
       //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
+
     }
   }
-  set amprelease(_release){
+  set amprelease(_release) {
     this.params.amprelease = _release;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({release: _release});
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({
+        attack: this.params.ampattack,
+        decay: this.params.ampdecay,
+        sustain: this.params.ampsustain,
+        release: this.params.amprelease
+      });
       //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
+
     }
   }
-  set egattack(_attack){
+  set egattack(_attack) {
     this.params.egattack = _attack;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({attack: _attack});
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({ attack: _attack });
       //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
     }
   }
-  set egdecay(_decay){
+  set egdecay(_decay) {
     this.params.egdecay = _decay;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({decay: _decay});
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({ decay: _decay });
       //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
     }
   }
-  set egsustain(_sustain){
+  set egsustain(_sustain) {
     this.params.egsustain = _sustain;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({sustain: _sustain});
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({ sustain: _sustain });
       //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
     }
   }
-  set egrelease(_release){
+  set egrelease(_release) {
     this.params.egrelease = _release;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({release: _release});
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({ release: _release });
       //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
     }
   }
-  
+
 
   set delay(_sig) {
-      this.params.status = _sig
+    this.params.status = _sig
   }
 
 
@@ -462,9 +492,9 @@ class Delay {
 
 
     // WTFFF pourquoi ça ne baisse pas ???????
-    this.feedbackGainNode.gain.setValueAtTime(0,this.context.currentTime)
-    this.wetGainNode.gain.setValueAtTime(0,this.context.currentTime)
-    this.dryGainNode.gain.setValueAtTime(0,this.context.currentTime)
+    this.feedbackGainNode.gain.setValueAtTime(0, this.context.currentTime)
+    this.wetGainNode.gain.setValueAtTime(0, this.context.currentTime)
+    this.dryGainNode.gain.setValueAtTime(0, this.context.currentTime)
 
 
     this.delayNodeLeft.connect(this.channelMerger, 0, 0);
@@ -488,8 +518,10 @@ class Delay {
 
 
 class Voice {
-  constructor(ctx, key) {
+  constructor(ctx, key, parent) {
     this.context = ctx;
+    this.parent = parent
+
     this.buildNode(key)
   }
 
@@ -499,9 +531,9 @@ class Voice {
 
     this.osc1.type = "sawtooth";
     this.osc2.type = "square";
-    var note = key % 12;
-    let octave = Math.floor(key / 12);
-    this.basefrequency = Math.pow(2, (note / 12)) * octave * 65.41
+    // var note = key % 12;
+    //let octave = Math.floor(key / 12);
+    this.basefrequency = 440 * Math.pow(2, (key - 69) / 12);
     this.osc1.frequency.setValueAtTime(this.basefrequency, this.context.currentTime);
     this.osc2.frequency.setValueAtTime(this.basefrequency, this.context.currentTime);
 
@@ -524,13 +556,18 @@ class Voice {
     this.highpassfilter = this.context.createBiquadFilter();
     this.highpassfilter.type = "highpass";
 
+
     //Enveloppe stage
     this.ampEnveloppe = ADSRNode(this.context, {
-      attack: 0.1, // seconds until hitting 1.0
-      decay: 0.2, // seconds until hitting sustain value
-      sustain: 0.5, // sustain value
-      release: 0.8  // seconds until returning back to 0.0
+      attack: this.parent.params.ampattack,
+      decay: this.parent.params.ampdecay,
+      sustain: this.parent.params.ampsustain,
+      release: this.parent.params.amprelease
     });
+    this.ampEnveloppe.start();
+
+
+  
 
     this.enveloppeGenerator = ADSRNode(this.context, {
       attack: 0.1, // seconds until hitting 1.0
@@ -573,7 +610,7 @@ class Voice {
     this.oscMerger.connect(this.lowPassfilter);
     this.lowPassfilter.connect(this.highpassfilter);
     this.highpassfilter.connect(this.amp);
-    this.ampEnveloppe.connect(this.amp.gain);
+    this.ampEnveloppe.connect(this.lowPassfilter.gain);
     //this.lowPassfilter.connect(this.enveloppeGenerator);--> has to be done by setter
 
     //this.enveloppeGenerator.connect(this.lfo);--> has to be done by setter
@@ -584,14 +621,12 @@ class Voice {
     // this.ampEnveloppe.connect(this.amp);
 
 
-    
+
     this.osc1.start();
     this.osc2.start();
     this.lfo.start();
-    this.ampEnveloppe.start();
-    this.ampEnveloppe.trigger(this.context.currentTime);
-    this.ampEnveloppe.stop(this.context.currentTime + 2);
-
+    this.ampEnveloppe.trigger(2);
+    this.ampEnveloppe.release(4);
   }
 
 }
@@ -613,15 +648,13 @@ function ADSRNode(ctx, opts) {
   //   releaseCurve: <number>  // bend       optional    default: 0
   // }
 
+
   function getNum(opts, key, def) {
-    if (typeof def === 'number' && typeof opts[key] === 'undefined')
-      return def;
-    if (typeof opts[key] === 'number')
-      return opts[key];
-    throw new Error('[ADSRNode] Expecting "' + key + '" to be a number');
+    if (opts[key]){  a =  opts[key]; return a;}
+    else return def;
   }
 
-  var attack = 0, decay = 0, sustain, sustain_adj, release = 0;
+  var attack = 0, decay = 0, sustain = 0, sustain_adj = 0, release = 0;
   var base = 0, acurve = 0, peak = 1, hold = 0, dcurve = 0, rcurve = 0;
 
   function update(opts) {
@@ -638,12 +671,17 @@ function ADSRNode(ctx, opts) {
     sustain_adj = adjustCurve(dcurve, peak, sustain);
   }
 
+
+
+
+
   // extract options
   update(opts);
 
   // create the node and inject the new methods
   var node = ctx.createConstantSource();
   node.offset.value = base;
+  
 
   // unfortunately, I can't seem to figure out how to use cancelAndHoldAtTime, so I have to have
   // code that calculates the ADSR curve in order to figure out the value at a given time, if an
@@ -670,6 +708,9 @@ function ADSRNode(ctx, opts) {
     // otherwise, exponential
     return endValue + (startValue - endValue) * Math.exp(-curTime * type / maxTime);
   }
+
+  
+
 
   function adjustCurve(type, startValue, endValue) {
     // the exponential curve will never hit its target... but we can calculate an adjusted
@@ -714,6 +755,7 @@ function ADSRNode(ctx, opts) {
   }
 
   node.trigger = function (when) {
+    console.log("i trigger")
     if (typeof when === 'undefined')
       when = this.context.currentTime;
 
@@ -738,7 +780,7 @@ function ADSRNode(ctx, opts) {
 
     this.offset.cancelScheduledValues(when);
 
-   
+
 
     if (interruptedLine)
       this.offset.linearRampToValueAtTime(v, when);
@@ -752,6 +794,11 @@ function ADSRNode(ctx, opts) {
     this.offset.setTargetAtTime(sustain, when + atktime + hold + decay, 0.001);
     return this;
   };
+
+  node.getOpts = () => {
+    return { attack, decay, sustain, sustain_adj, release, base, acurve, peak, hold, dcurve, rcurve };
+
+  }
 
   node.release = function (when) {
     if (typeof when === 'undefined')
