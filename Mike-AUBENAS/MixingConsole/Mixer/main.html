@@ -154,9 +154,6 @@
 		 */
 		createOverlayableZoneFor(zone, channelNumber)
 		{
-			const aChannelWidthPX = 100;
-			const aChannelHeightPX = 220;
-
 			let overlayElement  = document.createElement("div");
 			overlayElement.className = "overlay";
 
@@ -169,7 +166,8 @@
 					overlayElement.className += ` ${overlayType}`// TODO in switch case
 					overlayElement.id = `${overlayType}${channelNumber}`;
 
-					overlayElement.style.left = `${channelNumber * aChannelWidthPX}px`
+					overlayElement.style.left = `${(channelNumber * 100) + 20}px`
+					overlayElement.style.top = `${320}px`
 					break;
 			}
 
