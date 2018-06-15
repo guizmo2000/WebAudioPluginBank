@@ -48,13 +48,31 @@
 		{
 			cursor: pointer;
 
-			background-color: rgb(56, 56, 56);
+			background-color: rgb(80, 79, 79);
 
 			-webkit-transition: background-color 200ms linear;
 			-moz-transition: background-color 200ms linear;
 			-o-transition: background-color 200ms linear;
 			-ms-transition: background-color 200ms linear;
 			transition: background-color 200ms linear;
+		}
+
+		wasabi-channelmixer
+		{
+			position: relative;
+		}
+
+		.overlay
+		{
+			background-color: black;
+			position: absolute;
+			z-index: 20;
+		}
+
+		.pedalLabelZone
+		{
+			height: 22px;
+			width: 78.14px;
 		}
 
 	</style>
@@ -105,7 +123,9 @@
 					});
 
 					arrayAudioNodes[position].connect(node);
-					node.connect(ctx.destination)
+					node.connect(ctx.destination);
+
+					this.createOverlayableZoneFor("pedalLabel", position);
 				})
 			})
 		}
@@ -123,6 +143,40 @@
 				channelButton.appendChild(textNode);
 				divDropDown.appendChild(channelButton);
 			}
+		}
+
+		/**
+		 *	Creates a div element that overlay a Channel WebComonent at the position passed at zone so that we
+		 * 	can interact with it through the Mixer.
+		 *
+		 *	@param	{string}	zone	The zone we want to overlay
+		 *	@param	{number}	channelNumber	The channel we want to add thr overlay to
+		 */
+		createOverlayableZoneFor(zone, channelNumber)
+		{
+			const aChannelWidthPX = 100;
+			const aChannelHeightPX = 220;
+
+			let overlayElement  = document.createElement("div");
+			overlayElement.className = "overlay";
+
+
+			switch(zone)
+			{
+				case "pedalLabel" :
+					const overlayType = "pedalLabelZone";
+
+					overlayElement.className += ` ${overlayType}`// TODO in switch case
+					overlayElement.id = `${overlayType}${channelNumber}`;
+
+					overlayElement.style.left = `${channelNumber * aChannelWidthPX}px`
+					break;
+			}
+
+			this._root.querySelector('#arrayOfChannels').appendChild(overlayElement);
+
+
+
 		}
 	}
 
