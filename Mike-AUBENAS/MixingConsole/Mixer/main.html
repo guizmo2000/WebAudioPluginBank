@@ -30,8 +30,10 @@
 						1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 			margin-top: 20px;
-			display: inline-block;
+			display: none;
 			border-radius: 5px;
+
+			position: absolute;
 		}
 
 		#dropdown-change-position p
@@ -47,14 +49,32 @@
 		#dropdown-change-position p:hover
 		{
 			cursor: pointer;
+			display: block;
 
-			background-color: rgb(56, 56, 56);
+			background-color: rgb(80, 79, 79);
 
 			-webkit-transition: background-color 200ms linear;
 			-moz-transition: background-color 200ms linear;
 			-o-transition: background-color 200ms linear;
 			-ms-transition: background-color 200ms linear;
 			transition: background-color 200ms linear;
+		}
+
+		wasabi-channelmixer
+		{
+			position: relative;
+		}
+
+		.overlay
+		{
+			position: absolute;
+			z-index: 20;
+		}
+
+		.pedalLabelZone
+		{
+			height: 22px;
+			width: 78.14px;
 		}
 
 	</style>
@@ -88,7 +108,7 @@
 				}
 			})();
 
-			this.createDropdown();
+			this.createDropdownMenuForChangePosition();
 		}
 
 		createAndConnectChannel(position, arrayAudioNodes)
@@ -105,12 +125,14 @@
 					});
 
 					arrayAudioNodes[position].connect(node);
-					node.connect(ctx.destination)
+					node.connect(ctx.destination);
+
+					this.createOverlayableZoneFor("pedalLabel", position);
 				})
 			})
 		}
 
-		createDropdown()
+		createDropdownMenuForChangePosition()
 		{
 			const numberOfChannels = this._plug.getNumberOfChannels();
 			const divDropDown = this._root.querySelector("#dropdown-change-position");
@@ -123,6 +145,76 @@
 				channelButton.appendChild(textNode);
 				divDropDown.appendChild(channelButton);
 			}
+		}
+
+		/**
+		 *	Creates a div element that overlay a Channel WebComonent at the position passed at zone so that we
+		 * 	can interact with it through the Mixer.
+		 *
+		 *	@param	{string}	zone	The zone we want to overlay
+		 *	@param	{number}	channelNumber	The channel we want to add thr overlay to
+		 */
+		createOverlayableZoneFor(zone, channelNumber)
+		{
+			let overlayElement  = document.createElement("div");
+			overlayElement.className = "overlay";
+
+			switch(zone)
+			{
+				case "pedalLabel" :
+					const overlayType = "pedalLabelZone";
+
+					let isMenuOnFocus = false;
+
+					overlayElement.className += ` ${overlayType}`// TODO in switch case
+					overlayElement.id = `${overlayType}${channelNumber}`;
+
+					overlayElement.style.left = `${(channelNumber * 100) + 20}px`
+					overlayElement.style.top = `${320}px`;
+
+					let menu = this._root.querySelector("#dropdown-change-position");
+
+					overlayElement.addEventListener("mouseover", () =>
+					{
+						menu.style.display = "inline-block";
+						menu.style.left = `${(channelNumber * 100) + 10}px`;
+						isMenuOnFocus = true;
+					});
+
+					overlayElement.addEventListener("mouseleave", () =>
+					{
+						isMenuOnFocus = false;
+						makeMenuDisappear();
+					});
+
+					menu.addEventListener("mouseleave", () =>
+					{
+						isMenuOnFocus = false;
+						makeMenuDisappear();
+					});
+
+					menu.addEventListener("mouseover", () =>
+					{
+						isMenuOnFocus = true;
+					});
+
+					////////////////////////////////////////////////////////////////////////
+
+					function makeMenuDisappear()
+					{
+						setTimeout(() =>
+						{
+							if(isMenuOnFocus == false)
+								menu.style.display = "none";
+						}, 100);
+					}
+					break;
+				case "solo" :
+					// TODO
+					break;
+			}
+
+			this._root.querySelector('#arrayOfChannels').appendChild(overlayElement);
 		}
 	}
 
