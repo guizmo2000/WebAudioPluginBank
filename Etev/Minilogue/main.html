@@ -157,7 +157,7 @@
           <span class="knob-label" id="osc2shape-label">Osc2 Shape</span>
         </div>
         <div class="column">
-          <webaudio-knob id="osc2gain" class="knob" sprites="99" min="0" max="3" step="0.01" value="3"  midilearn="true" src="./../img/nux_black_white_stripe.png"
+          <webaudio-knob id="osc2gain" class="knob" sprites="99" min="0" max="3" step="0.01" value="3" midilearn="true" src="./../img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc2gain-label">Osc2 Gain</span>
         </div>
@@ -167,7 +167,7 @@
       <span class="pedalLabel">Filter</span>
       <div class="row">
         <div class="column">
-          <webaudio-knob id="lowpass" class="knob" min="30" max="5000" sprites="99"  value="500" step="1" midilearn="true" src="./../img/nux_black_white_stripe.png"
+          <webaudio-knob id="lowpass" class="knob" min="30" max="5000" sprites="99" value="500" step="1" midilearn="true" src="./../img/nux_black_white_stripe.png"
             diameter="40"></webaudio-knob>
           <span class="knob-label" id="lowpass-label">cutoff</span>
         </div>
@@ -265,8 +265,7 @@
       </div>
       <div class="row">
         <div class="column">
-          <webaudio-switch id="switchDelay" midilearn="true" src="./../img/switch_2.png"
-            width="80" height="40"></webaudio-switch>
+          <webaudio-switch id="switchDelay" midilearn="true" src="./../img/switch_2.png" width="80" height="40"></webaudio-switch>
           <span class="knob-label" id="switchDelay-label">Delay</span>
         </div>
       </div>
@@ -337,7 +336,8 @@
     }
 
     eventToKnob(rank) {
-      this.knobs[rank].addEventListener('input', (e) => this._plug.setParam(this.knobs[rank].id, e.target.value));
+      this.knobs[rank].addEventListener('input', (e) => 
+      this._plug.setParam(this.knobs[rank].id, e.target.value));
     }
 
     setKnobs() {
@@ -350,6 +350,7 @@
     setKeyboard() {
       var keyboard = this._root.querySelector('#keyboard');
       keyboard.addEventListener('change', (e) => {
+        console.log(e);
         if (e.note[0]) {
           this._plug.noteOn(e.note[1]);
         }
@@ -378,24 +379,9 @@
       this._plug.setParam("delay", "enable");
     }
 
-    MidiIn(e) {
-      switch (e.data[0] & 0xf0) {
-        case 0x90:
-          this._plug.noteOn(e.data[1]-36);
-          break;
-        case 0x80:
-          this._plug.noteOff(e.data[1]-36);
-      }
-
-    }
-
-
     SelectMidi(n) {
       this._root.querySelector('#midiport').selectedIndex = n + 1;
       this.currentPort = n;
-      this.midiPort[this.currentPort].onmidimessage = (evt) => {
-        this.MidiIn(evt);
-      }
     }
 
     InitMidi() {
@@ -411,13 +397,45 @@
                 this._root.querySelector('#midiport').appendChild(e);
                 this.midiPort.push(i.value);
               }
-              if (this.midiPort.length > 0) this.SelectMidi(this.midiPort.length -1);
+              if (this.midiPort.length > 0) this.SelectMidi(this.midiPort.length - 1);
             }, 10);
           }, () => {
             console.log("MIDI is not available.");
           }
         );
       }
+      webAudioControlsMidiManager.addMidiListener(event => {
+        var note = event.note;
+        var data = event.data;
+        var channel = data[0];
+        var controlNumber = data[1];
+        var value = data[2];
+        if (channel != 248) {
+          console.log("Midi event hook: data:[" + data + "] channel:" + data[0] + " cc:" + controlNumber + " value:" + value);
+        }
+        switch (channel) {
+          case 145:
+          this._plug.noteOn(controlNumber);
+          break;
+
+          case 129:
+            this._plug.noteOff(controlNumber);
+            break;
+
+          //Automapping this way is not good
+          // case 177:
+          //   switch(controlNumber){
+          //     case 43:console.log(this.knobs[8]);
+          //     break;
+          //     case 44:this._plug.setParam("resonance",value /10);
+          //     break;
+
+          //   }
+        }
+      });
+//const val = this.min+(this.max-this.min)*event.data[2]/127;
+this.setValue(val, true);
+
     };
 
   }
