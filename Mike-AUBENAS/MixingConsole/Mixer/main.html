@@ -30,7 +30,7 @@
 						1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 			margin-top: 20px;
-			display: inline-block;
+			display: none;
 			border-radius: 5px;
 		}
 
@@ -47,6 +47,7 @@
 		#dropdown-change-position p:hover
 		{
 			cursor: pointer;
+			display: block;
 
 			background-color: rgb(80, 79, 79);
 
@@ -168,13 +169,15 @@
 
 					overlayElement.style.left = `${(channelNumber * 100) + 20}px`
 					overlayElement.style.top = `${320}px`
+					overlayElement.addEventListener("mouseover", () =>
+					{
+						let menu = this._root.querySelector("#dropdown-change-position");
+						menu.style.display = "inline-block";
+					});
 					break;
 			}
 
 			this._root.querySelector('#arrayOfChannels').appendChild(overlayElement);
-
-
-
 		}
 	}
 
