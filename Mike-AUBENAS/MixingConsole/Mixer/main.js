@@ -1,8 +1,8 @@
 //jslint:disable:one-line no-trailing-spaces
 
-window.Mixer = class Mixer extends WebAudioPluginCompositeNode 
+window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 {
-	constructor(ctx,options) 
+	constructor(ctx,options)
 	{
 		super(ctx,options)
 
@@ -17,7 +17,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 		else
 			this.arrayNodeToConnect = 'no nodes';
 
-		this._metadata = 
+		this._metadata =
 		{
 			"name": "wasabi-Mixer",
 			"version": 1,
@@ -30,7 +30,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 		}
 
         this.patchNames = ["patch1"];
-		
+
 		this.getNumberOfChannels();
 
 		this.setup();
@@ -47,7 +47,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 
 	setArrayNodeToConnect(arrayMedia)
 	{  this.arrayNodeToConnect = arrayMedia; }
-	
+
 	getPatch(index)
 	{ return this.patchNames[index]; }
 
@@ -56,16 +56,16 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 
 	getState() { return this.params.status; }
 
-	setState(data) 
+	setState(data)
 	{
 		this.params.status = data;
 
-		if (data == "enable") 
+		if (data == "enable")
 		{
 			this.connectNodes();
 			this._input.disconnect(this._output);
-		} 
-		else if (data == "disable") 
+		}
+		else if (data == "disable")
 		{
 			this._input.disconnect(this.feedbackGainNode);
 			this._input.disconnect(this.dryGainNode);
@@ -77,27 +77,27 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 	{ return msg; }
 
 	setup()
-	{}	
+	{}
 
 	createMaster()
-	{ 
-		// TODO 
+	{
+		// TODO
 	}
 
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-window.WasabiMixer = class WasabiMixer extends WebAudioPluginFactory 
+window.WasabiMixer = class WasabiMixer extends WebAudioPluginFactory
 {
-	constructor(context, baseUrl,options)
-	{ 
-		super(context,baseUrl);
-		this.options = options; 
+	constructor(context, baseUrl, options)
+	{
+		super(context, baseUrl);
+		this.options = options;
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-AudioContext.prototype.createWasabiDelayCompositeNode = OfflineAudioContext.prototype.createWasabiDelayCompositeNode = function (options) 
+AudioContext.prototype.createWasabiDelayCompositeNode = OfflineAudioContext.prototype.createWasabiDelayCompositeNode = function (options)
 { return new Mixer(this, options); };

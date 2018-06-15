@@ -2,9 +2,9 @@
 
 window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 {
-	constructor(ctx,options)
+	constructor(ctx, options)
 	{
-		super(ctx,options)
+		super(ctx, options)
 
 		this.inputs = [];
 		this.outputs = [];
