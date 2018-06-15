@@ -18,15 +18,56 @@
 			display: flex;
 		}
 
+		#dropdown-change-position
+		{
+			background-color: rgb(30, 30, 30);
+
+			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
+						inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+						inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+						1px 0px 1px 0px rgba(0, 0, 0, 0.9),
+						0 2px 1px 0 rgba(0, 0, 0, 0.9),
+						1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+
+			margin-top: 20px;
+			display: inline-block;
+			border-radius: 5px;
+		}
+
+		#dropdown-change-position p
+		{
+			margin: 16px;
+
+			font-family: helvetica, monospace;
+			color: white;
+			text-transform: uppercase;
+			font-size: 10px;
+		}
+
+		#dropdown-change-position p:hover
+		{
+			cursor: pointer;
+
+			background-color: rgb(56, 56, 56);
+
+			-webkit-transition: background-color 200ms linear;
+			-moz-transition: background-color 200ms linear;
+			-o-transition: background-color 200ms linear;
+			-ms-transition: background-color 200ms linear;
+			transition: background-color 200ms linear;
+		}
+
 	</style>
 
 	<div id="arrayOfChannels"></div>
+
+	<div id="dropdown-change-position"></div>
 
 </template>
 
 <script>
 
-    let leMixer = document.currentScript.ownerDocument.querySelector("#wc-mixer");
+	let leMixer = document.currentScript.ownerDocument.querySelector("#wc-mixer");
 
 	class MixerGUI extends HTMLElement
 	{
@@ -46,6 +87,8 @@
 					await this.createAndConnectChannel(position, this.arrayNodeToConnectChannel);
 				}
 			})();
+
+			this.createDropdown();
 		}
 
 		createAndConnectChannel(position, arrayAudioNodes)
@@ -65,6 +108,21 @@
 					node.connect(ctx.destination)
 				})
 			})
+		}
+
+		createDropdown()
+		{
+			const numberOfChannels = this._plug.getNumberOfChannels();
+			const divDropDown = this._root.querySelector("#dropdown-change-position");
+
+			for(let i = 0; i < numberOfChannels; i++)
+			{
+				const channelButton = document.createElement("p");
+				const textNode = document.createTextNode(`Channel ${i + 1}`);
+
+				channelButton.appendChild(textNode);
+				divDropDown.appendChild(channelButton);
+			}
 		}
 	}
 
