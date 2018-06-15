@@ -135,7 +135,7 @@
 		createDropdownMenuForChangePosition()
 		{
 			const numberOfChannels = this._plug.getNumberOfChannels();
-			const divDropDown = this._root.querySelector("#dropdown-change-position");
+			const menu = this._root.querySelector("#dropdown-change-position");
 
 			for(let i = 0; i < numberOfChannels; i++)
 			{
@@ -143,7 +143,37 @@
 				const textNode = document.createTextNode(`Channel ${i + 1}`);
 
 				channelButton.appendChild(textNode);
-				divDropDown.appendChild(channelButton);
+				menu.appendChild(channelButton);
+			}
+
+			menu.setAttribute("channelLinked", 'none');
+
+			this.setMenuChangePositionChannelListener();
+		}
+
+		setMenuChangePositionChannelListener()
+		{
+			let buttons = this._root.querySelectorAll("#dropdown-change-position p");
+
+			for(let i = 0; i < buttons.length; i++)
+			{
+				let button = buttons[i];
+
+				button.addEventListener("click", () =>
+				{
+					let text = button.innerHTML;
+					let channelLinked = this._root.querySelector("#dropdown-change-position").getAttribute("channelLinked");
+					this.changeChannelPosition(channelLinked, text.substr(text.length -1));
+				});
+			}
+		}
+
+		changeChannelPosition(channelLinked, destination)
+		{
+			if( (channelLinked != 'none') && (channelLinked != destination) )
+			{
+				console.log(channelLinked);
+				console.log(destination);
 			}
 		}
 
@@ -178,6 +208,8 @@
 					{
 						menu.style.display = "inline-block";
 						menu.style.left = `${(channelNumber * 100) + 10}px`;
+						menu.setAttribute("channelLinked", channelNumber + 1);
+
 						isMenuOnFocus = true;
 					});
 
