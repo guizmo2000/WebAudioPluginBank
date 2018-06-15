@@ -67,7 +67,6 @@
 
 		.overlay
 		{
-			background-color: black;
 			position: absolute;
 			z-index: 20;
 		}
@@ -179,6 +178,7 @@
 					{
 						menu.style.display = "inline-block";
 						menu.style.left = `${(channelNumber * 100) + 10}px`;
+						isMenuOnFocus = true;
 					});
 
 					overlayElement.addEventListener("mouseleave", () =>
@@ -208,6 +208,9 @@
 								menu.style.display = "none";
 						}, 100);
 					}
+					break;
+				case "solo" :
+					// TODO
 					break;
 			}
 
