@@ -107,7 +107,7 @@
 				}
 			})();
 
-			this.createDropdown();
+			this.createDropdownMenuForChangePosition();
 		}
 
 		createAndConnectChannel(position, arrayAudioNodes)
@@ -131,7 +131,7 @@
 			})
 		}
 
-		createDropdown()
+		createDropdownMenuForChangePosition()
 		{
 			const numberOfChannels = this._plug.getNumberOfChannels();
 			const divDropDown = this._root.querySelector("#dropdown-change-position");
@@ -158,11 +158,12 @@
 			let overlayElement  = document.createElement("div");
 			overlayElement.className = "overlay";
 
-
 			switch(zone)
 			{
 				case "pedalLabel" :
 					const overlayType = "pedalLabelZone";
+
+					let isMenuOnFocus = false;
 
 					overlayElement.className += ` ${overlayType}`// TODO in switch case
 					overlayElement.id = `${overlayType}${channelNumber}`;
@@ -178,25 +179,32 @@
 						menu.style.left = `${(channelNumber * 100) + 20}px`; // Pas bien
 					});
 
-					menu.addEventListener("mouseleave", () =>
+					overlayElement.addEventListener("mouseleave", () =>
 					{
+						isMenuOnFocus = false;
 						makeMenuDisappear();
 					});
 
-					overlayElement.addEventListener("mouseleave", () =>
+					menu.addEventListener("mouseleave", () =>
 					{
+						isMenuOnFocus = false;
 						makeMenuDisappear();
+					});
+
+					menu.addEventListener("mouseover", () =>
+					{
+						isMenuOnFocus = true;
 					});
 
 					////////////////////////////////////////////////////////////////////////
 
 					function makeMenuDisappear()
 					{
-						menu.style.display = "none";
-						menu.style.WebkitTransition = "display 200ms linear";
-						menu.style.MozTransition = "display 200ms linear";
-						menu.style.OTransition = "display 200ms linear";
-						menu.style.MsTransition = "display 200ms linear";
+						setTimeout(() =>
+						{
+							if(isMenuOnFocus == false)
+								menu.style.display = "none";
+						}, 100);
 					}
 					break;
 			}
