@@ -168,12 +168,36 @@
 					overlayElement.id = `${overlayType}${channelNumber}`;
 
 					overlayElement.style.left = `${(channelNumber * 100) + 20}px`
-					overlayElement.style.top = `${320}px`
+					overlayElement.style.top = `${320}px`;
+
+					let menu = this._root.querySelector("#dropdown-change-position");
+
 					overlayElement.addEventListener("mouseover", () =>
 					{
-						let menu = this._root.querySelector("#dropdown-change-position");
 						menu.style.display = "inline-block";
+						menu.style.left = `${(channelNumber * 100) + 20}px`; // Pas bien
 					});
+
+					menu.addEventListener("mouseleave", () =>
+					{
+						makeMenuDisappear();
+					});
+
+					overlayElement.addEventListener("mouseleave", () =>
+					{
+						makeMenuDisappear();
+					});
+
+					////////////////////////////////////////////////////////////////////////
+
+					function makeMenuDisappear()
+					{
+						menu.style.display = "none";
+						menu.style.WebkitTransition = "display 200ms linear";
+						menu.style.MozTransition = "display 200ms linear";
+						menu.style.OTransition = "display 200ms linear";
+						menu.style.MsTransition = "display 200ms linear";
+					}
 					break;
 			}
 
