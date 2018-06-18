@@ -54,9 +54,23 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		}
 
 		this.state = this.params.status;
+		
 
 		this.setup();
 	}
+	get numberOfInputs(){
+    return this.inputs.length;
+  }
+
+  get numberOfOutputs(){
+    return this.outputs.length;
+  }
+  inputChannelCount(){
+    return 1;
+  }
+  outputChannelCount(){
+    return 1
+  }
 
 	setInitialParamValues()
 	{
