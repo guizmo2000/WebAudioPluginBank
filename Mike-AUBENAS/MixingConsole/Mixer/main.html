@@ -81,7 +81,7 @@
 
 	<div id="arrayOfChannels"></div>
 
-	<div id="dropdown-change-position"></div>
+	<div id="dropdown-change-position" title="Move this channel to another location"></div>
 
 </template>
 
@@ -99,6 +99,7 @@
 			this._root.appendChild(leMixer.content.cloneNode(true));
 			this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
 			this.arrayNodeToConnectChannel = this._plug.getArrayNodeToConnect();
+			this.listOfWasabiChannels = [];
 
 			(async () =>
 			{
@@ -119,16 +120,19 @@
 			{
 				plugin.load().then((node) =>
 				{
-					plugin.loadGui().then((elem) => {
-					this._root.querySelector('#arrayOfChannels').appendChild(elem);
-					resolve(true);
+					plugin.loadGui().then((elem) =>
+					{
+						this._root.querySelector('#arrayOfChannels').appendChild(elem);
+						resolve(true);
 					});
 
 					arrayAudioNodes[position].connect(node);
 					node.connect(ctx.destination);
 
 					this.createOverlayableZoneFor("pedalLabel", position);
-				})
+				});
+
+				this.listOfWasabiChannels.push(plugin);
 			})
 		}
 
@@ -172,8 +176,13 @@
 		{
 			if( (channelLinked != 'none') && (channelLinked != destination) )
 			{
-				console.log(channelLinked);
-				console.log(destination);
+				let arrayOfWebComponentsChannel = this._root.querySelectorAll("#arrayOfChannels wasabbi-channelmixer");
+
+				let previousWebComponent = this._root.querySelector(`wasabi-channelmixer[channelNumber="${channelLinked}"]`);
+				let destinationWebComponent = this._root.querySelector(`wasabi-channelmixer[channelNumber="${destination}"]`);
+
+				console.log(previousWebComponent);
+				console.log(destinationWebComponent);
 			}
 		}
 
@@ -200,7 +209,7 @@
 					overlayElement.id = `${overlayType}${channelNumber}`;
 
 					overlayElement.style.left = `${(channelNumber * 100) + 20}px`
-					overlayElement.style.top = `${320}px`;
+					overlayElement.style.top = `${260}px`;
 
 					let menu = this._root.querySelector("#dropdown-change-position");
 
