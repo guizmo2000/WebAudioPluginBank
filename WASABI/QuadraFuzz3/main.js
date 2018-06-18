@@ -35,7 +35,7 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
       "midlowgain": this._descriptor.midLowGain.default,
       "midhighgain": this._descriptor.midHighGain.default,
       "highgain": this._descriptor.highGain.default,
-      "status": "disabled"
+      "status": "disable"
     }
     // p5 patchnames
     this.patchNames = ["patch1"];
@@ -85,7 +85,6 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
   }
 
   setParam(key, value) {
-    console.log(key, value);
     try {
       this[key] = (value);
     } catch (error) {
@@ -275,8 +274,7 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
     if (data == "enable") {
       console.log("enable");
       this._input.disconnect(this._output);
-      this._input.connect(this.wetGainNode);
-      this._input.connect(this.dryGainNode);
+      this.connectNodes();
     } else if (data == "disable") {
       console.log("disable");
       this._input.disconnect(this.dryGainNode);

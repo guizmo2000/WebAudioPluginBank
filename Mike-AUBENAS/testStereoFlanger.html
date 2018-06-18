@@ -18,6 +18,8 @@
 
 	var ctx = new AudioContext();
 	var player = document.getElementById("soundSample");
+	var _settings = { feedback: 0.9, delay: 0.001, depth:0.002,frequency:1,status: "enable" };
+
 	player.onplay = () => {
 		ctx.resume().then(() => {
 			console.log('Playback resumed successfully');
@@ -33,6 +35,8 @@
 		plugin.loadGui().then((elem) => {
 			console.log("elem", elem);
 			document.body.appendChild(elem);
+			node.setState(_settings);
+
 		});
 		mediaSource.connect(node);
 		node.connect(ctx.destination);

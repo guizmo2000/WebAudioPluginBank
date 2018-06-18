@@ -1,182 +1,98 @@
-window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
-{
-	constructor(ctx, options)
-	{
+window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode {
+	constructor(ctx, options) {
 		super(ctx, options)
 
 		this.state;
-		this.inputs = [];
-		this.outputs = [];
-		this._gui = document.createElement("wc-stereoflanger");
-		this._gui.plug = this;
 
-		this._metadata =
-		{
-			"name": "wasabi-StereoFlanger",
-			"version": 1,
-			"category": "Flanger",
-			"type": "Audio",
-			"description": "Audio stereo flanger",
-			"thumbnailImage": "https://...",
-			"URLs": "https://.../doc",
-			"authorInformation": "Mike AUBENAS, i3s intern in Nice - Sophia-Antipolis, France"
-		}
-
-		this._descriptor =
-		{
-			"feedback":
-			{
-				"key": "feedback",
-				"type": "linear",
-				"range":
-				{
-					"min": 0,
-					"max": 1
-				},
-				"default": 0.9,
-				"unit": "",
-				"label": "feedback",
-				"flag": ""
-			},
-
-			"delay":
-			{
-				"key": "delay",
-				"type": "linear",
-				"range":
-				{
-					"min": 0.001,
-					"max": 0.02
-				},
-				"default": 0.003,
-				"unit": "ms",
-				"label": "delay",
-				"flag": ""
-			},
-
-			"depth":
-			{
-				"key": "depth",
-				"type": "linear",
-				"range":
-				{
-					"min": 0.0005,
-					"max": 0.02
-				},
-				"default": 0.005,
-				"unit": "",
-				"label": "depth",
-				"flag": ""
-			},
-
-			"frequency":
-			{
-				"key": "frequency",
-				"type": "linear",
-				"range":
-				{
-					"min": 0.05,
-					"max": 2
-				},
-				"default": 0.15,
-				"unit": "",
-				"label": "frequency",
-				"flag": ""
-			}
-		}
+		this.addParam({ name: 'feedback', defaultValue: 0.5, minValue: 0, maxValue: 1 });
+		this.addParam({ name: 'delay', defaultValue: 0.003, minValue: 0.001, maxValue: 0.02 });
+		this.addParam({ name: 'depth', defaultValue: 0.005, minValue: 0.0005, maxValue: 0.02 });
+		this.addParam({ name: 'frequency', defaultValue: 0.15, minValue: 0.05, maxValue: 2 });
 
 		this.params =
-		{
-			"feedback": this._descriptor.feedback.default,
-			"delay": this._descriptor.delay.default,
-			"depth": this._descriptor.depth.default,
-			"frequency": this._descriptor.frequency.default,
-			"status": "disabled"
-		}
-
-		this.patchNames = ["patch1"];
+			{
+				"feedback": this._descriptor.feedback.defaultValue,
+				"delay": this._descriptor.delay.defaultValue,
+				"depth": this._descriptor.depth.defaultValue,
+				"frequency": this._descriptor.frequency.defaultValue,
+				"status": "disable"
+			}
 
 		this.setup();
 	}
 
-	inputChannelCount()
-	{ return this.inputs.length; }
+	get numberOfInputs() {
+		return this.inputs.length;
+	}
 
-	getPatch(index)
-	{ return this.patchNames[index]; }
+	get numberOfOutputs() {
+		return this.outputs.length;
+	}
+	inputChannelCount() {
+		return 1;
+	}
+	outputChannelCount() {
+		return 1
+	}
+	getMetadata() {
+		return this.metadata;
+	}
 
-	setPatch(data, index)
-	{ this.patchNames[index] = data; }
+	getDescriptor() {
+		return this._descriptor;
+	}
 
-	getParam(key)
-	{
-		switch(key)
-		{
-			case "feedback" :
-				this.getFeedback();
-				break;
-			case "delay" :
-				this.getDelay();
-				break;
-			case "depth" :
-				this.getDepth();
-				break;
-			case "frequency" :
-				this.getFrequency();
-				break;
-			default :
-				console.log("This parameter isn't used in Wasabi-StereoFlanger");
-				break;
+	getPatch(index) {
+		return null;
+	}
+	setPatch(data, index) {
+		console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
+	}
+
+	getParam(key) {
+		try {
+			return this.params[key];
+		} catch (error) {
+			console.warn("this plugin does not implement this param")
 		}
 	}
 
-	setParam(key, value)
-	{
-		switch(key)
-		{
-			case "feedback" :
-				this.setFeedback(value);
-				break;
-			case "delay" :
-				this.setDelay(value);
-				break;
-			case "depth" :
-				this.setDepth(value);
-				break;
-			case "frequency" :
-				this.setFrequency(value);
-				break;
-			default :
-				console.log("This parameter isn't used in Wasabi-StereoFlanger");
-				break;
+	setParam(key, value) {
+		console.log(key, value);
+		try {
+			this[key] = (value);
+		} catch (error) {
+
+			console.warn("this plugin does not implement this param")
 		}
 	}
 
-	getState() { return this.params.status; }
+	getState() { return this.params; }
 
-	setState(data)
-	{
-		this.params.status = data;
+	setState(data) {
+		try {
+			this.gui.setAttribute('state', JSON.stringify(data));
+		} catch (error) {
+			console.log("Gui not defined", error)
+			try {
+				document.querySelector('wasabi-pingpongdelay').setAttribute('state', JSON.stringify(this.params));
+			} catch (error) {
+				console.log(error);
+			}
+		}
 
-		if (data == "enable")
-		{
-			this.connectNodes();
-			this._input.disconnect(this._output);
-		}
-		else if (data == "disable")
-		{
-			this._input.disconnect(this.feedbackGainNode);
-			this._input.disconnect(this.dryGainNode);
-			this._input.connect(this._output);
-		}
+		Object.keys(data).map(
+			(elem, index) => {
+				console.log(elem, data[elem]);
+				this.setParam(elem, data[elem]);
+			}
+		)
+
 	}
 
-	onMidi(msg)
-	{ return msg; }
+	onMidi(msg) { return msg; }
 
-	setup()
-	{
-		this.createIO();
+	setup() {
 		this.createNodes();
 		this.connectNodes();
 		this.setInitialParamValues();
@@ -184,14 +100,7 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 
 	}
 
-	createIO()
-	{
-		this.inputs.push(this._input);
-		this.outputs.push(this._output);
-	}
-
-	createNodes()
-	{
+	createNodes() {
 		/* @see : https://github.com/cwilso/Audio-Input-Effects/blob/master/js/effects.js */
 
 		this.splitter = this.context.createChannelSplitter(2);
@@ -206,134 +115,99 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode
 		this.wetGain = this.context.createGain();
 	}
 
-	connectNodes()
-	{
+	connectNodes() {
 		/* @see : https://github.com/cwilso/Audio-Input-Effects/blob/master/js/effects.js */
 
-		this._input.connect( this.splitter );
-		this._input.connect( this.wetGain );
+		this._input.connect(this.splitter);
+		this._input.connect(this.wetGain);
 
-		this.splitter.connect( this.delayLeft, 0 );
-		this.splitter.connect( this.delayRight, 1 );
+		this.splitter.connect(this.delayLeft, 0);
+		this.splitter.connect(this.delayRight, 1);
 
-		this.delayLeft.connect( this.feedbackLeft );
-		this.delayRight.connect( this.feedbackRight );
+		this.delayLeft.connect(this.feedbackLeft);
+		this.delayRight.connect(this.feedbackRight);
 
-		this.feedbackLeft.connect( this.delayRight );
-		this.feedbackRight.connect( this.delayLeft );
+		this.feedbackLeft.connect(this.delayRight);
+		this.feedbackRight.connect(this.delayLeft);
 
 		this.oscillator.type = 'triangle';
-		this.oscillator.connect( this.depthLeft );
-		this.oscillator.connect( this.depthRight );
+		this.oscillator.connect(this.depthLeft);
+		this.oscillator.connect(this.depthRight);
 
-		this.depthLeft.connect( this.delayLeft.delayTime );
-		this.depthRight.connect( this.delayRight.delayTime );
+		this.depthLeft.connect(this.delayLeft.delayTime);
+		this.depthRight.connect(this.delayRight.delayTime);
 
-		this.delayLeft.connect( this.merger, 0, 0 );
-		this.delayRight.connect( this.merger, 0, 1 );
+		this.delayLeft.connect(this.merger, 0, 0);
+		this.delayRight.connect(this.merger, 0, 1);
 
-		this.merger.connect( this.wetGain );
+		this.merger.connect(this.wetGain);
 
 		this.wetGain.connect(this.context.destination);
 	}
 
-	setInitialParamValues()
-	{
-		this.setFeedback(this.params.feedback);
-		this.setDelay(this.params.delay);
-		this.setDepth(this.params.depth);
-		this.setFrequency(this.params.frequency);
+	setInitialParamValues() {
+		this.feedback = this.params.feedback;
+		this.delay = this.params.delay;
+		this.depth = this.params.depth;
+		this.frequency = this.params.frequency;
 	}
 
-	getFeedback()
-	{ return this.params.feedback; }
 
-	getDelay()
-	{ return this.params.delay; }
-
-	getDepth()
-	{ return this.params.depth; }
-
-	getFrequency()
-	{ return this.params.frequency; }
-
-
-	isNumber(arg)
-	{ return toString.call(arg) === '[object Number]' && arg === +arg; }
-
-	getDryLevel(mix)
-	{
-		if (!this.isNumber(mix) || mix > 1 || mix < 0)
-			return 0;
-
-		if (mix <= 0.5)
-			return 1;
-
-		return 1 - ((mix - 0.5) * 2);
-	}
-
-	getWetLevel(mix)
-	{
-		if (!this.isNumber(mix) || mix > 1 || mix < 0)
-			return 0;
-
-		if (mix >= 0.5)
-			return 1;
-
-		return 1 - ((0.5 - mix) * 2);
-	}
-
-	setFeedback(_feedback)
-	{
-		if ( (_feedback < this._descriptor.feedback.range.max) && (_feedback > this._descriptor.feedback.range.min) )
+	set feedback(_feedback) {
+		if ((_feedback < this._descriptor.feedback.maxValue) && (_feedback > this._descriptor.feedback.minValue))
 			this.params.feedback = _feedback;
 
 		this.feedbackLeft.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
 		this.feedbackRight.gain.setValueAtTime(parseFloat(this.params.feedback, 10), this.context.currentTime);
 	}
 
-	setDelay(_delay)
-	{
-		if ( (_delay < this._descriptor.delay.range.max) && (_delay > this._descriptor.delay.range.min) )
+	set delay(_delay) {
+		if ((_delay < this._descriptor.delay.maxValue) && (_delay > this._descriptor.delay.minValue))
 			this.params.delay = _delay;
 
 		this.delayLeft.delayTime.setValueAtTime(parseFloat(this.params.delay, 10), this.context.currentTime);
 		this.delayRight.delayTime.setValueAtTime(parseFloat(this.params.delay, 10), this.context.currentTime);
 	}
 
-	setDepth(_depth)
-	{
-		if ( (_depth < this._descriptor.depth.range.max) && (_depth > this._descriptor.depth.range.min) )
+	set depth(_depth) {
+		if ((_depth < this._descriptor.depth.maxValue) && (_depth > this._descriptor.depth.minValue))
 			this.params.depth = _depth;
 
 		this.depthLeft.gain.setValueAtTime(parseFloat(this.params.depth, 10), this.context.currentTime);
 		this.depthRight.gain.setValueAtTime(- parseFloat(this.params.depth, 10), this.context.currentTime);
 	}
 
-	setFrequency(_frequency)
-	{
-		if ( (_frequency < this._descriptor.frequency.range.max) && (_frequency > this._descriptor.frequency.range.min) )
+	set frequency(_frequency) {
+		if ((_frequency < this._descriptor.frequency.maxValue) && (_frequency > this._descriptor.frequency.minValue))
 			this.params.frequency = _frequency;
 
 		this.oscillator.frequency.setValueAtTime(parseFloat(this.params.frequency, 10), this.context.currentTime);
 	}
+	set status(_sig) {
+		if (_sig === "enable") {
+			this.params.status = "enable";
+			this._input.connect(this.splitter);
+			this._input.connect(this.wetGain);
+			this._input.disconnect(this._output);
+
+		}
+		else if (_sig === "disable") {
+			this.params.status = "disable";
+			this._input.connect(this._output);
+			this._input.disconnect(this.splitter);
+			this._input.disconnect(this.wetGain);
+		}
+	}
+}
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////
+
+window.WasabiStereoFlanger = class WasabiStereoFlanger extends WebAudioPluginFactory {
+	constructor(context, baseUrl) { super(context, baseUrl); }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
-window.WasabiStereoFlanger = class WasabiStereoFlanger extends WebAudioPluginFactory
-{
-	constructor(context, baseUrl)
-	{ super(context,baseUrl); }
-
-	load()
-	{ return super.load(); }
-
-	loadGui()
-	{ return super.loadGui(); }
-}
-
-//////////////////////////////////////////////////////////////////////////////////////////
-
-AudioContext.prototype.createWasabiDelayCompositeNode = OfflineAudioContext.prototype.createWasabiDelayCompositeNode = function (options)
-{ return new StereoFlanger(this, options); };
+AudioContext.prototype.createWasabiDelayCompositeNode = OfflineAudioContext.prototype.createWasabiDelayCompositeNode = function (options) { return new StereoFlanger(this, options); };
