@@ -76,7 +76,7 @@ AudioNode.prototype.connect = function (that) {
 class WebAudioPluginCompositeNode extends CompositeAudioNode {
   constructor(context, options) {
     super(context, options);
-    this.context = ctx ? ctx : new AudioContext;
+    this.context = context ? context : new AudioContext;
     this._descriptor = new Object();
     this.params = new Object();
     // Do stuffs below.
