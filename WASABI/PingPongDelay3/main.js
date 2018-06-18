@@ -60,17 +60,16 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
     try {
       return this.params[key];
     } catch (error) {
-      console.err("this plugin does not implement this param")
+      console.warn("this plugin does not implement this param")
     }
   }
 
   setParam(key, value) {
-    console.log(key, value);
     try {
       this[key] = (value);
     } catch (error) {
 
-      console.err("this plugin does not implement this param")
+      console.warn("this plugin does not implement this param")
     }
   }
 
@@ -174,9 +173,8 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
 
   set status(_sig) {
     if (_sig === "enable") {
-      this._input.disconnect(this._output);
-      this._input.connect(this.feedbackGainNode);
-      this._input.connect(this.dryGainNode);
+      this.connectNodes();
+      this.inputNode.disconnect(this.outputNode);
     }
     else if (_sig === "disable") {
       this._input.disconnect(this.feedbackGainNode);
