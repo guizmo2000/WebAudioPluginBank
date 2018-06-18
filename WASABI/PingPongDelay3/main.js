@@ -15,10 +15,10 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
     this.addParam({name: 'mix',defaultValue: 0.5, minValue: 0, maxValue: 1 });
 
     this.params = {
-      feedback: this._descriptor.feedback.defaultValue,
-      mix: this._descriptor.mix.defaultValue,
-      time: this._descriptor.time.defaultValue,
-      status: "disable"
+      "feedback": this._descriptor.feedback.defaultValue,
+      "mix": this._descriptor.mix.defaultValue,
+      "time": this._descriptor.time.defaultValue,
+      "status": "disable"
     }
 
     this.setup();
