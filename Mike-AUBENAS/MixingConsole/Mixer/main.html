@@ -181,8 +181,24 @@
 				let previousWebComponent = this._root.querySelector(`wasabi-channelmixer[channelNumber="${channelLinked}"]`);
 				let destinationWebComponent = this._root.querySelector(`wasabi-channelmixer[channelNumber="${destination}"]`);
 
-				console.log(previousWebComponent);
-				console.log(destinationWebComponent);
+				let channelListDiv = this._root.querySelector("#arrayOfChannels");
+				channelListDiv.insertBefore(previousWebComponent, channelListDiv.childNodes[destination - 1]);
+
+				(function rewriteAllChannelNumbers()
+				{
+					let wcChannels = channelListDiv.children;
+
+					for(let i = 0; i < wcChannels.length; i++)
+					{
+						wcChannels[i].setAttribute("channelNumber", i + 1);
+					}
+				}());
+
+				(function repositionOverlays()
+				{
+					// TODO
+				}());
+
 			}
 		}
 
