@@ -65,7 +65,7 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
   }
 
   setParam(key, value) {
-    console.log(key);
+    console.log(key, value);
     try {
       this[key] = (value);
     } catch (error) {
@@ -159,7 +159,6 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
     if (_time < this._descriptor.time.max && _time > this._descriptor.time.min) this.params.time = _time;
     this.delayNodeLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
     this.delayNodeRight.delayTime.setValueAtTime(_time, this.context.currentTime);
-    console.log(this.params.time);
   }
 
   set feedback(_feedback) {
