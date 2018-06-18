@@ -383,11 +383,9 @@
 			console.log(`Custom element ${this.is} attributes changed.`);
 			this.presets = JSON.parse(this.getAttribute('presets'));
 			let tmp = this._root.querySelectorAll(".knob")
-			for (const knob in tmp) {
-				this.knobs.push(knob.querySelector("webaudio-knob"))
+			for (var i = 0; i<tmp.length;i++) {
+				this.knobs[i] = tmp[i].querySelector("webaudio-knob");
 			}
-			//this.knobs = this._root.querySelectorAll(".knob").querySelector("webaudio-knob");
-			console.log(this.knobs);
 			for (var i = 0; i < this.knobs.length; i++) {
 				this.knobs[i].value = this.presets[i];
 			}
