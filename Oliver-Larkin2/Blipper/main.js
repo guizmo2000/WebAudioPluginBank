@@ -209,9 +209,8 @@ class BlipperNode extends AudioWorkletNode {
 
 // Factory class
 
-var WAPlugin = WAPlugin || {};
 
-WAPlugin.LarkinBlipper = class LarkinBlipper {
+window.LarkinBlipper = class LarkinBlipper {
 
 constructor(context, baseUrl) {
     this.context = context;

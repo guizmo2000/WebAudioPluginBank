@@ -207,9 +207,7 @@ class WeirdPhaserNode extends AudioWorkletNode {
     
 }
 
-var WAPlugin = WAPlugin || {};
-
-WAPlugin.LarkinWeirdPhaser = class LarkinWeirdPhaser {
+window.LarkinWeirdPhaser = class LarkinWeirdPhaser {
 
 constructor(context, baseUrl) {
     this.context = context;
