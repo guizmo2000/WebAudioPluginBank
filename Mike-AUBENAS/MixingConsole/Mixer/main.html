@@ -182,9 +182,30 @@
 				let destinationWebComponent = this._root.querySelector(`wasabi-channelmixer[channelNumber="${destination}"]`);
 
 				let channelListDiv = this._root.querySelector("#arrayOfChannels");
+
+				previousWebComponent.remove();
+
 				channelListDiv.insertBefore(previousWebComponent, channelListDiv.childNodes[destination - 1]);
 
-				(function rewriteAllChannelNumbers()
+				/* let newDiv = swap(channelListDiv.children, channelLinked, destination);
+
+				(function eraseDiv()
+				{
+					while(channelListDiv.firstChild)
+						channelListDiv.removeChild(channelListDiv.firstChild);
+				}());
+
+				(function replaceWithNewElements()
+				{
+					newDiv.forEach( element =>
+					{
+						channelListDiv.appendChild(element);
+					});
+				}()); */
+
+
+
+				/*(function rewriteAllChannelNumbers()
 				{
 					let wcChannels = channelListDiv.children;
 
@@ -197,7 +218,21 @@
 				(function repositionOverlays()
 				{
 					// TODO
-				}());
+				}()); */
+
+				////////////////////////////////////////////////////////////////////////////////////
+
+				// See -> https://goo.gl/tvc6eD
+				function swap(htmlCollection, element1, element2)
+				{
+					let array = Array.from( htmlCollection );
+					var temp = array[element1];
+
+					array[element1] = array[element2];
+					array[element2] = temp;
+
+					return array;
+				}
 
 			}
 		}
