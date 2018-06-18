@@ -151,9 +151,9 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
     /*
      * set default value for parameters and assign it to the web audio nodes
      */
-    this.time = this._descriptor.time.defaultValue;
-    this.feedback = this._descriptor.feedback.defaultValue;
-    this.mix = this._descriptor.mix.defaultValue;
+    this.time = this.params.time;
+    this.feedback = this.params.feedback;
+    this.mix = this.params.mix;
   }
   set time(_time) {
     if (_time < this._descriptor.time.max && _time > this._descriptor.time.min) this.params.time = _time;
