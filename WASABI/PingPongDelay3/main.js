@@ -46,7 +46,7 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
   }
 
   getDescriptor(){
-    return this.descriptor;
+    return this._descriptor;
   }
 
   getPatch(index) {
