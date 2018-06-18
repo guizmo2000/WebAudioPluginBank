@@ -258,9 +258,7 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
 // Factory class
 
 
-var WAPlugin = WAPlugin || {};
-
-WAPlugin.FaustZitaRev2 = class FaustZitaRev2 {
+window.FaustZitaRev2 = class FaustZitaRev2 {
 
 constructor(context, baseUrl) {
     this.context = context;

@@ -33,6 +33,7 @@ function launchWAP(){
 
       plugin.loadGui().then((elem) => {
         document.body.appendChild(elem);
+
         resolve(true);
       });
       mediaSource.connect(node.getInput(0));

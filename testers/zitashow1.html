@@ -22,7 +22,7 @@
   var mediaSource = ctx.createMediaElementSource(player);
 
   var pluginURL = "./../Faust/ZitaRevV3";
-  var plugin = new WAPlugin.FaustZitaRev2(ctx, pluginURL);
+  var plugin = new window.FaustZitaRev2(ctx, pluginURL);
 
   plugin.load().then((node)=>{
     plugin.loadGui().then((elem)=>{

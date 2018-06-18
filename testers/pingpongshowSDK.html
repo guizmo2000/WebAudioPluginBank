@@ -25,6 +25,8 @@
   var numberofWap = 3;
   var pluginURL = "./../WASABI/PingPongDelay3";
   var plugin = new window.WasabiPingPongDelay(ctx, pluginURL);
+  var _settings = { feedback: 0.9, time: 0.9, mix: 0.9, status: "enable" };
+
 
   function launchWAP() {
     return new Promise((resolve, reject) => {
@@ -33,19 +35,22 @@
 
         plugin.loadGui().then((elem) => {
           document.body.appendChild(elem);
+          node.setState(_settings);
+
           resolve(true);
         });
         mediaSource.connect(node);
         node.connect(ctx.destination)
-        node.getMetadata();
+        node.setState(_settings);
       })
     })
   }
-  (async function loop() {
-    for (let i = 0; i < numberofWap; i++) {
-      await launchWAP();
-    }
-  })();
+  launchWAP();
+  // (async function loop() {
+  //   for (let i = 0; i < numberofWap; i++) {
+  //     await launchWAP();
+  //   }
+  // })();
 
 </script>
 

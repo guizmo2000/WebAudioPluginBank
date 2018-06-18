@@ -207,9 +207,7 @@ class ThruZeroFlangerNode extends AudioWorkletNode {
     
 }
 
-var WAPlugin = WAPlugin || {};
-
-WAPlugin.LarkinThruZeroFlanger = class LarkinThruZeroFlanger {
+window.LarkinThruZeroFlanger = class LarkinThruZeroFlanger {
 
 constructor(context, baseUrl) {
     this.context = context;

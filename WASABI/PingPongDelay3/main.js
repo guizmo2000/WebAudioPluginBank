@@ -60,17 +60,17 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
     try {
       return this.params[key];
     } catch (error) {
-      console.err("this plugin does not implement this param")
+      console.warn("this plugin does not implement this param")
     }
   }
 
   setParam(key, value) {
-    console.log(key);
+    console.log(key, value);
     try {
       this[key] = (value);
     } catch (error) {
 
-      console.err("this plugin does not implement this param")
+      console.warn("this plugin does not implement this param")
     }
   }
 
@@ -156,29 +156,31 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
     this.mix = this.params.mix;
   }
   set time(_time) {
-    if (_time < this._descriptor.time.max && _time > this._descriptor.time.min) this.params.time = _time;
+    if (_time < this._descriptor.time.maxValue && _time > this._descriptor.time.minValue) this.params.time = _time;
     this.delayNodeLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
     this.delayNodeRight.delayTime.setValueAtTime(_time, this.context.currentTime);
   }
 
   set feedback(_feedback) {
-    if (_feedback < this._descriptor.feedback.max && _feedback > this._descriptor.feedback.min) this.params.feedback = _feedback;
+    if (_feedback < this._descriptor.feedback.maxValue && _feedback > this._descriptor.feedback.minValue) this.params.feedback = _feedback;
     this.feedbackGainNode.gain.setValueAtTime(parseFloat(_feedback, 10), this.context.currentTime);
   }
 
   set mix(_mix) {
-    if (_mix < this._descriptor.mix.max && _mix > this._descriptor.mix.min)this.params.mix = _mix;
+    if (_mix < this._descriptor.mix.maxValue && _mix > this._descriptor.mix.minValue)this.params.mix = _mix;
     this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
     this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
   }
 
   set status(_sig) {
     if (_sig === "enable") {
+      this.params.status = "enable";
       this._input.disconnect(this._output);
       this._input.connect(this.feedbackGainNode);
       this._input.connect(this.dryGainNode);
     }
     else if (_sig === "disable") {
+      this.params.status = "disable";
       this._input.disconnect(this.feedbackGainNode);
       this._input.disconnect(this.dryGainNode);
       this._input.connect(this._output);

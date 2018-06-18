@@ -207,9 +207,7 @@ class StereoFreqShifterNode extends AudioWorkletNode {
     
 }
 
-var WAPlugin = WAPlugin || {};
-
-WAPlugin.LarkinStereoFreqShifter = class LarkinStereoFreqShifter {
+window.LarkinStereoFreqShifter = class LarkinStereoFreqShifter {
 
 constructor(context, baseUrl) {
     this.context = context;
