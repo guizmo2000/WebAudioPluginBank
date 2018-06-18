@@ -12,10 +12,10 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
     this.state;
  
 
-    this.addParam({name:'lowGain', defaultValue: 0.6, minValue: 0, maxValue: 1 });
-    this.addParam({name: 'midLowGain',defaultValue: 0.8, minValue: 0, maxValue: 1 });
-    this.addParam({name: 'midHighGain',defaultValue: 0.5, minValue: 0, maxValue: 1 });
-    this.addParam({name: 'highGain',defaultValue: 0.5, minValue: 0, maxValue: 1 });
+    this.addParam({name:'lowgain', defaultValue: 0.6, minValue: 0, maxValue: 1 });
+    this.addParam({name: 'midlowgain',defaultValue: 0.8, minValue: 0, maxValue: 1 });
+    this.addParam({name: 'midhighgain',defaultValue: 0.5, minValue: 0, maxValue: 1 });
+    this.addParam({name: 'highgain',defaultValue: 0.5, minValue: 0, maxValue: 1 });
 
     // P2 : Json metadata
     this.metadata = {
@@ -31,10 +31,10 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
 
     // params 
     this.params = {
-      "lowgain": this._descriptor.lowGain.default,
-      "midlowgain": this._descriptor.midLowGain.default,
-      "midhighgain": this._descriptor.midHighGain.default,
-      "highgain": this._descriptor.highGain.default,
+      "lowgain": this._descriptor.lowgain.defaultValue,
+      "midlowgain": this._descriptor.midlowgain.defaultValue,
+      "midhighgain": this._descriptor.midhighgain.defaultValue,
+      "highgain": this._descriptor.highgain.defaultValue,
       "status": "disable"
     }
     // p5 patchnames
@@ -85,6 +85,7 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
   }
 
   setParam(key, value) {
+    console.log(key, value);
     try {
       this[key] = (value);
     } catch (error) {
@@ -186,10 +187,10 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
     /*
      * set default value for parameters and assign it to the web audio nodes
      */
-    this.lowGain = this.params.lowgain;
-    this.midLowGain = this.params.midlowgain;
-    this.midHighGain = this.params.midhighgain;
-    this.highGain = this.params.highgain;
+    this.lowgain = this.params.lowgain;
+    this.midlowgain = this.params.midlowgain;
+    this.midhighgain = this.params.midhighgain;
+    this.highgain = this.params.highgain;
   }
 
   /*
@@ -241,14 +242,14 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
     * 
     */
 
-  set lowGain(_lowGain) {
+  set lowgain(_lowGain) {
     if (!this.isInRange(_lowGain, 0, 1))
       return;
     this.params.lowgain = _lowGain;
     this.overdrives[0].curve = this.getDistortionCurve(this.normalize(_lowGain, 0, 150));
   }
 
-  set midLowGain(_midLowGain) {
+  set midlowgain(_midLowGain) {
     if (!this.isInRange(_midLowGain, 0, 1))
       return;
     this.params.midlowgain = _midLowGain;
@@ -256,31 +257,31 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
 
   }
 
-  set midHighGain(_midHighGain) {
+  set midhighgain(_midHighGain) {
     if (!this.isInRange(_midHighGain, 0, 1))
       return;
     this.params.midhighgain = _midHighGain;
     this.overdrives[2].curve = this.getDistortionCurve(this.normalize(_midHighGain, 0, 150));
   }
-  set highGain(_highGain) {
+  set highgain(_highGain) {
     if (!this.isInRange(_highGain, 0, 1))
       return;
     this.params.highgain = _highGain;
     this.overdrives[3].curve = this.getDistortionCurve(this.normalize(_highGain, 0, 150));
   }
 
-  set status(data) {
-    this.params.status = data;
-    if (data == "enable") {
-      console.log("enable");
+  set status(_sig) {
+    if (_sig === "enable") {
+      this.params.status = "enable";
       this._input.disconnect(this._output);
       this.connectNodes();
-    } else if (data == "disable") {
-      console.log("disable");
+
+    }
+    else if (_sig === "disable") {
+      this.params.status = "disable";
       this._input.disconnect(this.dryGainNode);
       this._input.disconnect(this.wetGainNode);
       this._input.connect(this._output);
-
     }
   }
 
