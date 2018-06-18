@@ -133,6 +133,7 @@
     constructor(plug) {
       super();
       this._plug = plug;
+      this._plug.gui = this;
       this._root = this.attachShadow({ mode: 'open' });
       this._root.appendChild(delaytemp.content.cloneNode(true));
       this.isOn = false;
