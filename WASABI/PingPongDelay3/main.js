@@ -65,6 +65,7 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
   }
 
   setParam(key, value) {
+    console.log(key, value);
     try {
       this[key] = (value);
     } catch (error) {
@@ -173,8 +174,9 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
 
   set status(_sig) {
     if (_sig === "enable") {
-      this.connectNodes();
-      this.inputNode.disconnect(this.outputNode);
+      this._input.disconnect(this._output);
+      this._input.connect(this.feedbackGainNode);
+      this._input.connect(this.dryGainNode);
     }
     else if (_sig === "disable") {
       this._input.disconnect(this.feedbackGainNode);
