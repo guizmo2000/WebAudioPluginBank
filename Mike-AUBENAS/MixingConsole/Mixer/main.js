@@ -7,10 +7,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 		super(ctx,options)
 
 		this.state;
-		this.inputs = [];
-		this.outputs = [];
-		this._gui = document.createElement("wc-mixer");
-		this._gui.plug = this;
+		this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
 
 		if(options)
 			this.arrayNodeToConnect = options.arrayNodeToConnect ? options.arrayNodeToConnect : 'no nodes';
@@ -77,7 +74,39 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 	{ return msg; }
 
 	setup()
-	{}
+	{
+		this.createNode();
+		
+	}
+
+	createNode(){
+	this.master = this.context.createGain();
+	}
+
+
+	addChannel(){
+		let numchannel ="InputForchannel"+this.inputs.length+1;
+		this[numchannel] = this.context.createGain();
+		this.inputs.push(this[numchannel]);
+		console.log(this.inputs)
+		var plugin = new window.WasabiChannelMixer(this.context, this.urlChannel, {"channelNumber" : this.inputs.length});
+		plugin.load().then((node) =>
+		{
+			plugin.loadGui().then((elem) =>
+			{
+				this.gui._root.querySelector('#arrayOfChannels').appendChild(elem);
+			});
+
+			this[numchannel].connect(node);
+			node.connect(this.master);
+			
+
+			//this.createOverlayableZoneFor("pedalLabel", position);
+		});
+
+
+
+	}
 
 	createMaster()
 	{

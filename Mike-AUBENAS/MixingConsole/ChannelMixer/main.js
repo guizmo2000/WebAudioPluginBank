@@ -8,8 +8,6 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 
 		this.inputs = [];
 		this.outputs = [];
-		this._gui = document.createElement("wc-channelmixer");
-		this._gui.plug = this;
 
 		if(options)
 			this.channelNumber = options.channelNumber ? options.channelNumber : 0;

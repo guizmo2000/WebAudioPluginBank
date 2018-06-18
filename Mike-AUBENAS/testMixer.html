@@ -15,6 +15,8 @@
 	<audio src="./Samples/0005-Record-Maschine.mp3" controls loop></audio>
 	<audio src="./Samples/0006-Record-Maschine.mp3" controls loop></audio>
 	<audio src="./Samples/0007-Record-Maschine.mp3" controls loop></audio>
+	<button id="add">add</button>
+	<button id="bind">bind</button>
 
 </body>
 
@@ -44,7 +46,7 @@
 
 	var pluginURL = "./MixingConsole/Mixer";
 	let options = {"arrayNodeToConnect" : arrayMediaSources};
-	var plugin = new window.WasabiMixer(ctx, pluginURL, options);
+	var plugin = new window.WasabiMixer(ctx, pluginURL/*, options*/);
 
     plugin.load().then((node) =>
     {
@@ -52,9 +54,23 @@
         plugin.loadGui().then((elem) =>
         {
 			console.log("elem", elem);
+			arrayMediaSources[0].connect(node);
+			node.connect(ctx.destination);
 			document.body.appendChild(elem);
+			bindto(node);
+		//	bindto(node,2);
 		});
+		document.querySelector("#add").addEventListener('click',() =>{node.addChannel()})
+
+
 	});
+function bindto(node){
+		document.querySelector("#bind").addEventListener('click',() =>{
+			console.log(node.inputs);
+			arrayMediaSources[node.inputs.length-1].connect(node.inputs[node.inputs.length-1]);
+			
+			;})
+}
 
 	(function spaceToPlayAndPause()
 	{

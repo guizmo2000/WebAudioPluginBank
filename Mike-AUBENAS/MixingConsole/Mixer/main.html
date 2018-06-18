@@ -95,97 +95,118 @@
 		{
 			super();
 			this._plug = plug;
+			this._plug.gui = this;
 			this._root = this.attachShadow({ mode: 'open' });
 			this._root.appendChild(leMixer.content.cloneNode(true));
 			this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
 			this.arrayNodeToConnectChannel = this._plug.getArrayNodeToConnect();
 			this.listOfWasabiChannels = [];
 
-			(async () =>
-			{
-				for (let position = 0; position < this.arrayNodeToConnectChannel.length; position++)
-				{
-					await this.createAndConnectChannel(position, this.arrayNodeToConnectChannel);
-				}
-			})();
+			this.firstChannel();
+			// (async () =>
+			// {
+			// 	for (let position = 0; position < this.arrayNodeToConnectChannel.length; position++)
+			// 	{
+			// 		await this.createAndConnectChannel(position, this.arrayNodeToConnectChannel);
+			// 	}
+			// })();
 
-			this.createDropdownMenuForChangePosition();
+		//	this.createDropdownMenuForChangePosition();
 		}
 
-		createAndConnectChannel(position, arrayAudioNodes)
+		firstChannel(){
+			var plugin = new window.WasabiChannelMixer(this._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", {"channelNumber" : 1});
+		plugin.load().then((node) =>
 		{
-			var plugin = new window.WasabiChannelMixer(ctx, this.urlChannel, {"channelNumber" : position + 1});
-
-			return new Promise((resolve, reject) =>
+			plugin.loadGui().then((elem) =>
 			{
-				plugin.load().then((node) =>
-				{
-					plugin.loadGui().then((elem) =>
-					{
-						this._root.querySelector('#arrayOfChannels').appendChild(elem);
-						resolve(true);
-					});
+				this._root.querySelector('#arrayOfChannels').appendChild(elem);
+			});
 
-					arrayAudioNodes[position].connect(node);
-					node.connect(ctx.destination);
+			this._plug._input.connect(node);
+			node.connect(this._plug.master);
+			
 
-					this.createOverlayableZoneFor("pedalLabel", position);
-				});
-
-				this.listOfWasabiChannels.push(plugin);
-			})
+			//this.createOverlayableZoneFor("pedalLabel", position);
+		});
 		}
 
-		createDropdownMenuForChangePosition()
-		{
-			const numberOfChannels = this._plug.getNumberOfChannels();
-			const menu = this._root.querySelector("#dropdown-change-position");
 
-			for(let i = 0; i < numberOfChannels; i++)
-			{
-				const channelButton = document.createElement("p");
-				const textNode = document.createTextNode(`Channel ${i + 1}`);
 
-				channelButton.appendChild(textNode);
-				menu.appendChild(channelButton);
-			}
+		// createAndConnectChannel(position, arrayAudioNodes)
+		// {
+		// 	var plugin = new window.WasabiChannelMixer(ctx, this.urlChannel, {"channelNumber" : position + 1});
 
-			menu.setAttribute("channelLinked", 'none');
+		// 	return new Promise((resolve, reject) =>
+		// 	{
+		// 		plugin.load().then((node) =>
+		// 		{
+		// 			plugin.loadGui().then((elem) =>
+		// 			{
+		// 				this._root.querySelector('#arrayOfChannels').appendChild(elem);
+		// 				resolve(true);
+		// 			});
 
-			this.setMenuChangePositionChannelListener();
-		}
+		// 			arrayAudioNodes[position].connect(node);
+		// 			node.connect(ctx.destination);
 
-		setMenuChangePositionChannelListener()
-		{
-			let buttons = this._root.querySelectorAll("#dropdown-change-position p");
+		// 			this.createOverlayableZoneFor("pedalLabel", position);
+		// 		});
 
-			for(let i = 0; i < buttons.length; i++)
-			{
-				let button = buttons[i];
+		// 		this.listOfWasabiChannels.push(plugin);
+		// 	})
+		// }
 
-				button.addEventListener("click", () =>
-				{
-					let text = button.innerHTML;
-					let channelLinked = this._root.querySelector("#dropdown-change-position").getAttribute("channelLinked");
-					this.changeChannelPosition(channelLinked, text.substr(text.length -1));
-				});
-			}
-		}
+		// createDropdownMenuForChangePosition()
+		// {
+		// 	const numberOfChannels = this._plug.getNumberOfChannels();
+		// 	const menu = this._root.querySelector("#dropdown-change-position");
 
-		changeChannelPosition(channelLinked, destination)
-		{
-			if( (channelLinked != 'none') && (channelLinked != destination) )
-			{
-				let arrayOfWebComponentsChannel = this._root.querySelectorAll("#arrayOfChannels wasabbi-channelmixer");
+		// 	for(let i = 0; i < numberOfChannels; i++)
+		// 	{
+		// 		const channelButton = document.createElement("p");
+		// 		const textNode = document.createTextNode(`Channel ${i + 1}`);
 
-				let previousWebComponent = this._root.querySelector(`wasabi-channelmixer[channelNumber="${channelLinked}"]`);
-				let destinationWebComponent = this._root.querySelector(`wasabi-channelmixer[channelNumber="${destination}"]`);
+		// 		channelButton.appendChild(textNode);
+		// 		menu.appendChild(channelButton);
+		// 	}
 
-				let channelListDiv = this._root.querySelector("#arrayOfChannels");
+		// 	menu.setAttribute("channelLinked", 'none');
 
-				previousWebComponent.remove();
+		// 	this.setMenuChangePositionChannelListener();
+		// }
 
-				channelListDiv.insertBefore(previousWebComponent, channelListDiv.childNodes[destination - 1]);
+		// setMenuChangePositionChannelListener()
+		// {
+		// 	let buttons = this._root.querySelectorAll("#dropdown-change-position p");
+
+		// 	for(let i = 0; i < buttons.length; i++)
+		// 	{
+		// 		let button = buttons[i];
+
+		// 		button.addEventListener("click", () =>
+		// 		{
+		// 			let text = button.innerHTML;
+		// 			let channelLinked = this._root.querySelector("#dropdown-change-position").getAttribute("channelLinked");
+		// 			this.changeChannelPosition(channelLinked, text.substr(text.length -1));
+		// 		});
+		// 	}
+		// }
+
+		// changeChannelPosition(channelLinked, destination)
+		// {
+		// 	if( (channelLinked != 'none') && (channelLinked != destination) )
+		// 	{
+		// 		let arrayOfWebComponentsChannel = this._root.querySelectorAll("#arrayOfChannels wasabbi-channelmixer");
+
+		// 		let previousWebComponent = this._root.querySelector(`wasabi-channelmixer[channelNumber="${channelLinked}"]`);
+		// 		let destinationWebComponent = this._root.querySelector(`wasabi-channelmixer[channelNumber="${destination}"]`);
+
+		// 		let channelListDiv = this._root.querySelector("#arrayOfChannels");
+
+		// 		previousWebComponent.remove();
+
+		// 		channelListDiv.insertBefore(previousWebComponent, channelListDiv.childNodes[destination - 1]);
 
 				/* let newDiv = swap(channelListDiv.children, channelLinked, destination);
 
@@ -223,19 +244,19 @@
 				////////////////////////////////////////////////////////////////////////////////////
 
 				// See -> https://goo.gl/tvc6eD
-				function swap(htmlCollection, element1, element2)
-				{
-					let array = Array.from( htmlCollection );
-					var temp = array[element1];
+		// 		function swap(htmlCollection, element1, element2)
+		// 		{
+		// 			let array = Array.from( htmlCollection );
+		// 			var temp = array[element1];
 
-					array[element1] = array[element2];
-					array[element2] = temp;
+		// 			array[element1] = array[element2];
+		// 			array[element2] = temp;
 
-					return array;
-				}
+		// 			return array;
+		// 		}
 
-			}
-		}
+		// 	}
+		// }
 
 		/**
 		 *	Creates a div element that overlay a Channel WebComonent at the position passed at zone so that we
