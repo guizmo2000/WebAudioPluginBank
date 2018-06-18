@@ -5,7 +5,10 @@
   <title>empty host</title>
 </head>
 <meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
-<script src="./../WASABI/QuadraFuzz2/main.js"></script>
+<script src="./../sdk/WebAudioSDK.js"></script>
+
+<script src="./../WASABI/QuadraFuzz3/main.js"></script>
+
 <body>
   <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
 
@@ -22,8 +25,8 @@ var ctx = new AudioContext();
   var _settings = {lowgain: 0.6, midlowgain: 0.1, midhighgain: 0.4,highgain: 0.4, status: "enable"};
 
 
-  var pluginURL = "./../WASABI/QuadraFuzz2";
-  var plugin = new WAPlugin.WasabiQuadraFuzz(ctx, pluginURL);
+  var pluginURL = "./../WASABI/QuadraFuzz3";
+  var plugin = new window.WasabiQuadraFuzz(ctx, pluginURL);
 
   plugin.load().then((node)=>{
     plugin.loadGui().then((elem)=>{
@@ -31,7 +34,7 @@ var ctx = new AudioContext();
       node.setState(_settings);
 
     });
-    mediaSource.connect(node.getInput(0));
+    mediaSource.connect(node);
     node.connect(ctx.destination);
   });
 </script>
