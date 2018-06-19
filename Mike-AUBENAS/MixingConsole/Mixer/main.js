@@ -102,9 +102,9 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 	{
 		this.master = this.context.createGain();
 		this.master.connect(this._output);
-		for (let i=1;i<this._plug.inputs.length+1;i++){
-			let numchannel ="InputForchannel"+this._plug.inputs.length+1;
-			this[numchannel] = this._plug.context.createGain();
+		for (let i=1;i<this.inputs.length+1;i++){
+			let numchannel ="InputForchannel"+this.inputs.length+1;
+			this[numchannel] = this.context.createGain();
 			this._plug.inputs.push(this[numchannel]);
 		}
 		
