@@ -854,7 +854,7 @@ function ADSRNode(ctx, opts) {
 }
 
 
-window.Wasabiminilogue = class Wasabiminilogue extends WebAudioPluginFactory {
+window.WasabiMinilogue = class WasabiMinilogue extends WebAudioPluginFactory {
 
   constructor(context, baseUrl) {
     super(context, baseUrl);
