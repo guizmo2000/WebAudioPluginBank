@@ -46,6 +46,10 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 		this.setup();
 	}
 
+	get numberOfInputs() {
+    return 4;
+  }
+
 	getNumberOfChannels()
 	{
 		if(this.arrayNodeToConnect != 'no nodes')
