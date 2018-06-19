@@ -89,11 +89,11 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
   // p9 count inputs
   get numberOfInputs() {
-    return this.inputs.length;
+    return 0;
   }
 
   get numberOfOuputs() {
-    return this.outputs.length;
+    return 1;
   }
   inputChannelCount() {
     return 1;
