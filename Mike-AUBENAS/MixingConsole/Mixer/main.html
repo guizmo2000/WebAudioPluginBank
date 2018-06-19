@@ -77,9 +77,56 @@
 			width: 78.14px;
 		}
 
+		#mixerElements
+		{
+			display: flex;
+		}
+
+		#master
+		{
+			padding : 15px;
+			background: linear-gradient( rgb(77, 74, 78),rgb(251, 166, 75));
+
+			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
+						inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+						inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+						1px 0px 1px 0px rgba(0, 0, 0, 0.9),
+						0 2px 1px 0 rgba(0, 0, 0, 0.9),
+						1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+
+			border-radius: 8px;
+		}
+
+		#master webaudio-slider
+		{
+			padding-top: 20px;
+		}
+
 	</style>
 
-	<div id="arrayOfChannels"></div>
+	<div id="mixerElements">
+
+		<div id="arrayOfChannels"></div>
+
+		<div class="column" id="master">
+
+			<webaudio-slider id="masterKnob" midilearn="true" units="Db" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png"
+			knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png" value="2"
+			min="0" max="10" step="0.1" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;"
+			defvalue="2" tooltip="Master">
+
+				<div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
+					<div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
+					</div>
+				</div>
+				<div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
+				</div>
+
+			</webaudio-slider>
+
+		</div>
+	</div>
+
 
 	<div id="dropdown-change-position" title="Move this channel to another location"></div>
 
@@ -95,146 +142,31 @@
 		{
 			super();
 			this._plug = plug;
+			this._plug.gui = this;
 			this._root = this.attachShadow({ mode: 'open' });
 			this._root.appendChild(leMixer.content.cloneNode(true));
 			this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
 			this.arrayNodeToConnectChannel = this._plug.getArrayNodeToConnect();
 			this.listOfWasabiChannels = [];
 
-			(async () =>
-			{
-				for (let position = 0; position < this.arrayNodeToConnectChannel.length; position++)
-				{
-					await this.createAndConnectChannel(position, this.arrayNodeToConnectChannel);
-				}
-			})();
-
-			this.createDropdownMenuForChangePosition();
+			this.firstChannel();
+			this.setMaster();
 		}
 
-		createAndConnectChannel(position, arrayAudioNodes)
+		firstChannel()
 		{
-			var plugin = new window.WasabiChannelMixer(ctx, this.urlChannel, {"channelNumber" : position + 1});
+			let plugin = new window.WasabiChannelMixer(this._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", {"channelNumber" : 1});
 
-			return new Promise((resolve, reject) =>
+			plugin.load().then((node) =>
 			{
-				plugin.load().then((node) =>
+				plugin.loadGui().then((elem) =>
 				{
-					plugin.loadGui().then((elem) =>
-					{
-						this._root.querySelector('#arrayOfChannels').appendChild(elem);
-						resolve(true);
-					});
-
-					arrayAudioNodes[position].connect(node);
-					node.connect(ctx.destination);
-
-					this.createOverlayableZoneFor("pedalLabel", position);
+					this._root.querySelector('#arrayOfChannels').appendChild(elem);
 				});
 
-				this.listOfWasabiChannels.push(plugin);
-			})
-		}
-
-		createDropdownMenuForChangePosition()
-		{
-			const numberOfChannels = this._plug.getNumberOfChannels();
-			const menu = this._root.querySelector("#dropdown-change-position");
-
-			for(let i = 0; i < numberOfChannels; i++)
-			{
-				const channelButton = document.createElement("p");
-				const textNode = document.createTextNode(`Channel ${i + 1}`);
-
-				channelButton.appendChild(textNode);
-				menu.appendChild(channelButton);
-			}
-
-			menu.setAttribute("channelLinked", 'none');
-
-			this.setMenuChangePositionChannelListener();
-		}
-
-		setMenuChangePositionChannelListener()
-		{
-			let buttons = this._root.querySelectorAll("#dropdown-change-position p");
-
-			for(let i = 0; i < buttons.length; i++)
-			{
-				let button = buttons[i];
-
-				button.addEventListener("click", () =>
-				{
-					let text = button.innerHTML;
-					let channelLinked = this._root.querySelector("#dropdown-change-position").getAttribute("channelLinked");
-					this.changeChannelPosition(channelLinked, text.substr(text.length -1));
-				});
-			}
-		}
-
-		changeChannelPosition(channelLinked, destination)
-		{
-			if( (channelLinked != 'none') && (channelLinked != destination) )
-			{
-				let arrayOfWebComponentsChannel = this._root.querySelectorAll("#arrayOfChannels wasabbi-channelmixer");
-
-				let previousWebComponent = this._root.querySelector(`wasabi-channelmixer[channelNumber="${channelLinked}"]`);
-				let destinationWebComponent = this._root.querySelector(`wasabi-channelmixer[channelNumber="${destination}"]`);
-
-				let channelListDiv = this._root.querySelector("#arrayOfChannels");
-
-				previousWebComponent.remove();
-
-				channelListDiv.insertBefore(previousWebComponent, channelListDiv.childNodes[destination - 1]);
-
-				/* let newDiv = swap(channelListDiv.children, channelLinked, destination);
-
-				(function eraseDiv()
-				{
-					while(channelListDiv.firstChild)
-						channelListDiv.removeChild(channelListDiv.firstChild);
-				}());
-
-				(function replaceWithNewElements()
-				{
-					newDiv.forEach( element =>
-					{
-						channelListDiv.appendChild(element);
-					});
-				}()); */
-
-
-
-				/*(function rewriteAllChannelNumbers()
-				{
-					let wcChannels = channelListDiv.children;
-
-					for(let i = 0; i < wcChannels.length; i++)
-					{
-						wcChannels[i].setAttribute("channelNumber", i + 1);
-					}
-				}());
-
-				(function repositionOverlays()
-				{
-					// TODO
-				}()); */
-
-				////////////////////////////////////////////////////////////////////////////////////
-
-				// See -> https://goo.gl/tvc6eD
-				function swap(htmlCollection, element1, element2)
-				{
-					let array = Array.from( htmlCollection );
-					var temp = array[element1];
-
-					array[element1] = array[element2];
-					array[element2] = temp;
-
-					return array;
-				}
-
-			}
+				this._plug._input.connect(node);
+				node.connect(this._plug.master);
+			});
 		}
 
 		/**
@@ -308,6 +240,14 @@
 
 			this._root.querySelector('#arrayOfChannels').appendChild(overlayElement);
 		}
+
+		setMaster()
+		{
+			this._root.querySelector("#masterKnob").addEventListener("input", (event) =>
+			{
+				this._plug.changeMasterGain(event.target.value);
+			});
+		}
 	}
 
 	try
@@ -320,7 +260,6 @@
 		console.log(error);
 		console.log("Element already defined");
 	}
-
 
 	createWAP = (plug) =>
 	{

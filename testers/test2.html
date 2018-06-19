@@ -91,7 +91,7 @@
 
 
         Plugin URL (repository where your main.json file is)
-        <input type="text" id="urlPlugin" value="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/QuadraFuzz2/"> GUI
+        <input type="text" id="urlPlugin" value="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/QuadraFuzz3/"> GUI
         <input id="checkBox" type="checkbox" checked>
 
 
@@ -105,7 +105,7 @@
 
       you can try :
       <p>
-        <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2/</a> for wasabi delay</p>
+        <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay3/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay3/</a> for wasabi delay</p>
       <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRevV3/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRevV3/</a> for Faust ZitaRev</p>
       <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/Blipper/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/Blipper/</a> for Oliver Larkin Blipper</p>
       <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/ThruZeroFlanger/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/ThruZeroFlanger/</a> for Oliver Larkin Flanger</p>
@@ -191,7 +191,7 @@
   // instanciate the plugin 
   function buildPlugin(className, baseURL) {
 
-    var plugin = new WAPlugin[className](ctx, baseURL);
+    var plugin = new window[className](ctx, baseURL);
     console.log(plugin);
 
     plugin.load().then((node) => {

@@ -7,10 +7,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 		super(ctx,options)
 
 		this.state;
-		this.inputs = [];
-		this.outputs = [];
-		this._gui = document.createElement("wc-mixer");
-		this._gui.plug = this;
+		this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
 
 		if(options)
 			this.arrayNodeToConnect = options.arrayNodeToConnect ? options.arrayNodeToConnect : 'no nodes';
@@ -28,6 +25,19 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 			"URLs": "https://.../doc",
 			"authorInformation": "Mike AUBENAS, i3s intern in Nice - Sophia-Antipolis, France"
 		}
+
+		this.params =
+		{
+			"gain":
+			{
+				"value": 1,
+				"range":
+				{
+					"min": 0,
+					"max": 10
+				}
+			}
+		};
 
         this.patchNames = ["patch1"];
 
@@ -77,11 +87,45 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 	{ return msg; }
 
 	setup()
-	{}
-
-	createMaster()
 	{
-		// TODO
+		this.createNode();
+	}
+
+	createNode()
+	{
+		this.master = this.context.createGain();
+		this.master.connect(this._output);
+	}
+
+
+	addChannel()
+	{
+		let numchannel ="InputForchannel"+this.inputs.length+1;
+		this[numchannel] = this.context.createGain();
+		this.inputs.push(this[numchannel]);
+
+		var plugin = new window.WasabiChannelMixer(this.context, this.urlChannel, {"channelNumber" : this.inputs.length});
+
+		plugin.load().then((node) =>
+		{
+			plugin.loadGui().then((elem) =>
+			{
+				this.gui._root.querySelector('#arrayOfChannels').appendChild(elem);
+			});
+
+			this[numchannel].connect(node);
+			node.connect(this.master);
+			//this.createOverlayableZoneFor("pedalLabel", position);
+		});
+	}
+
+	changeMasterGain(value)
+	{
+		if ((value >= this.params.gain.range.min) && (value <= this.params.gain.range.max))
+		{
+			this.params.gain.value = value;
+			this.master.gain.setValueAtTime( parseFloat(value, 10), this.context.currentTime );
+		}
 	}
 
 }

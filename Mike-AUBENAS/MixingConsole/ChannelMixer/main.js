@@ -8,8 +8,6 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 
 		this.inputs = [];
 		this.outputs = [];
-		this._gui = document.createElement("wc-channelmixer");
-		this._gui.plug = this;
 
 		if(options)
 			this.channelNumber = options.channelNumber ? options.channelNumber : 0;
@@ -55,8 +53,22 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 
 		this.state = this.params.status;
 
+
 		this.setup();
 	}
+	get numberOfInputs(){
+    return this.inputs.length;
+  }
+
+  get numberOfOutputs(){
+    return this.outputs.length;
+  }
+  inputChannelCount(){
+    return 1;
+  }
+  outputChannelCount(){
+    return 1
+  }
 
 	setInitialParamValues()
 	{

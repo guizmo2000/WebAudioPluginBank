@@ -89,11 +89,11 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
   // p9 count inputs
   get numberOfInputs() {
-    return this.inputs.length;
+    return 0;
   }
 
-  get numberOfOuputs() {
-    return this.outputs.length;
+  get numberOfOutputs() {
+    return 1;
   }
   inputChannelCount() {
     return 1;
@@ -854,7 +854,7 @@ function ADSRNode(ctx, opts) {
 }
 
 
-window.Wasabiminilogue = class Wasabiminilogue extends WebAudioPluginFactory {
+window.WasabiMinilogue = class WasabiMinilogue extends WebAudioPluginFactory {
 
   constructor(context, baseUrl) {
     super(context, baseUrl);

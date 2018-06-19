@@ -22,10 +22,7 @@
 			cursor: move;
 			z-index: 9;
 
-			border-top-left-radius: 8px;
-			border-top-right-radius: 8px;
-			border-bottom-left-radius: 8px;
-			border-bottom-right-radius: 8px;
+			border-radius: 8px;
 		}
 
         .pedalLabel
@@ -148,14 +145,14 @@
 
         <div class="column">
 
-            <webaudio-slider id="gain" midilearn="true" units="Db" src="./MixingConsole/ChannelMixer/Image/vsliderbody.png"
-                knobsrc="./MixingConsole/ChannelMixer/Image/vsliderknob.png" value="2" min="0" max="10" step="0.1" basewidth="24" height="128"
+            <webaudio-slider id="gain" midilearn="true" units="Db" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png"
+                knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png" value="2" min="0" max="10" step="0.1" basewidth="24" height="128"
                 knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;" defvalue="2" tooltip="Gain">
 
                     <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px;
-                        background-image: url(./MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
+                        background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
                         <div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px;
-                        background-image: url(./MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
+                        background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
                         </div>
                     </div>
                     <div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility
@@ -178,7 +175,7 @@
 
         <div class="column">
 
-            <webaudio-knob id="pan" class="knob" sprites="99" min="-10" max="10" step="0.1" value="0" midilearn="true" src="./MixingConsole/ChannelMixer/Image/circular-knob-strong.png"
+            <webaudio-knob id="pan" class="knob" sprites="99" min="-10" max="10" step="0.1" value="0" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/circular-knob-strong.png"
                 width="40" height="40" data-role="pan" diameter="24" tooltip="Pan" defvalue="0"></webaudio-knob>
 
         </div>
@@ -209,6 +206,7 @@
         {
             super();
             this._plug = plug;
+            this._plug.gui = this;
             this.channelNumber = this._plug.getChannelNumber();
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(leChannel.content.cloneNode(true));

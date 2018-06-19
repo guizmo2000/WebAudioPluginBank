@@ -31,8 +31,8 @@ class CompositeAudioNode {
     */
     this.inputs = [];
     this.outputs = [];
-    this._input = context.createGain();
-    this._output = context.createGain();
+    this._input = this.context.createGain();
+    this._output = this.context.createGain();
     this.inputs.push(this._input);
     this.outputs.push(this._output);
 
