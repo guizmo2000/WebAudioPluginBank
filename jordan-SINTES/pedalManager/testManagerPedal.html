@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="css/style.css">
+    <title>testManagerPedal</title>
+</head>
+
+<body>
+
+
+        <div id="mechanism">
+                <p>Pedal effect on configuration 00</p>
+                <div id="Controller">
+                    <div id="button6">Undefined</div>
+                    <div id="button7">Undefined</div>
+                    <div id="button8">Undefined</div>
+                    <div id="button9">Undefined</div>
+                    <div id="button10">Undefined</div>
+                </div>
+                <br>
+                <div id="PedalEffect">
+                    <div id="bank01">bank01</div>
+                    <div id="bank02">bank02</div>
+                    <div id="bank03">bank03</div>
+                    <div id="bank04">bank04</div>
+                    <div id="bank05">bank05</div>
+                </div>
+                
+            </div>
+            
+
+    <div id="mechanism">
+        <p>Pedal effect on configuration 01</p>
+        <div id="PedalEffect">
+            <div id="delay">delay</div>
+            <div id="chorus">chorus</div>
+            <div id="overdrive">overdrive</div>
+            <div id="analyse">analyse</div>
+            <div id="faust">faust</div>
+        </div>
+        <br>
+        <div id="Controller">
+            <div id="play">play</div>
+            <div id="pause">pause</div>
+            <div id="stop">stop</div>
+            <div id="record">record</div>
+            <div id="clear">clear</div>
+        </div>
+        <div id="pedalArea">
+            <div id="volume">volume</div>
+        </div>
+    </div>
+
+    <script src="./js/testManagerPedal.js"></script>
+    <script>
+        WebAudioControlsOptions = {
+            useMidi: 1,
+        };
+    </script>
+    <script src="./../../bower_components/webaudio-controls2/webaudio-controls.js"></script>
+</body>
+
+</html>
