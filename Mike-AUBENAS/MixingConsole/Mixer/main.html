@@ -176,6 +176,19 @@
 			this.setMaster();
 			this.setAddChannel();
 		}
+		get properties() {
+      this.boundingRect = {
+        dataWidth: {
+          type: Number,
+          value: 300
+        },
+        dataHeight: {
+          type: Number,
+          value: 260
+        }
+      };
+      return this.boundingRect;
+    }
 
 		firstChannel()
 		{
