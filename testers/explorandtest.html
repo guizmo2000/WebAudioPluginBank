@@ -6,6 +6,7 @@
 </head>
 <meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
 <link rel="stylesheet" href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/mocha/mocha.css">
+<script src="./../sdk/WebAudioSDK.js" ></script>
 
 <style>
   #inputs {
@@ -209,7 +210,16 @@
       console.log(localStorage.ctx);
       // The script has been loaded, thus, the class has been defined.
       // We can instanciate the audio processor
-      var plugin = new WAPlugin[className](getContext(), baseURL);
+      try {       
+        var plugin = new window[className](getContext(), baseURL);
+
+      } catch (error) {
+        console.warn("WAP implementations changes, you can now use window.mymodule instead of WAPlugin.mymodule")
+        var plugin = new WAPlugin[className](getContext(), baseURL);
+
+
+
+      }
       console.log(plugin);
 
       plugin.load().then((node) => {
@@ -243,8 +253,7 @@
 
         if (nbInput > 0) {
           console.log("nbinput :", nbInput);
-          if (node instanceof AudioWorkletNode) mediaSource.connect(node);
-          else mediaSource.connect(node.getInput(0));
+          mediaSource.connect(node);
         }
         node.connect(getContext().destination);
         testPlugin(node);
