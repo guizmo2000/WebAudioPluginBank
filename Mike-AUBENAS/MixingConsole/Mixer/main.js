@@ -76,21 +76,23 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 	setup()
 	{
 		this.createNode();
-		
 	}
 
-	createNode(){
+	createNode()
+	{
 	this.master = this.context.createGain();
 	this.master.connect(this._output);
 	}
 
 
-	addChannel(){
+	addChannel()
+	{
 		let numchannel ="InputForchannel"+this.inputs.length+1;
 		this[numchannel] = this.context.createGain();
 		this.inputs.push(this[numchannel]);
-		console.log(this.inputs)
+	
 		var plugin = new window.WasabiChannelMixer(this.context, this.urlChannel, {"channelNumber" : this.inputs.length});
+
 		plugin.load().then((node) =>
 		{
 			plugin.loadGui().then((elem) =>
@@ -100,13 +102,8 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 
 			this[numchannel].connect(node);
 			node.connect(this.master);
-			
-
 			//this.createOverlayableZoneFor("pedalLabel", position);
 		});
-
-
-
 	}
 
 	createMaster()

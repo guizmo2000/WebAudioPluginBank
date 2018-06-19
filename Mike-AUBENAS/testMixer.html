@@ -59,17 +59,17 @@
 			document.body.appendChild(elem);
 			bindto(node);
 		});
-		document.querySelector("#add").addEventListener('click',() =>{node.addChannel()})
 
-
+		document.querySelector("#add").addEventListener('click',() =>{ node.addChannel(); } )
 	});
-function bindto(node){
-		document.querySelector("#bind").addEventListener('click',() =>{
-			console.log(node.inputs);
+
+	function bindto(node)
+	{
+		document.querySelector("#bind").addEventListener('click',() =>
+		{
 			arrayMediaSources[node.inputs.length-1].connect(node.inputs[node.inputs.length-1]);
-			
-			;})
-}
+		})
+	}
 
 	(function spaceToPlayAndPause()
 	{
