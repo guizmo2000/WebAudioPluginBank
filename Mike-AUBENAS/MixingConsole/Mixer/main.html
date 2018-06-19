@@ -179,12 +179,15 @@
 
 			(async function loop() {
 				for (let i = 0; i < 4; i++) {
-					await parent.addCh(plugin);
+					await parent.addCh(plugin,i);
 				}
 			})();
 		}
 
-		addCh(plugin) {
+		addCh(plugin,i) {
+		let numchannel ="InputForchannel"+this._plug.inputs.length+1;
+		this[numchannel] = this._plug.context.createGain();
+		this._plug.inputs.push(this[numchannel]);
 			return new Promise((resolve, reject) => {
 				plugin.load().then((node) => {
 					plugin.loadGui().then((elem) => {
@@ -192,7 +195,7 @@
 						resolve(true);
 					});
 
-					this._plug._input.connect(node);
+					this._plug.inputs[i].connect(node);
 					node.connect(this._plug.master);
 				});
 			});
