@@ -102,13 +102,32 @@
 			padding-top: 20px;
 		}
 
+		.column
+		{
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: center;
+
+			flex: 1;
+			margin: 3px;
+		}
+
+		.row
+		{
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-start;
+			align-items: stretch;
+		}
+
 	</style>
 
 	<div id="mixerElements">
 
 		<div id="arrayOfChannels"></div>
 
-		<div class="column" id="master">
+		<div class="row" id="master">
 
 			<webaudio-slider id="masterKnob" midilearn="true" units="Db" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png"
 			knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png" value="2"
@@ -123,6 +142,10 @@
 				</div>
 
 			</webaudio-slider>
+
+			<div class="row">
+				<img src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/Mixer/Image/plus.png" alt="Add a channel" height="30" width="30">
+			</div>
 
 		</div>
 	</div>
