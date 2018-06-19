@@ -15,7 +15,6 @@
 	<audio src="./Samples/0005-Record-Maschine.mp3" controls loop></audio>
 	<audio src="./Samples/0006-Record-Maschine.mp3" controls loop></audio>
 	<audio src="./Samples/0007-Record-Maschine.mp3" controls loop></audio>
-	<button id="add">add</button>
 	<button id="bind">bind</button>
 
 </body>
@@ -59,14 +58,13 @@
 			document.body.appendChild(elem);
 			bindto(node);
 		});
-
-		document.querySelector("#add").addEventListener('click',() =>{ node.addChannel(); } )
 	});
 
-	function bindto(node)
+	 function bindto(node)
 	{
 		document.querySelector("#bind").addEventListener('click',() =>
 		{
+			console.log("node.input.length-1", node.inputs.length - 1);
 			arrayMediaSources[node.inputs.length-1].connect(node.inputs[node.inputs.length-1]);
 		})
 	}
