@@ -1502,14 +1502,14 @@ webaudio-keyboard{
     }
     enableInputs() {
       let inputs = this.midiAccess.inputs.values();
-      console.log("Found " + this.midiAccess.inputs.size + " MIDI input(s)");
+      //console.log("Found " + this.midiAccess.inputs.size + " MIDI input(s)");
       for(let input = inputs.next(); input && !input.done; input = inputs.next()) {
-        console.log("Connected input: " + input.value.name);
+        //console.log("Connected input: " + input.value.name);
         input.value.onmidimessage = this.handleMIDIMessage.bind(this);
       }
     }
     midiConnectionStateChange(e) {
-      console.log("connection: " + e.port.name + " " + e.port.connection + " " + e.port.state);
+     // console.log("connection: " + e.port.name + " " + e.port.connection + " " + e.port.state);
       enableInputs();
     }
 
