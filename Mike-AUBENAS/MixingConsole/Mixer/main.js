@@ -81,6 +81,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 
 	createNode(){
 	this.master = this.context.createGain();
+	this.master.connect(this._output);
 	}
 
 
