@@ -77,9 +77,56 @@
 			width: 78.14px;
 		}
 
+		#mixerElements
+		{
+			display: flex;
+		}
+
+		#master
+		{
+			padding : 15px;
+			background: linear-gradient( rgb(77, 74, 78),rgb(251, 166, 75));
+
+			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
+						inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+						inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+						1px 0px 1px 0px rgba(0, 0, 0, 0.9),
+						0 2px 1px 0 rgba(0, 0, 0, 0.9),
+						1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+
+			border-radius: 8px;
+		}
+
+		#master webaudio-slider
+		{
+			padding-top: 20px;
+		}
+
 	</style>
 
-	<div id="arrayOfChannels"></div>
+	<div id="mixerElements">
+
+		<div id="arrayOfChannels"></div>
+
+		<div class="column" id="master">
+
+			<webaudio-slider id="masterKnob" midilearn="true" units="Db" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png"
+			knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png" value="2"
+			min="0" max="10" step="0.1" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;"
+			defvalue="2" tooltip="Master">
+
+				<div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
+					<div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
+					</div>
+				</div>
+				<div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
+				</div>
+
+			</webaudio-slider>
+
+		</div>
+	</div>
+
 
 	<div id="dropdown-change-position" title="Move this channel to another location"></div>
 
@@ -103,6 +150,7 @@
 			this.listOfWasabiChannels = [];
 
 			this.firstChannel();
+			this.setMaster();
 		}
 
 		firstChannel()
@@ -191,6 +239,14 @@
 			}
 
 			this._root.querySelector('#arrayOfChannels').appendChild(overlayElement);
+		}
+
+		setMaster()
+		{
+			this._root.querySelector("#masterKnob").addEventListener("input", (event) =>
+			{
+				this._plug.changeMasterGain(event.target.value);
+			});
 		}
 	}
 

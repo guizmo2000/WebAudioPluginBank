@@ -52,7 +52,7 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		}
 
 		this.state = this.params.status;
-		
+
 
 		this.setup();
 	}

@@ -26,6 +26,19 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 			"authorInformation": "Mike AUBENAS, i3s intern in Nice - Sophia-Antipolis, France"
 		}
 
+		this.params =
+		{
+			"gain":
+			{
+				"value": 1,
+				"range":
+				{
+					"min": 0,
+					"max": 10
+				}
+			}
+		};
+
         this.patchNames = ["patch1"];
 
 		this.getNumberOfChannels();
@@ -80,8 +93,8 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 
 	createNode()
 	{
-	this.master = this.context.createGain();
-	this.master.connect(this._output);
+		this.master = this.context.createGain();
+		this.master.connect(this._output);
 	}
 
 
@@ -90,7 +103,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 		let numchannel ="InputForchannel"+this.inputs.length+1;
 		this[numchannel] = this.context.createGain();
 		this.inputs.push(this[numchannel]);
-	
+
 		var plugin = new window.WasabiChannelMixer(this.context, this.urlChannel, {"channelNumber" : this.inputs.length});
 
 		plugin.load().then((node) =>
@@ -106,9 +119,13 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 		});
 	}
 
-	createMaster()
+	changeMasterGain(value)
 	{
-		// TODO
+		if ((value >= this.params.gain.range.min) && (value <= this.params.gain.range.max))
+		{
+			this.params.gain.value = value;
+			this.master.gain.setValueAtTime( parseFloat(value, 10), this.context.currentTime );
+		}
 	}
 
 }
