@@ -142,7 +142,7 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode {
 
 		this.merger.connect(this.wetGain);
 
-		this.wetGain.connect(this.context.destination);
+		this.wetGain.connect(this._output);
 	}
 
 	setInitialParamValues() {
