@@ -122,7 +122,7 @@
 				this.setUp();
 				this.draw();
 
-				this.connectNodes();
+			//	this.connectNodes();
 				this.draw();
 			}
 		}
@@ -134,11 +134,7 @@
 			this.audioAnalyser.getByteTimeDomainData(this.datasArray);
 		}
 
-		connectNodes()
-		{
-			this.mediaSource.connect(this.audioAnalyser);
-			this.audioAnalyser.connect(this.audioContext.destination);
-		}
+		
 
 		draw()
 		{
