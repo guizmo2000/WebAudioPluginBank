@@ -124,9 +124,10 @@
 
 	class FrequencyViewer extends HTMLElement
 	{
-		constructor(audioContext, mediaSource)
+		constructor(audioContext, audioAnalyser)
 		{
 			super();
+			this.audioAnalyser = audioAnalyser;
 
 			if(mediaSource && audioContext)
 			{
@@ -138,7 +139,7 @@
 				this.graphicContext = this.canvas.getContext("2d");
 
 				this.audioContext = audioContext;
-				this.audioAnalyser = this.audioContext.createAnalyser();
+			//	this.audioAnalyser = this.audioContext.createAnalyser();
 
 				this.mediaSource = mediaSource;
 

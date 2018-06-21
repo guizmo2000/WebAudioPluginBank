@@ -5,6 +5,7 @@
   };
 </script>
 <script src="./../../bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<link rel="import" href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/Visualizers/FrequencyViewer/frequencyViewer.html">
 <template id="wc-minilogue">
   <style>
     :host {
@@ -130,6 +131,15 @@
       <span class="pedalLabel">OSC</span>
       <div class="row">
         <div class="column">
+          <webaudio-slider class="knob" id="osc1octave" midilearn="1" midicc="1.1" value="3" min="1" max="5" step="1" width="15" height="24"
+            tooltip="Slider-L"></webaudio-slider>
+          <span class="knob-label" id="osc1pitch-label">Osc1 octave</span>
+        </div>
+        <div class="column">
+          <webaudio-slider class="knob" id="wave1" midilearn="1" value="0" min="0" max="2" step="1" width="15" height="24" tooltip="Slider-L"></webaudio-slider>
+          <span class="knob-label" id="osc1pitch-label">Osc1 wave</span>
+        </div>
+        <div class="column">
           <webaudio-knob id="osc1pitch" class="knob" min=0.5 max="2" sprites="99" value="1" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
             data-role="feedback" diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc1pitch-label">Osc1 pitch</span>
@@ -146,6 +156,16 @@
         </div>
       </div>
       <div class="row">
+        <div class="column">
+          <webaudio-slider class="knob" id="osc2octave" midilearn="1" midicc="2.0" value="3" min="1" max="5" step="1" width="15" height="24"
+            tooltip="Slider-L"></webaudio-slider>
+          <span class="knob-label" id="osc1pitch-label">Osc2 octave</span>
+        </div>
+        <div class="column">
+          <webaudio-slider class="knob" id="wave2" midilearn="1" midicc="1.23" value="0" min="0" max="2" step="1" width="15" height="24"
+            tooltip="Slider-L"></webaudio-slider>
+          <span class="knob-label" id="osc1pitch-label">Osc2 wave</span>
+        </div>
         <div class="column">
           <webaudio-knob id="osc2pitch" class="knob" min="0.5" max="2" sprites="99" value="1" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
@@ -167,8 +187,8 @@
       <span class="pedalLabel">Filter</span>
       <div class="row">
         <div class="column">
-          <webaudio-knob id="lowpass" class="knob" min="30" max="5000" sprites="99" value="500" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-            diameter="40"></webaudio-knob>
+          <webaudio-knob id="lowpass" class="knob" min="30" max="5000" sprites="99" value="2000" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+            diameter="40" midicc="1.7"></webaudio-knob>
           <span class="knob-label" id="lowpass-label">cutoff</span>
         </div>
         <div class="column">
@@ -243,11 +263,18 @@
       </div>
       <div class="row">
         <div class="column">
+          <webaudio-slider class="knob" id="lfodest" midilearn="1" midicc="1.23" value="0" min="0" max="2" step="1" width="15" height="24"
+            tooltip="Slider-L"></webaudio-slider>
+          <span class="knob-label" id="osc1pitch-label">lfo dest</span>
+        </div>
+        <div class="column">
           <webaudio-knob id="lfoint" class="knob" min="1" max="1000" sprites="99" value="20" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="lfoint-label">lfo int</span>
         </div>
       </div>
+    </div>
+    <div class="column" id="freqview">
     </div>
     <div class="column">
       <span class="pedalLabel">Delay</span>
@@ -290,11 +317,13 @@
       this._root = this.attachShadow({ mode: 'open' });
       this._root.appendChild(minitemp.content.cloneNode(true));
       this.knobs = this._root.querySelectorAll(".knob");
+      //this.sliders = this._root.querySelectorAll(".slider")
       this.isDelayOn = false;
       this.bypassDelay();
       this.setKnobs();
       this.setKeyboard();
       this.setSwitchListener();
+      this.setViewer();
       this.curMidi = 0;
       this.midiPort = [];
       this.currentPort = -1;
@@ -347,6 +376,13 @@
         this.eventToKnob(i);
       }
     }
+
+    setViewer(){
+      this.freqviewWrap = this._root.querySelector("freqview");
+      this.view = new FrequencyViewer(this._plug.context, this._plug.);
+
+    }
+
 
     setKeyboard() {
       var keyboard = this._root.querySelector('#keyboard');
