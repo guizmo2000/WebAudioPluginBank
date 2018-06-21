@@ -378,8 +378,9 @@
     }
 
     setViewer(){
-      this.freqviewWrap = this._root.querySelector("freqview");
-      this.view = new FrequencyViewer(this._plug.context, this._plug.);
+      this.freqviewWrap = this._root.querySelector("#freqview");
+      this.view = new FrequencyViewer(this._plug.context, this._plug.analyser);
+      this.freqviewWrap.appendChild(this.view)
 
     }
 

@@ -6,7 +6,7 @@
 
     <style>
 
-        /* :host
+        :host
         {
 			background: linear-gradient( rgb(77, 74, 78),rgb(25, 167, 60));
 			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
@@ -28,13 +28,13 @@
 			border-top-right-radius: 8px;
 			border-bottom-left-radius: 8px;
 			border-bottom-right-radius: 8px;
-        } */
+        }
 
 		canvas
 		{
 			padding-top: 10px;
-			width: 100px;
-			height: 50px;
+			width: 300px;
+			height: 150px;
 		}
 
 		webaudio-switch { left: -6px; }
@@ -88,6 +88,27 @@
 
 	</div>
 
+	<div class="row">
+
+		<div class="column">
+
+				<webaudio-switch id="switch" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+				width="32" height="20"></webaudio-switch>
+
+		</div>
+
+	</div>
+
+	<div class="row">
+
+		<div class="column">
+
+			<span class="wcLabel">Frequency Viewer</span>
+
+		</div>
+
+	</div>
+
 </template>
 
 <script>
@@ -112,7 +133,7 @@
 			{
 				this._root = this.attachShadow({ mode: 'open' });
 				this._root.appendChild(vuMeter.content.cloneNode(true));
-				//this.isOn = false;
+				this.isOn = false;
 
 				this.canvas = this._root.querySelector("canvas");
 				this.graphicContext = this.canvas.getContext("2d");
@@ -182,14 +203,14 @@
 			}
 		}
 
-		// setSwitchListener()
-		// {
-		// 	this._root.querySelector("#switch").addEventListener('change', (e) =>
-		// 	{
-		// 		this.isOn = !this.isOn;
-		// 		this.draw();
-		// 	});
-		// }
+		setSwitchListener()
+		{
+			this._root.querySelector("#switch").addEventListener('change', (e) =>
+			{
+				this.isOn = !this.isOn;
+				this.draw();
+			});
+		}
 	}
 
 	try
