@@ -64,29 +64,29 @@ function InitMidi() {
         
         function clearAll(){
 
-          button6.setAttribute('id', 'button6');
-          button7.setAttribute('id', 'button7');
-          button8.setAttribute('id', 'button8');
-          button9.setAttribute('id', 'button9');
-          button10.setAttribute('id', 'button10');
+          button6.setAttribute('id', 'button6'); button6.setAttribute('style', 'background:rgb(170, 167, 167)');
+          button7.setAttribute('id', 'button7'); button7.setAttribute('style', 'background:rgb(170, 167, 167)');
+          button8.setAttribute('id', 'button8'); button8.setAttribute('style', 'background:rgb(170, 167, 167)');
+          button9.setAttribute('id', 'button9'); button9.setAttribute('style', 'background:rgb(170, 167, 167)');
+          button10.setAttribute('id', 'button10'); button10.setAttribute('style', 'background:rgb(170, 167, 167)');
 
-          bank01.setAttribute('style', 'background:grey');
-          bank02.setAttribute('style', 'background:grey');
-          bank03.setAttribute('style', 'background:grey');
-          bank04.setAttribute('style', 'background:grey');
-          bank05.setAttribute('style', 'background:grey');
+          bank01.setAttribute('style', 'background:rgb(170, 167, 167)');
+          bank02.setAttribute('style', 'background:rgb(170, 167, 167)');
+          bank03.setAttribute('style', 'background:rgb(170, 167, 167)');
+          bank04.setAttribute('style', 'background:rgb(170, 167, 167)');
+          bank05.setAttribute('style', 'background:rgb(170, 167, 167)');
 
-          play.setAttribute('style', 'background:grey;');
-          pause.setAttribute('style', 'background:grey;');
-          stop.setAttribute('style', 'background:grey;');
-          record.setAttribute('style', 'background:grey;');
-          clear.setAttribute('style', 'background:grey;');
+          play.setAttribute('style', 'background:rgb(170, 167, 167);');
+          pause.setAttribute('style', 'background:rgb(170, 167, 167);');
+          stop.setAttribute('style', 'background:rgb(170, 167, 167);');
+          record.setAttribute('style', 'background:rgb(170, 167, 167);');
+          clear.setAttribute('style', 'background:rgb(170, 167, 167);');
 
-          delay.setAttribute('style', 'background:grey;');
-          chorus.setAttribute('style', 'background:grey;');
-          overdrive.setAttribute('style', 'background:grey;');
-          analyse.setAttribute('style', 'background:grey;');
-          faust.setAttribute('style', 'background:grey;');
+          delay.setAttribute('style', 'background:rgb(170, 167, 167);');
+          chorus.setAttribute('style', 'background:rgb(170, 167, 167);');
+          overdrive.setAttribute('style', 'background:rgb(170, 167, 167);');
+          analyse.setAttribute('style', 'background:rgb(170, 167, 167);');
+          faust.setAttribute('style', 'background:rgb(170, 167, 167);');
         }
       
 
@@ -168,85 +168,83 @@ function InitMidi() {
         switch(controlNumber){  
           case 00:
             clearAll();
-            bank01.setAttribute('style', 'background:green; ');
+            bank01.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 01:
             clearAll();
-            bank02.setAttribute('style', 'background:green; ');
+            bank02.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 02:
             clearAll();
-            bank03.setAttribute('style', 'background:green; ');
+            bank03.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 03:
             clearAll();
-            bank04.setAttribute('style', 'background:green; ');
+            bank04.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 04:
             clearAll();
-            bank05.setAttribute('style', 'background:green; ');
+            bank05.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 05:
             clearAll();
-            /*
-            if (controlNu==)
-            */
+            button6.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 06:
             clearAll();  
-            //to define
+            button7.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 07:
             clearAll();
-            //to define
+            button8.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 08:
             clearAll();
-            //to define
+            button9.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 09:
             clearAll();
-            //to define
+            button10.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 10:
             clearAll();
-            play.setAttribute('style', 'background:green; ');
+            play.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 11:
             clearAll();
-            pause.setAttribute('style', 'background:green; ');
+            pause.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 12:
             clearAll();
-            stop.setAttribute('style', 'background:green; ');
+            stop.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 13:
             clearAll();
-            record.setAttribute('style', 'background:green; ');
+            record.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 14:
             clearAll();
-            clear.setAttribute('style', 'background:green; ');
+            clear.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 15:
             clearAll();
-            delay.setAttribute('style', 'background:green; ');
+            delay.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 16:
             clearAll();  
-            chorus.setAttribute('style', 'background:green; ');
+            chorus.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 17:
             clearAll();
-            overdrive.setAttribute('style', 'background:green; ');
+            overdrive.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 18:
             clearAll();
-            analyse.setAttribute('style', 'background:green; ');
+            analyse.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 19:
             clearAll();
-            faust.setAttribute('style', 'background:green; ');
+            faust.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 27:
             volume.innerHTML=value;
