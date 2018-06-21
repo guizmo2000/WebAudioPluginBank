@@ -64,11 +64,11 @@ function InitMidi() {
         
         function clearAll(){
 
-          button6.setAttribute('id', 'button6');
-          button7.setAttribute('id', 'button7');
-          button8.setAttribute('id', 'button8');
-          button9.setAttribute('id', 'button9');
-          button10.setAttribute('id', 'button10');
+          button6.setAttribute('id', 'button6'); button6.setAttribute('style', 'background:grey');
+          button7.setAttribute('id', 'button7'); button7.setAttribute('style', 'background:grey');
+          button8.setAttribute('id', 'button8'); button8.setAttribute('style', 'background:grey');
+          button9.setAttribute('id', 'button9'); button9.setAttribute('style', 'background:grey');
+          button10.setAttribute('id', 'button10'); button10.setAttribute('style', 'background:grey');
 
           bank01.setAttribute('style', 'background:grey');
           bank02.setAttribute('style', 'background:grey');
@@ -188,25 +188,23 @@ function InitMidi() {
             break;
           case 05:
             clearAll();
-            /*
-            if (controlNu==)
-            */
+            button6.setAttribute('style', 'background:green; ');
             break;
           case 06:
             clearAll();  
-            //to define
+            button7.setAttribute('style', 'background:green; ');
             break;
           case 07:
             clearAll();
-            //to define
+            button8.setAttribute('style', 'background:green; ');
             break;
           case 08:
             clearAll();
-            //to define
+            button9.setAttribute('style', 'background:green; ');
             break;
           case 09:
             clearAll();
-            //to define
+            button10.setAttribute('style', 'background:green; ');
             break;
           case 10:
             clearAll();
