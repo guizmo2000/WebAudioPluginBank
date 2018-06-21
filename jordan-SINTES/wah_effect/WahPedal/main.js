@@ -11,12 +11,14 @@ window.WahPedal = class WahPedal extends WebAudioPluginCompositeNode {
 	  this.state;
 	
 	  this.addParam({name:'frequency', defaultValue: 600, minValue: 320, maxValue: 2500 });
-	  this.addParam({name: 'resonance',defaultValue: 4, minValue: 2, maxValue: 7 });
+		this.addParam({name: 'resonance',defaultValue: 4, minValue: 2, maxValue: 7 });
+		this.addParam({name: 'effect', defaultValue: 600, minValue:320, maxValue: 2500});
 
   
 	  this.params = {
 		"frequency": this._descriptor.frequency.defaultValue,
 		"resonance": this._descriptor.resonance.defaultValue,
+		"effect": this._descriptor.effect.defaultValue,
 		"status": "disable"
 	  }
   
@@ -119,12 +121,6 @@ window.WahPedal = class WahPedal extends WebAudioPluginCompositeNode {
 	  this.dryGainNode = this.context.createGain();
 	  this.wetGainNode = this.context.createGain();
 
-		/*
-	  this.peak = this.context.createBiquadFilter();
-	  this.peak.type = "peaking";
-	  this.peak.Q.value = 3;
-	  this.peak.value = 20;
-		*/
 	  this.lowPass = this.context.createBiquadFilter();
 	  this.lowPass.type = "bandpass";
 	  this.lowPass.Q.value = 2;
@@ -144,7 +140,8 @@ window.WahPedal = class WahPedal extends WebAudioPluginCompositeNode {
 	   * set default value for parameters and assign it to the web audio nodes
 	   */
 	  this.frequency = this.params.frequency;
-	  this.resonance = this.params.resonance;
+		this.resonance = this.params.resonance;
+		this.effect = this.params.effect;
 	}
 	set frequency(_frequency) {
 		if ((_frequency < this._descriptor.frequency.maxValue) && (_frequency > this._descriptor.frequency.minValue))
@@ -156,6 +153,21 @@ window.WahPedal = class WahPedal extends WebAudioPluginCompositeNode {
 		if ((_resonance < this._descriptor.resonance.maxValue) && (_resonance > this._descriptor.resonance.minValue))
 			this.params.resonance = _resonance;
 			this.lowPass.Q.setValueAtTime(_resonance, this.context.currentTime);
+	}
+
+	set effect(_effect) {
+		if ((_effect < this._descriptor.effect.maxValue) && (_effect > this._descriptor.effect.minValue))
+			this.params.effect = _effect;
+			this.lowPass.frequency.setValueAtTime(_effect, this.context.currentTime);
+			if(this.lowPass.frequency.setValueAtTime(_effect, this.context.currentTime) >=320 && (this.lowPass.frequency.setValueAtTime(_effect, this.context.currentTime)) <=1200){
+				this.lowPass.Q.setValueAtTime(2, this.context.currentTime);
+			}
+			else if(this.lowPass.frequency.setValueAtTime(_effect, this.context.currentTime) >=1201 && (this.lowPass.frequency.setValueAtTime(_effect, this.context.currentTime)) <=2000){
+				this.lowPass.Q.setValueAtTime(4.5, this.context.currentTime);
+			}
+			else{
+				this.lowPass.Q.setValueAtTime(7, this.context.currentTime);
+			}
 	}
   
   

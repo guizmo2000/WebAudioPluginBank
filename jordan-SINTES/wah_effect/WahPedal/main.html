@@ -95,15 +95,9 @@
   <div class="row">
     <div class="column">
       <webaudio-knob id="knob1" class="knob" sprites="99" min="320" max="2500" value="600" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" data-role="frequency" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob1-label">FREQUENCY</span>
+        width="40" height="40" data-role="effect" diameter="24"></webaudio-knob>
+      <span class="knob-label" id="knob1-label">EFFECT</span>
     </div>
-    <div class="column">
-      <webaudio-knob id="knob2" class="knob" sprites="99" min="2" max="7" value="4" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" data-role="resonance" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob2-label">RESONANCE</span>
-    </div>
-  </div>
  
 
   <div class="row">
@@ -174,8 +168,7 @@
 
     setKnobs() {
       console.log('setknobs');
-      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("frequency", e.target.value));
-      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("resonance", e.target.value));
+      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("effect", e.target.value));
 
     }
 
