@@ -6,28 +6,24 @@
 <template id="wc-mixer">
 
 	<style>
-
-		:host
-		{
-			width:500px;
-			height:500px;
+		:host {
+			width: 500px;
+			height: 500px;
 		}
 
-		#arrayOfChannels
-		{
+		#arrayOfChannels {
 			display: flex;
 		}
 
-		#dropdown-change-position
-		{
+		#dropdown-change-position {
 			background-color: rgb(30, 30, 30);
 
 			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
-						inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
-						inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
-						1px 0px 1px 0px rgba(0, 0, 0, 0.9),
-						0 2px 1px 0 rgba(0, 0, 0, 0.9),
-						1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+			inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+			inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+			1px 0px 1px 0px rgba(0, 0, 0, 0.9),
+			0 2px 1px 0 rgba(0, 0, 0, 0.9),
+			1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 			margin-top: 20px;
 			display: none;
@@ -36,8 +32,7 @@
 			position: absolute;
 		}
 
-		#dropdown-change-position p
-		{
+		#dropdown-change-position p {
 			margin: 16px;
 
 			font-family: helvetica, monospace;
@@ -46,8 +41,7 @@
 			font-size: 10px;
 		}
 
-		#dropdown-change-position p:hover
-		{
+		#dropdown-change-position p:hover {
 			cursor: pointer;
 			display: block;
 
@@ -60,60 +54,70 @@
 			transition: background-color 200ms linear;
 		}
 
-		wasabi-channelmixer
-		{
+		wasabi-channelmixer {
 			position: relative;
 		}
 
-		.overlay
-		{
+		.overlay {
 			position: absolute;
 			z-index: 20;
 		}
 
-		.pedalLabelZone
-		{
+		.pedalLabelZone {
 			height: 22px;
 			width: 78.14px;
 		}
 
-		#mixerElements
-		{
+		#mixerElements {
 			display: flex;
 		}
 
-		#master
-		{
-			padding : 15px;
-			background: linear-gradient( rgb(77, 74, 78),rgb(251, 166, 75));
+		#master {
+			padding: 15px;
+			background: linear-gradient( rgb(77, 74, 78), rgb(251, 166, 75));
 
 			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
-						inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
-						inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
-						1px 0px 1px 0px rgba(0, 0, 0, 0.9),
-						0 2px 1px 0 rgba(0, 0, 0, 0.9),
-						1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+			inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+			inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+			1px 0px 1px 0px rgba(0, 0, 0, 0.9),
+			0 2px 1px 0 rgba(0, 0, 0, 0.9),
+			1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 			border-radius: 8px;
 		}
 
-		#master webaudio-slider
-		{
-			padding-top: 20px;
+		#master webaudio-slider {
+			padding-top: 10px;
 		}
 
+		.column {
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			align-items: center;
+
+			/* flex: 1; */
+			margin: 3px;
+		}
+
+		.row {
+			display: flex;
+			flex-direction: row;
+			justify-content: flex-start;
+			align-items: stretch;
+		}
 	</style>
 
-	<div id="mixerElements">
+	<div id="mixerElements" class="row">
 
 		<div id="arrayOfChannels"></div>
 
 		<div class="column" id="master">
 
 			<webaudio-slider id="masterKnob" midilearn="true" units="Db" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png"
-			knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png" value="2"
-			min="0" max="10" step="0.1" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;"
-			defvalue="2" tooltip="Master">
+			 knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png"
+			 value="2" min="0" max="10" step="0.1" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;"
+			 defvalue="2" tooltip="Master">
 
 				<div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
 					<div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
@@ -123,6 +127,11 @@
 				</div>
 
 			</webaudio-slider>
+
+			<div class="column">
+				<img src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/Mixer/Image/plus.png" alt="Add a channel"
+				 height="30" width="30" title="Add a channel" id="add">
+			</div>
 
 		</div>
 	</div>
@@ -136,10 +145,8 @@
 
 	let leMixer = document.currentScript.ownerDocument.querySelector("#wc-mixer");
 
-	class MixerGUI extends HTMLElement
-	{
-		constructor(plug)
-		{
+	class MixerGUI extends HTMLElement {
+		constructor(plug) {
 			super();
 			this._plug = plug;
 			this._plug.gui = this;
@@ -149,23 +156,48 @@
 			this.arrayNodeToConnectChannel = this._plug.getArrayNodeToConnect();
 			this.listOfWasabiChannels = [];
 
-			this.firstChannel();
+			this.firstsChannel(that = this);
 			this.setMaster();
+			this.setAddChannel();
+		}
+		get properties() {
+			this.boundingRect = {
+				dataWidth: {
+					type: Number,
+					value: 500
+				},
+				dataHeight: {
+					type: Number,
+					value: 260
+				}
+			};
+			return this.boundingRect;
 		}
 
-		firstChannel()
-		{
-			let plugin = new window.WasabiChannelMixer(this._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", {"channelNumber" : 1});
+		firstsChannel(parent) {
+			let numchannel ="InputForchannel"+this._plug.inputs.length+1;
+			let plugin = new window.WasabiChannelMixer(this._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", { "channelNumber": this._plug.inputs.length });
 
-			plugin.load().then((node) =>
-			{
-				plugin.loadGui().then((elem) =>
-				{
-					this._root.querySelector('#arrayOfChannels').appendChild(elem);
+			(async function loop() {
+				for (let i = 0; i < 4; i++) {
+					await parent.addCh(plugin,i);
+				}
+			})();
+			console.log()
+		}
+
+		addCh(plugin,i) {
+		
+			return new Promise((resolve, reject) => {
+				plugin.load().then((node) => {
+					plugin.loadGui().then((elem) => {
+						this._root.querySelector('#arrayOfChannels').appendChild(elem);
+						resolve(true);
+					});
+
+					this._plug.inputs[i].connect(node);
+					node.connect(this._plug.master);
 				});
-
-				this._plug._input.connect(node);
-				node.connect(this._plug.master);
 			});
 		}
 
@@ -176,14 +208,12 @@
 		 *	@param	{string}	zone	The zone we want to overlay
 		 *	@param	{number}	channelNumber	The channel we want to add thr overlay to
 		 */
-		createOverlayableZoneFor(zone, channelNumber)
-		{
-			let overlayElement  = document.createElement("div");
+		createOverlayableZoneFor(zone, channelNumber) {
+			let overlayElement = document.createElement("div");
 			overlayElement.className = "overlay";
 
-			switch(zone)
-			{
-				case "pedalLabel" :
+			switch (zone) {
+				case "pedalLabel":
 					const overlayType = "pedalLabelZone";
 
 					let isMenuOnFocus = false;
@@ -196,8 +226,7 @@
 
 					let menu = this._root.querySelector("#dropdown-change-position");
 
-					overlayElement.addEventListener("mouseover", () =>
-					{
+					overlayElement.addEventListener("mouseover", () => {
 						menu.style.display = "inline-block";
 						menu.style.left = `${(channelNumber * 100) + 10}px`;
 						menu.setAttribute("channelLinked", channelNumber + 1);
@@ -205,35 +234,30 @@
 						isMenuOnFocus = true;
 					});
 
-					overlayElement.addEventListener("mouseleave", () =>
-					{
+					overlayElement.addEventListener("mouseleave", () => {
 						isMenuOnFocus = false;
 						makeMenuDisappear();
 					});
 
-					menu.addEventListener("mouseleave", () =>
-					{
+					menu.addEventListener("mouseleave", () => {
 						isMenuOnFocus = false;
 						makeMenuDisappear();
 					});
 
-					menu.addEventListener("mouseover", () =>
-					{
+					menu.addEventListener("mouseover", () => {
 						isMenuOnFocus = true;
 					});
 
 					////////////////////////////////////////////////////////////////////////
 
-					function makeMenuDisappear()
-					{
-						setTimeout(() =>
-						{
-							if(isMenuOnFocus == false)
+					function makeMenuDisappear() {
+						setTimeout(() => {
+							if (isMenuOnFocus == false)
 								menu.style.display = "none";
 						}, 100);
 					}
 					break;
-				case "solo" :
+				case "solo":
 					// TODO
 					break;
 			}
@@ -241,29 +265,30 @@
 			this._root.querySelector('#arrayOfChannels').appendChild(overlayElement);
 		}
 
-		setMaster()
-		{
-			this._root.querySelector("#masterKnob").addEventListener("input", (event) =>
-			{
+		setMaster() {
+			this._root.querySelector("#masterKnob").addEventListener("input", (event) => {
 				this._plug.changeMasterGain(event.target.value);
+			});
+		}
+
+		setAddChannel(node) {
+			this._root.querySelector("#add").addEventListener('click', () => {
+				this._plug.addChannel();
 			});
 		}
 	}
 
-	try
-	{
+	try {
 		console.log("Element defined");
 		customElements.define('wasabi-mixer', MixerGUI);
 	}
-	catch(error)
-	{
+	catch (error) {
 		console.log(error);
 		console.log("Element already defined");
 	}
 
-	createWAP = (plug) =>
-	{
-		console.log("mixeur :",plug);
+	createWAP = (plug) => {
+		console.log("mixeur :", plug);
 		let elem = new MixerGUI(plug);
 		return elem;
 	}

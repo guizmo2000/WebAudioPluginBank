@@ -162,7 +162,7 @@
 
 <script>
 
-	let delaytemp = document.currentScript.ownerDocument.querySelector("#wc-stereoflanger");
+	let stftmp = document.currentScript.ownerDocument.querySelector("#wc-stereoflanger");
 
 	class StereoFlangerGUI extends HTMLElement {
 		constructor(plug) {
@@ -170,7 +170,7 @@
 			this._plug = plug;
 			this._plug.gui = this;
 			this._root = this.attachShadow({ mode: 'open' });
-			this._root.appendChild(delaytemp.content.cloneNode(true));
+			this._root.appendChild(stftmp.content.cloneNode(true));
 			this.isOn = false;
 			this.state = new Object();
 			this.setKnobs();
