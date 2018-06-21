@@ -108,11 +108,11 @@
 			super();
 			this.audioAnalyser = audioAnalyser;
 
-			if(mediaSource && audioContext)
+			if(audioContext)
 			{
 				this._root = this.attachShadow({ mode: 'open' });
 				this._root.appendChild(vuMeter.content.cloneNode(true));
-				//this.isOn = false;
+				this.isOn = true;
 
 				this.canvas = this._root.querySelector("canvas");
 				this.graphicContext = this.canvas.getContext("2d");
@@ -124,9 +124,9 @@
 
 				this.setUp();
 				this.draw();
-				this.setSwitchListener();
 
 				this.connectNodes();
+				this.draw();
 			}
 		}
 
@@ -150,8 +150,8 @@
 
 			this.graphicContext.fillStyle = 'rgb(0, 0, 0)';
 			this.graphicContext.fillRect(0, 0, this.canvas.width, this.canvas.height);
-			this.graphicContext.lineWidth = 2;
-			this.graphicContext.strokeStyle = 'rgb(28, 149, 53)';
+			this.graphicContext.lineWidth = 4;
+			this.graphicContext.strokeStyle = 'rgb(0, 242, 255)';
 
 			this.graphicContext.beginPath();
 
