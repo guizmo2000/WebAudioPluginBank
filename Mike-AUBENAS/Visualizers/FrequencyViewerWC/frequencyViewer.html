@@ -6,7 +6,7 @@
 
     <style>
 
-        /* :host
+        :host
         {
 			background: linear-gradient( rgb(77, 74, 78),rgb(25, 167, 60));
 			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
@@ -28,13 +28,16 @@
 			border-top-right-radius: 8px;
 			border-bottom-left-radius: 8px;
 			border-bottom-right-radius: 8px;
-        } */
+        }
 
 		canvas
 		{
-			width: 80px;
-			height: 35px;
+			padding-top: 10px;
+			width: 300px;
+			height: 150px;
 		}
+
+		webaudio-switch { left: -6px; }
 
 		.column
 		{
@@ -44,6 +47,7 @@
 			align-items: center;
 
 			flex: 1;
+			margin: 3px;
 		}
 
 		.row
@@ -54,7 +58,24 @@
 			align-items: stretch;
 		}
 
-		
+		.wcLabel
+		{
+			/* background: rgba(0, 0, 0, 0.4); */
+			box-shadow: inset 0px 1px 5px #111;
+			border: 1px solid #000000;
+			color: #000000;
+			/* border:2px solid #aaa; */
+			padding: 4px 10px;
+			margin: 2px 0px;
+
+			font-size: 10px;
+			text-align: center;
+			user-select: none;
+			/* font-family: Lemon\/Milk; */
+			font-family: helvetica;
+			text-transform: uppercase;
+		}
+
 	</style>
 
 	<div class="row">
@@ -62,6 +83,27 @@
 		<div class="column">
 
 			<canvas></canvas>
+
+		</div>
+
+	</div>
+
+	<div class="row">
+
+		<div class="column">
+
+				<webaudio-switch id="switch" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+				width="32" height="20"></webaudio-switch>
+
+		</div>
+
+	</div>
+
+	<div class="row">
+
+		<div class="column">
+
+			<span class="wcLabel">Frequency Viewer</span>
 
 		</div>
 
@@ -87,22 +129,25 @@
 			super();
 			this.audioAnalyser = audioAnalyser;
 
-			if(audioContext)
+			if(mediaSource && audioContext)
 			{
 				this._root = this.attachShadow({ mode: 'open' });
 				this._root.appendChild(vuMeter.content.cloneNode(true));
-				this.isOn = true;
+				this.isOn = false;
 
 				this.canvas = this._root.querySelector("canvas");
 				this.graphicContext = this.canvas.getContext("2d");
 
 				this.audioContext = audioContext;
 			//	this.audioAnalyser = this.audioContext.createAnalyser();
+
+				this.mediaSource = mediaSource;
+
 				this.setUp();
 				this.draw();
+				this.setSwitchListener();
 
-			//	this.connectNodes();
-				this.draw();
+				this.connectNodes();
 			}
 		}
 
@@ -110,10 +155,14 @@
 		{
 			this.audioAnalyser.fftSize = 2048;
 			this.datasArray = new Uint8Array(this.audioAnalyser.fftSize);
-			this.lourd = this.audioAnalyser.getByteTimeDomainData(this.datasArray);
+			this.audioAnalyser.getByteTimeDomainData(this.datasArray);
 		}
 
-		
+		connectNodes()
+		{
+			this.mediaSource.connect(this.audioAnalyser);
+			this.audioAnalyser.connect(this.audioContext.destination);
+		}
 
 		draw()
 		{
@@ -122,8 +171,8 @@
 
 			this.graphicContext.fillStyle = 'rgb(0, 0, 0)';
 			this.graphicContext.fillRect(0, 0, this.canvas.width, this.canvas.height);
-			this.graphicContext.lineWidth = 4;
-			this.graphicContext.strokeStyle = 'rgb(0, 242, 255)';
+			this.graphicContext.lineWidth = 2;
+			this.graphicContext.strokeStyle = 'rgb(28, 149, 53)';
 
 			this.graphicContext.beginPath();
 
@@ -138,14 +187,14 @@
 					let coordinateY = value * this.canvas.height / 2;
 
 					if (i === 0)
-						this.graphicContext.moveTo(coordinateX, coordinateY )
+						this.graphicContext.moveTo(coordinateX, coordinateY)
 					else
-						this.graphicContext.lineTo(coordinateX, coordinateY );
+						this.graphicContext.lineTo(coordinateX, coordinateY);
 
 					coordinateX += sliceWidth;
 				}
 
-				this.graphicContext.lineTo(this.canvas.width, this.canvas.height /2);
+				this.graphicContext.lineTo(this.canvas.width, this.canvas.height / 2);
 				this.graphicContext.stroke();
 			}
 			else
@@ -154,14 +203,14 @@
 			}
 		}
 
-		// setSwitchListener()
-		// {
-		// 	this._root.querySelector("#switch").addEventListener('change', (e) =>
-		// 	{
-		// 		this.isOn = !this.isOn;
-		// 		this.draw();
-		// 	});
-		// }
+		setSwitchListener()
+		{
+			this._root.querySelector("#switch").addEventListener('change', (e) =>
+			{
+				this.isOn = !this.isOn;
+				this.draw();
+			});
+		}
 	}
 
 	try
