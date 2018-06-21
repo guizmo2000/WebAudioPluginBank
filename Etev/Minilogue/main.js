@@ -223,9 +223,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       this.voices[key].amp.connect(this.gainforAnalyse);
       if (this.params.status == "disable")this.voices[key].amp.connect(this._output);
       else if (this.params.status == "enable") {
-        this.ppdelay.feedbackGainNode.gain.value = 0.5;
         this.ppdelay.dryGainNode.gain.value = 0.1;
-        this.ppdelay.wetGainNode.gain.value = 0.5;
+        this.ppdelay.wetGainNode.gain.value = 1;
         this.voices[key].amp.connect(this.ppdelay.feedbackGainNode);
         this.voices[key].amp.connect(this.ppdelay.dryGainNode);
       }
