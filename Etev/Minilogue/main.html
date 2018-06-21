@@ -265,7 +265,8 @@
       </div>
       <div class="row">
         <div class="column">
-          <webaudio-switch id="switchDelay" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_2.png" width="80" height="40"></webaudio-switch>
+          <webaudio-switch id="switchDelay" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_2.png"
+            width="80" height="40"></webaudio-switch>
           <span class="knob-label" id="switchDelay-label">Delay</span>
         </div>
       </div>
@@ -336,8 +337,8 @@
     }
 
     eventToKnob(rank) {
-      this.knobs[rank].addEventListener('input', (e) => 
-      this._plug.setParam(this.knobs[rank].id, e.target.value));
+      this.knobs[rank].addEventListener('input', (e) =>
+        this._plug.setParam(this.knobs[rank].id, e.target.value));
     }
 
     setKnobs() {
@@ -351,10 +352,10 @@
       var keyboard = this._root.querySelector('#keyboard');
       keyboard.addEventListener('change', (e) => {
         if (e.note[0]) {
-          this._plug.noteOn(e.note[1]+36);
+          this._plug.noteOn(e.note[1] + 36);
         }
         else {
-          this._plug.noteOff(e.note[1]+36);
+          this._plug.noteOff(e.note[1] + 36);
         }
 
       });
@@ -409,14 +410,20 @@
         var channel = data[0];
         var controlNumber = data[1];
         var value = data[2];
-        if (channel != 248 && channel !=254) {
+        if (channel != 248 && channel != 254) {
           console.log("Midi event hook: data:[" + data + "] channel:" + data[0] + " cc:" + controlNumber + " value:" + value);
         }
         switch (channel) {
+          case 144:
+            this._plug.noteOn(controlNumber);
+            break;
           case 145:
-          this._plug.noteOn(controlNumber);
-          break;
+            this._plug.noteOn(controlNumber);
+            break;
 
+          case 128:
+            this._plug.noteOff(controlNumber);
+            break;
           case 129:
             this._plug.noteOff(controlNumber);
             break;
@@ -432,7 +439,7 @@
           //   }
         }
       });
-//const val = this.min+(this.max-this.min)*event.data[2]/127;
+      //const val = this.min+(this.max-this.min)*event.data[2]/127;
 
     };
 
