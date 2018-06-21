@@ -274,8 +274,7 @@
         </div>
       </div>
     </div>
-    <div class="column" id="freqview">
-    </div>
+
     <div class="column">
       <span class="pedalLabel">Delay</span>
       <div class="row">
@@ -289,13 +288,16 @@
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="feedback-label">delay feedback</span>
         </div>
-      </div>
-      <div class="row">
         <div class="column">
           <webaudio-switch id="switchDelay" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_2.png"
             width="80" height="40"></webaudio-switch>
           <span class="knob-label" id="switchDelay-label">Delay</span>
         </div>
+      </div>
+      <div class="row">
+        <div class="column" id="freqview">
+        </div>
+
       </div>
     </div>
   </div>
@@ -377,7 +379,7 @@
       }
     }
 
-    setViewer(){
+    setViewer() {
       this.freqviewWrap = this._root.querySelector("#freqview");
       this.view = new FrequencyViewer(this._plug.context, this._plug.analyser);
       this.freqviewWrap.appendChild(this.view)

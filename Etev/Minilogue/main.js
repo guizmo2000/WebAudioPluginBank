@@ -170,7 +170,10 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   setup() {
     console.log("setup");
     this.createIO();
+    this.gainforAnalyse = this.context.createGain();
+    this.gainforAnalyse.gain.value =3;
     this.analyser = this.context.createAnalyser();
+    this.gainforAnalyse.connect(this.analyser);
     //this.analyser.connect(this/_output); pas besoin ?
   }
 
@@ -217,10 +220,10 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       this.voices[key] = new Voice(this.context, key, that)
       this.setInitialParamValues();
       this.voices[key].amp.connect(this._output);
-      this.voices[key].amp.connect(this.analyser);
+      this.voices[key].amp.connect(this.gainforAnalyse);
       if (this.params.status == "disable")this.voices[key].amp.connect(this._output);
       else if (this.params.status == "enable") {
-        this.ppdelay.feedbackGainNode.gain.value = 0.2;
+        this.ppdelay.feedbackGainNode.gain.value = 0.5;
         this.ppdelay.dryGainNode.gain.value = 0.1;
         this.ppdelay.wetGainNode.gain.value = 0.5;
         this.voices[key].amp.connect(this.ppdelay.feedbackGainNode);

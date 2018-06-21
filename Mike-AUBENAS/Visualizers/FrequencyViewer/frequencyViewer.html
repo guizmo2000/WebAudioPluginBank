@@ -32,12 +32,9 @@
 
 		canvas
 		{
-			padding-top: 10px;
-			width: 100px;
-			height: 50px;
+			width: 80px;
+			height: 35px;
 		}
-
-		webaudio-switch { left: -6px; }
 
 		.column
 		{
@@ -47,7 +44,6 @@
 			align-items: center;
 
 			flex: 1;
-			margin: 3px;
 		}
 
 		.row
@@ -58,24 +54,7 @@
 			align-items: stretch;
 		}
 
-		.wcLabel
-		{
-			/* background: rgba(0, 0, 0, 0.4); */
-			box-shadow: inset 0px 1px 5px #111;
-			border: 1px solid #000000;
-			color: #000000;
-			/* border:2px solid #aaa; */
-			padding: 4px 10px;
-			margin: 2px 0px;
-
-			font-size: 10px;
-			text-align: center;
-			user-select: none;
-			/* font-family: Lemon\/Milk; */
-			font-family: helvetica;
-			text-transform: uppercase;
-		}
-
+		
 	</style>
 
 	<div class="row">
@@ -131,7 +110,7 @@
 		{
 			this.audioAnalyser.fftSize = 2048;
 			this.datasArray = new Uint8Array(this.audioAnalyser.fftSize);
-			this.audioAnalyser.getByteTimeDomainData(this.datasArray);
+			this.lourd = this.audioAnalyser.getByteTimeDomainData(this.datasArray);
 		}
 
 		
@@ -159,14 +138,14 @@
 					let coordinateY = value * this.canvas.height / 2;
 
 					if (i === 0)
-						this.graphicContext.moveTo(coordinateX, coordinateY)
+						this.graphicContext.moveTo(coordinateX, coordinateY )
 					else
-						this.graphicContext.lineTo(coordinateX, coordinateY);
+						this.graphicContext.lineTo(coordinateX, coordinateY );
 
 					coordinateX += sliceWidth;
 				}
 
-				this.graphicContext.lineTo(this.canvas.width, this.canvas.height / 2);
+				this.graphicContext.lineTo(this.canvas.width, this.canvas.height /2);
 				this.graphicContext.stroke();
 			}
 			else
