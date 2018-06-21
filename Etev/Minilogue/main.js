@@ -12,7 +12,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.state;
     this.voices = new Array();
     parent = this;
-    this.ppdelay = new Delay(parent, this.context);
 
     // P2 : Json metadata
     this._metadata = {
@@ -170,11 +169,13 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   setup() {
     console.log("setup");
     this.createIO();
+    this.normalize = this.context.createGain();
+    this.normalize.connect(this._output);
+    this.ppdelay = new Delay(parent, this.context);
     this.gainforAnalyse = this.context.createGain();
-    this.gainforAnalyse.gain.value =3;
+    this.gainforAnalyse.gain.value = 3;
     this.analyser = this.context.createAnalyser();
     this.gainforAnalyse.connect(this.analyser);
-    //this.analyser.connect(this/_output); pas besoin ?
   }
 
   createIO() {
@@ -217,11 +218,11 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   noteOn(key) {
     that = this;
     if (this.voices[key] == null) {
-      this.voices[key] = new Voice(this.context, key, that)
+      this.voices[key] = new Voice(this.context, key, that);
       this.setInitialParamValues();
       this.voices[key].amp.connect(this._output);
       this.voices[key].amp.connect(this.gainforAnalyse);
-      if (this.params.status == "disable")this.voices[key].amp.connect(this._output);
+      if (this.params.status == "disable")this.voices[key].amp.connect(this.normalize);
       else if (this.params.status == "enable") {
         this.ppdelay.dryGainNode.gain.value = 0.1;
         this.ppdelay.wetGainNode.gain.value = 1;
@@ -230,7 +231,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       }
 
     }
-    console.log(this.params.wave1, this.params.wave2)
+    this.normalizeGain();
 
   }
 
@@ -244,6 +245,10 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       this.voices[key] = null;
 
     }
+  }
+  normalizeGain(){
+  console.log('hey');
+    this.normalize.gain.setValueAtTime(1/this.voices.length, this.context.currentTime);
   }
 
 
@@ -649,7 +654,6 @@ class Delay {
 
     // // wet out
     this.channelMerger.connect(this.wetGainNode);
-
 
 
     this.wetGainNode.connect(this.parent._output);
