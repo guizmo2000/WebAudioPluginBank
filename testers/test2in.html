@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>empty host</title>
+</head>
+
+<body>
+
+</body>
+<script>
+window.onload = () =>{
+
+  
+
+  if (navigator.mediaDevices.getUserMedia) {
+      var constraints = {
+        audio: {
+          echoCancellation: false,
+          mozNoiseSuppression: false,
+          mozAutoGainControl: false
+        }
+      };
+      navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+        window.stream = stream;
+        this.sound.mediaSourceM = this.sound.context.createMediaStreamSource(stream);
+
+        this.splitter = this.sound.context.createChannelSplitter(2);
+        this.sound.mediaSourceM.connect(this.splitter);
+
+        this.monoMediaSourceM = this.sound.context.createChannelMerger(2);
+
+        //connexion monoMediaSourceM Midi
+        this.sound.mediaSourceM.connect(this.sound.gainNodeInMid);
+        //this.sound.gainNodeInMid.connect(this.splitter);
+        this.splitter.connect(this.monoMediaSourceM, 0, 0);
+        this.splitter.connect(this.monoMediaSourceM, 0, 1);
+        //this.monoMediaSourceM.connect(GlobalContext.context.destination)
+        this.splitter.connect(this.monoMediaSourceM, 1, 0);
+        this.splitter.connect(this.monoMediaSourceM, 1, 1);
+        this.monoMediaSourceM.connect(this.sound.gainNodeInMid);
+      }).catch(function (err) {
+        // handle the error
+        console.log(err.name + ": " + err.message);
+      });
+    }
+
+
+}
+</script>

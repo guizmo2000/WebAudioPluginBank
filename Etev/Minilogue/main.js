@@ -41,14 +41,14 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.addParam({ name: 'osc2gain', defaultValue: 3, minValue: 1, maxValue: 3 });
     this.addParam({ name: 'osc1shape', defaultValue: 0.5, minValue: 0, maxValue: 50 });
     this.addParam({ name: 'osc2shape', defaultValue: 0.5, minValue: 0, maxValue: 50 });
-    this.addParam({ name: 'ampattack', defaultValue: 0.5, minValue: 0.001, maxValue: 5 });
+    this.addParam({ name: 'ampattack', defaultValue: 0.001, minValue: 0.001, maxValue: 5 });
     this.addParam({ name: 'ampdecay', defaultValue: 1, minValue: 0.001, maxValue: 5 });
     this.addParam({ name: 'ampsustain', defaultValue: 0.5, minValue: 0.001, maxValue: 1 });
-    this.addParam({ name: 'amprelease', defaultValue: 1, minValue: 0.001, maxValue: 5 });
-    // this.addParam({ name: 'egattack', defaultValue: 0.5, minValue: 0, maxValue: 5 });
-    // this.addParam({ name: 'egdecay', defaultValue: 1, minValue: 0, maxValue: 5 });
-    // this.addParam({ name: 'egsustain', defaultValue: 0.5, minValue: 0, maxValue: 1 });
-    // this.addParam({ name: 'egrelease', defaultValue: 1, minValue: 0, maxValue: 5 });
+    this.addParam({ name: 'amprelease', defaultValue: 0.001, minValue: 0.001, maxValue: 5 });
+    this.addParam({ name: 'egattack', defaultValue: 0.5, minValue: 0.001, maxValue: 5 });
+    this.addParam({ name: 'egdecay', defaultValue: 1, minValue: 0.001, maxValue: 5 });
+    this.addParam({ name: 'egsustain', defaultValue: 0.5, minValue: 0.001, maxValue: 1 });
+    this.addParam({ name: 'egrelease', defaultValue: 1, minValue: 0.001, maxValue: 5 });
     this.addParam({ name: 'osc1Octave', defaultValue: 3, minValue: 1, maxValue: 5 });
     this.addParam({ name: 'osc2Octave', defaultValue: 3, minValue: 1, maxValue: 5 });
 
@@ -79,10 +79,10 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       ampdecay: this._descriptor.ampdecay.defaultValue,
       ampsustain: this._descriptor.ampsustain.defaultValue,
       amprelease: this._descriptor.amprelease.defaultValue,
-      // egattack: this._descriptor.egattack.defaultValue,
-      // egdecay: this._descriptor.egdecay.defaultValue,
-      // egsustain: this._descriptor.egsustain.defaultValue,
-      // egrelease: this._descriptor.egrelease.defaultValue,
+      egattack: this._descriptor.egattack.defaultValue,
+      egdecay: this._descriptor.egdecay.defaultValue,
+      egsustain: this._descriptor.egsustain.defaultValue,
+      egrelease: this._descriptor.egrelease.defaultValue,
       osc1Octave: this._descriptor.osc1Octave.defaultValue,
       osc2Octave: this._descriptor.osc2Octave.defaultValue,
       wave1: "sawtooth",
@@ -253,6 +253,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   }
 
   killNote(key){
+    console.log("kill"+key)
      this.voices[key].osc1.stop();
       this.voices[key].osc2.stop();
       this.voices[key].lfo.stop();
@@ -406,39 +407,45 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.params.amprelease = _release;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].ampEnveloppe.releaseTime = _release;
-      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
 
     }
    }
 
 
-  // set egattack(_attack) {
-  //   this.params.ampattack = _attack;
-  //   for (let voice = 0; voice < this.voices.length; voice++) {
-  //     if (this.voices[voice]) this.voices[voice].ampEnveloppe.attackTime = _attack;
+  set egattack(_attack) {
+    this.params.egattack = _attack;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].enveloppeGenerator.attackTime = _attack;
+      if (this.voices[voice]) console.log(this.voices[voice].osc2.detune.value);
       
-  //   }
-  // }
-  // set egdecay(_decay) {
-  //   this.params.ampdecay = _decay;
-  //   for (let voice = 0; voice < this.voices.length; voice++) {
-  //     if (this.voices[voice]) this.voices[voice].ampEnveloppe.decayTime = _decay;
-  //   }
-  // }
-  // set egsustain(_sustain) {
-  //   this.params.ampsustain = _sustain;
-  //   for (let voice = 0; voice < this.voices.length; voice++) {
-  //     if (this.voices[voice]) this.voices[voice].ampEnveloppe.sustainLevel = _sustain;
+    }
+  }
+  set egdecay(_decay) {
+    this.params.egdecay = _decay;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].enveloppeGenerator.decayTime = _decay;
+      if (this.voices[voice]) console.log(this.voices[voice].osc2.detune.value);
 
-  //   }
-  // }
-  // set egrelease(_release) {
-  //   this.params.amprelease = _release;
-  //   for (let voice = 0; voice < this.voices.length; voice++) {
-  //     if (this.voices[voice]) this.voices[voice].ampEnveloppe.releaseTime = _release;
+    }
+  }
+  set egsustain(_sustain) {
+    this.params.egsustain = _sustain;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].enveloppeGenerator.sustainLevel = _sustain;
+      if (this.voices[voice]) console.log(this.voices[voice].osc2.detune.value);
 
-  //   }
-  // }
+
+    }
+  }
+  set egrelease(_release) {
+    this.params.egrelease = _release;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].enveloppeGenerator.releaseTime = _release;
+      if (this.voices[voice]) console.log(this.voices[voice].osc2.detune.value);
+
+
+    }
+  }
 
 
   set osc1octave(_octave) {
@@ -724,17 +731,13 @@ class Voice {
     this.ampEnveloppe.decayTime = this.parent.params.ampdecay;
     this.ampEnveloppe.sustainLevel = this.parent.params.ampsustain;
     this.ampEnveloppe.releaseTime = this.parent.params.amprelease;
-    console.log(this.ampEnveloppe);
 
-
-
-
-    // this.enveloppeGenerator = new EnvGen(this.context, this.enveloppeGain.gain, this.parent);
-    // this.enveloppeGenerator.mode = 'ADSR';
-    // this.enveloppeGenerator.attackTime = this.parent.params.egattack;
-    // this.enveloppeGenerator.decayTime = this.parent.params.egdecay;
-    // this.enveloppeGenerator.sustainLevel = this.parent.params.egsustain;
-    // this.enveloppeGenerator.releaseTime = this.parent.params.egrelease;
+    this.enveloppeGenerator = new EnvGen(this.context, this.enveloppeGain.gain, this.parent);
+    this.enveloppeGenerator.mode = 'ADSR';
+    this.enveloppeGenerator.attackTime = this.parent.params.egattack;
+    this.enveloppeGenerator.decayTime = this.parent.params.egdecay;
+    this.enveloppeGenerator.sustainLevel = this.parent.params.egsustain;
+    this.enveloppeGenerator.releaseTime = this.parent.params.egrelease;
 
 
     // merger
@@ -746,6 +749,8 @@ class Voice {
     this.wshape2.connect(this.gainOsc2);
     this.oscNoise.connect(this.gainNoise);
     this.lfo.connect(this.gainLfo);
+
+    //this.enveloppeGain.connect(this.lowPassfilter.frequency);
 
 
     /*this.lowPassfilter.frequency*/
@@ -784,6 +789,7 @@ class Voice {
     this.oscMerger.connect(this.lowPassfilter);
     this.lowPassfilter.connect(this.highpassfilter);
     this.highpassfilter.connect(this.amp);
+    //this.enveloppeGain.connect(this.osc1.frequency);
 
     this.osc1.start();
     this.osc2.start();
