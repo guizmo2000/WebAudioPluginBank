@@ -10,7 +10,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     /*    ################     API PROPERTIES    ###############   */
     super(ctx, options)
     this.state;
-    this.voices = new Array();
+    this.voices = [];
     parent = this;
 
     // P2 : Json metadata
@@ -41,18 +41,18 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.addParam({ name: 'osc2gain', defaultValue: 3, minValue: 1, maxValue: 3 });
     this.addParam({ name: 'osc1shape', defaultValue: 0.5, minValue: 0, maxValue: 50 });
     this.addParam({ name: 'osc2shape', defaultValue: 0.5, minValue: 0, maxValue: 50 });
-    this.addParam({ name: 'ampattack', defaultValue: 0.1, minValue: 0, maxValue: 1 });
-    this.addParam({ name: 'ampdecay', defaultValue: 0.1, minValue: 0, maxValue: 1 });
-    this.addParam({ name: 'ampsustain', defaultValue: 0.1, minValue: 0, maxValue: 1 });
-    this.addParam({ name: 'amprelease', defaultValue: 0.1, minValue: 0, maxValue: 1 });
-    this.addParam({ name: 'egattack', defaultValue: 0.1, minValue: 0, maxValue: 1 });
-    this.addParam({ name: 'egdecay', defaultValue: 0.1, minValue: 0, maxValue: 1 });
-    this.addParam({ name: 'egsustain', defaultValue: 0.1, minValue: 0, maxValue: 1 });
-    this.addParam({ name: 'egrelease', defaultValue: 0.1, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'ampattack', defaultValue: 0.5, minValue: 0.001, maxValue: 5 });
+    this.addParam({ name: 'ampdecay', defaultValue: 1, minValue: 0.001, maxValue: 5 });
+    this.addParam({ name: 'ampsustain', defaultValue: 0.5, minValue: 0.001, maxValue: 1 });
+    this.addParam({ name: 'amprelease', defaultValue: 1, minValue: 0.001, maxValue: 5 });
+    // this.addParam({ name: 'egattack', defaultValue: 0.5, minValue: 0, maxValue: 5 });
+    // this.addParam({ name: 'egdecay', defaultValue: 1, minValue: 0, maxValue: 5 });
+    // this.addParam({ name: 'egsustain', defaultValue: 0.5, minValue: 0, maxValue: 1 });
+    // this.addParam({ name: 'egrelease', defaultValue: 1, minValue: 0, maxValue: 5 });
     this.addParam({ name: 'osc1Octave', defaultValue: 3, minValue: 1, maxValue: 5 });
     this.addParam({ name: 'osc2Octave', defaultValue: 3, minValue: 1, maxValue: 5 });
 
- 
+
 
 
 
@@ -79,12 +79,16 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       ampdecay: this._descriptor.ampdecay.defaultValue,
       ampsustain: this._descriptor.ampsustain.defaultValue,
       amprelease: this._descriptor.amprelease.defaultValue,
+      // egattack: this._descriptor.egattack.defaultValue,
+      // egdecay: this._descriptor.egdecay.defaultValue,
+      // egsustain: this._descriptor.egsustain.defaultValue,
+      // egrelease: this._descriptor.egrelease.defaultValue,
       osc1Octave: this._descriptor.osc1Octave.defaultValue,
       osc2Octave: this._descriptor.osc2Octave.defaultValue,
       wave1: "sawtooth",
       wave2: "sawtooth",
       lfodest: "cutoff",
-      
+
       status: "disable"
     }
 
@@ -204,10 +208,10 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.ampdecay = this.params.ampdecay;
     this.ampsustain = this.params.ampsustain;
     this.amprelease = this.params.amprelease;
-    this.egattack = this.params.egattack;
-    this.egdecay = this.params.egdecay;
-    this.egsustain = this.params.egsustain;
-    this.egrelease = this.params.egrelease;
+    // this.egattack = this.params.egattack;
+    // this.egdecay = this.params.egdecay;
+    // this.egsustain = this.params.egsustain;
+    // this.egrelease = this.params.egrelease;
     this.osc1octave = this.params.osc1Octave;
     this.osc2octave = this.params.osc2Octave;
 
@@ -222,7 +226,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       this.setInitialParamValues();
       this.voices[key].amp.connect(this._output);
       this.voices[key].amp.connect(this.gainforAnalyse);
-      if (this.params.status == "disable")this.voices[key].amp.connect(this.normalize);
+      this.voices[key].ampEnveloppe.gateOn();
+      if (this.params.status == "disable") this.voices[key].amp.connect(this.normalize);
       else if (this.params.status == "enable") {
         this.ppdelay.dryGainNode.gain.value = 0.1;
         this.ppdelay.wetGainNode.gain.value = 1;
@@ -230,6 +235,9 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
         this.voices[key].amp.connect(this.ppdelay.dryGainNode);
       }
 
+    }else{
+      this.killNote(key);
+      this.noteOn(key);
     }
     this.normalizeGain();
 
@@ -237,18 +245,23 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
   noteOff(key) {
     if (this.voices[key] != null) {
+      this.voices[key].ampEnveloppe.gateOff();
       // Shut off the note playing and clear it 
-      this.voices[key].osc1.stop();
+     
+
+    }
+  }
+
+  killNote(key){
+     this.voices[key].osc1.stop();
       this.voices[key].osc2.stop();
       this.voices[key].lfo.stop();
       delete this.voices[key];
       this.voices[key] = null;
-
-    }
   }
-  normalizeGain(){
-  console.log('hey');
-    this.normalize.gain.setValueAtTime(1/this.voices.length, this.context.currentTime);
+
+  normalizeGain() {
+    this.normalize.gain.setValueAtTime(1 / this.voices.length, this.context.currentTime);
   }
 
 
@@ -356,7 +369,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   }
 
   set feedback(_feedback) {
-     this.params.feedback = _feedback;
+    this.params.feedback = _feedback;
     this.ppdelay.feedbackGainNode.gain.setValueAtTime(_feedback, this.context.currentTime);
 
   }
@@ -371,35 +384,20 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   set ampattack(_attack) {
     this.params.ampattack = _attack;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({
-        attack: this.params.ampattack,
-        decay: this.params.ampdecay,
-        sustain: this.params.ampsustain,
-        release: this.params.amprelease
-      });
-      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.attackTime = _attack;
+      
     }
   }
   set ampdecay(_decay) {
     this.params.ampdecay = _decay;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({
-        attack: this.params.ampattack,
-        decay: this.params.ampdecay,
-        sustain: this.params.ampsustain,
-        release: this.params.amprelease
-      });
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.decayTime = _decay;
     }
   }
   set ampsustain(_sustain) {
     this.params.ampsustain = _sustain;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({
-        attack: this.params.ampattack,
-        decay: this.params.ampdecay,
-        sustain: this.params.ampsustain,
-        release: this.params.amprelease
-      });
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.sustainLevel = _sustain;
       //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
 
     }
@@ -407,69 +405,60 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   set amprelease(_release) {
     this.params.amprelease = _release;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({
-        attack: this.params.ampattack,
-        decay: this.params.ampdecay,
-        sustain: this.params.ampsustain,
-        release: this.params.amprelease
-      });
+      if (this.voices[voice]) this.voices[voice].ampEnveloppe.releaseTime = _release;
       //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
 
     }
-  }
-  set egattack(_attack) {
-    this.params.egattack = _attack;
-    for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({ attack: _attack });
-      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
-    }
-  }
-  set egdecay(_decay) {
-    this.params.egdecay = _decay;
-    for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({ decay: _decay });
-      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
-    }
-  }
-  set egsustain(_sustain) {
-    this.params.egsustain = _sustain;
-    for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({ sustain: _sustain });
-      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
-    }
-  }
-  set egrelease(_release) {
-    this.params.egrelease = _release;
-    for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].ampEnveloppe.update({ release: _release });
-      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
-    }
-  }
+   }
 
 
-  // this.basefrequency1 = 440 * Math.pow(2, ((key + 12*(this.osc1currentOctave - 3)) - 69) / 12);
-  //   this.basefrequency2 = 440 * Math.pow(2, ((key + 12*(this.osc2currentOctave - 3)) - 69) / 12);
-  //   this.osc1.frequency.setValueAtTime(this.basefrequency1, this.context.currentTime);
-  //   this.osc2.frequency.setValueAtTime(this.basefrequency2, this.context.currentTime);
+  // set egattack(_attack) {
+  //   this.params.ampattack = _attack;
+  //   for (let voice = 0; voice < this.voices.length; voice++) {
+  //     if (this.voices[voice]) this.voices[voice].ampEnveloppe.attackTime = _attack;
+      
+  //   }
+  // }
+  // set egdecay(_decay) {
+  //   this.params.ampdecay = _decay;
+  //   for (let voice = 0; voice < this.voices.length; voice++) {
+  //     if (this.voices[voice]) this.voices[voice].ampEnveloppe.decayTime = _decay;
+  //   }
+  // }
+  // set egsustain(_sustain) {
+  //   this.params.ampsustain = _sustain;
+  //   for (let voice = 0; voice < this.voices.length; voice++) {
+  //     if (this.voices[voice]) this.voices[voice].ampEnveloppe.sustainLevel = _sustain;
 
-  set osc1octave(_octave){
+  //   }
+  // }
+  // set egrelease(_release) {
+  //   this.params.amprelease = _release;
+  //   for (let voice = 0; voice < this.voices.length; voice++) {
+  //     if (this.voices[voice]) this.voices[voice].ampEnveloppe.releaseTime = _release;
+
+  //   }
+  // }
+
+
+  set osc1octave(_octave) {
     this.params.osc1Octave = _octave;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) {
         this.voices[voice].osc1currentOctave = _octave;
-        this.voices[voice].basefrequency1 = 440 * Math.pow(2, ((this.voices[voice].getkey() + 12*(_octave - 3)) - 69) / 12);
+        this.voices[voice].basefrequency1 = 440 * Math.pow(2, ((this.voices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
         this.voices[voice].osc1.frequency.setValueAtTime(this.voices[voice].basefrequency1, this.context.currentTime);
       }
 
     }
 
   }
-  set osc2octave(_octave){
+  set osc2octave(_octave) {
     this.params.osc2Octave = _octave;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) {
         this.voices[voice].osc2currentOctave = _octave;
-        this.voices[voice].basefrequency2 = 440 * Math.pow(2, ((this.voices[voice].getkey() + 12*(_octave - 3)) - 69) / 12);
+        this.voices[voice].basefrequency2 = 440 * Math.pow(2, ((this.voices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
         this.voices[voice].osc2.frequency.setValueAtTime(this.voices[voice].basefrequency2, this.context.currentTime);
       }
     }
@@ -544,7 +533,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
         }
         break;
 
-        // TODO: how the LFO can change the wshape ?  
+      // TODO: how the LFO can change the wshape ?  
 
       // case 1:
       //   this.params.lfodest = "shape";
@@ -671,12 +660,12 @@ class Voice {
 
     this.lfodestination1;
     this.lfodestination2;
-    
+
 
     this.buildNode(this.key)
   }
 
-  getkey(){
+  getkey() {
     return this.key;
   }
 
@@ -692,9 +681,9 @@ class Voice {
     this.osc2currentOctave = this.parent.params.osc2Octave;
 
 
- 
-    this.basefrequency1 = 440 * Math.pow(2, ((key + 12*(this.osc1currentOctave - 3)) - 69) / 12);
-    this.basefrequency2 = 440 * Math.pow(2, ((key + 12*(this.osc2currentOctave - 3)) - 69) / 12);
+
+    this.basefrequency1 = 440 * Math.pow(2, ((key + 12 * (this.osc1currentOctave - 3)) - 69) / 12);
+    this.basefrequency2 = 440 * Math.pow(2, ((key + 12 * (this.osc2currentOctave - 3)) - 69) / 12);
     this.osc1.frequency.setValueAtTime(this.basefrequency1, this.context.currentTime);
     this.osc2.frequency.setValueAtTime(this.basefrequency2, this.context.currentTime);
 
@@ -718,31 +707,35 @@ class Voice {
     this.highpassfilter.type = "highpass";
 
 
-    //Enveloppe stage
-    this.ampEnveloppe = ADSRNode(this.context, {
-      attack: this.parent.params.ampattack,
-      decay: this.parent.params.ampdecay,
-      sustain: this.parent.params.ampsustain,
-      release: this.parent.params.amprelease
-    });
-    this.ampEnveloppe.start();
-
-
-
-
-    this.enveloppeGenerator = ADSRNode(this.context, {
-      attack: 0.1, // seconds until hitting 1.0
-      decay: 0.2, // seconds until hitting sustain value
-      sustain: 0.5, // sustain value
-      release: 0.8  // seconds until returning back to 0.0
-    })
-
     // gain stage 
     this.gainOsc1 = this.context.createGain();
     this.gainOsc2 = this.context.createGain();
     this.gainNoise = this.context.createGain();
     this.gainLfo = this.context.createGain();
     this.amp = this.context.createGain();
+    this.enveloppeGain = this.context.createGain();
+
+
+    //Enveloppe stage
+
+    this.ampEnveloppe = new EnvGen(this.context, this.amp.gain, this.parent);
+    this.ampEnveloppe.mode = 'ADSR';
+    this.ampEnveloppe.attackTime = this.parent.params.ampattack;
+    this.ampEnveloppe.decayTime = this.parent.params.ampdecay;
+    this.ampEnveloppe.sustainLevel = this.parent.params.ampsustain;
+    this.ampEnveloppe.releaseTime = this.parent.params.amprelease;
+    console.log(this.ampEnveloppe);
+
+
+
+
+    // this.enveloppeGenerator = new EnvGen(this.context, this.enveloppeGain.gain, this.parent);
+    // this.enveloppeGenerator.mode = 'ADSR';
+    // this.enveloppeGenerator.attackTime = this.parent.params.egattack;
+    // this.enveloppeGenerator.decayTime = this.parent.params.egdecay;
+    // this.enveloppeGenerator.sustainLevel = this.parent.params.egsustain;
+    // this.enveloppeGenerator.releaseTime = this.parent.params.egrelease;
+
 
     // merger
     this.oscMerger = this.context.createChannelMerger(3);
@@ -765,10 +758,10 @@ class Voice {
         break;
 
       case 'shape':
-      if (this.gainLfo.gain.value < 2500 && this.gainLfo.gain.value > 50) {
-        this.wshape1.curve = this.parent.getDistortionCurve(this.parent.normalize(this.gainLfo.gain /50, 0, 150));
-        this.wshape2.curve = this.parent.getDistortionCurve(this.parent.normalize(this.gainLfo.gain /50, 0, 150));
-      }
+        if (this.gainLfo.gain.value < 2500 && this.gainLfo.gain.value > 50) {
+          this.wshape1.curve = this.parent.getDistortionCurve(this.parent.normalize(this.gainLfo.gain / 50, 0, 150));
+          this.wshape2.curve = this.parent.getDistortionCurve(this.parent.normalize(this.gainLfo.gain / 50, 0, 150));
+        }
         break;
 
       case 'pitch':
@@ -791,248 +784,255 @@ class Voice {
     this.oscMerger.connect(this.lowPassfilter);
     this.lowPassfilter.connect(this.highpassfilter);
     this.highpassfilter.connect(this.amp);
-    this.ampEnveloppe.connect(this.lowPassfilter.gain);
-    //this.lowPassfilter.connect(this.enveloppeGenerator);--> has to be done by setter
-
-    //this.enveloppeGenerator.connect(this.lfo);--> has to be done by setter
-
-
-    // on externalise
-    // this.amp.connect(this.dryGainNode);
-    // this.ampEnveloppe.connect(this.amp);
-
-
 
     this.osc1.start();
     this.osc2.start();
     this.lfo.start();
-    this.ampEnveloppe.trigger(2);
-    this.ampEnveloppe.release(4);
+
   }
 
 }
-
-
-function ADSRNode(ctx, opts) {
-  // `ctx` is the AudioContext
-  // `opts` is an object in the format:
-  // {
-  //   base:         <number>, // output     optional    default: 0
-  //   attack:       <number>, // seconds    optional    default: 0
-  //   attackCurve:  <number>, // bend       optional    default: 0
-  //   peak:         <number>, // output     optional    default: 1
-  //   hold:         <number>, // seconds    optional    default: 0
-  //   decay:        <number>, // seconds    optional    default: 0
-  //   decayCurve:   <number>, // bend       optional    default: 0
-  //   sustain:      <number>, // output     required
-  //   release:      <number>, // seconds    optional    default: 0
-  //   releaseCurve: <number>  // bend       optional    default: 0
-  // }
-
-
-  function getNum(opts, key, def) {
-    if (opts[key]) { a = opts[key]; return a; }
-    else return def;
+// ADSR node from https://github.com/rsimmons/fastidious-envelope-generator
+function assert(v) {
+  if (!v) {
+    throw new Error('Assertion error');
   }
-
-  var attack = 0, decay = 0, sustain = 0, sustain_adj = 0, release = 0;
-  var base = 0, acurve = 0, peak = 1, hold = 0, dcurve = 0, rcurve = 0;
-
-  function update(opts) {
-    base = getNum(opts, 'base', base);
-    attack = getNum(opts, 'attack', attack);
-    acurve = getNum(opts, 'attackCurve', acurve);
-    peak = getNum(opts, 'peak', peak);
-    hold = getNum(opts, 'hold', hold);
-    decay = getNum(opts, 'decay', decay);
-    dcurve = getNum(opts, 'decayCurve', dcurve);
-    sustain = getNum(opts, 'sustain', sustain);
-    release = getNum(opts, 'release', release);
-    rcurve = getNum(opts, 'releaseCurve', rcurve);
-    sustain_adj = adjustCurve(dcurve, peak, sustain);
-  }
-
-
-
-
-
-  // extract options
-  update(opts);
-
-  // create the node and inject the new methods
-  var node = ctx.createConstantSource();
-  node.offset.value = base;
-
-
-  // unfortunately, I can't seem to figure out how to use cancelAndHoldAtTime, so I have to have
-  // code that calculates the ADSR curve in order to figure out the value at a given time, if an
-  // interruption occurs
-  //
-  // the curve functions (linearRampToValueAtTime and setTargetAtTime) require an *event*
-  // preceding the curve in order to calculate the correct start value... inserting the event
-  // *should* work with cancelAndHoldAtTime, but it doesn't (or I misunderstand the API).
-  //
-  // therefore, for the curves to start at the correct location, I need to be able to calculate
-  // the entire ADSR curve myself, so that I can correctly interrupt the curve at any moment.
-  //
-  // these values track the state of the trigger/release moments, in order to calculate the final
-  // curve
-  var lastTrigger = false;
-  var lastRelease = false;
-
-  // small epsilon value to check for divide by zero
-  var eps = 0.00001;
-
-  function curveValue(type, startValue, endValue, curTime, maxTime) {
-    if (type === 0)
-      return startValue + (endValue - startValue) * Math.min(curTime / maxTime, 1);
-    // otherwise, exponential
-    return endValue + (startValue - endValue) * Math.exp(-curTime * type / maxTime);
-  }
-
-
-
-
-  function adjustCurve(type, startValue, endValue) {
-    // the exponential curve will never hit its target... but we can calculate an adjusted
-    // target so that it will miss the adjusted value, but end up hitting the actual target
-    if (type === 0)
-      return endValue; // linear hits its target, so no worries
-    var endExp = Math.exp(-type);
-    return (endValue - startValue * endExp) / (1 - endExp);
-  }
-
-  function triggeredValue(time) {
-    // calculates the actual value of the envelope at a given time, where `time` is the number
-    // of seconds after a trigger (but before a release)
-    var atktime = lastTrigger.atktime;
-    if (time < atktime) {
-      return curveValue(acurve, lastTrigger.v,
-        adjustCurve(acurve, lastTrigger.v, peak), time, atktime);
-    }
-    if (time < atktime + hold)
-      return peak;
-    if (time < atktime + hold + decay)
-      return curveValue(dcurve, peak, sustain_adj, time - atktime - hold, decay);
-    return sustain;
-  }
-
-  function releasedValue(time) {
-    // calculates the actual value of the envelope at a given time, where `time` is the number
-    // of seconds after a release
-    if (time < 0)
-      return sustain;
-    if (time > lastRelease.reltime)
-      return base;
-    return curveValue(rcurve, lastRelease.v,
-      adjustCurve(rcurve, lastRelease.v, base), time, lastRelease.reltime);
-  }
-
-  function curveTo(param, type, value, time, duration) {
-    if (type === 0 || duration <= 0)
-      param.linearRampToValueAtTime(value, time + duration);
-    else // exponential
-      param.setTargetAtTime(value, time, duration / type);
-  }
-
-  node.trigger = function (when) {
-    console.log("i trigger")
-    if (typeof when === 'undefined')
-      when = this.context.currentTime;
-
-    if (lastTrigger !== false) {
-      if (when < lastTrigger.when)
-        throw new Error('[ADSRNode] Cannot trigger before future trigger');
-      this.release(when);
-    }
-    var v = base;
-    var interruptedLine = false;
-    if (lastRelease !== false) {
-      var now = when - lastRelease.when;
-      v = releasedValue(now);
-      // check if a linear release has been interrupted by this attack
-      interruptedLine = rcurve === 0 && now >= 0 && now <= lastRelease.reltime;
-      lastRelease = false;
-    }
-    var atktime = attack;
-    if (Math.abs(base - peak) > eps)
-      atktime = attack * (v - peak) / (base - peak);
-    lastTrigger = { when: when, v: v, atktime: atktime };
-
-    this.offset.cancelScheduledValues(when);
-
-
-
-    if (interruptedLine)
-      this.offset.linearRampToValueAtTime(v, when);
-    else
-      this.offset.setTargetAtTime(v, when, 0.001);
-    curveTo(this.offset, acurve, adjustCurve(acurve, v, peak), when, atktime);
-    this.offset.setTargetAtTime(peak, when + atktime, 0.001);
-    if (hold > 0)
-      this.offset.setTargetAtTime(peak, when + atktime + hold, 0.001);
-    curveTo(this.offset, dcurve, sustain_adj, when + atktime + hold, decay);
-    this.offset.setTargetAtTime(sustain, when + atktime + hold + decay, 0.001);
-    return this;
-  };
-
-  node.getOpts = () => {
-    return { attack, decay, sustain, sustain_adj, release, base, acurve, peak, hold, dcurve, rcurve };
-
-  }
-
-  node.release = function (when) {
-    if (typeof when === 'undefined')
-      when = this.context.currentTime;
-
-    if (lastTrigger === false)
-      throw new Error('[ADSRNode] Cannot release without a trigger');
-    if (when < lastTrigger.when)
-      throw new Error('[ADSRNode] Cannot release before the last trigger');
-    var tnow = when - lastTrigger.when;
-    var v = triggeredValue(tnow);
-    var reltime = release;
-    if (Math.abs(sustain - base) > eps)
-      reltime = release * (v - base) / (sustain - base);
-    lastRelease = { when: when, v: v, reltime: reltime };
-    var atktime = lastTrigger.atktime;
-    // check if a linear attack or a linear decay has been interrupted by this release
-    var interruptedLine =
-      (acurve === 0 && tnow >= 0 && tnow <= atktime) ||
-      (dcurve === 0 && tnow >= atktime + hold && tnow <= atktime + hold + decay);
-    lastTrigger = false;
-
-    this.offset.cancelScheduledValues(when);
-    node.baseTime = when + reltime;
-
-    if (interruptedLine)
-      this.offset.linearRampToValueAtTime(v, when);
-    else
-      this.offset.setTargetAtTime(v, when, 0.001);
-    curveTo(this.offset, rcurve, adjustCurve(rcurve, v, base), when, reltime);
-    this.offset.setTargetAtTime(base, when + reltime, 0.001);
-    return this;
-  };
-
-  node.reset = function () {
-    lastTrigger = false;
-    lastRelease = false;
-    var now = this.context.currentTime;
-    this.offset.cancelScheduledValues(now);
-    this.offset.setTargetAtTime(base, now, 0.001);
-    node.baseTime = now;
-    return this;
-  };
-
-  node.update = function (opts) {
-    update(opts);
-    return this.reset();
-  };
-
-  node.baseTime = 0;
-
-  return node;
 }
+var INITIAL_LEVEL = 0;
+var ATTACK_LEVEL = 1;
+function EnvGen(audioContext, targetParam, parent) {
+  // Support instantiating w/o new
+  if (!(this instanceof EnvGen)) {
+    return new EnvGen(audioContext, targetParam);
+  }
+
+  this._audioContext = audioContext;
+  this._targetParam = targetParam;
+
+  var _this = this;
+
+  Object.defineProperty(this, 'mode', {
+    get: function () { return _this._mode; },
+    set: function (value) {
+      if (_this.MODES.indexOf(value) >= 0) {
+        // If we're currently in a 'sustain' state, and we switched into AD mode,
+        // we would get stuck in sustain state. So just to be safe, whenever mode
+        // is changed we fake a gate-off signal.
+        _this.gate(false, Math.max(this._lastGateTime, audioContext.currentTime));
+
+        _this._mode = value;
+      }
+    }
+  });
+
+  Object.defineProperty(this, 'attackTime', {
+    get: function () { return _this._attackTime; },
+    set: function (value) {
+      if ((typeof (value) === 'number') && !isNaN(value) && (value > 0)) {
+        _this._attackTime = value;
+      }
+    }
+  });
+
+  Object.defineProperty(this, 'decayTime', {
+    get: function () { return _this._decayTime; },
+    set: function (value) {
+      if ((typeof (value) === 'number') && !isNaN(value) && (value > 0)) {
+        _this._decayTime = value;
+      }
+    }
+  });
+
+  Object.defineProperty(this, 'sustainLevel', {
+    get: function () { return _this._sustainLevel; },
+    set: function (value) {
+      if ((typeof (value) === 'number') && !isNaN(value) && (value >= 0) && (value <= 1)) {
+        _this._sustainLevel = value;
+      }
+    }
+  });
+
+  Object.defineProperty(this, 'releaseTime', {
+    get: function () { return _this._releaseTime; },
+    set: function (value) {
+      if ((typeof (value) === 'number') && !isNaN(value) && (value > 0)) {
+        _this._releaseTime = value;
+      }
+    }
+  });
+
+  // Default settings
+  this._mode = 'ADSR';
+  this._attackTime = 1;
+  this._decayTime = 1;
+  this._sustainLevel = 1;
+  this._releaseTime = 1;
+
+  this._targetParam.value = INITIAL_LEVEL;
+
+  // In case there was preexisting automation on the target parameter, we reset it here to known state.
+  this._targetParam.cancelScheduledValues(0);
+  this._targetParam.setValueAtTime(INITIAL_LEVEL, 0);
+
+  // All segments are exponential approaches to target values (setTargetAtTime)
+  // Each segment has properties:
+  //  beginTime
+  //  beginValue
+  //  targetValue
+  //  timeConst: 1/abs(slope-of-log(value))
+  // The _scheduledSegments array is kept in time-order, and always has at least one element.
+  this._scheduledSegments = [{
+    beginTime: 0,
+    beginValue: INITIAL_LEVEL,
+    targetValue: INITIAL_LEVEL,
+    timeConst: 1, // doesn't matter what this is since beginValue === targetValue
+  }];
+
+  // Track info about last gate we received
+  this._lastGateTime = audioContext.currentTime;
+  this._lastGateState = false;
+}
+
+EnvGen.prototype.MODES = ['AD', 'ASR', 'ADSR'];
+
+// Schedule a segment with the target AudioParam, and add it to our internal tracking.
+// It must start after our current last segment
+EnvGen.prototype._appendSegment = function (beginTime, beginValue, targetValue, timeConst) {
+  assert(beginTime >= this._scheduledSegments[this._scheduledSegments.length - 1].beginTime); // sanity check
+
+  // Set an anchor point for new segment to start from
+  this._targetParam.setValueAtTime(beginValue, beginTime);
+
+  // Schedule the new segment
+  this._targetParam.setTargetAtTime(targetValue, beginTime, timeConst);
+
+  this._scheduledSegments.push({
+    beginTime: beginTime,
+    beginValue: beginValue,
+    targetValue: targetValue,
+    timeConst: timeConst,
+  });
+};
+
+// Schedule a segment that starts at the given time, which may be during or before previously scheduled segments
+EnvGen.prototype._scheduleSegmentFromTime = function (time, targetValue, timeConst) {
+  // Find what scheduled segment (if any) would be active at given time
+  var activeIdx;
+  for (var i = 0; i < this._scheduledSegments.length; i++) {
+    if ((time >= this._scheduledSegments[i].beginTime) && ((i === (this._scheduledSegments.length - 1) || (time < this._scheduledSegments[i + 1].beginTime)))) {
+      activeIdx = i;
+      break;
+    }
+  }
+  assert(activeIdx !== undefined); // There must always be some active segment at any (current or future) time
+
+  var activeSeg = this._scheduledSegments[activeIdx];
+
+  // Determine the mid-segment value at the given time
+  var interruptValue = activeSeg.targetValue + (activeSeg.beginValue - activeSeg.targetValue) * Math.exp((activeSeg.beginTime - time) / activeSeg.timeConst);
+
+  // Truncate _scheduledSegments array to end at the active segment
+  this._scheduledSegments.length = activeIdx + 1;
+
+  // Cancel all segments from the interrupt time onwward
+  this._targetParam.cancelScheduledValues(time);
+
+  // Append the new segment from the interrupted point
+  this._appendSegment(time, interruptValue, targetValue, timeConst);
+};
+
+// Schedule a segment that starts when the last previously-scheduled segment reaches the given value threshold
+EnvGen.prototype._scheduleSegmentFromValueThreshold = function (valueThreshold, targetValue, timeConst) {
+  var lastSeg = this._scheduledSegments[this._scheduledSegments.length - 1];
+
+  // Determine the time that the last segment will hit the given value threshold
+  var interruptTime = Math.abs(Math.log((lastSeg.targetValue - valueThreshold) / (lastSeg.targetValue - lastSeg.beginValue)) * lastSeg.timeConst) + lastSeg.beginTime;
+
+  // Append the new segment from the interrupt time
+  this._appendSegment(interruptTime, valueThreshold, targetValue, timeConst);
+};
+
+// Cull segments from this._scheduledSegments end before beforeTime 
+EnvGen.prototype._cullScheduledSegments = function (beforeTime) {
+  for (var i = 0; i < (this._scheduledSegments.length - 1); i++) {
+    // Because we only track beginTime (not endTime), we need to look one segment ahead
+    if (beforeTime < this._scheduledSegments[i + 1].beginTime) {
+      break;
+    }
+  }
+  // When we exit the loop, i will be the index of the segment that should be the first one remaining
+
+  this._scheduledSegments = this._scheduledSegments.slice(i);
+
+  assert(this._scheduledSegments.length > 0); // sanity check
+  assert(this._scheduledSegments[0].beginTime <= beforeTime); // sanity check
+};
+
+EnvGen.prototype.gate = function (on, time) {
+  // Note the current AudioContext time
+  var ct = this._audioContext.currentTime;
+
+  // Default time parameter to current time
+  time = (time === undefined) ? ct : time;
+
+  // Gates can only have times >= the times of previously supplied gates.
+  // If we receive a bad one, log a warning and ignore
+  if (time < this._lastGateTime) {
+    console.warn('Received gate with time earlier than a previous gate');
+    return;
+  }
+  this._lastGateTime = time;
+  this._lastGateState = on;
+
+  // Cull scheduled segments that we are tracking that are now in the past
+  this._cullScheduledSegments(ct);
+
+  if (on) {
+    // Schedule attack
+    // To make an attack that reaches maximum level (1) in a finite amount of time,
+    //  we aim to exponentially approach a value that is greater than 1, and then
+    //  stop the attack when it reaches 1. This is how analog envgens work.
+    var ATTACK_LINEARITY = 100 // Make this nearly-linear. We could expose as a parameter later on
+    var attackTargetLevel = 1 / (1 - Math.exp(-this._attackTime / ATTACK_LINEARITY));
+    this._scheduleSegmentFromTime(time, attackTargetLevel, ATTACK_LINEARITY);
+
+    // Schedule whatever phase that comes after attack (decay or sustain)
+    if ((this._mode === 'AD') || (this._mode === 'ADSR')) {
+      // Determine target level to which we will decay
+      var decayTargetLevel;
+      if (this._mode === 'AD') {
+        decayTargetLevel = INITIAL_LEVEL;
+      } else {
+        decayTargetLevel = this._sustainLevel;
+      }
+
+      // Schedule decay
+      this._scheduleSegmentFromValueThreshold(ATTACK_LEVEL, decayTargetLevel, this._decayTime);
+    } else if (this._mode === 'ASR') {
+      // Schedule sustain
+      this._scheduleSegmentFromValueThreshold(ATTACK_LEVEL, ATTACK_LEVEL, 1); // timeConst here doesn't really matter
+    } else {
+      assert(false); // invalid mode
+    }
+  } else {
+    if (this._mode === 'AD') {
+      // We ignore gate-off when in AD mode
+    } else if ((this._mode === 'ASR') || (this._mode === 'ADSR')) {
+      // Schedule release
+      this._scheduleSegmentFromTime(time, INITIAL_LEVEL, this._releaseTime);
+    } else {
+      assert(false); // invalid mode
+    }
+  }
+};
+
+EnvGen.prototype.gateOn = function (time) {
+  this.gate(true, time);
+};
+
+EnvGen.prototype.gateOff = function (time) {
+  this.gate(false, time);
+};
 
 
 window.WasabiMinilogue = class WasabiMinilogue extends WebAudioPluginFactory {
