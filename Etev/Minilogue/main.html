@@ -9,12 +9,12 @@
 <template id="wc-minilogue">
   <style>
     :host {
-      background: linear-gradient( rgb(77, 74, 78), rgb(218, 196, 191));
+      background: linear-gradient( rgb(77, 74, 78), rgb(221, 221, 221));
       box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 
-      width: 650px;
-      height: 260px;
+      width: 640px;
+      height: 240px;
       display: block;
       user-select: none;
       cursor: move;
@@ -209,7 +209,7 @@
       <span class="pedalLabel">EG</span>
       <div class="row">
         <div class="column">
-          <webaudio-knob id="ampattack" class="knob" min="0.001" max="5" sprites="99" value="0.5" step="0.1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+          <webaudio-knob id="ampattack" class="knob" min="0.001" max="5" sprites="99" value="0.001" step="0.1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc1pitch-label">Attack</span>
         </div>
@@ -224,29 +224,29 @@
           <span class="knob-label" id="osc1gain-label">Sustain</span>
         </div>
         <div class="column">
-          <webaudio-knob id="amprelease" class="knob" min="0.001" max="5" sprites="99" value="1" step="0.1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+          <webaudio-knob id="amprelease" class="knob" min="0.001" max="5" sprites="99" value="0.001" step="0.1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc1gain-label">Release</span>
         </div>
       </div>
       <div class="row">
         <div class="column">
-          <webaudio-knob id="egattack" class="knob" min="0" max="5" sprites="99" value="0.5" step="0.1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+          <webaudio-knob id="egattack" class="knob" min="0.001" max="5" sprites="99" value="0.5" step="0.1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc2pitch-label">Attack</span>
         </div>
         <div class="column">
-          <webaudio-knob id="egdecay" class="knob" min="0" max="5" sprites="99" value="1" step="0.1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+          <webaudio-knob id="egdecay" class="knob" min="0.001" max="5" sprites="99" value="1" step="0.1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc2shape-label">Decay</span>
         </div>
         <div class="column">
-          <webaudio-knob id="egsustain" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+          <webaudio-knob id="egsustain" class="knob" min="0.001" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc2gain-label">Sustain</span>
         </div>
         <div class="column">
-          <webaudio-knob id="egrelease" class="knob" smin="0" max="5" sprites="99" value="1" step="0.1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+          <webaudio-knob id="egrelease" class="knob" smin="0.001" max="5" sprites="99" value="1" step="0.1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
             diameter="24"></webaudio-knob>
           <span class="knob-label" id="osc1gain-label">Release</span>
         </div>
