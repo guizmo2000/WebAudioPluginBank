@@ -253,6 +253,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   }
 
   killNote(key){
+    console.log("kill"+key)
      this.voices[key].osc1.stop();
       this.voices[key].osc2.stop();
       this.voices[key].lfo.stop();
