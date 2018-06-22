@@ -12,8 +12,8 @@
       box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 
-      width: 100px;
-      height: 140px;
+      width: 180px;
+      height: 80px;
       display: block;
       user-select: none;
       cursor: move;
@@ -90,16 +90,15 @@
 
     .row {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       justify-content: flex-start;
       align-items: stretch;
-      margin-top: 45px;
     }
   </style>
   <div class="row">
     <div class="column">
       <webaudio-knob id="knob1" class="knob" sprites="99" min="0" max="100" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" data-role="effect" diameter="24"></webaudio-knob>
+        width="40" height="40" midicc="1.27" data-role="effect" diameter="24"></webaudio-knob>
       <span class="knob-label" id="knob1-label">EFFECT</span>
     </div>
  
@@ -132,6 +131,7 @@
       this.state = new Object();
       this.setKnobs();
       this.setSwitchListener();
+      //this.InitMidi();
     }
 
     get properties() {
@@ -192,6 +192,48 @@
       this._plug.setParam("status", "enable");
     }
 
+   /* SelectMidi(n) {
+	    this._root.querySelector('#midiport').selectedIndex = n + 1;
+	    this.currentPort = n;
+    }
+
+    InitMidi() {
+    	if (navigator.requestMIDIAccess) {
+    		navigator.requestMIDIAccess().then(
+    			(access) => {
+    				console.log("====> MIDI ready.");
+    				setTimeout(() => {
+    					var it = access.inputs.values();
+    					for (var i = it.next(); !i.done; i = it.next()) {
+    						var e = document.createElement("option");
+    						e.innerHTML = i.value.name;
+    						this._root.querySelector('#midiport').appendChild(e);
+    						this.midiPort.push(i.value);
+    					}
+    					if (this.midiPort.length > 0) this.SelectMidi(this.midiPort.length - 1);
+    				}, 10);
+    			}, () => {
+    				console.log("MIDI is not available.");
+    			}
+    		);
+    	}
+	    webAudioControlsMidiManager.addMidiListener(event => {
+	    	var note = event.note;
+	    	var data = event.data;
+	    	var channel = data[0];
+	    	var controlNumber = data[1];
+	    	var value = data[2];
+	    if (channel != 248) {
+	    	console.log("Midi event hook: data:[" + data + "] channel:" + data[0] + " cc:" + controlNumber + " value:" + value);
+      }
+
+     ;
+      if(channel == 176 && controlNumber == 27){
+        this._plug.setParam("effect", value);
+      }
+  })
+}*/
+
   }
   // Register the x-custom element with the browser
 
@@ -208,4 +250,8 @@
     let elem = new PedalWahGUI(plug);
     return elem;
   }
+
+    
+
+ //window.onload=PedalWahGUI.InitMidi;
 </script>
