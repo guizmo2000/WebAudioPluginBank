@@ -84,7 +84,7 @@ if(window.customElements){
     knobWidth:0,
     knobHeight:0,
     knobDiameter:64,
-    knobColors:"#e00;#000;#000",
+    knobColors:"#fff;#000;#000",
     sliderSrc:null,
     sliderKnobsrc:null,
     sliderWidth:0,
