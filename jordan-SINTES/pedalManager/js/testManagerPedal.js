@@ -60,6 +60,7 @@ function InitMidi() {
         var analyse=document.querySelector("#analyse");
         var faust=document.querySelector("#faust");
         
+        var expression=document.querySelector("#expression");
         var volume=document.querySelector("#volume");
         
         function clearAll(){
@@ -195,8 +196,14 @@ function InitMidi() {
             button7.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 07:
-            clearAll();
-            button8.setAttribute('style', 'background:rgb(82, 206, 88);; ');
+            if(channel==176){
+              volume.innerHTML=value;
+            }
+            else{
+              clearAll();
+              button8.setAttribute('style', 'background:rgb(82, 206, 88);; ');
+            }
+            
             break;
           case 08:
             clearAll();
@@ -247,7 +254,7 @@ function InitMidi() {
             faust.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 27:
-            volume.innerHTML=value;
+            expression.innerHTML=value;
         }
           
     
