@@ -138,14 +138,17 @@ window.WahPedal = class WahPedal extends WebAudioPluginCompositeNode {
 		this.effect = this.params.effect;
 	}
 
-	set effect(_effect) {
-         
+	set effect(_effect) {   
 		if ((_effect < this._descriptor.effect.maxValue) && (_effect > this._descriptor.effect.minValue))
-            this.params.effect = _effect;
-            this.lowPass.frequency.setValueAtTime(320+_effect*25, this.context.currentTime);
-            console.log(320+_effect*22)
-		    this.lowPass.Q.setValueAtTime(2+ _effect/20, this.context.currentTime);
-            console.log(2+_effect/20)
+						this.params.effect = _effect;
+						var lowpassparam= 250+_effect*18;
+						var qparam= 2+_effect/20;
+
+            this.lowPass.frequency.setValueAtTime(lowpassparam, this.context.currentTime);
+						console.log(lowpassparam);
+						
+		    		this.lowPass.Q.setValueAtTime(qparam, this.context.currentTime);
+            console.log(qparam);
 	}
   
   
