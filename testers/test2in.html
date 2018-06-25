@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -7,14 +6,37 @@
 </head>
 
 <body>
+  <span>Open your console with the webaudio graph extension and check if the graph react correctly</span>
+  <br>
+  <button id="merge">Merge</button>
+  <button id="split">Split</button>
+  <button class="mute" id="mute1" style="display:none">Muteleft</button>  <button class="mute" id="unmute1" style="display:none">UnMuteleft</button>
+  <button class="mute" id="mute2" style="display:none">MuteRigth</button>  <button class="mute" id="unmute2" style="display:none">UnMuteRigth</button>
+
 
 </body>
 <script>
-window.onload = () =>{
+  var ctx = new AudioContext();
 
-  
 
-  if (navigator.mediaDevices.getUserMedia) {
+  var splitter = ctx.createChannelSplitter(2);
+  var merger = ctx.createChannelMerger(2);
+  var gaingauche = ctx.createGain();
+  var gaindroite = ctx.createGain();
+  var gainStereo = ctx.createGain();
+
+  document.querySelector("#merge").addEventListener("click", mergetoOneStereo);
+  document.querySelector("#split").addEventListener("click", splittToTwoMono);
+  document.querySelector("#split").addEventListener("click", toggleMute);
+
+  document.querySelector("#mute1").addEventListener("click", muteleft);
+  document.querySelector("#mute2").addEventListener("click", muterigth);
+  document.querySelector("#unmute1").addEventListener("click", unmuteleft);
+  document.querySelector("#unmute2").addEventListener("click", unmuterigth);
+
+  window.onload = () => {
+
+    if (navigator.mediaDevices.getUserMedia) {
       var constraints = {
         audio: {
           echoCancellation: false,
@@ -23,29 +45,57 @@ window.onload = () =>{
         }
       };
       navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+        var mediaSourceM = ctx.createMediaStreamSource(stream);
         window.stream = stream;
-        this.sound.mediaSourceM = this.sound.context.createMediaStreamSource(stream);
-
-        this.splitter = this.sound.context.createChannelSplitter(2);
-        this.sound.mediaSourceM.connect(this.splitter);
-
-        this.monoMediaSourceM = this.sound.context.createChannelMerger(2);
-
-        //connexion monoMediaSourceM Midi
-        this.sound.mediaSourceM.connect(this.sound.gainNodeInMid);
-        //this.sound.gainNodeInMid.connect(this.splitter);
-        this.splitter.connect(this.monoMediaSourceM, 0, 0);
-        this.splitter.connect(this.monoMediaSourceM, 0, 1);
-        //this.monoMediaSourceM.connect(GlobalContext.context.destination)
-        this.splitter.connect(this.monoMediaSourceM, 1, 0);
-        this.splitter.connect(this.monoMediaSourceM, 1, 1);
-        this.monoMediaSourceM.connect(this.sound.gainNodeInMid);
+        mediaSourceM.connect(splitter);
       }).catch(function (err) {
         // handle the error
         console.log(err.name + ": " + err.message);
       });
     }
+  }
 
+  function toggleMute() {
+    if (document.querySelector(".mute").style.display == 'none') document.querySelectorAll(".mute").forEach((elt) => { elt.style.display = 'block' });
+    else document.querySelectorAll(".mute").forEach((elt) => { elt.style.display = 'none' });
+  }
 
-}
+  function mergetoOneStereo() {
+    gaindroite.disconnect();
+    gaingauche.disconnect();
+    splitter.disconnect();
+    splitter.connect(merger, 0, 0);
+    splitter.connect(merger, 0, 1);
+    splitter.connect(merger, 1, 0);
+    splitter.connect(merger, 1, 1);
+    merger.connect(gainStereo);
+    gainStereo.connect(ctx.destination);
+  }
+
+  function splittToTwoMono() {
+    merger.disconnect();
+    splitter.disconnect();
+    gainStereo.disconnect();
+    splitter.connect(gaingauche, 0);
+    splitter.connect(gaindroite, 1);
+    gaingauche.connect(ctx.destination);
+    gaindroite.connect(ctx.destination);
+  }
+
+  function muteleft() {
+      splitter.disconnect(gaingauche);
+  }
+
+  function muterigth(){
+    splitter.disconnect(gaindroite,1);
+  }
+
+  function unmuteleft() {
+      splitter.connect(gaingauche);
+  }
+
+  function unmuterigth(){
+    splitter.connect(gaindroite, 1);
+  }
+
 </script>
