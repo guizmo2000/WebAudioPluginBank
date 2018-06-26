@@ -147,7 +147,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
         }
 
         else{
-            var lowpassparam= 450+_effect*12;
+            var lowpassparam= 450+_effect*11.6;
         }
         var qparam= 2+_effect/20;
 
