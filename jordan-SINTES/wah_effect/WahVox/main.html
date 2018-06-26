@@ -1,0 +1,251 @@
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script>
+  WebAudioControlsOptions = {
+    useMidi: 1,
+  };
+</script>
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<template id="wc-wahvox">
+  <style>
+    :host {
+      background: linear-gradient( rgb(228, 215, 233), rgb(226, 212, 206));
+      box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+
+
+      width: 110px;
+      height: 140px;
+      display: block;
+      user-select: none;
+      cursor: move;
+      z-index: 9;
+
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+    }
+
+    .pedalLabel,
+    .div_buttons {
+      border-radius: 8px;
+    }
+
+    .div_menuPanel {
+      /* border-top-left-radius: 8px;
+        border-top-right-radius: 8px; */
+    }
+
+    webaudio-switch {
+      left: -6px;
+      
+    }
+
+    .pedalLabel {
+      /* background: rgba(0, 0, 0, 0.4); */
+      box-shadow: inset 0px 1px 5px #111;
+      border: 1px solid #ccc;
+      color: rgb(14, 9, 9);
+      padding: 4px 10px;
+
+      font-size: 10px;
+      text-align: center;
+      user-select: none;
+      font-family: helvetica;
+      text-transform: uppercase;
+      margin-top: 20px;
+    }
+
+    .knob-label {
+      color: rgb(0, 0, 0);
+      text-shadow: 0px 1px 1px #000;
+
+      font-size: 6px;
+      margin-top: -2px;
+
+      text-align: center;
+      text-transform: uppercase;
+      overflow: hidden;
+      user-select: none;
+      font-family: helvetica;
+      margin-top: 5px;
+
+    }
+
+    .elements {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: center;
+  
+      padding: 10px;
+      
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      
+      flex: 1;
+      margin: 3px;
+      margin-top: 10px;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      align-items: stretch;
+       
+    }
+  </style>
+  <div class="row">
+    <div class="column">
+      <webaudio-knob id="knob1" class="knob" sprites="99" min="0" max="100" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+      width="40" height="40" midicc="1.27" data-role="effect" diameter="24"></webaudio-knob>
+      <span class="knob-label" id="knob1-label">EFFECT</span>
+      <webaudio-switch id="switch1" class="switch"  midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+      width="32" height="20"></webaudio-switch>
+      <span class="pedalLabel">Vox V847</span>
+    </div>
+  </div>
+
+    
+</template>
+<script>
+  let delaytemp = document.currentScript.ownerDocument.querySelector("#wc-wahvox");
+  class WahVoxGUI extends HTMLElement {
+
+    constructor(plug) {
+      super();
+      this._plug = plug;
+      this._plug.gui = this;
+      this._root = this.attachShadow({ mode: 'open' });
+      this._root.appendChild(delaytemp.content.cloneNode(true));
+      this.isOn = false;
+      this.state = new Object();
+      this.setKnobs();
+      this.setSwitchListener();
+      //this.InitMidi();
+    }
+
+    get properties() {
+      this.boundingRect = {
+        dataWidth: {
+          type: Number,
+          value: 120
+        },
+        dataHeight: {
+          type: Number,
+          value: 180
+        }
+      };
+      return this.boundingRect;
+    }
+
+    static get observedAttributes() { return ['state']; }
+
+    attributeChangedCallback() {
+      console.log(`Custom element ${this.is} attributes changed.`);
+      this.state = JSON.parse(this.getAttribute('state'));
+      console.log(this.state);
+      if (this.state.status == "enable") {
+        this._root.querySelector("#switch1").value = 1;
+        this.isOn = true;
+      }
+      this.knobs = this._root.querySelectorAll(".knob");
+      this.labels = this._root.querySelectorAll(".knob-label");
+
+      for (var i = 0; i < this.knobs.length; i++) {
+        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")] * 100;
+      }
+      console.log(this.knobs);
+
+    }
+
+
+
+    setKnobs() {
+      console.log('setknobs');
+      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("effect", e.target.value));
+
+    }
+
+    setSwitchListener() {
+      console.log("setswitch");
+      this._root.querySelector("#switch1").addEventListener('change', (e) => {
+        if (this.isOn) this.bypass()
+        else this.reactivate();
+        this.isOn = !this.isOn;
+      });
+    }
+
+    bypass() {
+      this._plug.setParam("status", "disable");
+    }
+    reactivate() {
+      this._plug.setParam("status", "enable");
+    }
+
+   /* SelectMidi(n) {
+	    this._root.querySelector('#midiport').selectedIndex = n + 1;
+	    this.currentPort = n;
+    }
+
+    InitMidi() {
+    	if (navigator.requestMIDIAccess) {
+    		navigator.requestMIDIAccess().then(
+    			(access) => {
+    				console.log("====> MIDI ready.");
+    				setTimeout(() => {
+    					var it = access.inputs.values();
+    					for (var i = it.next(); !i.done; i = it.next()) {
+    						var e = document.createElement("option");
+    						e.innerHTML = i.value.name;
+    						this._root.querySelector('#midiport').appendChild(e);
+    						this.midiPort.push(i.value);
+    					}
+    					if (this.midiPort.length > 0) this.SelectMidi(this.midiPort.length - 1);
+    				}, 10);
+    			}, () => {
+    				console.log("MIDI is not available.");
+    			}
+    		);
+    	}
+	    webAudioControlsMidiManager.addMidiListener(event => {
+	    	var note = event.note;
+	    	var data = event.data;
+	    	var channel = data[0];
+	    	var controlNumber = data[1];
+	    	var value = data[2];
+	    if (channel != 248) {
+	    	console.log("Midi event hook: data:[" + data + "] channel:" + data[0] + " cc:" + controlNumber + " value:" + value);
+      }
+
+     ;
+      if(channel == 176 && controlNumber == 27){
+        this._plug.setParam("effect", value);
+      }
+  })
+}*/
+
+  }
+  // Register the x-custom element with the browser
+
+  try {
+    console.log("Element defined");
+    customElements.define('wasabi-wahvox', WahVoxGUI);
+  } catch (error) {
+    console.log(error);
+    console.log("Element already defined");
+  }
+
+
+  createWAP = (plug) => {
+    let elem = new WahVoxGUI(plug);
+    return elem;
+  }
+
+    
+
+ //window.onload=PedalWahGUI.InitMidi;
+</script>
