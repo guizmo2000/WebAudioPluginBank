@@ -5,10 +5,10 @@
   };
 </script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template id="wc-wahpedal">
+<template id="wc-wahvox">
   <style>
     :host {
-      background: linear-gradient( rgb(77, 74, 78), rgb(19, 14, 12));
+      background: linear-gradient( rgb(228, 215, 233), rgb(226, 212, 206));
       box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 
@@ -42,7 +42,7 @@
       /* background: rgba(0, 0, 0, 0.4); */
       box-shadow: inset 0px 1px 5px #111;
       border: 1px solid #ccc;
-      color: #ccc;
+      color: rgb(14, 9, 9);
       padding: 4px 10px;
 
       font-size: 10px;
@@ -54,7 +54,7 @@
     }
 
     .knob-label {
-      color: #ddd;
+      color: rgb(0, 0, 0);
       text-shadow: 0px 1px 1px #000;
 
       font-size: 6px;
@@ -105,15 +105,15 @@
       <span class="knob-label" id="knob1-label">EFFECT</span>
       <webaudio-switch id="switch1" class="switch"  midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
       width="32" height="20"></webaudio-switch>
-      <span class="pedalLabel">WAH</span>
+      <span class="pedalLabel">Vox V847</span>
     </div>
   </div>
 
     
 </template>
 <script>
-  let delaytemp = document.currentScript.ownerDocument.querySelector("#wc-wahpedal");
-  class PedalWahGUI extends HTMLElement {
+  let delaytemp = document.currentScript.ownerDocument.querySelector("#wc-wahvox");
+  class WahVoxGUI extends HTMLElement {
 
     constructor(plug) {
       super();
@@ -233,7 +233,7 @@
 
   try {
     console.log("Element defined");
-    customElements.define('wasabi-pedalwah', PedalWahGUI);
+    customElements.define('wasabi-wahvox', WahVoxGUI);
   } catch (error) {
     console.log(error);
     console.log("Element already defined");
@@ -241,7 +241,7 @@
 
 
   createWAP = (plug) => {
-    let elem = new PedalWahGUI(plug);
+    let elem = new WahVoxGUI(plug);
     return elem;
   }
 
