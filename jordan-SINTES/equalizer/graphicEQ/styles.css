@@ -1,0 +1,20 @@
+
+
+.div_app_graphicEQ{
+    position:relative;
+}  
+
+
+.graphicEQwrapper {
+height:95%;
+width:95%;
+position:fixed;
+border:5px solid grey;
+border-radius:15px;
+background: black;
+}
+
+.graphicEQ {
+border-radius: 10px;
+margin-left:10px;
+}
