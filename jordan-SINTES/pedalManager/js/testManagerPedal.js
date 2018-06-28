@@ -197,7 +197,7 @@ function InitMidi() {
             break;
           case 07:
             if(channel==176){
-              volume.innerHTML=value;
+              expression.innerHTML=value;
             }
             else{
               clearAll();
@@ -254,7 +254,7 @@ function InitMidi() {
             faust.setAttribute('style', 'background:rgb(82, 206, 88);; ');
             break;
           case 27:
-            expression.innerHTML=value;
+            volume.innerHTML=value;
         }
           
     
