@@ -6,7 +6,7 @@
 </head>
 
 <script src="./../../sdk/WebAudioSDK.js"></script>
-<script src="./WahPedal/main.js"></script>
+<script src="./WahVox/main.js"></script>
 
 <body>
 
@@ -45,8 +45,8 @@
 
   function toggleGuitarInput(event) {
     var button = document.querySelector("#toggleGuitarIn");
-    var pluginURL = "./WahPedal"; 
-	  var plugin = new WasabiWahPedal(ctx, pluginURL);
+    var pluginURL = "./WahVox"; 
+	  var plugin = new WasabiWahVox(ctx, pluginURL);
     
     plugin.load().then((node) => 
     {
