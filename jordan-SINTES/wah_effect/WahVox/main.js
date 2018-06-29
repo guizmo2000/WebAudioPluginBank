@@ -23,8 +23,9 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 			qMax: 2,
 			freqMin: 450,
 			freqMax: 1600,
-			gain: Math.pow(10, (18 /20)), // refer to: https://stackoverflow.com/questions/22604500/web-audio-api-working-with-decibels
-			gainboosted: Math.pow(10, (36 /20))
+			gain:1,
+			gainnotboosted: Math.pow(10, (18 /20)), // refer to: https://stackoverflow.com/questions/22604500/web-audio-api-working-with-decibels
+			gainboosted: Math.pow(10, (24 /20))
 		}
 
 		this.setup();
@@ -198,6 +199,9 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 			if(this.params.boost==="enable"){
 				this._input.gain.setValueAtTime(this.params.gainboosted, this.context.currentTime);
 			}
+			else if(this.params.boost==="disable"){
+				this._input.gain.setValueAtTime(this.params.gainnotboosted, this.context.currentTime);
+			}
 		}
 		else if (_sig === "disable") {
 			this.params.status = "disable";
@@ -216,7 +220,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		}
 		else if (_sig === "disable") {
 			this.params.boost = "disable";
-			this._input.gain.setValueAtTime(this.params.gain, this.context.currentTime);
+			this._input.gain.setValueAtTime(this.params.gainnotboosted, this.context.currentTime);
 		}
 	}
 
