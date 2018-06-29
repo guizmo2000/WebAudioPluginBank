@@ -12,7 +12,7 @@
       box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 
-      width: 80px;
+      width: 180px;
       height: 220px;
       display: block;
       user-select: none;
@@ -57,7 +57,7 @@
       color: rgb(255, 255, 255);
       text-shadow: 0px 1px 1px #000;
 
-      font-size: 6px;
+      font-size: 9px;
       margin-top: -2px;
 
       text-align: center;
@@ -85,6 +85,18 @@
       justify-content: flex-start;
       align-items: center;
       background-color: black;
+      flex: 1;
+      margin: 3px;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+
+    .column2 {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      
       flex: 1;
       margin: 3px;
       margin-top: 10px;
@@ -121,6 +133,11 @@
       width="32" height="20"></webaudio-switch>
       <span class="pedalLabel">Vox V847</span>
     </div>
+    <div class="column2">
+      <webaudio-switch id="switch2" class="switch"  midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+      width="32" height="20"></webaudio-switch>
+      <span class="knob-label" id="knob1-label">BOOST</span>
+    </div>
   </div>
 
     
@@ -136,9 +153,11 @@
       this._root = this.attachShadow({ mode: 'open' });
       this._root.appendChild(delaytemp.content.cloneNode(true));
       this.isOn = false;
+      this.isOnBoost = false;
       this.state = new Object();
       this.setKnobs();
       this.setSwitchListener();
+      this.setBoostListener();
       //this.InitMidi();
     }
 
@@ -166,6 +185,11 @@
         this._root.querySelector("#switch1").value = 1;
         this.isOn = true;
       }
+
+      if (this.state.boost == "enable") {
+        this._root.querySelector('#switch2').value = 1;
+        this.isOnBoost = true;
+      }
       this.knobs = this._root.querySelectorAll(".knob");
       this.labels = this._root.querySelectorAll(".knob-label");
 
@@ -187,7 +211,7 @@
     setSwitchListener() {
       console.log("setswitch");
       this._root.querySelector("#switch1").addEventListener('change', (e) => {
-        if (this.isOn) this.bypass()
+        if (this.isOn) this.bypass();
         else this.reactivate();
         this.isOn = !this.isOn;
       });
@@ -198,6 +222,22 @@
     }
     reactivate() {
       this._plug.setParam("status", "enable");
+    }
+
+    setBoostListener(){
+      console.log("setBoost");
+      this._root.querySelector("#switch2").addEventListener('change', (e) => {
+        if (this.isOnBoost) this.bypassBoost();
+        else this.reactivateBoost();
+        this.isOnBoost = !this.isOnBoost;
+      });
+    }
+
+    bypassBoost() {
+      this._plug.setParam("boost", "disable");
+    }
+    reactivateBoost() {
+      this._plug.setParam("boost", "enable");
     }
 
    /* SelectMidi(n) {

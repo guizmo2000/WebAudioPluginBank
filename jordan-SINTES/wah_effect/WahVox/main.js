@@ -6,6 +6,7 @@
 */
 window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 
+	
 	constructor(ctx, options) {
 		/*    ################     API PROPERTIES    ###############   */
 		super(ctx, options)
@@ -17,15 +18,19 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		this.params = {
 			"effect": this._descriptor.effect.defaultValue,
 			"status": "disable",
+			"boost": "disable",
 			qMin: 7,
 			qMax: 2,
 			freqMin: 450,
 			freqMax: 1600,
-			gain: 18
+			gain: Math.pow(10, (18 /20)), // refer to: https://stackoverflow.com/questions/22604500/web-audio-api-working-with-decibels
+			gainboosted: Math.pow(10, (36 /20))
 		}
 
 		this.setup();
 	}
+
+	
 
 	/*    ################     API METHODS    ###############   */
 	// p9 count inputs
@@ -114,27 +119,36 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 	setup() {
 		console.log("delay setup");
 		this.createNodes();
+		this.setInitalGain();
 		this.connectNodes();
 		this.linktoParams();
 	}
+
 
 	createNodes() {
 		this.dryGainNode = this.context.createGain();
 		this.wetGainNode = this.context.createGain();
 
+
 		this.bandPass = this.context.createBiquadFilter();
 		this.bandPass.type = "bandpass";
 		this.bandPass.frequency.value = 750;
-		this.bandPass.Q.value = this.map(this.lowPass.frequency.value,this.params.freqMin, this.params.freqMax,this.params.qMin, this.params.qMax);
+		this.bandPass.Q.value = this.map(this.bandPass.frequency.value,this.params.freqMin, this.params.freqMax,this.params.qMin, this.params.qMax);
 		this.bandPass.gain.value = this.params.gain;
+	}
+
+	setInitalGain() {
+		this._input.gain.setValueAtTime(this.params.gain, this.context.currentTime);
 	}
 
 	connectNodes() {
 		this._input.connect(this.dryGainNode);
-		this.dryGainNode.connect(this.lowPass);
-		this.lowPass.connect(this.wetGainNode);
+		this.dryGainNode.connect(this.bandPass);
+		this.bandPass.connect(this.wetGainNode);
 		this.wetGainNode.connect(this._output);
 	}
+
+
 
 	linktoParams() {
 	  /*
@@ -153,8 +167,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		*here the logarithmic is applied on frequency but we must change if knob can be logarithmic. Otherwise, using map function
 		* freq = this.map(_effect, 0, 100, this.param.min, this.param.max)
 		*/
-		console.log("effect: "+ _effect)
-		if(_effect === 0) _effect = 0.1;
+		if(_effect === 0) _effect = 1;
 		console.log("effect avant log " + _effect);
 
 		// conversion manuelle en log
@@ -168,12 +181,13 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		console.log("effect apres map " + freq);
 
 		// _effect entre 0 et 1, plus simple à gérer
-		this.lowPass.frequency.setValueAtTime(freq, this.context.currentTime);
+		this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
 		var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMin, this.params.qMax);
-		this.lowPass.Q.setValueAtTime(qparam, this.context.currentTime);
+		this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
 
 		console.log("f=" + freq + " q =" + qparam);
-	}
+
+	}	
 
 
 	set status(_sig) {
@@ -181,14 +195,37 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 			this.params.status = "enable";
 			this._input.disconnect(this._output);
 			this._input.connect(this.dryGainNode);
+			if(this.params.boost==="enable"){
+				this._input.gain.setValueAtTime(this.params.gainboosted, this.context.currentTime);
+			}
 		}
 		else if (_sig === "disable") {
 			this.params.status = "disable";
 			this._input.disconnect(this.dryGainNode);
 			this._input.connect(this._output);
+			this._input.gain.setValueAtTime(this.params.gain, this.context.currentTime);
 		}
 	}
 
+	set boost(_sig) {
+
+	if(this.params.status=== "enable"){
+		if (_sig === "enable") {
+			this.params.boost = "enable";
+			this._input.gain.setValueAtTime(this.params.gainboosted, this.context.currentTime);
+		}
+		else if (_sig === "disable") {
+			this.params.boost = "disable";
+			this._input.gain.setValueAtTime(this.params.gain, this.context.currentTime);
+		}
+	}
+
+	else if(this.params.status=== "disable"){
+		console.log("Boost aren't avaiable");
+		this._input.gain.setValueAtTime(this.params.gain, this.context.currentTime);
+	}	
+		
+	}
 
 
 }
