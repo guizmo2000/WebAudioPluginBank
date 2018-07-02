@@ -113,8 +113,6 @@
   </style>
   <div class="row">
     <div class="column">
-      <!--<webaudio-knob id="knob1" class="knob" sprites="99" min="0" max="100" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-      width="40" height="40" midicc="1.27" data-role="effect" diameter="24"></webaudio-knob>-->
       <webaudio-slider id="masterKnob" midilearn="true" units="Db" src="./wahvox/image/vsliderbody.png"
 			 knobsrc="./wahvox/image/vsliderknob.png"
 			 value="50" min="0" max="100" step="1" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;"
@@ -137,6 +135,9 @@
       <webaudio-switch id="switch2" class="switch"  midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
       width="32" height="20"></webaudio-switch>
       <span class="knob-label" id="knob1-label">BOOST</span>
+      <webaudio-slider class="knob" id="mode" midilearn="1" midicc="2.0" value="1" min="1" max="3" step="1" width="15" height="24"
+            tooltip="(1=log 2=exp 3=lin)"></webaudio-slider>
+			<span class="knob-label" id="knob1-label">Mode</span>
     </div>
   </div>
 
@@ -205,7 +206,7 @@
     setKnobs() {
       console.log('setknobs');
       this._root.querySelector("#masterKnob").addEventListener('input', (e) => this._plug.setParam("effect", e.target.value));
-
+      this._root.querySelector("#mode").addEventListener('input', (e) => this._plug.setParam("mode", e.target.value));
     }
 
     setSwitchListener() {

@@ -14,9 +14,9 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 
 		this.addParam({ name: 'effect', defaultValue: 50, minValue: 0, maxValue: 100 });
 
-
 		this.params = {
 			"effect": this._descriptor.effect.defaultValue,
+			"mode": 1,
 			"status": "disable",
 			"boost": "disable",
 			qMin: 7,
@@ -24,7 +24,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 			freqMin: 450,
 			freqMax: 1600,
 			gain: 1,
-			gainnotboosted: Math.pow(10, (18 / 20)), // refer to: https://stackoverflow.com/questions/22604500/web-audio-api-working-with-decibels
+			gainnotboosted: Math.pow(10, (18 / 20)), // refers to: https://stackoverflow.com/questions/22604500/web-audio-api-working-with-decibels
 			gainboosted: Math.pow(10, (24 / 20))
 		}
 
@@ -117,6 +117,10 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 
 	/*  #########  Personnal code for the web audio graph  #########   */
 
+	setGaintoDB(gain) {
+		Math.pow(10, (gain / 20));
+	}
+
 	setup() {
 		console.log("delay setup");
 		this.createNodes();
@@ -156,6 +160,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		 * set default value for parameters and assign it to the web audio nodes
 		 */
 		this.effect = this.params.effect;
+		
 	}
 
 	//To change the amplitude depends on parameter
@@ -163,43 +168,73 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 	}
 
-	/*
-	set effect(_effect) {
-		/* Effect is between 0-100, but kbob  logarothmic (check question git), the middle position isn't the median value
-		*here the logarithmic is applied on frequency but we must change if knob can be logarithmic. Otherwise, using map function
-		* freq = this.map(_effect, 0, 100, this.param.min, this.param.max)
-		
-		if (_effect === 0) _effect = 1;
-		console.log("effect avant log " + _effect);
-
-		// conversion manuelle en log
-		_effect = Math.log(_effect);
-
-		console.log("effect apres log " + _effect);
-
-		// normalisation entre freq min et freqmax
-		let freq = this.map(_effect, Math.log(1), Math.log(100), this.params.freqMin, this.params.freqMax);
-		//let freq = this.map(_effect, 1, 100, this.params.freqMin, this.params.freqMax);
-		console.log("effect apres map " + freq);
-
-		// _effect entre 0 et 1, plus simple à gérer
-		this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
-		var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMin, this.params.qMax);
-		this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
-
-		console.log("f=" + freq + " q =" + qparam);
-
-	}
-	*/
 
 	set effect(_effect) {
-		if (_effect === 0) _effect =1;
-		let freq = this.map(_effect, 1, 100, this.params.freqMin, this.params.freqMax);
-		console.log("effect apres map " + freq);
-		this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
-		var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMin, this.params.qMax);
-		this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
-		console.log("f=" + freq + " q =" + qparam);
+		if (this.mode === 1) {
+			//Logarithmic Mode
+			/* Effect is between 0-100, but kbob  logarothmic (check question git), the middle position isn't the median value
+			*here the logarithmic is applied on frequency but we must change if knob can be logarithmic. Otherwise, using map function
+			*freq = this.map(_effect, 0, 100, this.param.min, this.param.max)
+			*/
+			console.log("Logarithmic mode")
+			if (_effect === 0) _effect = 1;
+			console.log("effect avant log " + _effect);
+
+			// conversion manuelle en log
+			_effect = Math.log(_effect);
+
+			console.log("effect apres log " + _effect);
+
+			// normalisation entre freq min et freqmax
+			let freq = this.map(_effect, Math.log(1), Math.log(100), this.params.freqMin, this.params.freqMax);
+			//let freq = this.map(_effect, 1, 100, this.params.freqMin, this.params.freqMax);
+			console.log("effect apres map " + freq);
+
+			// _effect entre 0 et 1, plus simple à gérer
+			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
+			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMin, this.params.qMax);
+			this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
+
+			console.log("f=" + freq + " q =" + qparam);
+		}
+
+		else if (this.mode === 2) {
+			//Exponential mode (same remark as for the logarithm)
+			console.log("Exponantial Mode");
+			if (_effect === 0) _effect = 1;
+			console.log("effect avant exp " + _effect);
+
+			// conversion manuelle en log
+			_effect = Math.exp(_effect);
+
+			console.log("effect apres exp " + _effect);
+
+			// normalisation entre freq min et freqmax
+			let freq = this.map(_effect, Math.exp(1), Math.exp(100), this.params.freqMin, this.params.freqMax);
+			//let freq = this.map(_effect, 1, 100, this.params.freqMin, this.params.freqMax);
+			console.log("effect apres map " + freq);
+
+			// _effect entre 0 et 1, plus simple à gérer
+			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
+			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMin, this.params.qMax);
+			this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
+
+			console.log("f=" + freq + " q =" + qparam);
+		}
+
+		else if (this.mode === 3) {
+			//Linear mode
+			console.log("Linear mode");
+			if (_effect === 0) _effect = 1;
+			let freq = this.map(_effect, 1, 100, this.params.freqMin, this.params.freqMax);
+			console.log("effect apres map " + freq);
+			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
+			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMin, this.params.qMax);
+			this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
+			console.log("f=" + freq + " q =" + qparam);
+		}
+
+
 	}
 
 	set status(_sig) {
