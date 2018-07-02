@@ -8,7 +8,6 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
   constructor(ctx, options) {
     /*    ################     API PROPERTIES    ###############   */
     super(ctx, options)
-    this.state;
   
     this.addParam({name:'feedback', defaultValue: 0.5, minValue: 0, maxValue: 1 });
     this.addParam({name: 'time',defaultValue: 0.5, minValue: 0, maxValue: 1 });
@@ -25,8 +24,6 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
   }
 
   /*    ################     API METHODS    ###############   */
-  // p9 count inputs
-
   // p9 count inputs
   get numberOfInputs(){
     return this.inputs.length;
@@ -75,9 +72,11 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
   }
 
   // P7 state
-  getState() {
-    var tmp = {...this.params}
-    return (tmp);
+  async getState() {
+    return new Promise((resolve) =>{
+      resolve({...this.params});
+    });
+    
   }
 
   setState(data) {

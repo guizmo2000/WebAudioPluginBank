@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+<script src="./../sdk/WebAudioSDK.js"></script>
+<script src="./../Mike-AUBENAS/MixingConsole/ChannelMixer/main.js"></script>
 
 <head>
   <title>empty host</title>
@@ -10,15 +12,17 @@
   <br>
   <button id="merge">Merge</button>
   <button id="split">Split</button>
-  <button class="mute" id="mute1" style="display:none">Muteleft</button>  <button class="mute" id="unmute1" style="display:none">UnMuteleft</button>
-  <button class="mute" id="mute2" style="display:none">MuteRigth</button>  <button class="mute" id="unmute2" style="display:none">UnMuteRigth</button>
+  <button class="mute" id="mute1" style="display:none">Muteleft</button>
+  <button class="mute" id="unmute1" style="display:none">UnMuteleft</button>
+  <button class="mute" id="mute2" style="display:none">MuteRigth</button>
+  <button class="mute" id="unmute2" style="display:none">UnMuteRigth</button>
 
 
 </body>
 <script>
   var ctx = new AudioContext();
 
-
+  var pluginURL = "./../Mike-AUBENAS/MixingConsole/ChannelMixer";
   var splitter = ctx.createChannelSplitter(2);
   var merger = ctx.createChannelMerger(2);
   var gaingauche = ctx.createGain();
@@ -78,23 +82,44 @@
     gainStereo.disconnect();
     splitter.connect(gaingauche, 0);
     splitter.connect(gaindroite, 1);
-    gaingauche.connect(ctx.destination);
-    gaindroite.connect(ctx.destination);
+    const options = { "channelNumber": 1 };
+
+
+  loadMixer(gaingauche).then(()=>{
+    loadMixer(gaindroite);
+  })
+
+  }
+
+  function loadMixer(input) {
+    const options = {"channelNumber" : 1}; 
+    return new Promise(resolve => {
+      var plugin = new window.WasabiChannelMixer(ctx, pluginURL, options);
+      plugin.load().then((node) => {
+        plugin.loadGui().then((elem) => {
+          document.body.appendChild(elem);
+          resolve(true);
+        });
+        input.connect(node);
+        node.connect(ctx.destination);
+      });
+    });
+
   }
 
   function muteleft() {
-      splitter.disconnect(gaingauche);
+    splitter.disconnect(gaingauche);
   }
 
-  function muterigth(){
-    splitter.disconnect(gaindroite,1);
+  function muterigth() {
+    splitter.disconnect(gaindroite, 1);
   }
 
   function unmuteleft() {
-      splitter.connect(gaingauche);
+    splitter.connect(gaingauche);
   }
 
-  function unmuterigth(){
+  function unmuterigth() {
     splitter.connect(gaindroite, 1);
   }
 
