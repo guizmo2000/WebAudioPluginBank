@@ -137,7 +137,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
   // P7 state
   getState() {
-    return this.params;
+    var tmp = {...this.params}
+    return (tmp);
   }
 
   setState(data) {

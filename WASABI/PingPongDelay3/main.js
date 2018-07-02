@@ -76,7 +76,8 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
 
   // P7 state
   getState() {
-    return this.params;
+    var tmp = {...this.params}
+    return (tmp);
   }
 
   setState(data) {

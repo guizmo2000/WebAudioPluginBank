@@ -67,7 +67,10 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode {
 		}
 	}
 
-	getState() { return this.params; }
+	getState() {
+    var tmp = {...this.params}
+    return (tmp);
+  }
 
 	setState(data) {
 		try {
