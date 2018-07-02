@@ -14,6 +14,8 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 
 		this.addParam({ name: 'effect', defaultValue: 50, minValue: 0, maxValue: 100 });
 
+
+
 		this.params = {
 			"effect": this._descriptor.effect.defaultValue,
 			"mode": 1,
@@ -160,7 +162,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		 * set default value for parameters and assign it to the web audio nodes
 		 */
 		this.effect = this.params.effect;
-		
+		this.mode = this.params.mode;
 	}
 
 	//To change the amplitude depends on parameter
@@ -176,19 +178,15 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 			*here the logarithmic is applied on frequency but we must change if knob can be logarithmic. Otherwise, using map function
 			*freq = this.map(_effect, 0, 100, this.param.min, this.param.max)
 			*/
-			console.log("Logarithmic mode")
+
 			if (_effect === 0) _effect = 1;
-			console.log("effect avant log " + _effect);
 
 			// conversion manuelle en log
 			_effect = Math.log(_effect);
 
-			console.log("effect apres log " + _effect);
-
 			// normalisation entre freq min et freqmax
 			let freq = this.map(_effect, Math.log(1), Math.log(100), this.params.freqMin, this.params.freqMax);
 			//let freq = this.map(_effect, 1, 100, this.params.freqMin, this.params.freqMax);
-			console.log("effect apres map " + freq);
 
 			// _effect entre 0 et 1, plus simple à gérer
 			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
@@ -200,19 +198,15 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 
 		else if (this.mode === 2) {
 			//Exponential mode (same remark as for the logarithm)
-			console.log("Exponantial Mode");
-			if (_effect === 0) _effect = 1;
-			console.log("effect avant exp " + _effect);
-
+			_effect = _effect / 100;
 			// conversion manuelle en log
 			_effect = Math.exp(_effect);
 
-			console.log("effect apres exp " + _effect);
+
 
 			// normalisation entre freq min et freqmax
-			let freq = this.map(_effect, Math.exp(1), Math.exp(100), this.params.freqMin, this.params.freqMax);
+			let freq = this.map(_effect, Math.exp(0), Math.exp(1), this.params.freqMin, this.params.freqMax);
 			//let freq = this.map(_effect, 1, 100, this.params.freqMin, this.params.freqMax);
-			console.log("effect apres map " + freq);
 
 			// _effect entre 0 et 1, plus simple à gérer
 			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
@@ -224,10 +218,8 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 
 		else if (this.mode === 3) {
 			//Linear mode
-			console.log("Linear mode");
 			if (_effect === 0) _effect = 1;
 			let freq = this.map(_effect, 1, 100, this.params.freqMin, this.params.freqMax);
-			console.log("effect apres map " + freq);
 			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
 			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMin, this.params.qMax);
 			this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
@@ -275,6 +267,60 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 			this._input.gain.setValueAtTime(this.params.gain, this.context.currentTime);
 		}
 
+	}
+
+	set freqMinMax(_sig) {
+		if (_sig === 1){
+			this.params.freqMin=250;
+			this.params.freqMax=1400;
+		}
+
+		else if (_sig === 2){
+			this.params.freqMin=350;
+			this.params.freqMax=1500;
+		}
+
+		else if (_sig === 3){
+			this.params.freqMin=450;
+			this.params.freqMax=1600;
+		}
+
+		else if (_sig === 4){
+			this.params.freqMin=550;
+			this.params.freqMax=1700;
+		}
+
+		else if (_sig === 5){
+			this.params.freqMin=650;
+			this.params.freqMax=1800;
+		}
+	}
+
+	set qMinMax(_sig){
+		if (_sig === 1){
+			this.params.qMin=0.5;
+			this.params.qMax=10;
+		}
+
+		else if (_sig === 2){
+			this.params.qMin=1;
+			this.params.qMax=8;
+		}
+
+		else if (_sig === 3){
+			this.params.qMin=2;
+			this.params.qMax=7;
+		}
+
+		else if (_sig === 4){
+			this.params.qMin=3;
+			this.params.qMax=6;
+		}
+
+		else if (_sig === 5){
+			this.params.qMin=4;
+			this.params.qMax=5;
+		}
 	}
 
 
