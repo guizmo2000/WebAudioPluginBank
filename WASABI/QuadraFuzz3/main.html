@@ -179,6 +179,9 @@
       if (this.state.status == "enable") {
         this._root.querySelector("#switch1").value = 1;
         this.isOn = true;
+      }else{
+        this._root.querySelector("#switch1").value = 0;
+        this.isOn = false;
       }
       this.knobs = this._root.querySelectorAll(".knob");
       this.labels = this._root.querySelectorAll(".knob-label");
