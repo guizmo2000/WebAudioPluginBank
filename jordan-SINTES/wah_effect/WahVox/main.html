@@ -217,6 +217,7 @@
       console.log('setknobs');
       this._root.querySelector("#masterKnob").addEventListener('input', (e) => this._plug.setParam("effect", e.target.value));
       this._root.querySelector("#mode").addEventListener('input', (e) => this._plug.setParam("mode", e.target.value));
+      this._root.querySelector("#knob").addEventListener('input', (e) => this._plug.setParam("freqMinMax", e.target.value));
     }
 
     setSwitchListener() {

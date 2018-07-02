@@ -269,6 +269,33 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 
 	}
 
+	set freqMinMax(_sig) {
+		if (_sig === 1){
+			this.params.freqMin=250;
+			this.params.freqMax=1400;
+		}
+
+		else if (_sig === 2){
+			this.params.freqMin=350;
+			this.params.freqMax=1500;
+		}
+
+		else if (_sig === 3){
+			this.params.freqMin=450;
+			this.params.freqMax=1600;
+		}
+
+		else if (_sig === 4){
+			this.params.freqMin=550;
+			this.params.freqMax=1700;
+		}
+
+		else if (_sig === 5){
+			this.params.freqMin=650;
+			this.params.freqMax=1800;
+		}
+	}
+
 
 }
 
