@@ -296,6 +296,33 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		}
 	}
 
+	set qMinMax(_sig){
+		if (_sig === 1){
+			this.params.qMin=0.5;
+			this.params.qMax=10;
+		}
+
+		else if (_sig === 2){
+			this.params.qMin=1;
+			this.params.qMax=8;
+		}
+
+		else if (_sig === 3){
+			this.params.qMin=2;
+			this.params.qMax=7;
+		}
+
+		else if (_sig === 4){
+			this.params.qMin=3;
+			this.params.qMax=6;
+		}
+
+		else if (_sig === 5){
+			this.params.qMin=4;
+			this.params.qMax=5;
+		}
+	}
+
 
 }
 
