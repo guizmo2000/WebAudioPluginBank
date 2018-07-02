@@ -96,7 +96,6 @@
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
-      
       flex: 1;
       margin: 3px;
       margin-top: 10px;
@@ -135,10 +134,21 @@
       <webaudio-switch id="switch2" class="switch"  midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
       width="32" height="20"></webaudio-switch>
       <span class="knob-label" id="knob1-label">BOOST</span>
-      <webaudio-slider class="knob" id="mode" midilearn="1" midicc="2.0" value="1" min="1" max="3" step="1" width="15" height="24"
-            tooltip="(1=log 2=exp 3=lin)"></webaudio-slider>
-			<span class="knob-label" id="knob1-label">Mode</span>
+      <div class="row">
+          <webaudio-slider class="knob" id="mode" midilearn="1" midicc="2.0" value="1" min="1" max="3" step="1" width="15" height="34"
+          tooltip="Mode"></webaudio-slider>
+      </div>
+      
+      <span class="knob-label" id="knob1-label">Mode</span>
+      
+        <webaudio-knob id="knob" class="knob" sprites="99" min="1" max="5" step="1" value="3" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+         width="30" height="30" data-role="frequency" diameter="24" tooltip="Frequency"></webaudio-knob>
+        <span class="knob-label" id="knob3-label">FREQUENCY</span>
+        
+    
     </div>
+
+   
   </div>
 
     
