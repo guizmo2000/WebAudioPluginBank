@@ -240,6 +240,8 @@ class WebAudioPluginFactory {
             // the file has been loaded, instanciate GUI
             // and get back the HTML elem
             // HERE WE COULD REMOVE THE HARD CODED NAME
+            let name = window[classname];
+            console.log(name)
             var element = createWAP(this.plug);
             resolve(element);
           }
