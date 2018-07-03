@@ -73,23 +73,22 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
 
   // P7 state
   async getState() {
-    return new Promise((resolve) =>{
-      resolve({...this.params});
+    return new Promise((resolve) => {
+      resolve({ ...this.params });
     });
-    
+
   }
 
-  setState(data) {
-    try {
-      this.gui.setAttribute('state', JSON.stringify(data));
-    } catch (error) {
-      console.log("Gui not defined", error)
+  async setState(data) {
+    return new Promise((resolve, reject) => {
       try {
-        document.querySelector('wasabi-pingpongdelay').setAttribute('state', JSON.stringify(this.params));
+        this.gui.setAttribute('state', JSON.stringify(data));
+        resolve(true);
       } catch (error) {
-        console.log(error);
+        console.log("Gui not defined", error)
+        reject();
       }
-    }
+    })
 
     Object.keys(data).map(
       (elem, index) => {
