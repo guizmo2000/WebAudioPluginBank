@@ -94,34 +94,7 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
     }
   }
 
-  // P7 state
-  async getState() {
-    return new Promise((resolve) => {
-      resolve({ ...this.params });
-    });
-
-  }
-
-  async setState(data) {
-    return new Promise((resolve, reject) => {
-      try {
-        this.gui.setAttribute('state', JSON.stringify(data));
-        resolve(true);
-      } catch (error) {
-        console.log("Gui not defined", error)
-        reject();
-      }
-    })
-
-
-    Object.keys(data).map(
-      (elem, index) => {
-        console.log(elem, data[elem]);
-        this.setParam(elem, data[elem]);
-      }
-    )
-
-  }
+  
 
 
   onMidi(msg) {
