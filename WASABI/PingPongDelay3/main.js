@@ -62,7 +62,7 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
   }
 
   setParam(key, value) {
-    console.log(key, value);
+    //console.log(key, value);
     try {
       this[key] = (value);
     } catch (error) {
@@ -82,7 +82,7 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
   /*  #########  Personnal code for the web audio graph  #########   */
 
   setup() {
-    console.log("delay setup");
+    //console.log("delay setup");
     this.createNodes();
     this.connectNodes();
     this.linktoParams();

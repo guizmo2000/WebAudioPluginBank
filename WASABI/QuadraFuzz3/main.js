@@ -85,7 +85,7 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
   }
 
   setParam(key, value) {
-    console.log(key, value);
+    //console.log(key, value);
     try {
       this[key] = (value);
     } catch (error) {
@@ -105,7 +105,7 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
   /*  #########  Personnal code for the web audio graph  #########   */
 
   setup() {
-    console.log("Quadrafuzz setup");
+    //console.log("Quadrafuzz setup");
     this.createNodes();
     this.connectNodes();
     this.linktoParams();

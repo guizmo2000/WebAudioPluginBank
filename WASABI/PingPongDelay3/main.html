@@ -175,14 +175,14 @@
       for (var i = 0; i < this.knobs.length; i++) {
         this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")] * 100;
       }
-      console.log(this.knobs);
+      //console.log(this.knobs);
 
     }
 
 
 
     setKnobs() {
-      console.log('setknobs');
+     // console.log('setknobs');
       this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("feedback", e.target.value / 100));
       this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("time", e.target.value / 100));
       this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("mix", e.target.value / 100));
@@ -190,7 +190,7 @@
     }
 
     setSwitchListener() {
-      console.log("setswitch");
+     // console.log("setswitch");
       this._root.querySelector("#switch1").addEventListener('change', (e) => {
         if (this.isOn) this.bypass()
         else this.reactivate();
@@ -209,7 +209,7 @@
   // Register the x-custom element with the browser
 
   try {
-    console.log("Element defined");
+   // console.log("Element defined");
     customElements.define('wasabi-pingpongdelay', PingPongDelayGui);
   } catch (error) {
     console.log(error);

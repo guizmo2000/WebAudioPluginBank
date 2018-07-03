@@ -185,7 +185,7 @@
       }
       this.knobs = this._root.querySelectorAll(".knob");
       this.labels = this._root.querySelectorAll(".knob-label");
-      console.log(this.labels);
+     // console.log(this.labels);
 
       for (var i = 0; i < this.knobs.length; i++) {
         this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")];
@@ -194,7 +194,7 @@
 
 
     setKnobs() {
-      console.log('setknobs');
+      //console.log('setknobs');
       this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("lowgain", e.target.value));
       this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("midlowgain", e.target.value));
       this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("midhighgain", e.target.value));
@@ -206,7 +206,7 @@
 
 
     setSwitchListener() {
-      console.log("setswitch");
+     // console.log("setswitch");
       this._root.querySelector("#switch1").addEventListener('change', (e) => {
         if (this.isOn) this.bypass()
         else this.reactivate();
@@ -227,7 +227,7 @@
 
   try {
     customElements.define('wasabi-quadrafuzz', QuadraFuzzGui);
-    console.log("Element defined");
+   // console.log("Element defined");
   } catch (error) {
     console.log(error);
     console.log("Element already defined");
