@@ -537,7 +537,7 @@ webaudio-knob{
     }
   });
 } catch(error){
-  console.log("webaudio-knob already defined");
+  //console.log("webaudio-knob already defined");
 }
 
 try{
@@ -832,7 +832,7 @@ webaudio-slider{
     }
   });
 } catch(error){
-  console.log("webaudio-slider already defined");
+  //console.log("webaudio-slider already defined");
 }
 
 try{
@@ -1026,7 +1026,7 @@ webaudio-switch{
     }
   });
 } catch(error){
-  console.log("webaudio-switch already defined");
+  //console.log("webaudio-switch already defined");
 }
 
 try{
@@ -1187,7 +1187,7 @@ webaudio-param{
     }
   });
 } catch(error){
-  console.log("webaudio-param already defined");
+  //console.log("webaudio-param already defined");
 }
 
 try{
@@ -1474,7 +1474,7 @@ webaudio-keyboard{
     }
   });
 } catch(error){
-  console.log("webaudio-keyboard already defined");
+ //console.log("webaudio-keyboard already defined");
 }
 
   // FOR MIDI LEARN
