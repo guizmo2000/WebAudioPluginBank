@@ -65,7 +65,7 @@
       padding: 4px 10px;
       margin-left: 2%;
 
-      font-size: 10px;
+      font-size: 8px;
       text-align: center;
       user-select: none;
       /* font-family: Lemon\/Milk; */
@@ -113,6 +113,12 @@
       justify-content: flex-start;
       align-items: stretch;
     }
+
+    #freqview{
+      border:solid;
+      border-width: 1px;
+      border-color: azure;
+    }
   </style>
   <div class="column" id="minimalGUI">
     <div class="row">
@@ -130,13 +136,13 @@
         <span class="pedalLabel">Master</span>
         <div class="row">
           <div class="column">
-            <webaudio-knob id="master" class="knob" sprites="99" min="0" max="10" value="5" step="0.01" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="master" class="knob" sprites="99" min="0" max="10" value="5" step="0.01" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="master-label">Master</span>
           </div>
         </div>
         <div class="row">
           <div class="column">
-            <webaudio-knob id="noise" class="knob" sprites="99" value="50" step="1" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="noise" class="knob" sprites="99" value="50" step="1" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="noise-label">Noise</span>
           </div>
         </div>
@@ -155,16 +161,16 @@
           </div>
           <div class="column">
             <webaudio-knob id="osc1pitch" class="knob" min=0.5 max="2" sprites="99" value="1" step="0.01" midilearn="true" data-role="feedback"
-              diameter="24"></webaudio-knob>
+              diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc1pitch-label">Osc1 pitch</span>
           </div>
           <div class="column">
             <webaudio-knob id="osc1shape" class="knob" min="0" max="50" sprites="99" value="0.5" step="0.01" midilearn="true" data-role="feedback"
-              diameter="24"></webaudio-knob>
+              diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc1shape-label">Osc1 shape</span>
           </div>
           <div class="column">
-            <webaudio-knob id="osc1gain" class="knob" sprites="99" min="0" max="3" value="3" step="0.01" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="osc1gain" class="knob" sprites="99" min="0" max="3" value="3" step="0.01" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc1gain-label">Osc1 Gain</span>
           </div>
         </div>
@@ -180,15 +186,15 @@
             <span class="knob-label" id="osc1pitch-label">Osc2 wave</span>
           </div>
           <div class="column">
-            <webaudio-knob id="osc2pitch" class="knob" min="0.5" max="2" sprites="99" value="1" step="0.01" midilearn="true" sr diameter="24"></webaudio-knob>
+            <webaudio-knob id="osc2pitch" class="knob" min="0.5" max="2" sprites="99" value="1" step="0.01" midilearn="true" sr diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc2pitch-label">Osc2 pitch</span>
           </div>
           <div class="column">
-            <webaudio-knob id="osc2shape" class="knob" min="0" max="50" sprites="99" value="0.5" step="0.01" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="osc2shape" class="knob" min="0" max="50" sprites="99" value="0.5" step="0.01" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc2shape-label">Osc2 Shape</span>
           </div>
           <div class="column">
-            <webaudio-knob id="osc2gain" class="knob" sprites="99" min="0" max="3" step="0.01" value="3" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="osc2gain" class="knob" sprites="99" min="0" max="3" step="0.01" value="3" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc2gain-label">Osc2 Gain</span>
           </div>
         </div>
@@ -197,18 +203,18 @@
         <span class="pedalLabel">Filter</span>
         <div class="row">
           <div class="column">
-            <webaudio-knob id="lowpass" class="knob" min="30" max="5000" sprites="99" value="2000" step="1" midilearn="true" diameter="40"
+            <webaudio-knob id="lowpass" class="knob" min="30" max="5000" sprites="99" value="2000" step="1" midilearn="true" diameter="30"
               midicc="1.7"></webaudio-knob>
             <span class="knob-label" id="lowpass-label">cutoff</span>
           </div>
           <div class="column">
-            <webaudio-knob id="highpass" class="knob" min="30" max="5000" sprites="99" value="30" step="0.01" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="highpass" class="knob" min="30" max="5000" sprites="99" value="30" step="0.01" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="highpass-label">High pass</span>
           </div>
         </div>
         <div class="row">
           <div class="column">
-            <webaudio-knob id="resonance" class="knob" sprites="99" min="0" max="30" value="0.1" step="0.01" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="resonance" class="knob" sprites="99" min="0" max="30" value="0.1" step="0.01" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="resonance-label">Resonance</span>
           </div>
         </div>
@@ -217,37 +223,37 @@
         <span class="pedalLabel">EG</span>
         <div class="row">
           <div class="column">
-            <webaudio-knob id="ampattack" class="knob" min="0.001" max="5" sprites="99" value="0.001" step="0.1" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="ampattack" class="knob" min="0.001" max="5" sprites="99" value="0.001" step="0.1" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc1pitch-label">Attack</span>
           </div>
           <div class="column">
-            <webaudio-knob id="ampdecay" class="knob" min="0.001" max="5" sprites="99" value="1" step="0.1" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="ampdecay" class="knob" min="0.001" max="5" sprites="99" value="1" step="0.1" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc1shape-label">Decay</span>
           </div>
           <div class="column">
-            <webaudio-knob id="ampsustain" class="knob" min="0.001" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="ampsustain" class="knob" min="0.001" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc1gain-label">Sustain</span>
           </div>
           <div class="column">
-            <webaudio-knob id="amprelease" class="knob" min="0.001" max="5" sprites="99" value="0.001" step="0.1" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="amprelease" class="knob" min="0.001" max="5" sprites="99" value="0.001" step="0.1" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc1gain-label">Release</span>
           </div>
         </div>
         <div class="row">
           <div class="column">
-            <webaudio-knob id="egattack" class="knob" min="0.001" max="5" sprites="99" value="0.5" step="0.1" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="egattack" class="knob" min="0.001" max="5" sprites="99" value="0.5" step="0.1" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc2pitch-label">Attack</span>
           </div>
           <div class="column">
-            <webaudio-knob id="egdecay" class="knob" min="0.001" max="5" sprites="99" value="1" step="0.1" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="egdecay" class="knob" min="0.001" max="5" sprites="99" value="1" step="0.1" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc2shape-label">Decay</span>
           </div>
           <div class="column">
-            <webaudio-knob id="egsustain" class="knob" min="0.001" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="egsustain" class="knob" min="0.001" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc2gain-label">Sustain</span>
           </div>
           <div class="column">
-            <webaudio-knob id="egrelease" class="knob" smin="0.001" max="5" sprites="99" value="1" step="0.1" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="egrelease" class="knob" smin="0.001" max="5" sprites="99" value="1" step="0.1" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc1gain-label">Release</span>
           </div>
         </div>
@@ -256,18 +262,18 @@
         <span class="pedalLabel">LFO</span>
         <div class="row">
           <div class="column">
-            <webaudio-knob id="lforate" class="knob" min="0" max="20" sprites="99" value="0" step="0.01" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="lforate" class="knob" min="0" max="20" sprites="99" value="0" step="0.01" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="lforate-label">lfo rate</span>
           </div>
         </div>
         <div class="row">
           <div class="column">
-            <webaudio-slider class="knob" id="lfodest" midilearn="1" midicc="1.23" value="0" min="0" max="2" step="1" width="15" height="24"
+            <webaudio-slider class="knob" id="lfodest" midilearn="1" midicc="1.23" value="0" min="0" max="2" step="1" width="15" height="20"
               tooltip="Slider-L"></webaudio-slider>
             <span class="knob-label" id="osc1pitch-label">lfo dest</span>
           </div>
           <div class="column">
-            <webaudio-knob id="lfoint" class="knob" min="1" max="1000" sprites="99" value="20" step="1" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="lfoint" class="knob" min="1" max="1000" sprites="99" value="20" step="1" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="lfoint-label">lfo int</span>
           </div>
         </div>
@@ -277,11 +283,11 @@
         <span class="pedalLabel">Delay</span>
         <div class="row">
           <div class="column">
-            <webaudio-knob id="time" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="time" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="time-label">delay time</span>
           </div>
           <div class="column">
-            <webaudio-knob id="feedback" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" diameter="24"></webaudio-knob>
+            <webaudio-knob id="feedback" class="knob" min="0" max="1" sprites="99" value="0.5" step="0.01" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="feedback-label">delay feedback</span>
           </div>
           <div class="column">
@@ -420,7 +426,7 @@
       var settings = {
         id: 'keyboard',
         width: 500,
-        height: 80,
+        height: 90,
         startNote: 'C1',
         whiteNotesColour: '#fff',
         blackNotesColour: '#000',
@@ -488,7 +494,6 @@
         );
       }
       webAudioControlsMidiManager.addMidiListener(event => {
-        var note = event.note;
         var data = event.data;
         var channel = data[0];
         var controlNumber = data[1];
@@ -496,33 +501,16 @@
         if (channel != 248 && channel != 254) {
           console.log("Midi event hook: data:[" + data + "] channel:" + data[0] + " cc:" + controlNumber + " value:" + value);
         }
-        switch (channel) {
-          case 144:
+        switch (channel & 0xf0) {
+          case 0x90:
             this._plug.noteOn(controlNumber);
-            break;
-          case 145:
-            this._plug.noteOn(controlNumber);
-            break;
-
-          case 128:
+            return;
+          case 0x80:
             this._plug.noteOff(controlNumber);
-            break;
-          case 129:
-            this._plug.noteOff(controlNumber);
-            break;
 
-          //Automapping this way is not good
-          // case 177:
-          //   switch(controlNumber){
-          //     case 43:console.log(this.knobs[8]);
-          //     break;
-          //     case 44:this._plug.setParam("resonance",value /10);
-          //     break;
-
-          //   }
+            return;
         }
       });
-      //const val = this.min+(this.max-this.min)*event.data[2]/127;
 
     };
 
