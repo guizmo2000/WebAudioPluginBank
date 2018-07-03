@@ -185,6 +185,7 @@ class WebAudioPluginFactory {
     this.baseUrl = baseUrl;
     this.options = options;
     this.MetadataFileURL = this.baseUrl + "/main.json";
+    this.classname;
   }
 
   fetchPlugin() {
@@ -201,6 +202,7 @@ class WebAudioPluginFactory {
   load() {
     return new Promise((resolve, reject) => {
       this.fetchPlugin().then(classname => {
+        this.classname = classname;
         try {
           this.plug = new window[classname](this.context, this.options);
           this.plug._metadataFileURL = this.MetadataFileURL;
@@ -214,6 +216,7 @@ class WebAudioPluginFactory {
   }
 
   loadGui() {
+    console.log(this.classname);
     return new Promise((resolve, reject) => {
       try {
         this.plug.setParam('status', 'disable');
@@ -240,17 +243,14 @@ class WebAudioPluginFactory {
             // the file has been loaded, instanciate GUI
             // and get back the HTML elem
             // HERE WE COULD REMOVE THE HARD CODED NAME
-            let name = window[classname];
-            console.log(name)
-            var element = createWAP(this.plug);
+            var element = window['create'+this.classname.toString()](this.plug);
             resolve(element);
           }
         } else {
           console.log("already exist")
           // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
           // so we can create another instance
-          var element = createWAP(this.plug);
-          console.log(element);
+          var element = window['create'+this.classname.toString()](this.plug);
           resolve(element);
         }
       } catch (e) {

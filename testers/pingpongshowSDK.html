@@ -35,13 +35,12 @@
 
         plugin.loadGui().then((elem) => {
           document.body.appendChild(elem);
-          node.setState(_settings);
+         // node.setState(_settings);
 
           resolve(true);
         });
         mediaSource.connect(node);
         node.connect(ctx.destination)
-        node.setState(_settings);
       })
     })
   }
