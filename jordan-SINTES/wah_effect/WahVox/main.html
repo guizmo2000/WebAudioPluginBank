@@ -158,7 +158,7 @@
     
 </template>
 <script>
-  let delaytemp = document.currentScript.ownerDocument.querySelector("#wc-wahvox");
+  let wahtemp = document.currentScript.ownerDocument.querySelector("#wc-wahvox");
   class WahVoxGUI extends HTMLElement {
 
     constructor(plug) {
@@ -166,7 +166,7 @@
       this._plug = plug;
       this._plug.gui = this;
       this._root = this.attachShadow({ mode: 'open' });
-      this._root.appendChild(delaytemp.content.cloneNode(true));
+      this._root.appendChild(wahtemp.content.cloneNode(true));
       this.isOn = false;
       this.isOnBoost = false;
       this.state = new Object();
