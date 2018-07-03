@@ -39,7 +39,7 @@ class CompositeAudioNode {
   }
 
   connect() {
-    for (var i=0;i<this.outputs.length;i++){
+    for (var i = 0; i < this.outputs.length; i++) {
       this.outputs[i].connect.apply(this._output, arguments);
     }
   }
@@ -99,12 +99,12 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
 
   getMetadata() { // does not return the thing
     return fetch(this._metadataFileURL).then(json => {
-        return(json);
-      })
+      return (json);
+    })
 
   }
 
-  setParam(key,value) {
+  setParam(key, value) {
     throw new Error('You have to implement the method setParam!')
   }
 
@@ -139,12 +139,37 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
 
   getParam(key) { };
 
-  getState() { };
+  // P7 state
+  async getState() {
+    return new Promise((resolve) => {
+      resolve({ ...this.params });
+    });
 
-  setState(data) { };
+  }
 
-  onMidi(msg) { };
-}
+  async setState(data) {
+    return new Promise((resolve, reject) => {
+      try {
+        this.gui.setAttribute('state', JSON.stringify(data));
+        resolve(true);
+      } catch (error) {
+        console.log("Gui not defined", error)
+        reject();
+      }
+    })
+
+
+    Object.keys(data).map(
+      (elem, index) => {
+        console.log(elem, data[elem]);
+        this.setParam(elem, data[elem]);
+      }
+    )
+
+  }
+
+    onMidi(msg) { };
+  }
 
 
 class WebAudioPluginFactory {
