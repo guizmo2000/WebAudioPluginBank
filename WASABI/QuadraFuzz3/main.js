@@ -6,16 +6,16 @@
 window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
 
 
-  constructor(ctx,options) {
+  constructor(ctx, options) {
     super(ctx, options)
     /*    ################     API PROPERTIES    ###############   */
     this.state;
- 
 
-    this.addParam({name:'lowgain', defaultValue: 0.6, minValue: 0, maxValue: 1 });
-    this.addParam({name: 'midlowgain',defaultValue: 0.8, minValue: 0, maxValue: 1 });
-    this.addParam({name: 'midhighgain',defaultValue: 0.5, minValue: 0, maxValue: 1 });
-    this.addParam({name: 'highgain',defaultValue: 0.5, minValue: 0, maxValue: 1 });
+
+    this.addParam({ name: 'lowgain', defaultValue: 0.6, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'midlowgain', defaultValue: 0.8, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'midhighgain', defaultValue: 0.5, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'highgain', defaultValue: 0.5, minValue: 0, maxValue: 1 });
 
     // P2 : Json metadata
     this.metadata = {
@@ -47,18 +47,18 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
 
   // p9 count inputs
 
-  get numberOfInputs(){
+  get numberOfInputs() {
     return this.inputs.length;
   }
 
-  get numberOfOutputs(){
+  get numberOfOutputs() {
     return this.outputs.length;
   }
 
   inputChannelCount() {
     return 1;
   }
-  outputChannelCount(){
+  outputChannelCount() {
     return 1;
   }
   getMetadata() {
@@ -95,23 +95,25 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
   }
 
   // P7 state
-  getState() {
-    var tmp = {...this.params}
-    return (tmp);
+  async getState() {
+    return new Promise((resolve) => {
+      resolve({ ...this.params });
+    });
+
   }
 
-  setState(data) {
-    try {
-      this.gui.setAttribute('state', JSON.stringify(data));
-    } catch (error) {
-      console.log("Gui not defined", error)
+  async setState(data) {
+    return new Promise((resolve, reject) => {
       try {
-        document.querySelector('wasabi-pingpongdelay').setAttribute('state', JSON.stringify(this.params));
+        this.gui.setAttribute('state', JSON.stringify(data));
+        resolve(true);
       } catch (error) {
-        console.log(error);
+        console.log("Gui not defined", error)
+        reject();
       }
-    }
-    
+    })
+
+
     Object.keys(data).map(
       (elem, index) => {
         console.log(elem, data[elem]);
@@ -292,11 +294,11 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
 window.WasabiQuadraFuzz = class WasabiQuadraFuzz extends WebAudioPluginFactory {
 
   constructor(context, baseUrl) {
-    super(context, baseUrl);  
+    super(context, baseUrl);
   }
 
 }
 AudioContext.prototype.createWasabiQuadraFuzzCompositeNode =
-OfflineAudioContext.prototype.createWasabiQuadraFuzzCompositeNode = function (options) {
-  return new QuadraFuzz(this, options);
-};
+  OfflineAudioContext.prototype.createWasabiQuadraFuzzCompositeNode = function (options) {
+    return new QuadraFuzz(this, options);
+  };

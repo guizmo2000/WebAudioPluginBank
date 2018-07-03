@@ -11,28 +11,52 @@
 
 <body>
   <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
-
+  <button id="save">save</button>
+  <button id="load">load</button>
 </body>
 <script>
-var ctx = new AudioContext();
+
+  var ctx = new AudioContext();
   var player = document.getElementById("soundSample");
+  var nd;
   player.onplay = () => {
-		ctx.resume().then(() => {
-			console.log('Playback resumed successfully');
-		});
-	}
+    ctx.resume().then(() => {
+      console.log('Playback resumed successfully');
+    });
+  }
   var mediaSource = ctx.createMediaElementSource(player);
-  var _settings = {lowgain: 0.6, midlowgain: 0.1, midhighgain: 0.4,highgain: 0.4, status: "enable"};
+  var _settings = { lowgain: 0.6, midlowgain: 0.1, midhighgain: 0.4, highgain: 0.4, status: "enable" };
+  
 
 
   var pluginURL = "./../WASABI/QuadraFuzz3";
   var plugin = new window.WasabiQuadraFuzz(ctx, pluginURL);
 
-  plugin.load().then((node)=>{
-    plugin.loadGui().then((elem)=>{
-      document.body.appendChild(elem);
-     node.setState(_settings);
+  function saveListener(node) {
+    document.querySelector("#save").addEventListener('click', () => savePlugin(node));
+  }
 
+  function loadListener(node) {
+    document.querySelector("#load").addEventListener('click', () =>loadPlugin(node));
+    document.querySelector("#save").addEventListener('click', () => savePlugin(node));
+  }
+
+  function loadPlugin(node) {
+    console.log(_settings);
+    node.setState(_settings)
+  }
+
+  function savePlugin(node) {
+    _settings = node.getState();
+    console.log(_settings);
+  }
+
+
+  plugin.load().then((node) => {
+    plugin.loadGui().then((elem) => {
+      document.body.appendChild(elem);
+      saveListener(node);
+      loadListener(node);
     });
     mediaSource.connect(node);
     node.connect(ctx.destination);
