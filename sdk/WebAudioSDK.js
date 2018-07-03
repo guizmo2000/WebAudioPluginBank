@@ -223,6 +223,7 @@ class WebAudioPluginFactory {
       }
       try {
         // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
+        console.log(this.baseUrl);
         let url = this.baseUrl + "/main.html";
 
         if (!this.linkExists(url)) {
