@@ -216,7 +216,6 @@ class WebAudioPluginFactory {
   }
 
   loadGui() {
-    console.log(this.classname);
     return new Promise((resolve, reject) => {
       try {
         this.plug.setParam('status', 'disable');
@@ -226,7 +225,6 @@ class WebAudioPluginFactory {
       }
       try {
         // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
-        console.log(this.baseUrl);
         let url = this.baseUrl + "/main.html";
 
         if (!this.linkExists(url)) {
@@ -247,7 +245,6 @@ class WebAudioPluginFactory {
             resolve(element);
           }
         } else {
-          console.log("already exist")
           // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
           // so we can create another instance
           var element = window['create'+this.classname.toString()](this.plug);
