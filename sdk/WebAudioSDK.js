@@ -248,6 +248,7 @@ class WebAudioPluginFactory {
           // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
           // so we can create another instance
           var element = createWAP(this.plug);
+          console.log(element);
           resolve(element);
         }
       } catch (e) {
