@@ -148,30 +148,28 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
   }
 
   async setState(data) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
+
+      Object.keys(data).map(
+        (elem) => {
+          console.log(elem, data[elem]);
+          this.setParam(elem, data[elem]);
+        });
       try {
         this.gui.setAttribute('state', JSON.stringify(data));
       } catch (error) {
-        console.log("Gui not defined", error)
-        reject();
+        console.warn("Plugin without gui or GUI not defined", error);
       }
-    
+      resolve(data);
+    })
 
 
-    Object.keys(data).map(
-      (elem, index) => {
-        console.log(elem, data[elem]);
-        this.setParam(elem, data[elem]);
-      }
-    )
-    resolve(data);
-  })
 
   }
-  
 
-    onMidi(msg) { };
-  }
+
+  onMidi(msg) { };
+}
 
 
 class WebAudioPluginFactory {
@@ -243,13 +241,13 @@ class WebAudioPluginFactory {
             // the file has been loaded, instanciate GUI
             // and get back the HTML elem
             // HERE WE COULD REMOVE THE HARD CODED NAME
-            var element = window['create'+this.classname.toString()](this.plug);
+            var element = window['create' + this.classname.toString()](this.plug);
             resolve(element);
           }
         } else {
           // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
           // so we can create another instance
-          var element = window['create'+this.classname.toString()](this.plug);
+          var element = window['create' + this.classname.toString()](this.plug);
           resolve(element);
         }
       } catch (e) {

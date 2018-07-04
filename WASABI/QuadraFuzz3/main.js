@@ -85,9 +85,8 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
   }
 
   setParam(key, value) {
-    //console.log(key, value);
     try {
-      this[key] = (value);
+      this[key] = value;
     } catch (error) {
 
       console.warn("this plugin does not implement this param")
