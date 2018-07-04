@@ -121,6 +121,7 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
               }
 
         }
+        this.setPatch("init");
     }
 
     // To be called by the message port with messages coming from the processor
