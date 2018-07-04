@@ -223,12 +223,12 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
     }
 
     /**
-     * @returns {Object} describe the path of the params available and the current value
+     * @returns {Object} describes the path each param available and its current value
      */
     async getState() {
         var params = new Object();
         for (let i = 0; i < this.getDescriptor().length; i++) {
-            Object.assign(params, { [this.getDescriptor()[i]]: `${this.getParam(this.getDescriptor()[i])}` })
+            Object.assign(params, { [this.getDescriptor()[i]]: `${this.getParam(this.getDescriptor()[i])}` });
         }
         return new Promise(resolve => {
             resolve(params)
@@ -236,7 +236,7 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
     }
 
     /**
-     * Set each params with its value indicated in the state object
+     * Sets each params with the value indicated in the state object
      * @param {Object} state 
      */
     async setState(state) {
