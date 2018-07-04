@@ -85,6 +85,11 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     return this._descriptor;
   }
 
+
+  /**
+   * Build a key / value param descriptor with name as key
+   * @param param 
+   */
   addParam(param) {
     try {
       this._descriptor = Object.assign({ [param.name]: { minValue: param.minValue, maxValue: param.maxValue, defaultValue: param.defaultValue } }, this._descriptor)
@@ -93,17 +98,24 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     }
   }
 
-  getDescriptor() { // will be discarded
+  getDescriptor() {
     return this._descriptor;
   }
 
-  getMetadata() { // does not return the thing
+  /**
+   * Fetch and return the metadata
+   */
+  getMetadata() {
     return fetch(this._metadataFileURL).then(json => {
       return (json);
     })
 
   }
 
+  /**
+   * @param {*} key 
+   * @param {*} value 
+   */
   setParam(key, value) {
     throw new Error('You have to implement the method setParam!')
   }
@@ -126,20 +138,30 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     this._numberOfOuputs = number;
   }
 
+  /**
+   * To fit and extend the AudioNode fields
+   */
   inputChannelCount() {
+    //TODO 
     return 2;
   };
   outputChannelCount() {
     return this._channelCount;
   };
 
+  /**
+   * Preset or "patch" gesture
+   * @param {*} index 
+   */
   getPatch(index) { };
 
   setPatch(data, index) { };
 
   getParam(key) { };
 
-  // P7 state
+  /**
+   * Return the params list with it's current values
+   */
   async getState() {
     return new Promise((resolve) => {
       resolve({ ...this.params });
@@ -147,6 +169,10 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
 
   }
 
+  /**
+   * Set the params values to recover a stored state
+   * @param {JSON} data 
+   */
   async setState(data) {
     return new Promise((resolve) => {
 
@@ -239,7 +265,7 @@ class WebAudioPluginFactory {
           link.onload = (e) => {
             // the file has been loaded, instanciate GUI
             // and get back the HTML elem
-            // HERE WE COULD REMOVE THE HARD CODED NAME
+            // the  create Gui method is called 
             var element = window['create' + this.classname.toString()](this.plug);
             resolve(element);
           }
