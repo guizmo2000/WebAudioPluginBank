@@ -74,6 +74,9 @@
     //});
 
     node.setParam("status", "disable");
+    node.getMetadata().then((meta)=>{
+      console.log(meta)
+    });
     mediaSource.connect(node);
     node.connect(ctx.destination);
   });

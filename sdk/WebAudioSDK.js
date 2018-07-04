@@ -105,11 +105,14 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
   /**
    * Fetch and return the metadata
    */
-  getMetadata() {
-    return fetch(this._metadataFileURL).then(json => {
-      return (json);
-    })
-
+  async getMetadata() {
+    return new Promise(resolve =>{
+       fetch(this._metadataFileURL).then(responseJSON => {
+        return responseJSON.json();
+      }).then(json=>{
+        resolve(json);
+      })
+    });
   }
 
   /**

@@ -61,9 +61,9 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
   outputChannelCount() {
     return 1;
   }
-  getMetadata() {
-    return this.metadata;
-  }
+  // getMetadata() {
+  //   return this.metadata;
+  // }
 
   getDescriptor() {
     return this._descriptor;
