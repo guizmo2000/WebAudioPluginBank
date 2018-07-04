@@ -87,38 +87,40 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
 
         // Set message handler
         this.port.onmessage = this.handleMessage.bind(this);
+
+        // Two hand builded presets, as examples 
         this.presets = {
             init:
             {
-                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping":"6000",
-                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X":"200",
-                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60":"3",
-                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60":"2",
-                "/zitaRev/Zita_Rev1/Input/In_Delay":"60",
-                "/zitaRev/Zita_Rev1/Output/Dry/Wet_Mix":"0",
-                "/zitaRev/Zita_Rev1/Output/Level":"0",
-                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq":"315",
-                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level":"0",
-                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq":"1500",
-                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level":"0",
-                
-              }
-            ,
-            aqua: 
-            {
-                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping":"18000",
-                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X":"800",
-                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60":"6",
-                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60":"6",
-                "/zitaRev/Zita_Rev1/Input/In_Delay":"80",
-                "/zitaRev/Zita_Rev1/Output/Dry/Wet_Mix":"0.7",
-                "/zitaRev/Zita_Rev1/Output/Level":"0",
-                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq":"2000",
-                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level":"13",
-                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq":"8000",
-                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level":"14",
+                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping": "6000",
+                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X": "200",
+                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60": "3",
+                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60": "2",
+                "/zitaRev/Zita_Rev1/Input/In_Delay": "60",
+                "/zitaRev/Zita_Rev1/Output/Dry/Wet_Mix": "0",
+                "/zitaRev/Zita_Rev1/Output/Level": "0",
+                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq": "315",
+                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level": "0",
+                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq": "1500",
+                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level": "0",
 
-              }
+            }
+            ,
+            aqua:
+            {
+                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/HF_Damping": "18000",
+                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/LF_X": "800",
+                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Low_RT60": "6",
+                "/zitaRev/Zita_Rev1/Decay_Times_in_Bands_(see_tooltips)/Mid_RT60": "6",
+                "/zitaRev/Zita_Rev1/Input/In_Delay": "80",
+                "/zitaRev/Zita_Rev1/Output/Dry/Wet_Mix": "0.7",
+                "/zitaRev/Zita_Rev1/Output/Level": "0",
+                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Freq": "2000",
+                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_1/Eq1_Level": "13",
+                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Freq": "8000",
+                "/zitaRev/Zita_Rev1/RM_Peaking_Equalizer_2/Eq2_Level": "14",
+
+            }
 
         }
     }
@@ -220,38 +222,41 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
         this.port.postMessage({ type: "midi", data: data });
     }
 
-
+    /**
+     * @returns {Object} describe the path of the params available and the current value
+     */
     async getState() {
         var params = new Object();
-        let str = this.getDescriptor();
-        let tmp = new Object();
-
-        for (let i = 0; i < str.length; i++) {
-            console.log(this.getParam(str[i]));
-            tmp = { [str[i]]: `${this.getParam(str[i])}` };
-            Object.assign(params, tmp)
+        for (let i = 0; i < this.getDescriptor().length; i++) {
+            Object.assign(params, { [this.getDescriptor()[i]]: `${this.getParam(this.getDescriptor()[i])}` })
         }
         return new Promise(resolve => {
             resolve(params)
         });
     }
 
+    /**
+     * Set each params with its value indicated in the state object
+     * @param {Object} state 
+     */
     async setState(state) {
         return new Promise(resolve => {
             for (const param in state) {
-                if (state.hasOwnProperty(param))this.setParam(param, state[param]);
+                if (state.hasOwnProperty(param)) this.setParam(param, state[param]);
             }
             try {
                 this.gui.setAttribute('state', JSON.stringify(state));
             } catch (error) {
                 console.warn("Plugin without gui or GUI not defined", error);
             }
-
             resolve(state);
         })
-
     }
 
+    /**
+     * A different call closer to the preset management
+     * @param {Object} patch to assign as a preset to the zitaRev
+     */
     setPatch(patch) {
         this.setState(this.presets[patch])
 
