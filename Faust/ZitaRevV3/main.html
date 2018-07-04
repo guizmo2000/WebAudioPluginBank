@@ -389,10 +389,10 @@
 			console.log(this._root.querySelector("#switch1Cont").querySelector("#switch1").value);
       if (this.state[tmp] == 1) {
         this._root.querySelector("#switch1Cont").querySelector("#switch1").value = 0;
-        this.isOn = true;
+        this.isOn = false;
       }else if(this.state[tmp] == 0){
         this._root.querySelector("#switch1Cont").querySelector("#switch1").value = 1;
-        this.isOn = false;
+        this.isOn = true;
       }
       this.knobs = this._root.querySelectorAll(".knob");
       for (var i = 0; i < this.knobs.length; i++) {
@@ -420,7 +420,9 @@
 
 
 		bypass() {
+			console.log("hey");
 			this._plug.setParam("/zitaRev/bypass", 1);
+
 		}
 
 		reactivate() {
