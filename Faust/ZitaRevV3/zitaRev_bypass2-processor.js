@@ -183,9 +183,9 @@ class zitaRev_bypass2Processor extends AudioWorkletProcessor {
         this.HEAP32 = new Int32Array(this.HEAP);
         this.HEAPF32 = new Float32Array(this.HEAP);
 
-        console.log(this.HEAP);
-        console.log(this.HEAP32);
-        console.log(this.HEAPF32);
+        // console.log(this.HEAP);
+        // console.log(this.HEAP32);
+        // console.log(this.HEAPF32);
 
         // bargraph
         this.outputs_timer = 5;

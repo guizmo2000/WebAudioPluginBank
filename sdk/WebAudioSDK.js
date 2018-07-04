@@ -16,7 +16,7 @@ class CompositeAudioNode {
     /**
      * 
      * @param {AudioContext} context  
-     * @param {JSON} options optional, if you want to set set alternate values from the defaultOptions below
+     * @param {JSON} options optional, if you want to set alternate values from the defaultOptions below
      */
     let defaultValues = options ? options : { numberOfInputs: 1, numberOfOuputs: 1, channelCount: 2, channelCountMode: "Max", channelInterpretation: "speakers" };
     this._numberOfInputs = defaultValues.numberOfInputs;
