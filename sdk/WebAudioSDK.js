@@ -151,7 +151,7 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     return new Promise((resolve, reject) => {
       try {
         this.gui.setAttribute('state', JSON.stringify(data));
-        resolve(JSON.stringify(data));
+        resolve(data);
       } catch (error) {
         console.log("Gui not defined", error)
         reject();
