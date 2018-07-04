@@ -16,7 +16,7 @@ class CompositeAudioNode {
     /**
      * 
      * @param {AudioContext} context  
-     * @param {JSON} options optional, if you want to set set alternate values from the defaultOptions below
+     * @param {JSON} options optional, if you want to set alternate values from the defaultOptions below
      */
     let defaultValues = options ? options : { numberOfInputs: 1, numberOfOuputs: 1, channelCount: 2, channelCountMode: "Max", channelInterpretation: "speakers" };
     this._numberOfInputs = defaultValues.numberOfInputs;
@@ -85,6 +85,11 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     return this._descriptor;
   }
 
+
+  /**
+   * Build a key / value param descriptor with name as key
+   * @param param 
+   */
   addParam(param) {
     try {
       this._descriptor = Object.assign({ [param.name]: { minValue: param.minValue, maxValue: param.maxValue, defaultValue: param.defaultValue } }, this._descriptor)
@@ -93,17 +98,27 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     }
   }
 
-  getDescriptor() { // will be discarded
+  getDescriptor() {
     return this._descriptor;
   }
 
-  getMetadata() { // does not return the thing
-    return fetch(this._metadataFileURL).then(json => {
-      return (json);
-    })
-
+  /**
+   * Fetch and return the metadata
+   */
+  async getMetadata() {
+    return new Promise(resolve =>{
+       fetch(this._metadataFileURL).then(responseJSON => {
+        return responseJSON.json();
+      }).then(json=>{
+        resolve(json);
+      })
+    });
   }
 
+  /**
+   * @param {*} key 
+   * @param {*} value 
+   */
   setParam(key, value) {
     throw new Error('You have to implement the method setParam!')
   }
@@ -126,20 +141,30 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     this._numberOfOuputs = number;
   }
 
+  /**
+   * To fit and extend the AudioNode fields
+   */
   inputChannelCount() {
+    //TODO 
     return 2;
   };
   outputChannelCount() {
     return this._channelCount;
   };
 
+  /**
+   * Preset or "patch" gesture
+   * @param {*} index 
+   */
   getPatch(index) { };
 
   setPatch(data, index) { };
 
   getParam(key) { };
 
-  // P7 state
+  /**
+   * Return the params list with it's current values
+   */
   async getState() {
     return new Promise((resolve) => {
       resolve({ ...this.params });
@@ -147,29 +172,32 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
 
   }
 
+  /**
+   * Set the params values to recover a stored state
+   * @param {JSON} data 
+   */
   async setState(data) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
+
+      Object.keys(data).map(
+        (elem) => {
+          this.setParam(elem, data[elem]);
+        });
       try {
         this.gui.setAttribute('state', JSON.stringify(data));
-        resolve(true);
       } catch (error) {
-        console.log("Gui not defined", error)
-        reject();
+        console.warn("Plugin without gui or GUI not defined", error);
       }
+      resolve(data);
     })
 
 
-    Object.keys(data).map(
-      (elem, index) => {
-        console.log(elem, data[elem]);
-        this.setParam(elem, data[elem]);
-      }
-    )
 
   }
 
-    onMidi(msg) { };
-  }
+
+  onMidi(msg) { };
+}
 
 
 class WebAudioPluginFactory {
@@ -240,14 +268,14 @@ class WebAudioPluginFactory {
           link.onload = (e) => {
             // the file has been loaded, instanciate GUI
             // and get back the HTML elem
-            // HERE WE COULD REMOVE THE HARD CODED NAME
-            var element = window['create'+this.classname.toString()](this.plug);
+            // the  create Gui method is called 
+            var element = window['create' + this.classname.toString()](this.plug);
             resolve(element);
           }
         } else {
           // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
           // so we can create another instance
-          var element = window['create'+this.classname.toString()](this.plug);
+          var element = window['create' + this.classname.toString()](this.plug);
           resolve(element);
         }
       } catch (e) {

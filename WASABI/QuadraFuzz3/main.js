@@ -61,9 +61,9 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
   outputChannelCount() {
     return 1;
   }
-  getMetadata() {
-    return this.metadata;
-  }
+  // getMetadata() {
+  //   return this.metadata;
+  // }
 
   getDescriptor() {
     return this._descriptor;
@@ -85,9 +85,8 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
   }
 
   setParam(key, value) {
-    //console.log(key, value);
     try {
-      this[key] = (value);
+      this[key] = value;
     } catch (error) {
 
       console.warn("this plugin does not implement this param")
