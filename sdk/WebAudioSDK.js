@@ -152,7 +152,6 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
 
       Object.keys(data).map(
         (elem) => {
-          console.log(elem, data[elem]);
           this.setParam(elem, data[elem]);
         });
       try {
