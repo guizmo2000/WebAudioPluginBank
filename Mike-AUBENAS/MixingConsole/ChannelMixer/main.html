@@ -256,7 +256,6 @@
         setListener()
         {
 			this._root.querySelector("#gain").addEventListener('input', (e) => this._plug.setGain(e.target.value));
-
             this._root.querySelector("#pan").addEventListener('input', (e) => this._plug.setPan(e.target.value));
             this._root.querySelector("#pan").addEventListener('contextmenu', (e) =>
             {
