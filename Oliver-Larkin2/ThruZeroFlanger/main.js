@@ -247,14 +247,14 @@ loadGui() {
                     // the file has been loaded, instanciate GUI
                     // and get back the HTML elem
                     // HERE WE COULD REMOVE THE HARD CODED NAME
-                    var element = createLarkinThruZeroFlanger(this.plug);
+                    var element = createThruZeroFlangerGUI(this.plug);
                     //element._plug = this.plug;
                     resolve(element);
                 }
             } else {
                 // LINK EXIST, WE AT LEAST CREATED ONE INSTANCE PREVIOUSLY
                 // so we can create another instance
-                var element = createLarkinThruZeroFlanger(this.plug);
+                var element = createThruZeroFlangerGUI(this.plug);
                 //element._plug = this.plug;
                 resolve(element);
             }
