@@ -362,7 +362,7 @@ window.LarkinThruZeroFlanger = class LarkinThruZeroFlanger {
     load()
     {
     	return new Promise((resolve, reject) => {
-        		this.context.audioWorklet.addModule(this.baseUrl + "ThruZeroFlanger-processor.js").then(() => {
+        		this.context.audioWorklet.addModule(this.baseUrl + "/ThruZeroFlanger-processor.js").then(() => {
         		this.node = new ThruZeroFlangerNode(this.context, {});
                 this.node.onprocessorerror = () => { console.log('An error from ThruZeroFlanger-processor was detected.');}
         		return (this.node);
