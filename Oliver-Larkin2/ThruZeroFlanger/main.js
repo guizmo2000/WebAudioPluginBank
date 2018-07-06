@@ -340,7 +340,7 @@ window.LarkinThruZeroFlanger = class LarkinThruZeroFlanger {
                 //this.node.onprocessorerror = () => { console.log('An error from ThruZeroFlanger-processor was detected.'); }
                 return (this.node);
             }).then((node) => {
-                console.log(node.getDescriptor());
+                console.log(this.node.getDescriptor());
                 resolve(node);
             }).catch((e) => {
                 reject(e);
