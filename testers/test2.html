@@ -276,9 +276,9 @@
       });
     });
 
-    describe('Param getter', function () {
-      it('plugin should have a getParam(key) method', function () {
-        expect(plugin).to.have.property("getParam")
+    describe('State getter', function () {
+      it('plugin should have a getState() method', function () {
+        expect(plugin).to.have.property("setState");
       });
     });
 
@@ -289,10 +289,15 @@
       });
     });
 
+    describe('midi enable', function () {
+      it('plugin should have a onMidi(msg) method', function () {
+        expect(plugin).to.have.property("onMidi");
+      });
+    });
 
-    describe('State getter', function () {
-      it('plugin should have a getState() method', function () {
-        expect(plugin).to.have.property("getState");
+    describe('Patch getter', function () {
+      it('plugin should have a getPatch(key) method', function () {
+        expect(plugin).to.have.property("getPatch");
 
       });
     });
@@ -301,26 +306,6 @@
     describe('Patch setter', function () {
       it('plugin should have a setPatch(key,value) method', function () {
         expect(plugin).to.have.property("setPatch");
-      });
-    });
-
-
-    describe('State getter', function () {
-      it('plugin should have a getState() method', function () {
-        expect(plugin).to.have.property("setPatch");
-      });
-    });
-
-
-    describe('State setter', function () {
-      it('plugin should have a setState(value) method', function () {
-        expect(plugin).to.have.property("setState");
-      });
-    });
-
-    describe('midi enable', function () {
-      it('plugin should have a onMidi(msg) method', function () {
-        expect(plugin).to.have.property("onMidi");
       });
     });
 
