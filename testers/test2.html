@@ -276,10 +276,23 @@
       });
     });
 
+    describe('Param getter', function () {
+      it('plugin should have a getParam(key) method', function () {
+        expect(plugin).to.have.property("getParam")
+      });
+    });
 
-    describe('Patch getter', function () {
-      it('plugin should have a getPatch(key) method', function () {
-        expect(plugin).to.have.property("getPatch");
+
+    describe('State setter', function () {
+      it('plugin should have a setState(data) method', function () {
+        expect(plugin).to.have.property("setState");
+      });
+    });
+
+
+    describe('State getter', function () {
+      it('plugin should have a getState() method', function () {
+        expect(plugin).to.have.property("getState");
 
       });
     });
