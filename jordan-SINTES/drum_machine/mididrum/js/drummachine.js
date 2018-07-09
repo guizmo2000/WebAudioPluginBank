@@ -421,8 +421,7 @@ function init() {
     var elKitCombo = document.getElementById('kitcombo');
     elKitCombo.addEventListener("mousedown", handleKitComboMouseDown, true);
 
-    var elEffectCombo = document.getElementById('effectcombo');
-    elEffectCombo.addEventListener("mousedown", handleEffectComboMouseDown, true);
+    
 
     document.body.addEventListener("mousedown", handleBodyMouseDown, true);
 
@@ -506,12 +505,7 @@ function makeEffectList() {
     elItem.innerHTML = 'None';
     elItem.addEventListener("mousedown", handleEffectMouseDown, true);
     
-    for (var i = 0; i < numEffects; i++) {
-        var elItem = document.createElement('li');
-        elItem.innerHTML = impulseResponseInfoList[i].name;
-        elList.appendChild(elItem);
-        elItem.addEventListener("mousedown", handleEffectMouseDown, true);
-    }
+   
 }
 
 function makeKitList() {
@@ -874,12 +868,7 @@ function handleBodyMouseDown(event) {
         }
     }
     
-    if (elEffectcombo.classList.contains('active') && !isDescendantOfId(event.target, 'effectcombo')) {
-        elEffectcombo.classList.remove('active');
-        if (!isDescendantOfId(event.target, 'kitcombo_container')) {
-            event.stopPropagation();
-        }
-    }    
+     
 }
 
 function isDescendantOfId(el, id) {
@@ -935,7 +924,7 @@ function setEffect(index) {
     sliderSetValue('effect_thumb', theBeat.effectMix);
     updateControls();
 
-    document.getElementById('effectname').innerHTML = impulseResponseInfoList[index].name;
+   
 }
 
 function setEffectLevel() {        
@@ -1117,7 +1106,7 @@ function updateControls() {
     }
 
     document.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
-    document.getElementById('effectname').innerHTML = impulseResponseInfoList[theBeat.effectIndex].name;
+   
     document.getElementById('tempo').innerHTML = theBeat.tempo;
     sliderSetPosition('swing_thumb', theBeat.swingFactor);
     sliderSetPosition('effect_thumb', theBeat.effectMix);
