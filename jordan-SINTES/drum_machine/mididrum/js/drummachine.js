@@ -449,7 +449,7 @@ function initControls() {
     makeEffectList();
 
     // sliders
-    document.getElementById('effect_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
+   
     document.getElementById('tom1_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
     document.getElementById('tom2_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
     document.getElementById('tom3_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
@@ -458,7 +458,7 @@ function initControls() {
     document.getElementById('kick_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
     document.getElementById('swing_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
 
-    document.getElementById('effect_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
+    
     document.getElementById('tom1_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
     document.getElementById('tom2_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
     document.getElementById('tom3_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
@@ -770,6 +770,7 @@ function sliderSetValue(slider, value) {
 }
 
 function sliderSetPosition(slider, value) {
+    /*
     var elThumb = document.getElementById(slider);
     var elTrack = elThumb.parentNode;
 
@@ -786,6 +787,7 @@ function sliderSetPosition(slider, value) {
 
         elThumb.style.top = travelH * (1.0 - value) + 'px';
     }
+    */
 }
 
 function handleButtonMouseDown(event) {
