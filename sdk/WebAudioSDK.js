@@ -13,6 +13,7 @@ class CompositeAudioNode {
 
   constructor(context, options) {
     this.context = context;
+    this.options = options;
     /**
      * 
      * @param {AudioContext} context  
