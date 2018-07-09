@@ -235,7 +235,7 @@ class WebAudioPluginFactory {
         try {
           this.plug = new window[classname](this.context, this.options);
           this.plug._metadataFileURL = this.MetadataFileURL;
-          this.plug.baseUrl = this.baseUrl;
+          this.plug.URL = this.baseUrl;
           resolve(this.plug);
         } catch (e) {
           reject(e);
