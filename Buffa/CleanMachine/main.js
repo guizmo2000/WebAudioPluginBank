@@ -122,8 +122,8 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
   createNodes() {
     // Create WebAudio nodes
     this.eq = new Equalizer(this.context);
-    this.reverb = new Convolver(this.context, this.reverbImpulses, "reverbImpulses");
-    this.cabinetSim = new Convolver(this.context, this.cabinetImpulses, "cabinetImpulses");
+    this.reverb = new Convolver(this.context, this.URL, this.reverbImpulses, "reverbImpulses");
+    this.cabinetSim = new Convolver(this.context, this.URL, this.cabinetImpulses, "cabinetImpulses");
     this.boost = new Boost(this.context);
   }
 
@@ -303,16 +303,16 @@ function Equalizer(ctx) {
 //----------------- Class for CONVOLVER (Reverb, Cabinet Simulation) --------------
 // ---------------- used for both reverb and cabinet simulation -------------------
 
-function Convolver(context, impulses, menuId) {
+function Convolver(context, pluginURL, impulses, menuId) {
   var convolverNode, convolverGain, directGain;
   // create source and gain node
   var inputGain = context.createGain();
   var outputGain = context.createGain();
   var decodedImpulse;
 
-  var irDefaultURL = "assets/impulses/reverb/cardiod-rear-levelled.wav";
-  var ir1 = "assets/impulses/reverb/pcm90cleanplate.wav";
-  var ir2 = "assets/impulses/reverb/ScalaMilanOperaHall.wav";
+  var irDefaultURL = pluginURL + "assets/impulses/reverb/cardiod-rear-levelled.wav";
+  var ir1 = pluginURL + "assets/impulses/reverb/pcm90cleanplate.wav";
+  var ir2 = pluginURL + "assets/impulses/reverb/ScalaMilanOperaHall.wav";
 
   var menuIRs;
   var IRs = impulses;
@@ -542,23 +542,6 @@ window.WasabiCleanMachine = class WasabiCleanMachine extends WebAudioPluginFacto
 
   constructor(context, baseUrl) {
     super(context, baseUrl);
-  }
-
-  // We redefine load in order to pass the path for assets
-  load() {
-    return new Promise((resolve, reject) => {
-      this.fetchPlugin().then(classname => {
-        this.classname = classname;
-        try {
-          this.plug = new window[classname](this.context, this.baseURL);
-          this.plug._metadataFileURL = this.MetadataFileURL;
-          resolve(this.plug);
-        } catch (e) {
-          reject(e);
-        }
-
-      })
-    });
   }
 }
 
