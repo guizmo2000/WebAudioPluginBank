@@ -11,8 +11,9 @@ class CompositeAudioNode {
     return true;
   }
 
-  constructor(context, options) {
+  constructor(context, URL, options) {
     this.context = context;
+    this.URL = URL;
     this.options = options;
     /**
      * 
@@ -107,10 +108,10 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
    * Fetch and return the metadata
    */
   async getMetadata() {
-    return new Promise(resolve =>{
-       fetch(this._metadataFileURL).then(responseJSON => {
+    return new Promise(resolve => {
+      fetch(this.URL + "/main.json").then(responseJSON => {
         return responseJSON.json();
-      }).then(json=>{
+      }).then(json => {
         resolve(json);
       })
     });
@@ -213,13 +214,12 @@ class WebAudioPluginFactory {
     this.context = context;
     this.baseUrl = baseUrl;
     this.options = options;
-    this.MetadataFileURL = this.baseUrl + "/main.json";
     this.classname;
   }
 
   fetchPlugin() {
     return new Promise((resolve, reject) => {
-      fetch(this.MetadataFileURL)
+      fetch(this.baseUrl + "/main.json")
         .then(responseJSON => {
           return responseJSON.json();
         }).then(metadata => {
@@ -233,9 +233,7 @@ class WebAudioPluginFactory {
       this.fetchPlugin().then(classname => {
         this.classname = classname;
         try {
-          this.plug = new window[classname](this.context, this.options);
-          this.plug._metadataFileURL = this.MetadataFileURL;
-          this.plug.URL = this.baseUrl;
+          this.plug = new window[classname](this.context, this.baseUrl, this.options);
           resolve(this.plug);
         } catch (e) {
           reject(e);
