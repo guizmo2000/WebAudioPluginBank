@@ -13,6 +13,7 @@ class CompositeAudioNode {
 
   constructor(context, options) {
     this.context = context;
+    this.options = options;
     /**
      * 
      * @param {AudioContext} context  
@@ -234,6 +235,7 @@ class WebAudioPluginFactory {
         try {
           this.plug = new window[classname](this.context, this.options);
           this.plug._metadataFileURL = this.MetadataFileURL;
+          this.plug.URL = this.baseUrl;
           resolve(this.plug);
         } catch (e) {
           reject(e);
