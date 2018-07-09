@@ -2,9 +2,9 @@
 
 window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 {
-	constructor(ctx,options)
+	constructor(ctx,URL ,options)
 	{
-		super(ctx,options)
+		super(ctx,URL,options)
 
 		this.state;
 		this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
@@ -149,12 +149,11 @@ window.WasabiMixer = class WasabiMixer extends WebAudioPluginFactory
 {
 	constructor(context, baseUrl, options)
 	{
-		super(context, baseUrl);
-		this.options = options;
+		super(context, baseUrl,options);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
 AudioContext.prototype.createWasabiDelayCompositeNode = OfflineAudioContext.prototype.createWasabiDelayCompositeNode = function (options)
-{ return new Mixer(this, options); };
+{ return new Mixer(this,baseUrl, options); };

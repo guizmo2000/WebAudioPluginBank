@@ -5,9 +5,9 @@
 */
 window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
 
-  constructor(ctx, options) {
+  constructor(ctx,URL ,options) {
     /*    ################     API PROPERTIES    ###############   */
-    super(ctx, options)
+    super(ctx,URL, options)
   
     this.addParam({name:'feedback', defaultValue: 0.5, minValue: 0, maxValue: 1 });
     this.addParam({name: 'time',defaultValue: 0.5, minValue: 0, maxValue: 1 });
@@ -19,6 +19,7 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
       "time": this._descriptor.time.defaultValue,
       "status": "disable"
     }
+
 
     this.setup();
   }
@@ -38,10 +39,7 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
   outputChannelCount(){
     return 1
   }
-  getMetadata(){
-    return this.metadata;
-  }
-
+  
   getDescriptor(){
     return this._descriptor;
   }

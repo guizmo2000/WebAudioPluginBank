@@ -6,8 +6,8 @@
 window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
 
 
-  constructor(ctx, options) {
-    super(ctx, options)
+  constructor(ctx,URL ,options) {
+    super(ctx,URL, options)
     /*    ################     API PROPERTIES    ###############   */
     this.state;
 

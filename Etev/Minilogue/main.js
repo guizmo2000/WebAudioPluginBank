@@ -6,9 +6,9 @@
 
 window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
-  constructor(ctx, options) {
+  constructor(ctx,URL ,options) {
     /*    ################     API PROPERTIES    ###############   */
-    super(ctx, options)
+    super(ctx,URL, options)
     this.state;
     this.voices = [];
     parent = this;

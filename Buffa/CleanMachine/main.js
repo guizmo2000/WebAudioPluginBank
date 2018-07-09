@@ -5,9 +5,9 @@
  */
 window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
 
-  constructor(ctx, options) {
+  constructor(ctx,URL ,options) {
     /*    ################     API PROPERTIES    ###############   */
-    super(ctx, options)
+    super(ctx, URL,options)
 
     //this.addParam({name:'feedback', defaultValue: 0.5, minValue: 0, maxValue: 1 });
     //this.addParam({name: 'time',defaultValue: 0.5, minValue: 0, maxValue: 1 });
@@ -51,6 +51,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
         url: "assets/impulses/cabinet/Marshall1960.wav"
       }
     ];
+
     this.setup();
   }
 
@@ -310,15 +311,18 @@ function Convolver(context, pluginURL, impulses, menuId) {
   var outputGain = context.createGain();
   var decodedImpulse;
 
-  var irDefaultURL = pluginURL + "assets/impulses/reverb/cardiod-rear-levelled.wav";
-  var ir1 = pluginURL + "assets/impulses/reverb/pcm90cleanplate.wav";
-  var ir2 = pluginURL + "assets/impulses/reverb/ScalaMilanOperaHall.wav";
+  // Note used in the class ? 
+  var irDefaultURL = pluginURL + "/assets/impulses/reverb/cardiod-rear-levelled.wav";
+  var ir1 = pluginURL + "/assets/impulses/reverb/pcm90cleanplate.wav";
+  var ir2 = pluginURL + "/assets/impulses/reverb/ScalaMilanOperaHall.wav";
+
 
   var menuIRs;
   var IRs = impulses;
 
   var currentImpulse = IRs[0];
-  var defaultImpulseURL = IRs[0].url;
+  // Here i add the "pluginURL+'/'+" to have the right path to impulses 
+  var defaultImpulseURL = pluginURL +'/'+IRs[0].url;
 
   convolverNode = context.createConvolver();
   convolverNode.buffer = decodedImpulse;
@@ -547,5 +551,6 @@ window.WasabiCleanMachine = class WasabiCleanMachine extends WebAudioPluginFacto
 
 AudioContext.prototype.createWasabiCleanMachineCompositeNode =
   OfflineAudioContext.prototype.createWasabiCleanMachineCompositeNode = function (options) {
+    console.log(this, options);
     return new CleanMachine(this, options);
   };

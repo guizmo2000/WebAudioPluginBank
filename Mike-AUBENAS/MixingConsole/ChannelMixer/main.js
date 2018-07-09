@@ -2,9 +2,9 @@
 
 window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 {
-	constructor(ctx, options)
+	constructor(ctx,URL ,options)
 	{
-		super(ctx, options)
+		super(ctx,URL, options)
 
 		this.inputs = [];
 		this.outputs = [];
@@ -173,12 +173,11 @@ window.WasabiChannelMixer = class WasabiChannelMixer extends WebAudioPluginFacto
 {
 	constructor(context, baseUrl, options)
 	{
-		super(context,baseUrl);
-		this.options = options;
+		super(context,baseUrl,options);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
 AudioContext.prototype.createWasabiDelayCompositeNode = OfflineAudioContext.prototype.createWasabiDelayCompositeNode = function (options)
-{ return new ChannelMixer(this, options); };
+{ return new ChannelMixer(this,baseUrl,options); };

@@ -1,6 +1,6 @@
 window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode {
-	constructor(ctx, options) {
-		super(ctx, options)
+	constructor(ctx,URL ,options) {
+		super(ctx,URL, options)
 
 		this.state;
 

@@ -7,9 +7,9 @@
 window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 
 
-	constructor(ctx, options) {
+	constructor(ctx,URL ,options) {
 		/*    ################     API PROPERTIES    ###############   */
-		super(ctx, options)
+		super(ctx,URL, options)
 		this.state;
 
 		this.addParam({ name: 'effect', defaultValue: 50, minValue: 0, maxValue: 100 });
