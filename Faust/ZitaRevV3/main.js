@@ -70,9 +70,53 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
                 || item.type === "checkbox"
                 || item.type === "nentry") {
                 // Keep inputs adresses
-                obj.inputs_items.push(item.address);
+                obj.inputs_items.push(item);
             }
         }
+
+        this.wap_ui = function (ui) {
+            //console.log(ui)
+            for (var i = 0; i < ui.length; i++) {
+                this.wap_group(ui[i]);
+            }
+        }
+        this.wap_group = function (group) {
+            //console.log(group);
+            if (group.items) {
+                for (let j = 0; j < group.items.length; j++) {
+                    this.wapGUI_parse(group.items[j]);
+
+                }
+            }
+        }
+
+        this.wapGUI_parse = function (item) {
+            if (item.type === "vgroup"
+                || item.type === "hgroup"
+                || item.type === "tgroup"
+                /*|| item.type ==="checkbox"*/) {
+                let tmp = {};
+                Object.assign(tmp, item);
+                console.log(tmp);
+                this.clean(tmp);
+            }
+        }
+
+        this.clean = function (tmp) {
+            console.log(tmp);
+            for (var i = 0; i < tmp.items.length; i++) {
+                if (tmp.items[i].type != "vslider"
+                    || tmp.items[i].type != "hslider"
+                    || tmp.items[i].type != "button"
+                    || tmp.items[i].type != "checkbox"
+                    || tmp.items[i].type != "nentry") {
+                    tmp.items.splice(i, 1);
+                }
+            }
+            Object.assign(this.jsoninfos, tmp);
+           // this.jsoninfos.push(tmp);
+        }
+
 
         this.output_handler = null;
 
@@ -81,9 +125,15 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
         // input/output items
         this.inputs_items = [];
         this.outputs_items = [];
+        this.jsoninfos = {}
 
         // Parse UI
         this.parse_ui(this.json_object.ui, this);
+
+        // Parse UI for wap GUI generator
+        //console.log(this.json_object.ui)
+        this.wap_ui(this.json_object.ui);
+
 
         // Set message handler
         this.port.onmessage = this.handleMessage.bind(this);
@@ -258,7 +308,7 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
      * @param {Object} patch to assign as a preset to the zitaRev
      */
     setPatch(patch) {
-        this.setState(this.presets[patch])
+        this.setState(this.presets[patch]);
 
     }
 
@@ -281,7 +331,7 @@ window.FaustZitaRev2 = class FaustZitaRev2 {
                 this.plug = new zitaRev_bypass2Node(this.context, {});
                 return (this.plug);
             }).then((faust) => {
-                console.log(this.plug.getDescriptor());
+                //console.log(this.plug.getDescriptor());
                 resolve(faust);
             }).catch((e) => {
                 reject(e);

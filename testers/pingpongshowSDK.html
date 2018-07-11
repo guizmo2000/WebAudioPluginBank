@@ -22,7 +22,7 @@
     });
   }
   var mediaSource = ctx.createMediaElementSource(player);
-  var numberofWap = 3;
+  var numberofWap = 4;
   var pluginURL = "./../WASABI/PingPongDelay3";
   var plugin = new window.WasabiPingPongDelay(ctx, pluginURL);
   var _settings = { feedback: 0.9, time: 0.9, mix: 0.9, status: "enable" };
@@ -39,17 +39,22 @@
 
           resolve(true);
         });
+
+        node.getMetadata().then(meta=>{
+          console.log(meta);
+        });
         mediaSource.connect(node);
         node.connect(ctx.destination)
       })
     })
   }
+
   launchWAP();
-  // (async function loop() {
-  //   for (let i = 0; i < numberofWap; i++) {
-  //     await launchWAP();
-  //   }
-  // })();
+  (async function loop() {
+    for (let i = 0; i < numberofWap; i++) {
+       launchWAP();
+    }
+  })();
 
 </script>
 
