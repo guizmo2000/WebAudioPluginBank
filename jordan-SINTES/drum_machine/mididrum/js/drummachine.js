@@ -190,18 +190,7 @@ Kit.prototype.loadSample = function(sampleID, url, mixToMono) {
 }
 
 
-
-
-
-
-
-
-
-
-
-function startLoadingAssets() {
-
-  
+function startLoadingAssets() { 
     
     // Initialize drum kits
     var numKits = kitName.length;
@@ -536,12 +525,12 @@ function playDrum(noteNumber, velocity) {
 
 
 function tempoIncrease() {
-    theBeat.tempo = Math.min(kMaxTempo, theBeat.tempo+4);
+    theBeat.tempo = Math.min(kMaxTempo, theBeat.tempo+1);
     document.getElementById('tempo').innerHTML = theBeat.tempo;
 }
 
 function tempoDecrease() {
-    theBeat.tempo = Math.max(kMinTempo, theBeat.tempo-4);
+    theBeat.tempo = Math.max(kMinTempo, theBeat.tempo-1);
     document.getElementById('tempo').innerHTML = theBeat.tempo;
 }
 
