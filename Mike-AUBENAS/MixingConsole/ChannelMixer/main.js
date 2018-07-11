@@ -88,6 +88,24 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode
 		}
 	}
 
+	getParam(key) {
+    try {
+      return this.params[key];
+    } catch (error) {
+      console.warn("this plugin does not implement this param")
+    }
+  }
+
+  setParam(key, value) {
+    //console.log(key, value);
+    try {
+      this[key] = (value);
+    } catch (error) {
+
+      console.warn("this plugin does not implement this param")
+    }
+  }
+
 	getChannelNumber()
 	{ return this.channelNumber; }
 
