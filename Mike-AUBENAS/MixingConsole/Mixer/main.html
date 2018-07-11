@@ -181,7 +181,7 @@
 			let plugin = new window.WasabiChannelMixer(this._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", {i});
 
 			(async function loop() {
-				for (i = 1; i < 5; i++) {
+				for (i = 1; i < 3; i++) {
 					await parent.addCh(plugin, i);
 				}
 			})();
