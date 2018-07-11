@@ -5,16 +5,9 @@ window.onload = init;
 
 var timerWorker = null; // Worker thread to send us scheduling messages.
 var context;
-var convolver;
 var compressor;
 var masterGainNode;
-var effectLevelNode;
 var filterNode;
-
-// Each effect impulse response has a specific overall desired dry and wet volume.
-// For example in the telephone filter, it's necessary to make the dry volume 0 to correctly hear the effect.
-var effectDryMix = 1.0;
-var effectWetMix = 1.0;
 
 var timeoutId;
 
@@ -23,7 +16,7 @@ var lastDrawTime = -1;
 
 var kits;
 
-var kNumInstruments = 6;
+var kNumInstruments = 6; //Tom 1, Tom2, Tom 3, Hi-Hat...
 var kInitialKitIndex = 10;
 var kMaxSwing = .08;
 
@@ -408,14 +401,9 @@ function init() {
     masterGainNode.gain.value = 0.7; // reduce overall volume to avoid clipping
     masterGainNode.connect(filterNode);
 
-    // Create effect volume.
-    effectLevelNode = context.createGain();
-    effectLevelNode.gain.value = 1.0; // effect level slider controls this
-    effectLevelNode.connect(masterGainNode);
+    
 
-    // Create convolver for effect
-    convolver = context.createConvolver();
-    convolver.connect(effectLevelNode);
+
 
 
     var elKitCombo = document.getElementById('kitcombo');
@@ -557,7 +545,7 @@ function playNote(buffer, pan, x, y, z, sendGain, mainGain, playbackRate, noteTi
 
     // Connect to dry mix
     var dryGainNode = context.createGain();
-    dryGainNode.gain.value = mainGain * effectDryMix;
+    dryGainNode.gain.value = mainGain;
     finalNode.connect(dryGainNode);
     dryGainNode.connect(masterGainNode);
 
@@ -565,7 +553,6 @@ function playNote(buffer, pan, x, y, z, sendGain, mainGain, playbackRate, noteTi
     var wetGainNode = context.createGain();
     wetGainNode.gain.value = sendGain;
     finalNode.connect(wetGainNode);
-    wetGainNode.connect(convolver);
 
     voice.start(noteTime);
 }
@@ -734,11 +721,6 @@ function sliderSetValue(slider, value) {
     var pitchRate = Math.pow(2.0, 2.0 * (value - 0.5));
     
     switch(slider) {
-    case 'effect_thumb':
-        // Change the volume of the convolution effect.
-        theBeat.effectMix = value;
-        setEffectLevel(theBeat);            
-        break;
     case 'kick_thumb':
         theBeat.kickPitchVal = value;
         kickPitch = pitchRate;
@@ -913,26 +895,18 @@ function setEffect(index) {
     }
 
     theBeat.effectIndex = index;
-    effectDryMix = impulseResponseInfoList[index].dryMix;
-    effectWetMix = impulseResponseInfoList[index].wetMix;            
-    convolver.buffer = impulseResponseList[index].buffer;
+                
 
   // Hack - if the effect is meant to be entirely wet (not unprocessed signal)
   // then put the effect level all the way up.
-    if (effectDryMix == 0)
-        theBeat.effectMix = 1;
+   
 
-    setEffectLevel(theBeat);
+    
     sliderSetValue('effect_thumb', theBeat.effectMix);
     updateControls();
-
-   
+  
 }
 
-function setEffectLevel() {        
-    // Factor in both the preset's effect level and the blending level (effectWetMix) stored in the effect itself.
-    effectLevelNode.gain.value = theBeat.effectMix * effectWetMix;
-}
 
 
 function handleDemoMouseDown(event) {
@@ -1021,8 +995,7 @@ function handleLoadOk(event) {
     // Set effect
     setEffect(theBeat.effectIndex);
 
-    // Change the volume of the convolution effect.
-    setEffectLevel(theBeat);
+    
 
     // Apply values from sliders
     sliderSetValue('effect_thumb', theBeat.effectMix);
