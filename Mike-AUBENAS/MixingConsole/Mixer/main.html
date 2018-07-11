@@ -193,9 +193,6 @@
 				plugin.load().then((node) => {
 					plugin.loadGui().then((elem) => {
 						this._root.querySelector('#arrayOfChannels').appendChild(elem);
-						var event = new Event('change');
-						// Dispatch it.
-						this.dispatchEvent(event); 
 						resolve(true);
 					});
 
