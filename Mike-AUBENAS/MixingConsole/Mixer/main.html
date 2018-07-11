@@ -197,7 +197,7 @@
 						resolve(true);
 					});
 
-					this._plug.inputs[i].connect(node);
+					this._plug.inputs[i-1].connect(node);
 					node.connect(this._plug.master);
 				});
 			});
