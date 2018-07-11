@@ -8,7 +8,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 
 		this.state;
 		this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
-		this._numberOfInputs = 4;
+		this._numberOfInputs = 2;
 
 		if(options)
 			this.arrayNodeToConnect = options.arrayNodeToConnect ? options.arrayNodeToConnect : 'no nodes';
