@@ -62,6 +62,23 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 		if(this.arrayNodeToConnect != 'no nodes')
 			return this.arrayNodeToConnect.length;
 	}
+	getParam(key) {
+    try {
+      return this.params[key];
+    } catch (error) {
+      console.warn("this plugin does not implement this param")
+    }
+  }
+
+  setParam(key, value) {
+    //console.log(key, value);
+    try {
+      this[key] = (value);
+    } catch (error) {
+
+      console.warn("this plugin does not implement this param")
+    }
+  }
 
 	getArrayNodeToConnect()
 	{ return this.arrayNodeToConnect; }
