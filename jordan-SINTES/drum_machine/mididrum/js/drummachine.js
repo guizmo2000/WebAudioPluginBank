@@ -62,7 +62,7 @@ var mouseCaptureOffset = 0;
 
 var loopLength = 16;
 var rhythmIndex = 0;
-var kMinTempo = 53;
+var kMinTempo = 52;
 var kMaxTempo = 180;
 var noteTime = 0.0;
 
@@ -150,7 +150,7 @@ Kit.prototype.load = function() {
 
     this.loadSample(0, kickPath, false);
     this.loadSample(1, snarePath, false);
-    this.loadSample(2, hihatPath, true);  // we're panning only the hihat
+    this.loadSample(2, hihatPath, false);  
     this.loadSample(3, tom1Path, false);
     this.loadSample(4, tom2Path, false);
     this.loadSample(5, tom3Path, false);
@@ -525,12 +525,12 @@ function playDrum(noteNumber, velocity) {
 
 
 function tempoIncrease() {
-    theBeat.tempo = Math.min(kMaxTempo, theBeat.tempo+1);
+    theBeat.tempo = Math.min(kMaxTempo, theBeat.tempo+2);
     document.getElementById('tempo').innerHTML = theBeat.tempo;
 }
 
 function tempoDecrease() {
-    theBeat.tempo = Math.max(kMinTempo, theBeat.tempo-1);
+    theBeat.tempo = Math.max(kMinTempo, theBeat.tempo-2);
     document.getElementById('tempo').innerHTML = theBeat.tempo;
 }
 
@@ -703,7 +703,7 @@ function handleButtonMouseDown(event) {
 
         case 2:  // Hihat
           // Pan the hihat according to sequence position.
-          playNote(currentKit.hihatBuffer, true, 0.5*rhythmIndex - 4, 0, -1.0, 1, volumes[note] * 0.7, hihatPitch, 0);
+          playNote(currentKit.hihatBuffer, false, 0.5*rhythmIndex - 4, 0, -1.0, 1, volumes[note] * 0.7, hihatPitch, 0);
           break;
 
         case 3:  // Tom 1   
