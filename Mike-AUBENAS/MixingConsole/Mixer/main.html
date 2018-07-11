@@ -177,7 +177,7 @@
 
 		firstsChannel(parent) {
 			let numchannel = "InputForchannel" + this._plug.inputs.length + 1;
-			let plugin = new window.WasabiChannelMixer(this._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", { "channelNumber": this._plug.inputs.length });
+			let plugin = new window.WasabiChannelMixer(this._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", { "channelNumber": numchannel });
 
 			(async function loop() {
 				for (let i = 0; i < 4; i++) {
@@ -200,6 +200,7 @@
 					});
 
 					this._plug.inputs[i].connect(node);
+					this._plug.numberOfInputs = i+1
 					node.connect(this._plug.master);
 				});
 			});
