@@ -180,7 +180,7 @@
 
 			(async function loop() {
 				for (let i = 0; i < 4; i++) {
-					 parent.addCh(plugin,i);
+					await parent.addCh(plugin,i);
 				}
 			})();
 			console.log()
