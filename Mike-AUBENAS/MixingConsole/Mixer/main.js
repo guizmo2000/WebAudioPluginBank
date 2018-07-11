@@ -54,7 +54,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 	}
 	
 	get dynamicParam(){
-		return {listento:"inputs.length", description:"inputs number increase when pushing '+' on GUI"}
+		return {listento:"numberOfInputs", description:"inputs number increase when pushing '+' on GUI"}
 	}
 
 	getNumberOfChannels()
