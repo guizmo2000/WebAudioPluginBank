@@ -8,6 +8,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 
 		this.state;
 		this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
+		this._numberOfInputs = 2;
 
 		if(options)
 			this.arrayNodeToConnect = options.arrayNodeToConnect ? options.arrayNodeToConnect : 'no nodes';
@@ -47,8 +48,12 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 	}
 
 	get numberOfInputs() {
-    return 4;
+    return this._numberOfInputs;
 	}
+	set numberOfInputs(num) {
+    this._numberOfInputs =  num;
+	}
+
 	get numberOfOutputs() {
     return 1;
 	}
@@ -145,6 +150,11 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 			plugin.loadGui().then((elem) =>
 			{
 				this.gui._root.querySelector('#arrayOfChannels').appendChild(elem);
+				this.numberOfInputs ++;
+
+				var event = new Event('change');
+						// Dispatch it.
+				this.gui.dispatchEvent(event); 
 			});
 
 			this[numchannel].connect(node);
