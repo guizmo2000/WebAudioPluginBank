@@ -5,11 +5,59 @@
  */
 window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
 
-  constructor(ctx,URL ,options) {
+  constructor(ctx, URL, options) {
     /*    ################     API PROPERTIES    ###############   */
-    super(ctx, URL,options)
+    super(ctx, URL, options)
 
-    //this.addParam({name:'feedback', defaultValue: 0.5, minValue: 0, maxValue: 1 });
+    this.addParam({
+      name: 'volume',
+      defaultValue: 5,
+      minValue: 0,
+      maxValue: 10
+    });
+    this.addParam({
+      name: 'master',
+      defaultValue: 6,
+      minValue: 0,
+      maxValue: 10
+    });
+    this.addParam({
+      name: 'drive',
+      defaultValue: 0,
+      minValue: 0,
+      maxValue: 10
+    });
+    this.addParam({
+      name: 'bass',
+      defaultValue: 5,
+      minValue: 0,
+      maxValue: 10
+    });
+    this.addParam({
+      name: 'middle',
+      defaultValue: 4,
+      minValue: 0,
+      maxValue: 10
+    });
+    this.addParam({
+      name: 'treble',
+      defaultValue: 3,
+      minValue: 0,
+      maxValue: 10
+    });
+    this.addParam({
+      name: 'reverb',
+      defaultValue: 2,
+      minValue: 0,
+      maxValue: 10
+    });
+    this.addParam({
+      name: 'presence',
+      defaultValue: 5,
+      minValue: 0,
+      maxValue: 10
+    });
+
     //this.addParam({name: 'time',defaultValue: 0.5, minValue: 0, maxValue: 1 });
     //this.addParam({name: 'mix',defaultValue: 0.5, minValue: 0, maxValue: 1 });
 
@@ -20,6 +68,20 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
       "status": "disable"
     }
 */
+
+    // ** this should be inherited ** if one prefers to use the default values from the this.addParam calls
+    this.params = {
+      volume: 5,
+      master: 6,
+      drive: 0,
+      bass: 5,
+      middle: 4,
+      treble: 3,
+      reverb: 2,
+      presence: 5,
+      status: "disable"
+    }
+
 
     this.reverbImpulses = [{
         name: "Fender Hot Rod",
@@ -56,27 +118,6 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
   }
 
   /*    ################     API METHODS    ###############   */
-  // p9 count inputs
-  get numberOfInputs() {
-    return this.inputs.length;
-  }
-
-  get numberOfOutputs() {
-    return this.outputs.length;
-  }
-  inputChannelCount() {
-    return 1;
-  }
-  outputChannelCount() {
-    return 1
-  }
-  getMetadata() {
-    return this.metadata;
-  }
-
-  getDescriptor() {
-    return this._descriptor;
-  }
 
   getPatch(index) { // patch = preset
     return null;
@@ -132,7 +173,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
   }
 
   connectNodes() {
-    
+
     // Connect EQ nodes
 
 
@@ -159,7 +200,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
 */
 
     this.amp.output.connect(this._output);
-    
+
   }
 
   linktoParams() {
@@ -167,12 +208,53 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
      * set default value for parameters and assign it to the web audio nodes
      */
 
-     /*
+    /*
     this.time = this.params.time;
     this.feedback = this.params.feedback;
     this.mix = this.params.mix;
     */
   }
+
+  set volume(val) {
+    this.params.volume = val;
+    this.amp.changeOutputGain(val);
+  }
+
+  set master(val) {
+    this.params.master = val;
+    this.amp.changeMasterVolume(val);
+  }
+
+  set drive(val) {
+    this.params.drive = val;
+    this.amp.changeDrive(val);
+  }
+
+  set bass(val) {
+    this.params.bass = val;
+    this.amp.changeBassFilterValue(val);
+  }
+
+  set middle(val) {
+    this.params.middle = val;
+    this.amp.changeMidFilterValue(val);
+  }
+
+  set treble(val) {
+    this.params.treble = val;
+    this.amp.changeTrebleFilterValue(val);
+  }
+
+  set reverb(val) {
+    this.params.reverb = val;
+    this.amp.changeReverbGain(val);
+  }
+
+  set presence(val) {
+    this.params.presence = val;
+    this.amp.changePresenceFilterValue(val);
+  }
+
   /*
   set time(_time) {
   
@@ -191,51 +273,12 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
     this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
     this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
   }
-
-  set status(_sig) {
-    if (_sig === "enable") {
-      this.params.status = "enable";
-      this._input.disconnect(this._output);
-      this._input.connect(this.feedbackGainNode);
-      this._input.connect(this.dryGainNode);
-    } else if (_sig === "disable") {
-      this.params.status = "disable";
-      this._input.disconnect(this.feedbackGainNode);
-      this._input.disconnect(this.dryGainNode);
-      this._input.connect(this._output);
-    }
-  }
-
 */
+  set status(_sig) {
+    let bypassOn = (_sig === "disable");
 
-  // delay tools
-  /*
-   *
-   *Tools to build sounds 
-   */
-
-  isNumber(arg) {
-    return toString.call(arg) === '[object Number]' && arg === +arg;
-  }
-
-  getDryLevel(mix) {
-    if (!this.isNumber(mix) || mix > 1 || mix < 0)
-      return 0;
-
-    if (mix <= 0.5)
-      return 1;
-
-    return 1 - ((mix - 0.5) * 2);
-  }
-
-  getWetLevel(mix) {
-    if (!this.isNumber(mix) || mix > 1 || mix < 0)
-      return 0;
-
-    if (mix >= 0.5)
-      return 1;
-
-    return 1 - ((0.5 - mix) * 2);
+    this.amp.bypass(bypassOn);
+    // cas reactivation ? 
   }
 
 }
@@ -252,7 +295,7 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
 
   var currentDistoName = "standard";
   var currentK = 2; // we have separates ks, but also a "global" one that
-                    // is the max of the four (the knob value)
+  // is the max of the four (the knob value)
   var currentWSCurve = wsFactory.distorsionCurves[currentDistoName](currentK);
   // for Wave Shaper Curves visualization
   var distoDrawer, signalDrawer;
@@ -313,16 +356,16 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
   var k = [2, 2, 2, 2]; // array of k initial values
   var od = [];
   var gainsOds = [];
-// noprotect  
+  // noprotect  
   for (var i = 0; i < 4; i++) {
-      od[i] = context.createWaveShaper();
-      od[i].curve = makeDistortionCurve(k[i]);
-      // Oversampling generates some (small) latency
-      //od[i].oversample = '4x';
+    od[i] = context.createWaveShaper();
+    od[i].curve = makeDistortionCurve(k[i]);
+    // Oversampling generates some (small) latency
+    //od[i].oversample = '4x';
 
-      // gains
-      gainsOds[i] = context.createGain();
-      gainsOds[i].gain.value = 1;
+    // gains
+    gainsOds[i] = context.createGain();
+    gainsOds[i].gain.value = 1;
   }
 
   // output gain after amp stage
@@ -358,18 +401,18 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
   // Master volume
   var masterVolume = context.createGain();
 
-/*
-  reverb = new Reverb(context, function () {
-      console.log("reverb created");
+  /*
+    reverb = new Reverb(context, function () {
+        console.log("reverb created");
 
-      cabinetSim = new CabinetSimulator(context, function () {
-          console.log("cabinet sim created");
+        cabinetSim = new CabinetSimulator(context, function () {
+            console.log("cabinet sim created");
 
-          doAllConnections();
+            doAllConnections();
 
-      });
-  });
-*/
+        });
+    });
+  */
 
   doAllConnections();
 
@@ -378,218 +421,218 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
   // -------------------
 
   function doAllConnections() {
-      // called only after reverb and cabinet sim could load and
-      // decode impulses
+    // called only after reverb and cabinet sim could load and
+    // decode impulses
 
-      // Build web audio graph, set default preset
-      buildGraph();
-      initPresets();
+    // Build web audio graph, set default preset
+    buildGraph();
+    initPresets();
 
-      setDefaultPreset();
-      console.log("running");
+    setDefaultPreset();
+    console.log("running");
   }
 
 
   function buildGraph() {
-      input.connect(inputGain);
-      input.connect(byPass);
+    input.connect(inputGain);
+    input.connect(byPass);
 
-      // boost is not activated, it's just a sort of disto at 
-      // the very beginning of the amp route
-      inputGain.connect(boost.input);
+    // boost is not activated, it's just a sort of disto at 
+    // the very beginning of the amp route
+    inputGain.connect(boost.input);
 
-      boost.output.connect(lowCutFilter);
-      lowCutFilter.connect(hiCutFilter);
+    boost.output.connect(lowCutFilter);
+    lowCutFilter.connect(hiCutFilter);
 
-      for (var i = 0; i < 4; i++) {
-          hiCutFilter.connect(filters[i]);
-          filters[i].connect(od[i]);
-          od[i].connect(gainsOds[i]);
-          gainsOds[i].connect(outputGain);
-      }
-      // tonestack
-      outputGain.connect(bassFilter);
-      bassFilter.connect(midFilter);
-      midFilter.connect(trebleFilter);
-      trebleFilter.connect(presenceFilter);
+    for (var i = 0; i < 4; i++) {
+      hiCutFilter.connect(filters[i]);
+      filters[i].connect(od[i]);
+      od[i].connect(gainsOds[i]);
+      gainsOds[i].connect(outputGain);
+    }
+    // tonestack
+    outputGain.connect(bassFilter);
+    bassFilter.connect(midFilter);
+    midFilter.connect(trebleFilter);
+    trebleFilter.connect(presenceFilter);
 
-      // post process
-      presenceFilter.connect(inputEQ);
-      // bypass eq route
-      presenceFilter.connect(bypassEQg);
-      bypassEQg.connect(masterVolume);
+    // post process
+    presenceFilter.connect(inputEQ);
+    // bypass eq route
+    presenceFilter.connect(bypassEQg);
+    bypassEQg.connect(masterVolume);
 
-      // normal route
-      inputEQ.connect(eq.input);
-      eq.output.connect(masterVolume);
-      masterVolume.connect(reverb.input);
+    // normal route
+    inputEQ.connect(eq.input);
+    eq.output.connect(masterVolume);
+    masterVolume.connect(reverb.input);
 
-      reverb.output.connect(cabinetSim.input);
-      cabinetSim.output.connect(output);
-      //eq.output.connect(output);
-      //reverb.output.connect(output);
+    reverb.output.connect(cabinetSim.input);
+    cabinetSim.output.connect(output);
+    //eq.output.connect(output);
+    //reverb.output.connect(output);
 
-      // byPass route
-      byPass.connect(output);
+    // byPass route
+    byPass.connect(output);
   }
 
-  function boostOnOff(cb) {  
-      // called when we click the switch on the GUI      
-      boost.toggle();
+  function boostOnOff(cb) {
+    // called when we click the switch on the GUI      
+    boost.toggle();
 
-      adjustOutputGainIfBoostActivated();
-      updateBoostLedButtonState(boost.isActivated());
+    adjustOutputGainIfBoostActivated();
+    updateBoostLedButtonState(boost.isActivated());
   }
 
   function changeBoost(state) {
-      console.log("changeBoost, boost before: " + boost.isActivated() + " output gain=" + output.gain.value );
+    console.log("changeBoost, boost before: " + boost.isActivated() + " output gain=" + output.gain.value);
 
-      if(boost.isActivated() !== state) {
-          // we need to adjust the output gain
-          console.log("changeBoost: we change boost state");
-          boost.onOff(state);
-          adjustOutputGainIfBoostActivated();
-          updateBoostLedButtonState(boost.isActivated());
-      } else {
-          console.log("changeBoost: we do not change boost state");
-      }
+    if (boost.isActivated() !== state) {
+      // we need to adjust the output gain
+      console.log("changeBoost: we change boost state");
+      boost.onOff(state);
+      adjustOutputGainIfBoostActivated();
+      updateBoostLedButtonState(boost.isActivated());
+    } else {
+      console.log("changeBoost: we do not change boost state");
+    }
 
-      console.log("changeBoost, boost after: " + boost.isActivated());
+    console.log("changeBoost, boost after: " + boost.isActivated());
   }
 
   function adjustOutputGainIfBoostActivated() {
-      console.log("adjustOutputGainIfBoostActivated: output gain value before = " + output.gain.value)
+    console.log("adjustOutputGainIfBoostActivated: output gain value before = " + output.gain.value)
 
-      if(boost.isActivated()) {
-          output.gain.value /= 2;
-      } else {
-          output.gain.value *= 2;
-      }
-      console.log("adjustOutputGainIfBoostActivated: output gain value after = " + output.gain.value)
+    if (boost.isActivated()) {
+      output.gain.value /= 2;
+    } else {
+      output.gain.value *= 2;
+    }
+    console.log("adjustOutputGainIfBoostActivated: output gain value after = " + output.gain.value)
   }
 
   function updateBoostLedButtonState(activated) {
-      // update buttons states
-      /*
-      var boostSwitch = document.querySelector("#toggleBoost");
+    // update buttons states
+    /*
+    var boostSwitch = document.querySelector("#toggleBoost");
 
-      if(boost.isActivated()) {
-          boostSwitch.setValue(1,false);
-      } else {
-          boostSwitch.setValue(0,false);
-      }
-      */
+    if(boost.isActivated()) {
+        boostSwitch.setValue(1,false);
+    } else {
+        boostSwitch.setValue(0,false);
+    }
+    */
   }
 
 
   function changeInputGainValue(sliderVal) {
-      input.gain.value = parseFloat(sliderVal);
+    input.gain.value = parseFloat(sliderVal);
   }
 
   function changeOutputGainValue(sliderVal) {
-      output.gain.value = parseFloat(sliderVal)/10;
-      console.log("changeOutputGainValue value = " + output.gain.value);
+    output.gain.value = parseFloat(sliderVal) / 10;
+    console.log("changeOutputGainValue value = " + output.gain.value);
   }
 
 
   function changeLowCutFreqValue(sliderVal) {
-      var value = parseFloat(sliderVal);
-      lowCutFilter.frequency.value = value;
+    var value = parseFloat(sliderVal);
+    lowCutFilter.frequency.value = value;
 
-      // update output labels
-      //var output = document.querySelector("#lowCutFreq");
-      //output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
+    // update output labels
+    //var output = document.querySelector("#lowCutFreq");
+    //output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
 
-      // refresh slider state
-      //var slider = document.querySelector("#lowCutFreqSlider");
-      //slider.value = parseFloat(sliderVal).toFixed(1);
+    // refresh slider state
+    //var slider = document.querySelector("#lowCutFreqSlider");
+    //slider.value = parseFloat(sliderVal).toFixed(1);
   }
 
   function changeHicutFreqValue(sliderVal) {
-      var value = parseFloat(sliderVal);
-      hiCutFilter.frequency.value = value;
+    var value = parseFloat(sliderVal);
+    hiCutFilter.frequency.value = value;
 
-      // update output labels
-      //var output = document.querySelector("#hiCutFreq");
-      //output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
+    // update output labels
+    //var output = document.querySelector("#hiCutFreq");
+    //output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
 
-      // refresh slider state
-      //var slider = document.querySelector("#hiCutFreqSlider");
-      //slider.value = parseFloat(sliderVal).toFixed(1);
+    // refresh slider state
+    //var slider = document.querySelector("#hiCutFreqSlider");
+    //slider.value = parseFloat(sliderVal).toFixed(1);
   }
 
-function changeBassFilterValue(sliderVal) {
-      // sliderVal is in [0, 10]
-      var value = parseFloat(sliderVal);
-      bassFilter.gain.value = (value-5) * 3;
-      console.log("bass gain set to " + bassFilter.gain.value);
+  function changeBassFilterValue(sliderVal) {
+    // sliderVal is in [0, 10]
+    var value = parseFloat(sliderVal);
+    bassFilter.gain.value = (value - 5) * 3;
+    console.log("bass gain set to " + bassFilter.gain.value);
 
-      // update output labels
-      //var output = document.querySelector("#bassFreq");
-      //output.value = parseFloat(sliderVal).toFixed(1);
+    // update output labels
+    //var output = document.querySelector("#bassFreq");
+    //output.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh slider state
-      //var slider = document.querySelector("#bassFreqSlider");
-      //slider.value = parseFloat(sliderVal).toFixed(1);
+    // refresh slider state
+    //var slider = document.querySelector("#bassFreqSlider");
+    //slider.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh knob state
-      //var knob = document.querySelector("#Knob4");
-      //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+    // refresh knob state
+    //var knob = document.querySelector("#Knob4");
+    //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
   }
 
   function changeMidFilterValue(sliderVal) {
-      // sliderVal is in [0, 10]
-      var value = parseFloat(sliderVal);
-      midFilter.gain.value = (value-5) * 2;
+    // sliderVal is in [0, 10]
+    var value = parseFloat(sliderVal);
+    midFilter.gain.value = (value - 5) * 2;
 
-      // update output labels
-      //var output = document.querySelector("#midFreq");
-      //output.value = parseFloat(sliderVal).toFixed(1);
+    // update output labels
+    //var output = document.querySelector("#midFreq");
+    //output.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh slider state
-      //var slider = document.querySelector("#midFreqSlider");
-      //slider.value = parseFloat(sliderVal).toFixed(1);
+    // refresh slider state
+    //var slider = document.querySelector("#midFreqSlider");
+    //slider.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh knob state
-      //var knob = document.querySelector("#Knob5");
-      //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+    // refresh knob state
+    //var knob = document.querySelector("#Knob5");
+    //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
   }
 
   function changeTrebleFilterValue(sliderVal) {
-      // sliderVal is in [0, 10]
-      var value = parseFloat(sliderVal);
-      trebleFilter.gain.value = (value-5) * 5;
+    // sliderVal is in [0, 10]
+    var value = parseFloat(sliderVal);
+    trebleFilter.gain.value = (value - 5) * 5;
 
-      // update output labels
-      //var output = document.querySelector("#trebleFreq");
-      //output.value = parseFloat(sliderVal).toFixed(1);
+    // update output labels
+    //var output = document.querySelector("#trebleFreq");
+    //output.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh slider state
-      //var slider = document.querySelector("#trebleFreqSlider");
-      //slider.value = parseFloat(sliderVal).toFixed(1);
+    // refresh slider state
+    //var slider = document.querySelector("#trebleFreqSlider");
+    //slider.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh knob state
-      //var knob = document.querySelector("#Knob6");
-      //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+    // refresh knob state
+    //var knob = document.querySelector("#Knob6");
+    //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
   }
 
   function changePresenceFilterValue(sliderVal) {
-      // sliderVal is in [0, 10]
-      var value = parseFloat(sliderVal);
-      presenceFilter.gain.value = (value-5) * 2;
-      //console.log("set presence freq to " + presenceFilter.frequency.value)
+    // sliderVal is in [0, 10]
+    var value = parseFloat(sliderVal);
+    presenceFilter.gain.value = (value - 5) * 2;
+    //console.log("set presence freq to " + presenceFilter.frequency.value)
 
-      // update output labels
-      //var output = document.querySelector("#presenceFreq");
-      //output.value = parseFloat(sliderVal).toFixed(1);
+    // update output labels
+    //var output = document.querySelector("#presenceFreq");
+    //output.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh slider state
-      //var slider = document.querySelector("#presenceFreqSlider");
-      //slider.value = parseFloat(sliderVal).toFixed(1);
+    // refresh slider state
+    //var slider = document.querySelector("#presenceFreqSlider");
+    //slider.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh knob state
-      //var knob = document.querySelector("#Knob8");
-      //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+    // refresh knob state
+    //var knob = document.querySelector("#Knob8");
+    //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
   }
 
   // Build a drop down menu with all distorsion names
@@ -613,9 +656,9 @@ function changeBassFilterValue(sliderVal) {
   }
 */
   function changeDistoTypeFromPreset(name) {
-      currentDistoName = name;
-      //menuDisto.value = name;
-      changeDrive(currentK);
+    currentDistoName = name;
+    //menuDisto.value = name;
+    changeDrive(currentK);
   }
 
   function changeDrive(sliderValue) {
@@ -626,98 +669,98 @@ function changeBassFilterValue(sliderVal) {
     var profileValues = [1, 1, 1, 1];
     // other values i.e [0.5, 0.5, 0.8, 1] -> less distorsion
     // on bass frequencies and top high frequency
-    
-    for(var i = 0; i < 4; i++) {
+
+    for (var i = 0; i < 4; i++) {
       // less distorsion on bass channels
-      if(i < 2) {
-          changeDistorsionValues(sliderValue/2, i);
+      if (i < 2) {
+        changeDistorsionValues(sliderValue / 2, i);
       } else {
-          changeDistorsionValues(sliderValue, i);
+        changeDistorsionValues(sliderValue, i);
       }
-      
+
     }
   }
 
   function changeDistorsionValues(sliderValue, numDisto) {
-      // sliderValue is in [0, 10] range, adjust to [0, 1500] range  
-      var value = 150 * parseFloat(sliderValue);
-      var minp = 0;
-      var maxp = 1500;
+    // sliderValue is in [0, 10] range, adjust to [0, 1500] range  
+    var value = 150 * parseFloat(sliderValue);
+    var minp = 0;
+    var maxp = 1500;
 
-      // The result should be between 10 an 1500
-      var minv = Math.log(10);
-      var maxv = Math.log(1500);
+    // The result should be between 10 an 1500
+    var minv = Math.log(10);
+    var maxv = Math.log(1500);
 
-      // calculate adjustment factor
-      var scale = (maxv - minv) / (maxp - minp);
+    // calculate adjustment factor
+    var scale = (maxv - minv) / (maxp - minp);
 
-      value = Math.exp(minv + scale * (value - minp));
-      // end of logarithmic adjustment
+    value = Math.exp(minv + scale * (value - minp));
+    // end of logarithmic adjustment
 
-      k[numDisto] = value;
-      //console.log("k = " + value + " pos = " + logToPos(value));
-      od[numDisto].curve = makeDistortionCurve(k[numDisto]);
-      //od[numDisto].curve = makeDistortionCurve(sliderValue);
-      // update output labels
-      //var output = document.querySelector("#k" + numDisto);
-      //output.value = parseFloat(sliderValue).toFixed(1);
+    k[numDisto] = value;
+    //console.log("k = " + value + " pos = " + logToPos(value));
+    od[numDisto].curve = makeDistortionCurve(k[numDisto]);
+    //od[numDisto].curve = makeDistortionCurve(sliderValue);
+    // update output labels
+    //var output = document.querySelector("#k" + numDisto);
+    //output.value = parseFloat(sliderValue).toFixed(1);
 
-      // update sliders
-      var numSlider = numDisto + 1;
-      //var slider = document.querySelector("#K" + numSlider + "slider");
-      //slider.value = parseFloat(sliderValue).toFixed(1);
+    // update sliders
+    var numSlider = numDisto + 1;
+    //var slider = document.querySelector("#K" + numSlider + "slider");
+    //slider.value = parseFloat(sliderValue).toFixed(1);
 
-      // refresh knob state
-      //var knob = document.querySelector("#Knob3");
-      var maxPosVal1 = Math.max(logToPos(k[2]), logToPos(k[3]));
-      var maxPosVal2 = Math.max(logToPos(k[0]), logToPos(k[1]));
-      var maxPosVal = Math.max(maxPosVal1, maxPosVal2);
-      //var maxPosVal = Math.max(logToPos(k[2]), logToPos(k[3]));
-      var linearValue = parseFloat(maxPosVal).toFixed(1);
-      //knob.setValue(linearValue, false);
-      // in [0, 10]
-      currentK = linearValue;
-      // redraw curves
-      //drawCurrentDisto();
+    // refresh knob state
+    //var knob = document.querySelector("#Knob3");
+    var maxPosVal1 = Math.max(logToPos(k[2]), logToPos(k[3]));
+    var maxPosVal2 = Math.max(logToPos(k[0]), logToPos(k[1]));
+    var maxPosVal = Math.max(maxPosVal1, maxPosVal2);
+    //var maxPosVal = Math.max(logToPos(k[2]), logToPos(k[3]));
+    var linearValue = parseFloat(maxPosVal).toFixed(1);
+    //knob.setValue(linearValue, false);
+    // in [0, 10]
+    currentK = linearValue;
+    // redraw curves
+    //drawCurrentDisto();
   }
 
   function logToPos(logValue) {
-      var minp = 0;
-      var maxp = 1500;
+    var minp = 0;
+    var maxp = 1500;
 
-      // The result should be between 10 an 1500
-      var minv = Math.log(10);
-      var maxv = Math.log(1500);
+    // The result should be between 10 an 1500
+    var minv = Math.log(10);
+    var maxv = Math.log(1500);
 
-      // calculate adjustment factor
-      var scale = (maxv - minv) / (maxp - minp);
+    // calculate adjustment factor
+    var scale = (maxv - minv) / (maxp - minp);
 
-      return (minp + (Math.log(logValue) - minv) / scale)/150;
+    return (minp + (Math.log(logValue) - minv) / scale) / 150;
   }
 
   function changeOversampling(cb) {
-      for (var i = 0; i < 4; i++) {
-          if(cb.checked) {
-              // Oversampling generates some (small) latency
-              od[i].oversample = '4x';
-              boost.setOversampling('4x');
-              console.log("set oversampling to 4x");
-          } else {
-              od[i].oversample = 'none';
-               boost.setOversampling('none');
-              console.log("set oversampling to none");
-          }
-       }
-       // Not sure if this is necessary... My ears can't hear the difference
-       // between oversampling=node and 4x ? Maybe we should re-init the
-       // waveshaper curves ?
-       changeDistoType();
+    for (var i = 0; i < 4; i++) {
+      if (cb.checked) {
+        // Oversampling generates some (small) latency
+        od[i].oversample = '4x';
+        boost.setOversampling('4x');
+        console.log("set oversampling to 4x");
+      } else {
+        od[i].oversample = 'none';
+        boost.setOversampling('none');
+        console.log("set oversampling to none");
+      }
+    }
+    // Not sure if this is necessary... My ears can't hear the difference
+    // between oversampling=node and 4x ? Maybe we should re-init the
+    // waveshaper curves ?
+    changeDistoType();
   }
 
   // Returns an array of distorsions values in [0, 10] range
   function getDistorsionValue(numChannel) {
-      var pos = logToPos(k[numChannel]);
-      return parseFloat(pos).toFixed(1);
+    var pos = logToPos(k[numChannel]);
+    return parseFloat(pos).toFixed(1);
   }
 
   /*
@@ -764,470 +807,974 @@ function changeBassFilterValue(sliderVal) {
 */
 
   function changeQValues(sliderVal, numQ) {
-      var value = parseFloat(sliderVal);
-      filters[numQ].Q.value = value;
+    var value = parseFloat(sliderVal);
+    filters[numQ].Q.value = value;
 
-      // update output labels
-      //var output = document.querySelector("#q" + numQ);
-      //output.value = value.toFixed(1);
+    // update output labels
+    //var output = document.querySelector("#q" + numQ);
+    //output.value = value.toFixed(1);
 
-      // update sliders
-      //var numSlider = numQ + 1;
-      //var slider = document.querySelector("#Q" + numSlider + "slider");
-      //slider.value = value;
+    // update sliders
+    //var numSlider = numQ + 1;
+    //var slider = document.querySelector("#Q" + numSlider + "slider");
+    //slider.value = value;
 
   }
 
   function changeFreqValues(sliderVal, numF) {
-      var value = parseFloat(sliderVal);
-      filters[numF].frequency.value = value;
+    var value = parseFloat(sliderVal);
+    filters[numF].frequency.value = value;
 
-      // update output labels
-      //var output = document.querySelector("#freq" + numF);
-      //output.value = value + " Hz";
-      // refresh slider state
-      //var numSlider = numF + 1;
-      //var slider = document.querySelector("#F" + numSlider + "slider");
-      //slider.value = value;
+    // update output labels
+    //var output = document.querySelector("#freq" + numF);
+    //output.value = value + " Hz";
+    // refresh slider state
+    //var numSlider = numF + 1;
+    //var slider = document.querySelector("#F" + numSlider + "slider");
+    //slider.value = value;
   }
 
   // volume aka preamp output volume
   function changeOutputGain(sliderVal) {
-      // sliderVal is in [0, 10]
-      // Adjust to [0, 1]
-      var value = parseFloat(sliderVal/10);
-      outputGain.gain.value = value;
+    // sliderVal is in [0, 10]
+    // Adjust to [0, 1]
+    var value = parseFloat(sliderVal / 10);
+    outputGain.gain.value = value;
 
-      // update output labels
-      //var output = document.querySelector("#outputGain");
-      //output.value = parseFloat(sliderVal).toFixed(1);
+    // update output labels
+    //var output = document.querySelector("#outputGain");
+    //output.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh slider state
-      //var slider = document.querySelector("#OGslider");
-      //slider.value = parseFloat(sliderVal).toFixed(1);
+    // refresh slider state
+    //var slider = document.querySelector("#OGslider");
+    //slider.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh knob state
-      //var knob = document.querySelector("#Knob1");
-      //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+    // refresh knob state
+    //var knob = document.querySelector("#Knob1");
+    //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
   }
 
   function changeMasterVolume(sliderVal) {
-      // sliderVal is in [0, 10]
-      var value = parseFloat(sliderVal);
-      masterVolume.gain.value = value;
+    // sliderVal is in [0, 10]
+    var value = parseFloat(sliderVal);
+    masterVolume.gain.value = value;
 
-      // update output labels
-      //var output = document.querySelector("#MVOutputGain");
-      //output.value = parseFloat(sliderVal).toFixed(1);
+    // update output labels
+    //var output = document.querySelector("#MVOutputGain");
+    //output.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh slider state
-      //var slider = document.querySelector("#MVslider");
-      //slider.value = parseFloat(sliderVal).toFixed(1);
-      
-      // refresh knob state
-      //var knob = document.querySelector("#Knob2");
-      //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+    // refresh slider state
+    //var slider = document.querySelector("#MVslider");
+    //slider.value = parseFloat(sliderVal).toFixed(1);
+
+    // refresh knob state
+    //var knob = document.querySelector("#Knob2");
+    //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
   }
 
   function changeReverbGain(sliderVal) {
-      // slider val in [0, 10] range
-      // adjust to [0, 1]
-      var value = parseFloat(sliderVal) / 10;
-      reverb.setGain(value);
+    // slider val in [0, 10] range
+    // adjust to [0, 1]
+    var value = parseFloat(sliderVal) / 10;
+    reverb.setGain(value);
 
-      // update output labels
-      //var output = document.querySelector("#reverbGainOutput");
-      //output.value = parseFloat(sliderVal).toFixed(1);
+    // update output labels
+    //var output = document.querySelector("#reverbGainOutput");
+    //output.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh slider state
-      //var slider = document.querySelector("#convolverSlider");
-      //slider.value = parseFloat(sliderVal).toFixed(1);
+    // refresh slider state
+    //var slider = document.querySelector("#convolverSlider");
+    //slider.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh knob state
-      //var knob = document.querySelector("#Knob7");
-      //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+    // refresh knob state
+    //var knob = document.querySelector("#Knob7");
+    //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
   }
 
   function changeReverbImpulse(name) {
-      reverb.loadImpulseByName(name);
+    reverb.loadImpulseByName(name);
   }
 
   function changeRoom(sliderVal) {
-      // slider val in [0, 10] range
-      // adjust to [0, 1]
-      console.log('change room');
-      var value = parseFloat(sliderVal) / 10;
-      cabinetSim.setGain(value);
+    // slider val in [0, 10] range
+    // adjust to [0, 1]
+    console.log('change room');
+    var value = parseFloat(sliderVal) / 10;
+    cabinetSim.setGain(value);
 
-      // update output labels
-      //var output = document.querySelector("#cabinetGainOutput");
-      //output.value = parseFloat(sliderVal).toFixed(1);
+    // update output labels
+    //var output = document.querySelector("#cabinetGainOutput");
+    //output.value = parseFloat(sliderVal).toFixed(1);
 
-      // refresh slider state
-      //var slider = document.querySelector("#convolverCabinetSlider");
-      //slider.value = parseFloat(sliderVal).toFixed(1);
+    // refresh slider state
+    //var slider = document.querySelector("#convolverCabinetSlider");
+    //slider.value = parseFloat(sliderVal).toFixed(1);
 
   }
 
   function changeCabinetSimImpulse(name) {
-      cabinetSim.loadImpulseByName(name);
+    cabinetSim.loadImpulseByName(name);
   }
 
   function changeEQValues(eqValues) {
-      eq.setValues(eqValues);
+    eq.setValues(eqValues);
   }
 
   function makeDistortionCurve(k) {
-      // compute a new ws curve for current disto name and current k
-      currentWSCurve = wsFactory.distorsionCurves[currentDistoName](k);
-      return currentWSCurve;
+    // compute a new ws curve for current disto name and current k
+    currentWSCurve = wsFactory.distorsionCurves[currentDistoName](k);
+    return currentWSCurve;
   }
 
   // --------
   // PRESETS
   // --------
   function initPresets() {
-      // updated 10/4/2016
-      preset1 = {"name":"Clean 1","distoName":"standard","boost":false,"LCF":200,"HCF":12000,"K1":"0.0","K2":"0.0","K3":"0.0","K4":"0.0","F1":147,"F2":569,"F3":1915,"F4":4680,"Q1":"0.0","Q2":"49.0","Q3":"42.0","Q4":"11.0","OG":"5.0","BF":"5.0","MF":"4.2","TF":"3.1","PF":"5.0","EQ":[-2,-1,0,3,-9,-4],"MV":"5.8","RN":"Fender Hot Rod","RG":"2.0","CN":"Vintage Marshall 1","CG":"2.0"};
-      presets.push(preset1);
+    // updated 10/4/2016
+    preset1 = {
+      "name": "Clean 1",
+      "distoName": "standard",
+      "boost": false,
+      "LCF": 200,
+      "HCF": 12000,
+      "K1": "0.0",
+      "K2": "0.0",
+      "K3": "0.0",
+      "K4": "0.0",
+      "F1": 147,
+      "F2": 569,
+      "F3": 1915,
+      "F4": 4680,
+      "Q1": "0.0",
+      "Q2": "49.0",
+      "Q3": "42.0",
+      "Q4": "11.0",
+      "OG": "5.0",
+      "BF": "5.0",
+      "MF": "4.2",
+      "TF": "3.1",
+      "PF": "5.0",
+      "EQ": [-2, -1, 0, 3, -9, -4],
+      "MV": "5.8",
+      "RN": "Fender Hot Rod",
+      "RG": "2.0",
+      "CN": "Vintage Marshall 1",
+      "CG": "2.0"
+    };
+    presets.push(preset1);
 
-      preset2 = {
-          "name":"Crunch 1",
-          "LCF":90,
-          "HCF":7000,
-          "K1":"4.7",
-          "K2":"4.1",
-          "K3":"10.0",
-          "K4":"10.0",
-          "F1":147,
-          "F2":569,
-          "F3":1915,
-          "F4":4680,
-          "Q1":0,
-          "Q2":49,
-          "Q3":42,
-          "Q4":11,
-          "OG":7.9,
-          "BF":5,
-          "MF":5,
-          "TF":5,
-          "PF":5,
-          "EQ":[-2,-1,2,2,-7,-13],
-          "MV":"0.7",
-          "RG":"2.0",
-          "CG":"5.4"
-      }
-      presets.push(preset2);
+    preset2 = {
+      "name": "Crunch 1",
+      "LCF": 90,
+      "HCF": 7000,
+      "K1": "4.7",
+      "K2": "4.1",
+      "K3": "10.0",
+      "K4": "10.0",
+      "F1": 147,
+      "F2": 569,
+      "F3": 1915,
+      "F4": 4680,
+      "Q1": 0,
+      "Q2": 49,
+      "Q3": 42,
+      "Q4": 11,
+      "OG": 7.9,
+      "BF": 5,
+      "MF": 5,
+      "TF": 5,
+      "PF": 5,
+      "EQ": [-2, -1, 2, 2, -7, -13],
+      "MV": "0.7",
+      "RG": "2.0",
+      "CG": "5.4"
+    }
+    presets.push(preset2);
 
-      preset3 = {
-          "name":"Clean 2",
-          "LCF":242,
-          "HCF":17165,
-          "K1":"0.0",
-          "K2":"0.0",
-          "K3":"0.0",
-          "K4":"0.0",
-          "F1":204,
-          "F2":300,
-          "F3":2904,
-          "F4":5848,
-          "Q1":0,
-          "Q2":29,
-          "Q3":55,
-          "Q4":20,
-          "OG":"7.1",
-          "BF":7.2,
-          "MF":6.5,
-          "TF":5.9,
-          "PF":8,
-          "EQ":[-2,-1,-2,4,11,3],
-          "MV":"8.3",
-          "RG":"2.8",
-          "CG":"6.3"
-      };
-      presets.push(preset3);
+    preset3 = {
+      "name": "Clean 2",
+      "LCF": 242,
+      "HCF": 17165,
+      "K1": "0.0",
+      "K2": "0.0",
+      "K3": "0.0",
+      "K4": "0.0",
+      "F1": 204,
+      "F2": 300,
+      "F3": 2904,
+      "F4": 5848,
+      "Q1": 0,
+      "Q2": 29,
+      "Q3": 55,
+      "Q4": 20,
+      "OG": "7.1",
+      "BF": 7.2,
+      "MF": 6.5,
+      "TF": 5.9,
+      "PF": 8,
+      "EQ": [-2, -1, -2, 4, 11, 3],
+      "MV": "8.3",
+      "RG": "2.8",
+      "CG": "6.3"
+    };
+    presets.push(preset3);
 
-      preset4 = {"name":"Funk Blues Clean","distoName":"standard","LCF":242,"HCF":7000,"K1":"5.0","K2":"5.0","K3":"9.9","K4":"9.9","F1":204,"F2":300,"F3":2904,"F4":5848,"Q1":"0.0","Q2":"29.0","Q3":"55.0","Q4":"20.0","OG":"2.1","BF":"9.9","MF":"6.5","TF":"2.7","PF":"8.0","EQ":[9,11,-19,-22,11,-15],"MV":"2.6","RG":"0.0","CG":"6.3"};
-      presets.push(preset4);
+    preset4 = {
+      "name": "Funk Blues Clean",
+      "distoName": "standard",
+      "LCF": 242,
+      "HCF": 7000,
+      "K1": "5.0",
+      "K2": "5.0",
+      "K3": "9.9",
+      "K4": "9.9",
+      "F1": 204,
+      "F2": 300,
+      "F3": 2904,
+      "F4": 5848,
+      "Q1": "0.0",
+      "Q2": "29.0",
+      "Q3": "55.0",
+      "Q4": "20.0",
+      "OG": "2.1",
+      "BF": "9.9",
+      "MF": "6.5",
+      "TF": "2.7",
+      "PF": "8.0",
+      "EQ": [9, 11, -19, -22, 11, -15],
+      "MV": "2.6",
+      "RG": "0.0",
+      "CG": "6.3"
+    };
+    presets.push(preset4);
 
-      preset5 = {
-          "name":"Marshall Hi Gain",
-          "LCF":345,
-          "HCF":18461,
-          "K1":"10.0",
-          "K2":"10.0",
-          "K3":"10.0",
-          "K4":"10.0",
-          "F1":186,
-          "F2":792,
-          "F3":2402,
-          "F4":6368,
-          "Q1":2,
-          "Q2":1,
-          "Q3":1,
-          "Q4":1,
-          "OG":"0.2",
-          "BF":"4.8",
-          "MF":"4.1",
-          "TF":"5.9",
-          "PF":"8.3",
-          "EQ":[14,7,28,3,22,18],
-          "MV":"2",
-          "RG":"2",
-          "CG":"7.4"
-      };
-      presets.push(preset5);
+    preset5 = {
+      "name": "Marshall Hi Gain",
+      "LCF": 345,
+      "HCF": 18461,
+      "K1": "10.0",
+      "K2": "10.0",
+      "K3": "10.0",
+      "K4": "10.0",
+      "F1": 186,
+      "F2": 792,
+      "F3": 2402,
+      "F4": 6368,
+      "Q1": 2,
+      "Q2": 1,
+      "Q3": 1,
+      "Q4": 1,
+      "OG": "0.2",
+      "BF": "4.8",
+      "MF": "4.1",
+      "TF": "5.9",
+      "PF": "8.3",
+      "EQ": [14, 7, 28, 3, 22, 18],
+      "MV": "2",
+      "RG": "2",
+      "CG": "7.4"
+    };
+    presets.push(preset5);
 
-      preset6 = {"name":"Aerosmith WTW","distoName":"standard","LCF":345,"HCF":7000,"K1":"3.3","K2":"3.3","K3":"6.6","K4":"6.6","F1":186,"F2":792,"F3":2402,"F4":6368,"Q1":"2.0","Q2":"1.0","Q3":"1.0","Q4":"1.0","OG":"0.6","BF":"4.8","MF":"4.1","TF":"3.4","PF":"8.3","EQ":[12,2,22,13,16,18],"MV":"2.2","RG":"0.0","CG":"0.0"};
+    preset6 = {
+      "name": "Aerosmith WTW",
+      "distoName": "standard",
+      "LCF": 345,
+      "HCF": 7000,
+      "K1": "3.3",
+      "K2": "3.3",
+      "K3": "6.6",
+      "K4": "6.6",
+      "F1": 186,
+      "F2": 792,
+      "F3": 2402,
+      "F4": 6368,
+      "Q1": "2.0",
+      "Q2": "1.0",
+      "Q3": "1.0",
+      "Q4": "1.0",
+      "OG": "0.6",
+      "BF": "4.8",
+      "MF": "4.1",
+      "TF": "3.4",
+      "PF": "8.3",
+      "EQ": [12, 2, 22, 13, 16, 18],
+      "MV": "2.2",
+      "RG": "0.0",
+      "CG": "0.0"
+    };
 
-      presets.push(preset6);
+    presets.push(preset6);
 
-      preset7 = {"name":"MW 1","LCF":10,"HCF":7000,"K1":"5.0","K2":"8.5","K3":"10.0","K4":"2.0","F1":186,"F2":792,"F3":2402,"F4":6368,"Q1":16,"Q2":1,"Q3":1,"Q4":5,"OG":"0.4","BF":"6.0","MF":"2.4","TF":"3.7","PF":"2.6","EQ":[14,18,-5,3,13,25],"MV":"9.9","RG":"2.9","CG":"8.9"};
-      presets.push(preset7);
+    preset7 = {
+      "name": "MW 1",
+      "LCF": 10,
+      "HCF": 7000,
+      "K1": "5.0",
+      "K2": "8.5",
+      "K3": "10.0",
+      "K4": "2.0",
+      "F1": 186,
+      "F2": 792,
+      "F3": 2402,
+      "F4": 6368,
+      "Q1": 16,
+      "Q2": 1,
+      "Q3": 1,
+      "Q4": 5,
+      "OG": "0.4",
+      "BF": "6.0",
+      "MF": "2.4",
+      "TF": "3.7",
+      "PF": "2.6",
+      "EQ": [14, 18, -5, 3, 13, 25],
+      "MV": "9.9",
+      "RG": "2.9",
+      "CG": "8.9"
+    };
+    presets.push(preset7);
 
-      preset8 = {"name":"Hells Bells","distoName":"standard","boost":false,"LCF":157,"HCF":17716,"K1":"2.5","K2":"2.5","K3":"5.0","K4":"5.0","F1":147,"F2":569,"F3":1915,"F4":4680,"Q1":"0.1","Q2":"0.6","Q3":"1.1","Q4":"0.1","OG":"4.5","BF":"5.0","MF":"5.0","TF":"5.0","PF":"5.0","EQ":[14,8,0,3,14,3],"MV":"0.5","RN":"Fender Hot Rod","RG":"2.0","CN":"Vintage Marshall 1","CG":"2.0"}
-      presets.push(preset8);
+    preset8 = {
+      "name": "Hells Bells",
+      "distoName": "standard",
+      "boost": false,
+      "LCF": 157,
+      "HCF": 17716,
+      "K1": "2.5",
+      "K2": "2.5",
+      "K3": "5.0",
+      "K4": "5.0",
+      "F1": 147,
+      "F2": 569,
+      "F3": 1915,
+      "F4": 4680,
+      "Q1": "0.1",
+      "Q2": "0.6",
+      "Q3": "1.1",
+      "Q4": "0.1",
+      "OG": "4.5",
+      "BF": "5.0",
+      "MF": "5.0",
+      "TF": "5.0",
+      "PF": "5.0",
+      "EQ": [14, 8, 0, 3, 14, 3],
+      "MV": "0.5",
+      "RN": "Fender Hot Rod",
+      "RG": "2.0",
+      "CN": "Vintage Marshall 1",
+      "CG": "2.0"
+    }
+    presets.push(preset8);
 
-      preset9 = {"name":"Smoke on the Water","LCF":298,"HCF":8703,"K1":"9.6","K2":"9.6","K3":"9.6","K4":"9.6","F1":300,"F2":1058,"F3":2297,"F4":7000,"Q1":2.5,"Q2":2,"Q3":0.6000000238418579,"Q4":0.4000000059604645,"OG":"4.5","BF":"4.0","MF":"8.5","TF":"3.8","PF":"3.1","EQ":[14,19,-7,-12,19,16],"MV":"1.8","RG":"1.6","CG":"10.0"};
-      presets.push(preset9);
+    preset9 = {
+      "name": "Smoke on the Water",
+      "LCF": 298,
+      "HCF": 8703,
+      "K1": "9.6",
+      "K2": "9.6",
+      "K3": "9.6",
+      "K4": "9.6",
+      "F1": 300,
+      "F2": 1058,
+      "F3": 2297,
+      "F4": 7000,
+      "Q1": 2.5,
+      "Q2": 2,
+      "Q3": 0.6000000238418579,
+      "Q4": 0.4000000059604645,
+      "OG": "4.5",
+      "BF": "4.0",
+      "MF": "8.5",
+      "TF": "3.8",
+      "PF": "3.1",
+      "EQ": [14, 19, -7, -12, 19, 16],
+      "MV": "1.8",
+      "RG": "1.6",
+      "CG": "10.0"
+    };
+    presets.push(preset9);
 
-      preset10 = {"name":"Neat Neat Neat/Punk","distoName":"standard","LCF":184,"HCF":7000,"K1":"4.0","K2":"4.0","K3":"8.0","K4":"8.0","F1":71,"F2":300,"F3":3303,"F4":6210,"Q1":"2.5","Q2":"0.0","Q3":"17.2","Q4":"0.4","OG":"2.0","BF":"4.0","MF":"1.6","TF":"2.0","PF":"6.4","EQ":[-12,-12,-10,3,1,2],"MV":"10.0","RG":"3.4","CG":"5.4"};
-      presets.push(preset10);
+    preset10 = {
+      "name": "Neat Neat Neat/Punk",
+      "distoName": "standard",
+      "LCF": 184,
+      "HCF": 7000,
+      "K1": "4.0",
+      "K2": "4.0",
+      "K3": "8.0",
+      "K4": "8.0",
+      "F1": 71,
+      "F2": 300,
+      "F3": 3303,
+      "F4": 6210,
+      "Q1": "2.5",
+      "Q2": "0.0",
+      "Q3": "17.2",
+      "Q4": "0.4",
+      "OG": "2.0",
+      "BF": "4.0",
+      "MF": "1.6",
+      "TF": "2.0",
+      "PF": "6.4",
+      "EQ": [-12, -12, -10, 3, 1, 2],
+      "MV": "10.0",
+      "RG": "3.4",
+      "CG": "5.4"
+    };
+    presets.push(preset10);
 
-      preset11 = {"name":"Crunch 2","distoName":"standard","LCF":259,"HCF":12000,"K1":"2.0","K2":"2.0","K3":"3.9","K4":"3.9","F1":242,"F2":493,"F3":1780,"F4":4382,"Q1":"0.3","Q2":"12.6","Q3":"0.3","Q4":"2.8","OG":"10.0","BF":"8.1","MF":"4.5","TF":"2.9","PF":"9.8","EQ":[6,-5,-21,-3,-18,0],"MV":"8.2","RG":"1.2","CG":"8.7"}
-      presets.push(preset11);
+    preset11 = {
+      "name": "Crunch 2",
+      "distoName": "standard",
+      "LCF": 259,
+      "HCF": 12000,
+      "K1": "2.0",
+      "K2": "2.0",
+      "K3": "3.9",
+      "K4": "3.9",
+      "F1": 242,
+      "F2": 493,
+      "F3": 1780,
+      "F4": 4382,
+      "Q1": "0.3",
+      "Q2": "12.6",
+      "Q3": "0.3",
+      "Q4": "2.8",
+      "OG": "10.0",
+      "BF": "8.1",
+      "MF": "4.5",
+      "TF": "2.9",
+      "PF": "9.8",
+      "EQ": [6, -5, -21, -3, -18, 0],
+      "MV": "8.2",
+      "RG": "1.2",
+      "CG": "8.7"
+    }
+    presets.push(preset11);
 
-      preset12 = {"name":"Noisy 1","distoName":"NoisyHiGain","LCF":46,"HCF":9788,"K1":"0.9","K2":"0.9","K3":"1.9","K4":"1.9","F1":242,"F2":493,"F3":1200,"F4":3500,"Q1":"0.3","Q2":"0.0","Q3":"0.3","Q4":"0.0","OG":"3.2","BF":"7.4","MF":"6.7","TF":"5.2","PF":"4.8","EQ":[8,1,13,16,-12,-19],"MV":"6.6","RG":"0.0","CG":"7.5"}
-      presets.push(preset12);
+    preset12 = {
+      "name": "Noisy 1",
+      "distoName": "NoisyHiGain",
+      "LCF": 46,
+      "HCF": 9788,
+      "K1": "0.9",
+      "K2": "0.9",
+      "K3": "1.9",
+      "K4": "1.9",
+      "F1": 242,
+      "F2": 493,
+      "F3": 1200,
+      "F4": 3500,
+      "Q1": "0.3",
+      "Q2": "0.0",
+      "Q3": "0.3",
+      "Q4": "0.0",
+      "OG": "3.2",
+      "BF": "7.4",
+      "MF": "6.7",
+      "TF": "5.2",
+      "PF": "4.8",
+      "EQ": [8, 1, 13, 16, -12, -19],
+      "MV": "6.6",
+      "RG": "0.0",
+      "CG": "7.5"
+    }
+    presets.push(preset12);
 
-      preset13 = {"name":"Marshall Hi-Gain 2","distoName":"HiGainModern","LCF":200,"HCF":12000,"K1":"0.9","K2":"0.9","K3":"1.8","K4":"1.8","F1":147,"F2":569,"F3":1915,"F4":4680,"Q1":"0.0","Q2":"49.0","Q3":"42.0","Q4":"11.0","OG":"3.0","BF":"5.0","MF":"5.0","TF":"0.1","PF":"5.0","EQ":[-2,-1,0,3,1,3],"MV":"0.3","RG":"2.0","CG":"2.0"}
-      presets.push(preset13);
+    preset13 = {
+      "name": "Marshall Hi-Gain 2",
+      "distoName": "HiGainModern",
+      "LCF": 200,
+      "HCF": 12000,
+      "K1": "0.9",
+      "K2": "0.9",
+      "K3": "1.8",
+      "K4": "1.8",
+      "F1": 147,
+      "F2": 569,
+      "F3": 1915,
+      "F4": 4680,
+      "Q1": "0.0",
+      "Q2": "49.0",
+      "Q3": "42.0",
+      "Q4": "11.0",
+      "OG": "3.0",
+      "BF": "5.0",
+      "MF": "5.0",
+      "TF": "0.1",
+      "PF": "5.0",
+      "EQ": [-2, -1, 0, 3, 1, 3],
+      "MV": "0.3",
+      "RG": "2.0",
+      "CG": "2.0"
+    }
+    presets.push(preset13);
 
-      preset14 = {"name":"Clean 3","distoName":"smooth","LCF":200,"HCF":12000,"K1":"2.5","K2":"2.5","K3":"5.0","K4":"5.0","F1":242,"F2":493,"F3":1780,"F4":4382,"Q1":"0.3","Q2":"12.6","Q3":"0.3","Q4":"2.8","OG":"10.0","BF":"8.1","MF":"4.5","TF":"2.9","PF":"9.8","EQ":[6,-5,-21,-3,3,0],"MV":"9.8","RG":"3.7","CG":"4.6"}
-      presets.push(preset14);
+    preset14 = {
+      "name": "Clean 3",
+      "distoName": "smooth",
+      "LCF": 200,
+      "HCF": 12000,
+      "K1": "2.5",
+      "K2": "2.5",
+      "K3": "5.0",
+      "K4": "5.0",
+      "F1": 242,
+      "F2": 493,
+      "F3": 1780,
+      "F4": 4382,
+      "Q1": "0.3",
+      "Q2": "12.6",
+      "Q3": "0.3",
+      "Q4": "2.8",
+      "OG": "10.0",
+      "BF": "8.1",
+      "MF": "4.5",
+      "TF": "2.9",
+      "PF": "9.8",
+      "EQ": [6, -5, -21, -3, 3, 0],
+      "MV": "9.8",
+      "RG": "3.7",
+      "CG": "4.6"
+    }
+    presets.push(preset14);
 
-      preset15 = {"name":"ELectro Acoustic","distoName":"smooth","LCF":200,"HCF":12000,"K1":"2.5","K2":"2.5","K3":"5.0","K4":"5.0","F1":242,"F2":493,"F3":1780,"F4":4382,"Q1":"0.3","Q2":"12.6","Q3":"0.3","Q4":"2.8","OG":"10.0","BF":"8.1","MF":"4.5","TF":"2.9","PF":"9.8","EQ":[6,-5,-21,-3,3,0],"MV":"8.2","RG":"3.7","CG":"4.6"}
-      presets.push(preset15);
+    preset15 = {
+      "name": "ELectro Acoustic",
+      "distoName": "smooth",
+      "LCF": 200,
+      "HCF": 12000,
+      "K1": "2.5",
+      "K2": "2.5",
+      "K3": "5.0",
+      "K4": "5.0",
+      "F1": 242,
+      "F2": 493,
+      "F3": 1780,
+      "F4": 4382,
+      "Q1": "0.3",
+      "Q2": "12.6",
+      "Q3": "0.3",
+      "Q4": "2.8",
+      "OG": "10.0",
+      "BF": "8.1",
+      "MF": "4.5",
+      "TF": "2.9",
+      "PF": "9.8",
+      "EQ": [6, -5, -21, -3, 3, 0],
+      "MV": "8.2",
+      "RG": "3.7",
+      "CG": "4.6"
+    }
+    presets.push(preset15);
 
-      preset16 = {"name":"Heartbreak Riff","distoName":"standard","LCF":214,"HCF":15820,"K1":"4.1","K2":"4.1","K3":"8.2","K4":"8.2","F1":186,"F2":792,"F3":2402,"F4":4836,"Q1":"2.9","Q2":"0.7","Q3":"1.0","Q4":"1.0","OG":"0.8","BF":"4.8","MF":"6.0","TF":"5.9","PF":"8.9","EQ":[15,19,19,-2,17,-3],"MV":"2.1","RG":"1.2","CG":"7.4"}
-      presets.push(preset16);
+    preset16 = {
+      "name": "Heartbreak Riff",
+      "distoName": "standard",
+      "LCF": 214,
+      "HCF": 15820,
+      "K1": "4.1",
+      "K2": "4.1",
+      "K3": "8.2",
+      "K4": "8.2",
+      "F1": 186,
+      "F2": 792,
+      "F3": 2402,
+      "F4": 4836,
+      "Q1": "2.9",
+      "Q2": "0.7",
+      "Q3": "1.0",
+      "Q4": "1.0",
+      "OG": "0.8",
+      "BF": "4.8",
+      "MF": "6.0",
+      "TF": "5.9",
+      "PF": "8.9",
+      "EQ": [15, 19, 19, -2, 17, -3],
+      "MV": "2.1",
+      "RG": "1.2",
+      "CG": "7.4"
+    }
+    presets.push(preset16);
 
-      preset17 = {"name":"Light My Knob","distoName":"superClean","LCF":256,"HCF":12000,"K1":"0.0","K2":"0.0","K3":"0.0","K4":"0.0","F1":147,"F2":569,"F3":2382,"F4":5696,"Q1":"0.0","Q2":"0.0","Q3":"0.0","Q4":"0.0","OG":"5.9","BF":"5.0","MF":"5.0","TF":"5.0","PF":"8.0","EQ":[-2,10,-10,-20,17,3],"MV":"6.5","RG":"2.0","CG":"6.7"}
-      presets.push(preset17);
+    preset17 = {
+      "name": "Light My Knob",
+      "distoName": "superClean",
+      "LCF": 256,
+      "HCF": 12000,
+      "K1": "0.0",
+      "K2": "0.0",
+      "K3": "0.0",
+      "K4": "0.0",
+      "F1": 147,
+      "F2": 569,
+      "F3": 2382,
+      "F4": 5696,
+      "Q1": "0.0",
+      "Q2": "0.0",
+      "Q3": "0.0",
+      "Q4": "0.0",
+      "OG": "5.9",
+      "BF": "5.0",
+      "MF": "5.0",
+      "TF": "5.0",
+      "PF": "8.0",
+      "EQ": [-2, 10, -10, -20, 17, 3],
+      "MV": "6.5",
+      "RG": "2.0",
+      "CG": "6.7"
+    }
+    presets.push(preset17);
 
-      preset18 = {"name":"Gainsbourgh Funk","distoName":"superClean","LCF":345,"HCF":18461,"K1":"0.4","K2":"0.4","K3":"0.7","K4":"0.7","F1":186,"F2":792,"F3":2402,"F4":6368,"Q1":"0.0","Q2":"23.7","Q3":"1.0","Q4":"1.0","OG":"6.6","BF":"8.0","MF":"1.3","TF":"5.9","PF":"10.0","EQ":[12,-2,-10,-20,2,11],"MV":"10.0","RG":"2.0","CG":"4.2"}
-      presets.push(preset18);
+    preset18 = {
+      "name": "Gainsbourgh Funk",
+      "distoName": "superClean",
+      "LCF": 345,
+      "HCF": 18461,
+      "K1": "0.4",
+      "K2": "0.4",
+      "K3": "0.7",
+      "K4": "0.7",
+      "F1": 186,
+      "F2": 792,
+      "F3": 2402,
+      "F4": 6368,
+      "Q1": "0.0",
+      "Q2": "23.7",
+      "Q3": "1.0",
+      "Q4": "1.0",
+      "OG": "6.6",
+      "BF": "8.0",
+      "MF": "1.3",
+      "TF": "5.9",
+      "PF": "10.0",
+      "EQ": [12, -2, -10, -20, 2, 11],
+      "MV": "10.0",
+      "RG": "2.0",
+      "CG": "4.2"
+    }
+    presets.push(preset18);
 
-      preset19 = {"name":"Revolution Beatles","distoName":"HiGainModern","LCF":200,"HCF":12000,"K1":"2.3","K2":"2.3","K3":"4.6","K4":"4.6","F1":147,"F2":569,"F3":1915,"F4":4680,"Q1":"1.9","Q2":"3.4","Q3":"4.2","Q4":"11.0","OG":"0.5","BF":"5.0","MF":"2.2","TF":"4.7","PF":"8.0","EQ":[-2,9,29,29,1,-3],"MV":"0.2","RG":"1.7","CG":"4.9"}
-      presets.push(preset19);
+    preset19 = {
+      "name": "Revolution Beatles",
+      "distoName": "HiGainModern",
+      "LCF": 200,
+      "HCF": 12000,
+      "K1": "2.3",
+      "K2": "2.3",
+      "K3": "4.6",
+      "K4": "4.6",
+      "F1": 147,
+      "F2": 569,
+      "F3": 1915,
+      "F4": 4680,
+      "Q1": "1.9",
+      "Q2": "3.4",
+      "Q3": "4.2",
+      "Q4": "11.0",
+      "OG": "0.5",
+      "BF": "5.0",
+      "MF": "2.2",
+      "TF": "4.7",
+      "PF": "8.0",
+      "EQ": [-2, 9, 29, 29, 1, -3],
+      "MV": "0.2",
+      "RG": "1.7",
+      "CG": "4.9"
+    }
+    presets.push(preset19);
 
-      preset20 = {"name":"Noisy 2","distoName":"NoisyHiGain","LCF":289,"HCF":8720,"K1":"5.1","K2":"3.7","K3":"5.0","K4":"5.0","F1":91,"F2":548,"F3":1820,"F4":4535,"Q1":"4.3","Q2":"0.5","Q3":"0.3","Q4":"2.8","OG":"6.7","BF":"8.1","MF":"7.3","TF":"3.2","PF":"6.1","EQ":[9,-10,3,10,4,-17],"MV":"3.5","RG":"3.7","CG":"8.5"}
-      presets.push(preset20);
+    preset20 = {
+      "name": "Noisy 2",
+      "distoName": "NoisyHiGain",
+      "LCF": 289,
+      "HCF": 8720,
+      "K1": "5.1",
+      "K2": "3.7",
+      "K3": "5.0",
+      "K4": "5.0",
+      "F1": 91,
+      "F2": 548,
+      "F3": 1820,
+      "F4": 4535,
+      "Q1": "4.3",
+      "Q2": "0.5",
+      "Q3": "0.3",
+      "Q4": "2.8",
+      "OG": "6.7",
+      "BF": "8.1",
+      "MF": "7.3",
+      "TF": "3.2",
+      "PF": "6.1",
+      "EQ": [9, -10, 3, 10, 4, -17],
+      "MV": "3.5",
+      "RG": "3.7",
+      "CG": "8.5"
+    }
+    presets.push(preset20);
 
-      preset21 = {"name":"Highway to Hell","distoName":"fuzz","boost":true,"LCF":214,"HCF":15820,"K1":"0.9","K2":"0.3","K3":"4.2","K4":"1.3","F1":83,"F2":838,"F3":1694,"F4":5782,"Q1":"2.9","Q2":"1.7","Q3":"2.7","Q4":"1.0","OG":"0.8","BF":"4.8","MF":"6.0","TF":"5.9","PF":"8.9","EQ":[15,16,19,-2,17,-3],"MV":"2.1","RN":"Fender Hot Rod","RG":"0.0","CN":"Vintage Marshall 1","CG":"6.0"};
-      presets.push(preset21);
+    preset21 = {
+      "name": "Highway to Hell",
+      "distoName": "fuzz",
+      "boost": true,
+      "LCF": 214,
+      "HCF": 15820,
+      "K1": "0.9",
+      "K2": "0.3",
+      "K3": "4.2",
+      "K4": "1.3",
+      "F1": 83,
+      "F2": 838,
+      "F3": 1694,
+      "F4": 5782,
+      "Q1": "2.9",
+      "Q2": "1.7",
+      "Q3": "2.7",
+      "Q4": "1.0",
+      "OG": "0.8",
+      "BF": "4.8",
+      "MF": "6.0",
+      "TF": "5.9",
+      "PF": "8.9",
+      "EQ": [15, 16, 19, -2, 17, -3],
+      "MV": "2.1",
+      "RN": "Fender Hot Rod",
+      "RG": "0.0",
+      "CN": "Vintage Marshall 1",
+      "CG": "6.0"
+    };
+    presets.push(preset21);
 
-      preset22 = {"name":"Love RnRoll","distoName":"smooth","boost":true,"LCF":214,"HCF":15820,"K1":"3.8","K2":"3.8","K3":"7.5","K4":"7.5","F1":186,"F2":792,"F3":2402,"F4":4836,"Q1":"2.9","Q2":"0.7","Q3":"1.0","Q4":"1.0","OG":"0.8","BF":"4.8","MF":"6.0","TF":"5.9","PF":"8.9","EQ":[15,19,19,-2,17,-3],"MV":"2.1","RN":"Fender Hot Rod","RG":"1.2","CN":"Vintage Marshall 1","CG":"7.4"};
-      presets.push(preset22);
+    preset22 = {
+      "name": "Love RnRoll",
+      "distoName": "smooth",
+      "boost": true,
+      "LCF": 214,
+      "HCF": 15820,
+      "K1": "3.8",
+      "K2": "3.8",
+      "K3": "7.5",
+      "K4": "7.5",
+      "F1": 186,
+      "F2": 792,
+      "F3": 2402,
+      "F4": 4836,
+      "Q1": "2.9",
+      "Q2": "0.7",
+      "Q3": "1.0",
+      "Q4": "1.0",
+      "OG": "0.8",
+      "BF": "4.8",
+      "MF": "6.0",
+      "TF": "5.9",
+      "PF": "8.9",
+      "EQ": [15, 19, 19, -2, 17, -3],
+      "MV": "2.1",
+      "RN": "Fender Hot Rod",
+      "RG": "1.2",
+      "CN": "Vintage Marshall 1",
+      "CG": "7.4"
+    };
+    presets.push(preset22);
 
-      /*
-      presets.forEach(function (p, index) {
-          var option = document.createElement("option");
-          option.value = index;
-          option.text = p.name;
-          menuPresets.appendChild(option);
-      });
-      menuPresets.onchange = changePreset;
-      */
+    /*
+    presets.forEach(function (p, index) {
+        var option = document.createElement("option");
+        option.value = index;
+        option.text = p.name;
+        menuPresets.appendChild(option);
+    });
+    menuPresets.onchange = changePreset;
+    */
   }
 
   function setPresetByIndex(index) {
-      setPreset(presets[index]);
+    setPreset(presets[index]);
   }
 
   function setPreset(p) {
-      if(p.distoName === undefined) {
-          p.distoName = "standard";
-      }
+    if (p.distoName === undefined) {
+      p.distoName = "standard";
+    }
 
-      if(p.boost === undefined) p.boost = false;
-      changeBoost(p.boost);
+    if (p.boost === undefined) p.boost = false;
+    changeBoost(p.boost);
 
-      changeLowCutFreqValue(p.LCF);
-      changeHicutFreqValue(p.HCF);
+    changeLowCutFreqValue(p.LCF);
+    changeHicutFreqValue(p.HCF);
 
-      changeDistorsionValues(p.K1, 0);
-      changeDistorsionValues(p.K2, 1);
-      changeDistorsionValues(p.K3, 2);
-      changeDistorsionValues(p.K4, 3);
+    changeDistorsionValues(p.K1, 0);
+    changeDistorsionValues(p.K2, 1);
+    changeDistorsionValues(p.K3, 2);
+    changeDistorsionValues(p.K4, 3);
 
-      changeFreqValues(p.F1, 0);
-      changeFreqValues(p.F2, 1);
-      changeFreqValues(p.F3, 2);
-      changeFreqValues(p.F4, 3);
+    changeFreqValues(p.F1, 0);
+    changeFreqValues(p.F2, 1);
+    changeFreqValues(p.F3, 2);
+    changeFreqValues(p.F4, 3);
 
-      changeQValues(p.Q1, 0);
-      changeQValues(p.Q2, 1);
-      changeQValues(p.Q3, 2);
-      changeQValues(p.Q4, 3);
+    changeQValues(p.Q1, 0);
+    changeQValues(p.Q2, 1);
+    changeQValues(p.Q3, 2);
+    changeQValues(p.Q4, 3);
 
-      changeOutputGain(p.OG);
+    changeOutputGain(p.OG);
 
-      changeBassFilterValue(p.BF);
-      changeMidFilterValue(p.MF);
-      changeTrebleFilterValue(p.TF);
-      changePresenceFilterValue(p.PF);
+    changeBassFilterValue(p.BF);
+    changeMidFilterValue(p.MF);
+    changeTrebleFilterValue(p.TF);
+    changePresenceFilterValue(p.PF);
 
-      changeMasterVolume(p.MV);
+    changeMasterVolume(p.MV);
 
-      changeReverbGain(p.RG);
-      changeReverbImpulse(p.RN);
+    changeReverbGain(p.RG);
+    changeReverbImpulse(p.RN);
 
-      changeRoom(p.CG);
-      changeCabinetSimImpulse(p.CN);
+    changeRoom(p.CG);
+    changeCabinetSimImpulse(p.CN);
 
-      changeEQValues(p.EQ);
+    changeEQValues(p.EQ);
 
 
-     changeDistoTypeFromPreset(p.distoName);
+    changeDistoTypeFromPreset(p.distoName);
   }
 
   function getPresets() {
-      return presets;
+    return presets;
   }
 
   function setDefaultPreset() {
-      setPreset(preset18);
+    setPreset(preset18);
   }
 
   function printCurrentAmpValues() {
-      var currentPresetValue = {
-          name: 'current',
-          distoName : currentDistoName,
-          boost: boost.isActivated(),
-          LCF: lowCutFilter.frequency.value,
-          HCF: hiCutFilter.frequency.value,
-          K1: getDistorsionValue(0),
-          K2: getDistorsionValue(1),
-          K3: getDistorsionValue(2),
-          K4: getDistorsionValue(3),
-          F1: filters[0].frequency.value,
-          F2: filters[1].frequency.value,
-          F3: filters[2].frequency.value,
-          F4: filters[3].frequency.value,
-          Q1: filters[0].Q.value.toFixed(1),
-          Q2: filters[1].Q.value.toFixed(1),
-          Q3: filters[2].Q.value.toFixed(1),
-          Q4: filters[3].Q.value.toFixed(1),
-          OG: (outputGain.gain.value*10).toFixed(1),
-          BF: ((bassFilter.gain.value / 3) + 5).toFixed(1), // bassFilter.gain.value = (value-5) * 3;
-          MF: ((midFilter.gain.value / 2) + 5).toFixed(1), // midFilter.gain.value = (value-5) * 2;
-          TF: ((trebleFilter.gain.value / 5) + 5).toFixed(1), // trebleFilter.gain.value = (value-5) * 5;
-          PF: ((presenceFilter.gain.value / 2) + 5).toFixed(1), // presenceFilter.gain.value = (value-5) * 2;
-          EQ: eq.getValues(),
-          MV: masterVolume.gain.value.toFixed(1),
-          RN: reverb.getName(),
-          RG: (reverb.getGain()*10).toFixed(1),
-          CN: cabinetSim.getName(),
-          CG: (cabinetSim.getGain()*10).toFixed(1)
-     };
+    var currentPresetValue = {
+      name: 'current',
+      distoName: currentDistoName,
+      boost: boost.isActivated(),
+      LCF: lowCutFilter.frequency.value,
+      HCF: hiCutFilter.frequency.value,
+      K1: getDistorsionValue(0),
+      K2: getDistorsionValue(1),
+      K3: getDistorsionValue(2),
+      K4: getDistorsionValue(3),
+      F1: filters[0].frequency.value,
+      F2: filters[1].frequency.value,
+      F3: filters[2].frequency.value,
+      F4: filters[3].frequency.value,
+      Q1: filters[0].Q.value.toFixed(1),
+      Q2: filters[1].Q.value.toFixed(1),
+      Q3: filters[2].Q.value.toFixed(1),
+      Q4: filters[3].Q.value.toFixed(1),
+      OG: (outputGain.gain.value * 10).toFixed(1),
+      BF: ((bassFilter.gain.value / 3) + 5).toFixed(1), // bassFilter.gain.value = (value-5) * 3;
+      MF: ((midFilter.gain.value / 2) + 5).toFixed(1), // midFilter.gain.value = (value-5) * 2;
+      TF: ((trebleFilter.gain.value / 5) + 5).toFixed(1), // trebleFilter.gain.value = (value-5) * 5;
+      PF: ((presenceFilter.gain.value / 2) + 5).toFixed(1), // presenceFilter.gain.value = (value-5) * 2;
+      EQ: eq.getValues(),
+      MV: masterVolume.gain.value.toFixed(1),
+      RN: reverb.getName(),
+      RG: (reverb.getGain() * 10).toFixed(1),
+      CN: cabinetSim.getName(),
+      CG: (cabinetSim.getGain() * 10).toFixed(1)
+    };
 
-     console.log(JSON.stringify(currentPresetValue));
+    console.log(JSON.stringify(currentPresetValue));
   }
 
   // END PRESETS
 
-  function bypass(cb) {
-      console.log("byPass : " + cb.checked);
+  function bypass(bypassOn) {
+    console.log("byPass : " + bypassOn);
 
-      if (cb.checked) {
-          // byPass mode
-          inputGain.gain.value = 1;
-          byPass.gain.value = 0;
-      } else {
-          // normal amp running mode
-          inputGain.gain.value = 0;
-          byPass.gain.value = 1;
-      }
+    if (bypassOn) {
+      // byPass mode
+      inputGain.gain.value = 1;
+      byPass.gain.value = 0;
+    } else {
+      // normal amp running mode
+      inputGain.gain.value = 0;
+      byPass.gain.value = 1;
+    }
 
-      // update buttons states
-      //var onOffButton = document.querySelector("#myonoffswitch");
-      //var led = document.querySelector("#led");
+    // update buttons states
+    //var onOffButton = document.querySelector("#myonoffswitch");
+    //var led = document.querySelector("#led");
 
-      //onOffButton.checked = cb.checked;
-      //var onOffSwitch = document.querySelector("#switch1");
-      /*
-      if(cb.checked) {
-          onOffSwitch.setValue(0,false);
-          led.setValue(1, false);
-      } else {
-          onOffSwitch.setValue(1,false);
-          led.setValue(0, false);
-      }
-      */
+    //onOffButton.checked = cb.checked;
+    //var onOffSwitch = document.querySelector("#switch1");
+    /*
+    if(cb.checked) {
+        onOffSwitch.setValue(0,false);
+        led.setValue(1, false);
+    } else {
+        onOffSwitch.setValue(1,false);
+        led.setValue(0, false);
+    }
+    */
   }
 
   function bypassEQ(cb) {
-      console.log("EQ byPass : " + cb.checked);
+    console.log("EQ byPass : " + cb.checked);
 
-      if (cb.checked) {
-          // byPass mode
-          inputEQ.gain.value = 1;
-          bypassEQg.gain.value = 0;
-      } else {
-          // normal amp running mode
-          inputEQ.gain.value = 0;
-          bypassEQg.gain.value = 1;
-      }
+    if (cb.checked) {
+      // byPass mode
+      inputEQ.gain.value = 1;
+      bypassEQg.gain.value = 0;
+    } else {
+      // normal amp running mode
+      inputEQ.gain.value = 0;
+      bypassEQg.gain.value = 1;
+    }
 
-      // update buttons states
-      /*
-      //var onOffButton = document.querySelector("#myonoffswitch");
-      var led = document.querySelector("#led");
+    // update buttons states
+    /*
+    //var onOffButton = document.querySelector("#myonoffswitch");
+    var led = document.querySelector("#led");
 
-      //onOffButton.checked = cb.checked;
-      var eqOnOffSwitch = document.querySelector("#switch2");
-      if(cb.checked) {
-          eqOnOffSwitch.setValue(0,false);
-      } else {
-          eqOnOffSwitch.setValue(1,false);
-      }
-      */
+    //onOffButton.checked = cb.checked;
+    var eqOnOffSwitch = document.querySelector("#switch2");
+    if(cb.checked) {
+        eqOnOffSwitch.setValue(0,false);
+    } else {
+        eqOnOffSwitch.setValue(1,false);
+    }
+    */
   }
 
   // API: methods exposed
   return {
-      input: input,
-      output: output,
-      boostOnOff:boostOnOff,
-      eq: eq,
-      reverb: reverb,
-      cabinet: cabinetSim,
-      changeInputGainValue: changeInputGainValue,
-      changeOutputGainValue:changeOutputGainValue,
-      changeLowCutFreqValue: changeLowCutFreqValue,
-      changeHicutFreqValue: changeHicutFreqValue,
-      changeBassFilterValue : changeBassFilterValue,
-      changeMidFilterValue : changeMidFilterValue,
-      changeTrebleFilterValue : changeTrebleFilterValue,
-      changePresenceFilterValue : changePresenceFilterValue,
-      changeDrive: changeDrive,
-      changeDistorsionValues: changeDistorsionValues,
-      changeOversampling: changeOversampling,
-      changeQValues: changeQValues,
-      changeFreqValues: changeFreqValues,
-      changeOutputGain: changeOutputGain,
-      changeMasterVolume: changeMasterVolume,
-      changeReverbGain: changeReverbGain,
-      changeRoom: changeRoom,
-      changeEQValues: changeEQValues,
-      setDefaultPreset: setDefaultPreset,
-      getPresets: getPresets,
-      setPreset: setPreset,
-      setPresetByIndex: setPresetByIndex,
-      printCurrentAmpValues : printCurrentAmpValues,
-      bypass: bypass,
-      bypassEQ: bypassEQ
+    input: input,
+    output: output,
+    boostOnOff: boostOnOff,
+    eq: eq,
+    reverb: reverb,
+    cabinet: cabinetSim,
+    changeInputGainValue: changeInputGainValue,
+    changeOutputGainValue: changeOutputGainValue,
+    changeLowCutFreqValue: changeLowCutFreqValue,
+    changeHicutFreqValue: changeHicutFreqValue,
+    changeBassFilterValue: changeBassFilterValue,
+    changeMidFilterValue: changeMidFilterValue,
+    changeTrebleFilterValue: changeTrebleFilterValue,
+    changePresenceFilterValue: changePresenceFilterValue,
+    changeDrive: changeDrive,
+    changeDistorsionValues: changeDistorsionValues,
+    changeOversampling: changeOversampling,
+    changeQValues: changeQValues,
+    changeFreqValues: changeFreqValues,
+    changeOutputGain: changeOutputGain,
+    changeMasterVolume: changeMasterVolume,
+    changeReverbGain: changeReverbGain,
+    changeRoom: changeRoom,
+    changeEQValues: changeEQValues,
+    setDefaultPreset: setDefaultPreset,
+    getPresets: getPresets,
+    setPreset: setPreset,
+    setPresetByIndex: setPresetByIndex,
+    printCurrentAmpValues: printCurrentAmpValues,
+    bypass: bypass,
+    bypassEQ: bypassEQ
   };
 }
 
@@ -1454,7 +2001,7 @@ function Convolver(context, impulses, menuId) {
 
 // ---------------- BOOST ----------------
 // Booster, useful to add a "Boost channel"
-var Boost = function(context) {
+var Boost = function (context) {
   // Booster not activated by default
   var activated = false;
 
@@ -1483,56 +2030,56 @@ var Boost = function(context) {
   byPass.connect(output);
 
   function isActivated() {
-      return activated;
+    return activated;
   }
 
   function onOff(wantedState) {
-      if(wantedState === undefined) {
-          // do not boost
-          if(activated) toggle();
-          return;
-      }
-      var currentState = activated;
+    if (wantedState === undefined) {
+      // do not boost
+      if (activated) toggle();
+      return;
+    }
+    var currentState = activated;
 
-      if(wantedState !== currentState) {
-          toggle();
-      }
+    if (wantedState !== currentState) {
+      toggle();
+    }
   }
 
   function toggle() {
-      if(!activated) {
-          byPass.gain.value = 0;
-          inputGain.gain.value = 1;
-      } else {
-          byPass.gain.value = 1;
-          inputGain.gain.value = 0;
-      }
-      activated = !activated;
+    if (!activated) {
+      byPass.gain.value = 0;
+      inputGain.gain.value = 1;
+    } else {
+      byPass.gain.value = 1;
+      inputGain.gain.value = 0;
+    }
+    activated = !activated;
   }
 
   function setOversampling(value) {
-      shaper.oversample = value;
-      console.log("boost set oversampling to " + value);
+    shaper.oversample = value;
+    console.log("boost set oversampling to " + value);
   }
 
   function makeDistortionCurve(k) {
-      var n_samples = 44100; //65536; //22050;     //44100
-      var curve = new Float32Array(n_samples);
-      var deg = Math.PI / 180;
-      for (var i = 0; i < n_samples; i += 1) {
-          var x = i * 2 / n_samples - 1;
-          curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
-      }
-      return curve;
+    var n_samples = 44100; //65536; //22050;     //44100
+    var curve = new Float32Array(n_samples);
+    var deg = Math.PI / 180;
+    for (var i = 0; i < n_samples; i += 1) {
+      var x = i * 2 / n_samples - 1;
+      curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+    }
+    return curve;
   }
   // API
   return {
-      input:input,
-      output:output,
-      onOff: onOff,
-      toggle:toggle,
-      isActivated: isActivated,
-      setOversampling: setOversampling
+    input: input,
+    output: output,
+    onOff: onOff,
+    toggle: toggle,
+    isActivated: isActivated,
+    setOversampling: setOversampling
   };
 };
 
@@ -1545,285 +2092,289 @@ function WaveShapers() {
   buildDistorsionFactories();
 
   function buildDistorsionFactories() {
-      // all distorsion values in [0, 1500]
+    // all distorsion values in [0, 1500]
 
-      // classic curve from WebAudio specification
-      distorsionCurves.standard = function (distorsionValue) {
-          var k = distorsionValue;
-          var c = classicDistorsion(k);
-          return c;
-      };
+    // classic curve from WebAudio specification
+    distorsionCurves.standard = function (distorsionValue) {
+      var k = distorsionValue;
+      var c = classicDistorsion(k);
+      return c;
+    };
 
-      // classic curve variant from WebAudio specification
-      distorsionCurves.standardLower = function (distorsionValue) {
-          var k = distorsionValue;
-          var c = classicDistorsion2(k);
+    // classic curve variant from WebAudio specification
+    distorsionCurves.standardLower = function (distorsionValue) {
+      var k = distorsionValue;
+      var c = classicDistorsion2(k);
 
-          //var c1 = scaleCurve(c, 2, 2);
-          return c;
-      };
+      //var c1 = scaleCurve(c, 2, 2);
+      return c;
+    };
 
-      distorsionCurves.smooth = function (distorsionValue) {
-          var c = new Float32Array(44100);
-          var kTuna = distorsionValue / 1500;
-          smooth(kTuna, 44100, c);
-          return c;
-      };
+    distorsionCurves.smooth = function (distorsionValue) {
+      var c = new Float32Array(44100);
+      var kTuna = distorsionValue / 1500;
+      smooth(kTuna, 44100, c);
+      return c;
+    };
 
-      distorsionCurves.fuzz = function (distorsionValue) {
-          var c = new Float32Array(44100);
-          var kTuna = distorsionValue / 1500;
-          fuzz(kTuna, 44100, c);
-          return c;
-      };
+    distorsionCurves.fuzz = function (distorsionValue) {
+      var c = new Float32Array(44100);
+      var kTuna = distorsionValue / 1500;
+      fuzz(kTuna, 44100, c);
+      return c;
+    };
 
-      distorsionCurves.clean = function (distorsionValue) {
-          var c = new Float32Array(44100);
-          var kTuna = distorsionValue / 1500;
-          clean(kTuna, 44100, c);
-          return c;
-      };
+    distorsionCurves.clean = function (distorsionValue) {
+      var c = new Float32Array(44100);
+      var kTuna = distorsionValue / 1500;
+      clean(kTuna, 44100, c);
+      return c;
+    };
 
-      /*
-      distorsionCurves.asymetric = function (distorsionValue) {
-          var c = new Float32Array(44100);
-          var kTuna = distorsionValue / 1500;
-          asymetric(kTuna, 44100, c);
-          return c;
-      };
+    /*
+    distorsionCurves.asymetric = function (distorsionValue) {
+        var c = new Float32Array(44100);
+        var kTuna = distorsionValue / 1500;
+        asymetric(kTuna, 44100, c);
+        return c;
+    };
       
-      */
-      distorsionCurves.notSoDistorded = function (distorsionValue) {
-          var k = distorsionValue / 150;
-          var c = notSoDistorded(k);
-          return c;
-      };
+    */
+    distorsionCurves.notSoDistorded = function (distorsionValue) {
+      var k = distorsionValue / 150;
+      var c = notSoDistorded(k);
+      return c;
+    };
 
-      distorsionCurves.crunch = function (distorsionValue) {
-          var k = distorsionValue / 150;
-          var c = crunch(k);
-          return c;
-      };
+    distorsionCurves.crunch = function (distorsionValue) {
+      var k = distorsionValue / 150;
+      var c = crunch(k);
+      return c;
+    };
 
-      distorsionCurves.ClassA = function (distorsionValue) {
-          var k = distorsionValue / 150;
-          var c = classA(k);
-          return c;
-      };
+    distorsionCurves.ClassA = function (distorsionValue) {
+      var k = distorsionValue / 150;
+      var c = classA(k);
+      return c;
+    };
 
-      distorsionCurves.superClean = function (distorsionValue) {
-          var k = distorsionValue / 150;
-          var c = superClean(k);
-          return c;
-      };
+    distorsionCurves.superClean = function (distorsionValue) {
+      var k = distorsionValue / 150;
+      var c = superClean(k);
+      return c;
+    };
 
-      distorsionCurves.vertical = function (distorsionValue) {
-          var k = distorsionValue / 150;
-          var c = vertical(k);
-          return c;
-      };
+    distorsionCurves.vertical = function (distorsionValue) {
+      var k = distorsionValue / 150;
+      var c = vertical(k);
+      return c;
+    };
 
-      distorsionCurves.superFuzz = function (distorsionValue) {
-          var k = distorsionValue / 150;
-          var c = superFuzz(k);
-          return c;
-      };
+    distorsionCurves.superFuzz = function (distorsionValue) {
+      var k = distorsionValue / 150;
+      var c = superFuzz(k);
+      return c;
+    };
 
-      distorsionCurves.NoisyHiGain = function (distorsionValue) {
-          var k = distorsionValue / 10;
-          var c = NoisyHiGain(k);
-          return c;
-      };
+    distorsionCurves.NoisyHiGain = function (distorsionValue) {
+      var k = distorsionValue / 10;
+      var c = NoisyHiGain(k);
+      return c;
+    };
 
-      distorsionCurves.HiGainModern = function (distorsionValue) {
-          var k = distorsionValue / 2;
-          var c = HiGainModern(k);
-          return c;
-      };
+    distorsionCurves.HiGainModern = function (distorsionValue) {
+      var k = distorsionValue / 2;
+      var c = HiGainModern(k);
+      return c;
+    };
   }
   // ----------------------------------
   // ---- wave shaping functions ------
   // ----------------------------------
   // Classic one
   function classicDistorsion(k) {
-      var n_samples = 44100,
-              curve = new Float32Array(n_samples),
-              deg = Math.PI / 180, i = 0, x;
+    var n_samples = 44100,
+      curve = new Float32Array(n_samples),
+      deg = Math.PI / 180,
+      i = 0,
+      x;
 
-      for (; i < n_samples; ++i) {
-          x = i * 2 / n_samples - 1;
-          curve[i] = (3 + k) * x * 57 * deg / (Math.PI + k * Math.abs(x));
-      }
-      return curve;
+    for (; i < n_samples; ++i) {
+      x = i * 2 / n_samples - 1;
+      curve[i] = (3 + k) * x * 57 * deg / (Math.PI + k * Math.abs(x));
+    }
+    return curve;
   }
 
   function classicDistorsion2(k) {
-      var n_samples = 44100,
-              curve = new Float32Array(n_samples),
-              deg = Math.PI / 180, i = 0, x;
+    var n_samples = 44100,
+      curve = new Float32Array(n_samples),
+      deg = Math.PI / 180,
+      i = 0,
+      x;
 
-      for (; i < n_samples; ++i) {
-          x = i * 2 / n_samples - 1;
-          curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
-      }
-      return curve;
+    for (; i < n_samples; ++i) {
+      x = i * 2 / n_samples - 1;
+      curve[i] = (3 + k) * x * 20 * deg / (Math.PI + k * Math.abs(x));
+    }
+    return curve;
   }
 
   // Tuna JS 1
   function smooth(amount, n_samples, ws_table) {
-      amount = Math.min(amount, 0.9);
-      var k = 2 * amount / (1 - amount),
-              i, x;
-      for (i = 0; i < n_samples; i++) {
-          x = i * 2 / n_samples - 1;
-          ws_table[i] = (1 + k) * x / (1 + k * Math.abs(x));
-      }
+    amount = Math.min(amount, 0.9);
+    var k = 2 * amount / (1 - amount),
+      i, x;
+    for (i = 0; i < n_samples; i++) {
+      x = i * 2 / n_samples - 1;
+      ws_table[i] = (1 + k) * x / (1 + k * Math.abs(x));
+    }
   }
 
   // Tuna JS 3
   function fuzz(amount, n_samples, ws_table) {
-      var i, x, y, a = 1 - amount;
-      for (i = 0; i < n_samples; i++) {
-          x = i * 2 / n_samples - 1;
-          y = x < 0 ? -Math.pow(Math.abs(x), a + 0.04) : Math.pow(x, a);
-          ws_table[i] = tanh(y * 2);
-      }
+    var i, x, y, a = 1 - amount;
+    for (i = 0; i < n_samples; i++) {
+      x = i * 2 / n_samples - 1;
+      y = x < 0 ? -Math.pow(Math.abs(x), a + 0.04) : Math.pow(x, a);
+      ws_table[i] = tanh(y * 2);
+    }
   }
   // Tuna JS 4
   function clean(amount, n_samples, ws_table) {
-      var i, x, y, abx, a = 1 - amount > 0.99 ? 0.99 : 1 - amount;
-      for (i = 0; i < n_samples; i++) {
-          x = i * 2 / n_samples - 1;
-          abx = Math.abs(x);
-          if (abx < a)
-              y = abx;
-          else if (abx > a)
-              y = a + (abx - a) / (1 + Math.pow((abx - a) / (1 - a), 2));
-          else if (abx > 1)
-              y = abx;
-          ws_table[i] = sign(x) * y * (1 / ((a + 1) / 2));
-      }
+    var i, x, y, abx, a = 1 - amount > 0.99 ? 0.99 : 1 - amount;
+    for (i = 0; i < n_samples; i++) {
+      x = i * 2 / n_samples - 1;
+      abx = Math.abs(x);
+      if (abx < a)
+        y = abx;
+      else if (abx > a)
+        y = a + (abx - a) / (1 + Math.pow((abx - a) / (1 - a), 2));
+      else if (abx > 1)
+        y = abx;
+      ws_table[i] = sign(x) * y * (1 / ((a + 1) / 2));
+    }
   }
 
   // tuna JS 5
   function asymetric(amount, n_samples, ws_table) {
-      var i, x;
-      for (i = 0; i < n_samples; i++) {
-          x = i * 2 / n_samples - 1;
-          if (x < -0.08905) {
-              ws_table[i] = (-3 / 4) * (1 - (Math.pow((1 - (Math.abs(x) - 0.032857)), 12)) + (1 / 3) * (Math.abs(x) - 0.032847)) + 0.01;
-          } else if (x >= -0.08905 && x < 0.320018) {
-              ws_table[i] = (-6.153 * (x * x)) + 3.9375 * x;
-          } else {
-              ws_table[i] = 0.630035;
-          }
+    var i, x;
+    for (i = 0; i < n_samples; i++) {
+      x = i * 2 / n_samples - 1;
+      if (x < -0.08905) {
+        ws_table[i] = (-3 / 4) * (1 - (Math.pow((1 - (Math.abs(x) - 0.032857)), 12)) + (1 / 3) * (Math.abs(x) - 0.032847)) + 0.01;
+      } else if (x >= -0.08905 && x < 0.320018) {
+        ws_table[i] = (-6.153 * (x * x)) + 3.9375 * x;
+      } else {
+        ws_table[i] = 0.630035;
       }
+    }
   }
 
 
   // From GFX, tweaked for most of them...
   function notSoDistorded(a) {
-      a = Math.pow(a + 2, 3);
-      for (var c = new Float32Array(22050), d = 0; 22050 > d; d += 1) {
-          var f = 2 * d / 22050 - 1;
-          c[d] = (1 + a) * f / (1 + a * Math.abs(f));
-      }
-      return c;
+    a = Math.pow(a + 2, 3);
+    for (var c = new Float32Array(22050), d = 0; 22050 > d; d += 1) {
+      var f = 2 * d / 22050 - 1;
+      c[d] = (1 + a) * f / (1 + a * Math.abs(f));
+    }
+    return c;
   }
 
   function crunch(a) {
-      a = Math.pow(a, 2);
-      for (var c = new Float32Array(22050), d = 0; 22050 > d; d += 1) {
-          var f = 2 * d / 22050 - 1;
-          c[d] = (1 + a) * f / (1 + a * Math.abs(f));
-      }
-      return c;
+    a = Math.pow(a, 2);
+    for (var c = new Float32Array(22050), d = 0; 22050 > d; d += 1) {
+      var f = 2 * d / 22050 - 1;
+      c[d] = (1 + a) * f / (1 + a * Math.abs(f));
+    }
+    return c;
   }
 
   function classA(a) {
-      var c = new Float32Array(22050);
-      a = 10 + 3 * a;
-      for (var d = 0; 22050 > d; d += 1) {
-          var e = 2 * d / 22050 - 1;
-          c[d] = (1 + a) * e / (1 + a * Math.abs(e));
-      }
-      return c;
+    var c = new Float32Array(22050);
+    a = 10 + 3 * a;
+    for (var d = 0; 22050 > d; d += 1) {
+      var e = 2 * d / 22050 - 1;
+      c[d] = (1 + a) * e / (1 + a * Math.abs(e));
+    }
+    return c;
   }
 
   function superClean(a) {
-      a = (a + 6) / 4;
-      for (var c = new Float32Array(22050), d = 0; 22050 > d; d += 1) {
-          var e = 2 * d / 22050 - 1;
-          c[d] = (1 + a) * e / (1 + a * Math.abs(e));
-      }
-      return c;
+    a = (a + 6) / 4;
+    for (var c = new Float32Array(22050), d = 0; 22050 > d; d += 1) {
+      var e = 2 * d / 22050 - 1;
+      c[d] = (1 + a) * e / (1 + a * Math.abs(e));
+    }
+    return c;
   }
 
   function vertical(a) {
-      a = Math.pow(a + 2, 3);
-      for (var c = new Float32Array(22050), d = 0; 22050 > d; d += 1) {
-          var e = 2 * d / 22050 - 1;
-          c[d] = (1 + a) * e / (1 + a * Math.abs(e));
-      }
-      return c;
+    a = Math.pow(a + 2, 3);
+    for (var c = new Float32Array(22050), d = 0; 22050 > d; d += 1) {
+      var e = 2 * d / 22050 - 1;
+      c[d] = (1 + a) * e / (1 + a * Math.abs(e));
+    }
+    return c;
   }
 
   function superFuzz(a) {
-      a = Math.pow(a, 3);
-      for (var c =
-              new Float32Array(22050), d = 0; 22050 > d; d += 1) {
-          var e = 2 * d / 22050 - 1;
-          c[d] = (1 + a) * e / (1 + a * Math.abs(e));
-      }
-      return c;
+    a = Math.pow(a, 3);
+    for (var c =
+        new Float32Array(22050), d = 0; 22050 > d; d += 1) {
+      var e = 2 * d / 22050 - 1;
+      c[d] = (1 + a) * e / (1 + a * Math.abs(e));
+    }
+    return c;
   }
 
   function NoisyHiGain(a) {
-      a /= 153;
-      for (var c = new Float32Array(22050), d = 0; 22050 > d; d += 1)
-          c[d] = (0 > 2 * d / 22050 - 1 ? -1 : 1) * a;
-      return c;
+    a /= 153;
+    for (var c = new Float32Array(22050), d = 0; 22050 > d; d += 1)
+      c[d] = (0 > 2 * d / 22050 - 1 ? -1 : 1) * a;
+    return c;
   }
 
 
   function HiGainModern(a) {
-      a = 1 / (1 + Math.pow(a, 4));
-      for (var c = new Float32Array(22050), d = 0; 22050 > d; d += 1) {
-          var e = 2 * d / 22050 - 1;
-          c[d] = e / (Math.abs(e) + a);
-      }
-      return c;
+    a = 1 / (1 + Math.pow(a, 4));
+    for (var c = new Float32Array(22050), d = 0; 22050 > d; d += 1) {
+      var e = 2 * d / 22050 - 1;
+      c[d] = e / (Math.abs(e) + a);
+    }
+    return c;
   }
   // END OF WAVE SHAPING FUNCTIONS
 
 
   // API
   return {
-      buildDistorsionFactories: buildDistorsionFactories,
-      distorsionCurves: distorsionCurves
+    buildDistorsionFactories: buildDistorsionFactories,
+    distorsionCurves: distorsionCurves
   };
 }
 
 // ----------- UTILS -----------
 // utils functions for some waveshapers
 function tanh(n) {
-    return (Math.exp(n) - Math.exp(-n)) / (Math.exp(n) + Math.exp(-n));
+  return (Math.exp(n) - Math.exp(-n)) / (Math.exp(n) + Math.exp(-n));
 }
 
 function sign(x) {
-    if (x === 0) {
-        return 1;
-    } else {
-        return Math.abs(x) / x;
-    }
+  if (x === 0) {
+    return 1;
+  } else {
+    return Math.abs(x) / x;
+  }
 }
 // ---------- END OF UTILS -------
 // ---------- END OF DISTORSION FACTORY -------
 
 window.WasabiCleanMachine = class WasabiCleanMachine extends WebAudioPluginFactory {
 
-  constructor(context, baseUrl) {
-    super(context, baseUrl);
+  constructor(context, baseUrl, options) {
+    super(context, baseUrl, options);
   }
 }
 
