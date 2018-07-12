@@ -1803,6 +1803,21 @@ function WaveShapers() {
       distorsionCurves: distorsionCurves
   };
 }
+
+// ----------- UTILS -----------
+// utils functions for some waveshapers
+function tanh(n) {
+    return (Math.exp(n) - Math.exp(-n)) / (Math.exp(n) + Math.exp(-n));
+}
+
+function sign(x) {
+    if (x === 0) {
+        return 1;
+    } else {
+        return Math.abs(x) / x;
+    }
+}
+// ---------- END OF UTILS -------
 // ---------- END OF DISTORSION FACTORY -------
 
 window.WasabiCleanMachine = class WasabiCleanMachine extends WebAudioPluginFactory {
