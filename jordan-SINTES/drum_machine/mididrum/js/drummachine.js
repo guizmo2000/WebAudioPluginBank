@@ -23,11 +23,7 @@ var kMaxSwing = .08;
 var currentKit;
 
 var beatReset = {"kitIndex":0,"tempo":100,"swingFactor":0,"kickPitchVal":0.5,"snarePitchVal":0.5,"hihatPitchVal":0.5,"tom1PitchVal":0.5,"tom2PitchVal":0.5,"tom3PitchVal":0.5,"rhythm1":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm2":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm3":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm4":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm5":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm6":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]};
-var beatDemo = [
-    {"kitIndex":13,"tempo":120,"swingFactor":0,"kickPitchVal":0.5,"snarePitchVal":0.5,"hihatPitchVal":0.5,"tom1PitchVal":0.5,"tom2PitchVal":0.5,"tom3PitchVal":0.5,"rhythm1":[2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm2":[0,0,0,0,2,0,0,0,0,0,0,0,2,0,0,0],"rhythm3":[0,0,0,0,0,0,2,0,2,0,0,0,0,0,0,0],"rhythm4":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0],"rhythm5":[0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm6":[0,0,0,0,0,0,0,2,0,2,2,0,0,0,0,0]},
-    {"kitIndex":11,"tempo":100,"swingFactor":0,"kickPitchVal":0.46478873239436624,"snarePitchVal":0.45070422535211263,"hihatPitchVal":0.15492957746478875,"tom1PitchVal":0.7183098591549295,"tom2PitchVal":0.704225352112676,"tom3PitchVal":0.8028169014084507,"rhythm1":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm2":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm3":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm4":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm5":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm6":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
-    
-];
+var beatInitial =  {"kitIndex":11,"tempo":100,"swingFactor":0,"kickPitchVal":0.46478873239436624,"snarePitchVal":0.45070422535211263,"hihatPitchVal":0.15492957746478875,"tom1PitchVal":0.7183098591549295,"tom2PitchVal":0.704225352112676,"tom3PitchVal":0.8028169014084507,"rhythm1":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm2":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm3":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm4":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm5":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm6":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]};
 
 function cloneBeat(source) {
     var beat = new Object();
@@ -69,8 +65,6 @@ var noteTime = 0.0;
 var instruments = ['Kick', 'Snare', 'HiHat', 'Tom1', 'Tom2', 'Tom3'];
 
 var volumes = [0, 0.3, 1];
-
-var kitCount = 0;
 
 var kitName = [
     "R8",
@@ -148,6 +142,7 @@ Kit.prototype.load = function() {
     var tom2Path = pathName + "tom2.wav";
     var tom3Path = pathName + "tom3.wav";
 
+    //put to true to have sound position in function to the click position on drumMachine
     this.loadSample(0, kickPath, false);
     this.loadSample(1, snarePath, false);
     this.loadSample(2, hihatPath, false);  
@@ -164,7 +159,7 @@ function (buffer) { this.tom1 = buffer; },
 function (buffer) { this.tom2 = buffer; },
 function (buffer) { this.tom3 = buffer; } ];
 
-Kit.prototype.loadSample = function(sampleID, url, mixToMono) {
+Kit.prototype.loadSample = function(sampleID, url) {
     // Load asynchronously
 
     var request = new XMLHttpRequest();
@@ -181,7 +176,7 @@ Kit.prototype.loadSample = function(sampleID, url, mixToMono) {
             kit.isLoaded = true;
 
             if (kit.demoIndex != -1) {
-                beatDemo[kit.demoIndex].setKitLoaded();
+                beatInitial.setKitLoaded();
             }
         }
     }
@@ -201,7 +196,7 @@ function startLoadingAssets() {
     
     // Start loading the assets used by the presets first, in order of the presets.
     for (var demoIndex = 0; demoIndex < 2; ++demoIndex) {
-        var kit = kits[beatDemo[demoIndex].kitIndex];
+        var kit = kits[beatInitial.kitIndex];
         kit.setDemoIndex(demoIndex);
         kit.load();
     }
@@ -218,29 +213,14 @@ function startLoadingAssets() {
     currentKit = kits[kInitialKitIndex];
 }
 
-function demoButtonURL(demoIndex) {
-    var n = demoIndex + 1;
-    var demoName = "demo" + n;
-    var url = "mididrum/images/btn_" + demoName + ".png";
-    return url;
-}
+
 
 // This gets rid of the loading spinner in each of the demo buttons.
 function showDemoAvailable(demoIndex /* zero-based */) {
-    var url = demoButtonURL(demoIndex);
-    var n = demoIndex + 1;
-    var demoName = "demo" + n;
-    var demo = document.getElementById(demoName);
-   
     
-    // Enable play button and assign it to demo 2.
-    if (demoIndex == 1) {
         showPlayAvailable();
-        loadBeat(beatDemo[1]);
-
-    // Uncomment to allow autoplay
-    //     handlePlay();
-    }
+        loadBeat(beatInitial);
+    
 }
 
 // This gets rid of the loading spinner on the play button.
@@ -252,27 +232,24 @@ function showPlayAvailable() {
 function init() {
     // Let the beat demos know when all of their assets have been loaded.
     // Add some new methods to support this.
-    for (var i = 0; i < beatDemo.length; ++i) {
-        beatDemo[i].index = i;
-        beatDemo[i].isKitLoaded = false;
+        beatInitial.isKitLoaded = false;
 
-        beatDemo[i].setKitLoaded = function() {
+        beatInitial.setKitLoaded = function() {
             this.isKitLoaded = true;
             this.checkIsLoaded();
         };
 
    
 
-        beatDemo[i].checkIsLoaded = function() {
+        beatInitial.checkIsLoaded = function() {
             if (this.isLoaded()) {
                 showDemoAvailable(this.index); 
             }
         };
 
-        beatDemo[i].isLoaded = function() {
+        beatInitial.isLoaded = function() {
             return this.isKitLoaded;
         };
-    }
         
     startLoadingAssets();
 
@@ -302,11 +279,6 @@ function init() {
     masterGainNode = context.createGain();
     masterGainNode.gain.value = 0.7; // reduce overall volume to avoid clipping
     masterGainNode.connect(filterNode);
-
-    
-
-
-
 
     var elKitCombo = document.getElementById('kitcombo');
     elKitCombo.addEventListener("mousedown", handleKitComboMouseDown, true);
@@ -427,7 +399,6 @@ function playNote(buffer, pan, x, y, z, sendGain, mainGain, playbackRate, noteTi
     if (pan) {
         var panner = context.createPanner();
         panner.panningModel = "HRTF";
-        panner.setPosition(x, y, z);
         voice.connect(panner);
         finalNode = panner;
     } else {
@@ -642,26 +613,7 @@ function sliderSetValue(slider, value) {
     }
 }
 
-function sliderSetPosition(slider, value) {
-    /*
-    var elThumb = document.getElementById(slider);
-    var elTrack = elThumb.parentNode;
 
-    if (slider == 'swing_thumb') {
-        var thumbW = elThumb.clientWidth;
-        var trackW = elTrack.clientWidth;
-        var travelW = trackW - thumbW;
-
-        elThumb.style.left = travelW * value + 'px';
-    } else {
-        var thumbH = elThumb.clientHeight;
-        var trackH = elTrack.clientHeight;
-        var travelH = trackH - thumbH;
-
-        elThumb.style.top = travelH * (1.0 - value) + 'px';
-    }
-    */
-}
 
 function handleButtonMouseDown(event) {
     var notes = theBeat.rhythm1;
@@ -693,6 +645,7 @@ function handleButtonMouseDown(event) {
     
     if (note) {
         switch(instrumentIndex) {
+        //put to true to have sound position in function to the click position on drumMachine
         case 0:  // Kick
           playNote(currentKit.kickBuffer, false, 0,0,-2, 0.5 * 1, volumes[note] * 1.0, kickPitch, 0);
           break;
@@ -896,13 +849,6 @@ function updateControls() {
     document.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
    
     document.getElementById('tempo').innerHTML = theBeat.tempo;
-    sliderSetPosition('swing_thumb', theBeat.swingFactor);
-    sliderSetPosition('kick_thumb', theBeat.kickPitchVal);
-    sliderSetPosition('snare_thumb', theBeat.snarePitchVal);
-    sliderSetPosition('hihat_thumb', theBeat.hihatPitchVal);
-    sliderSetPosition('tom1_thumb', theBeat.tom1PitchVal);        
-    sliderSetPosition('tom2_thumb', theBeat.tom2PitchVal);
-    sliderSetPosition('tom3_thumb', theBeat.tom3PitchVal);
 }
 
 
