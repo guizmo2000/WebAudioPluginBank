@@ -2,8 +2,7 @@
 
 This bank is a repository of standardised webaudio plugins.
 
-Some of them implement audioworklets, so you need to enable [experimental features on chrome](https://googlechromelabs.github.io/web-audio-samples/audio-worklet/) or use [chrome canary](https://www.google.com/chrome/browser/canary.html).
-
+Some of them implement audioworklets, web component. I recommand to test it on Chrome.
 
 A plugin is defined by its URL and its metadata
 
