@@ -1,212 +1,742 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-<meta name="description" content="Create custom drum beats with a few clicks.  Choose from 15 drum kits and 26 effects, and adjust the pitch of each drum.  Save and share your beats… rock on!">
-<title>Test Drum Machine</title>
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script>
+    WebAudioControlsOptions = {
+        useMidi: 1,
+    };
+</script>
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
 
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Michroma">
-<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Droid Sans">
-<link rel="stylesheet" type="text/css" href = "./mididrum/style/drummachine.css" />
+<template id="wc-drummachine">
+    <style>
+        /* Styles for Drum Machine Demo */
 
-<script src="https://cwilso.github.io/AudioContext-MonkeyPatch/AudioContextMonkeyPatch.js"></script>
+        body {
+            background-color: rgb(245, 245, 245);
+            color: rgb(77, 13, 13);
+            font-family: 'Droid Sans', Arial, sans-serif;
+            font-size: 13px;
+        }
 
-<!-- Set up Web MIDI polyfill -->
-<script type="text/javascript" src="./mididrum/js/WebMIDIAPI.js"></script>
-
-<script type="text/javascript" src="./mididrum/js/midi.js"></script>
-<script type="text/javascript" src="./mididrum/js/drummachine.js"></script>
-
-</head>
+        * {
+            -webkit-user-drag: none;
+            -webkit-user-select: none;
+            cursor: pointer !important;
+        }
 
 
-<!-- Preload some important UI elements -->
-<img class="preload" src='./mididrum/images/btn_play.png'>
-<img class="preload" src='./mididrum/images/btn_load.png'>
-<img class="preload" src='./mididrum/images/btn_reset.png'>
-<img class="preload" src='./mididrum/images/btn_save.png'>
-<img class="preload" src='./mididrum/images/btn_demo1.png'>
-<img class="preload" src='./mididrum/images/btn_demo2.png'>
-<img class="preload" src='./mididrum/images/btn_demo3.png'>
-<img class="preload" src='./mididrum/images/btn_demo4.png'>
-<img class="preload" src='./mididrum/images/btn_demo5.png'>
-<img class="preload" src='./mididrum/images/button_off.png'>
-<img class="preload" src='./mididrum/images/button_half.png'>
-<img class="preload" src='./mididrum/images/button_on.png'>
-<img class="preload" src='./mididrum/images/LED_on.png'>
 
-<!--  The markup below keeps all images in a row on a single long line to avoid 
+        #version {
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .container {
+            border-radius: 10px;
+            border: 1px solid rgb(128, 3, 3);
+            width: 750px;
+            background-color: rgb(189, 30, 30);
+            margin: 0px auto;
+            padding: 20px 20px 15px 20px;
+            -webkit-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+            display: none;
+        }
+
+        #io {
+            display: block;
+            padding: 5px 20px;
+        }
+
+        .container.active {
+            display: block;
+        }
+
+        .buttons_row {}
+
+        #LED_row {
+            margin-top: 8px;
+            margin-bottom: 12px;
+        }
+
+        .label {
+            display: inline-block;
+            vertical-align: top;
+            width: 60px;
+            position: relative;
+            top: 12px;
+            text-align: right;
+            margin-right: 15px;
+        }
+
+        #pad {
+            height: 268px;
+        }
+
+        #params {
+            height: 155px;
+        }
+
+        #tools {
+            height: 36px;
+        }
+
+        #paramsleft_container {
+            display: inline-block;
+            vertical-align: top;
+            margin-right: 13px;
+        }
+
+        .btn {
+            padding: 0;
+            margin: 0;
+            border: 0;
+        }
+
+        #kitlabel,
+        #effectlabel,
+        #swinglabel {
+            top: 6px;
+        }
+
+        #beatlabel {
+            top: 8px;
+        }
+
+        .combo {
+            width: 158px;
+            height: 15px;
+            background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)),
+            color-stop(2%, rgb(255, 255, 255)), color-stop(5%, rgb(244, 244, 244)),
+            color-stop(90%, rgb(255, 255, 255)), to(rgb(232, 232, 232)));
+            border-radius: 3px;
+            border: 1px solid rgb(220, 220, 220);
+            color: rgb(76, 76, 76);
+            display: inline-block;
+            vertical-align: top;
+            position: relative;
+            padding: 6px;
+            margin-bottom: 10px;
+        }
+
+        .combo img {
+            position: absolute;
+            left: 150px;
+            top: 11px;
+        }
+
+        .combolist {
+            list-style-type: none;
+            position: absolute;
+            top: 27px;
+            left: -1px;
+            margin: 0;
+            background-color: rgb(249, 249, 249);
+            border-radius: 2px;
+            border: 1px solid rgb(200, 200, 200);
+            width: 160px;
+            padding: 5px;
+            display: none;
+            z-index: 1;
+        }
+
+        #effectlist {
+            height: 200px;
+            overflow: auto;
+        }
+
+        .combo.active .combolist {
+            display: block;
+        }
+
+        .combolist li {
+            padding: 2px;
+            border-radius: 2px;
+        }
+
+        .combolist li:hover {
+            color: rgb(255, 255, 255);
+            background-color: rgb(38, 47, 104);
+        }
+
+        .slider_container {
+            width: 50px;
+            height: 175px;
+            margin: 0 1px;
+            position: relative;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        #swing_container {
+            width: 250px;
+            height: 30px;
+            margin-bottom: 10px;
+        }
+
+        .slider_groove {
+            margin: 0 auto;
+            display: inline-block;
+            vertical-align: top;
+            position: relative;
+        }
+
+        .slider_thumb {
+            position: absolute;
+            left: 10px;
+            top: 0;
+        }
+
+        .slider_label {
+            text-align: center;
+            margin-top: 13px;
+        }
+
+        #tempo_container {
+            height: 40px;
+            margin-bottom: 10px;
+        }
+
+        #tempodisplay {
+            background-image: url('../images/tempo_bg.png');
+            width: 57px;
+            height: 20px;
+            display: inline-block;
+            vertical-align: top;
+            padding: 10px 20px;
+            text-align: right;
+            color: rgb(76, 76, 76);
+        }
+
+        #tempo {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        #bpm {
+            font-size: 14px;
+        }
+
+        #tempoinc,
+        #tempodec {
+            position: relative;
+            top: 3px;
+            left: 1px;
+        }
+
+        .vrule {
+            width: 1px;
+            height: 160px;
+            background-color: rgb(128, 3, 3);
+            margin: 0 8px;
+            display: inline-block;
+            vertical-align: top;
+        }
+
+        #play,
+        #stop {
+            margin-right: 12px;
+        }
+
+        #stop {
+            display: none;
+        }
+
+        #play.playing {
+            display: none;
+        }
+
+        #stop.playing {
+            display: inline;
+        }
+
+        #demos_container {
+            margin-left: 10px;
+        }
+
+        #save_container,
+        #load_container {
+            height: 521px;
+        }
+
+        #save_textarea,
+        #load_textarea {
+            width: 607px;
+            height: 270px;
+            margin: 20px 40px;
+            font-size: 12px;
+            -webkit-user-select: text !important;
+        }
+
+        #save_ok {
+            display: block;
+            margin: 0 auto;
+        }
+
+        #load_buttons {
+            margin: 0 auto;
+            width: 160px;
+        }
+
+        #load_ok,
+        #load_cancel {
+            margin: 0 3px;
+        }
+
+        #loading {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        #loadingcard {
+            background: -webkit-gradient(linear, left top, left bottom, from(rgb(235, 235, 235)),
+            to(rgb(255, 255, 255)));
+            -webkit-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+            width: 260px;
+            height: 60px;
+            border-radius: 10px;
+            margin: 210px auto;
+            padding: 10px;
+        }
+
+        #loadingtext {
+            text-align: center;
+            margin: 5px 0;
+        }
+
+        #loadingcard img {
+            margin: 15px auto;
+            display: block;
+        }
+
+        img.preload {
+            display: none;
+        }
+
+        #MIDIPlugin {
+            visibility: hidden;
+        }
+    </style>
+
+    <!-- Preload some important UI elements -->
+    <img class="preload" src='./mididrum/images/btn_play.png'>
+    <img class="preload" src='./mididrum/images/btn_load.png'>
+    <img class="preload" src='./mididrum/images/btn_reset.png'>
+    <img class="preload" src='./mididrum/images/btn_save.png'>
+    <img class="preload" src='./mididrum/images/btn_demo1.png'>
+    <img class="preload" src='./mididrum/images/btn_demo2.png'>
+    <img class="preload" src='./mididrum/images/btn_demo3.png'>
+    <img class="preload" src='./mididrum/images/btn_demo4.png'>
+    <img class="preload" src='./mididrum/images/btn_demo5.png'>
+    <img class="preload" src='./mididrum/images/button_off.png'>
+    <img class="preload" src='./mididrum/images/button_half.png'>
+    <img class="preload" src='./mididrum/images/button_on.png'>
+    <img class="preload" src='./mididrum/images/LED_on.png'>
+
+    <!--  The markup below keeps all images in a row on a single long line to avoid 
             a bizarre bug where otherwise the browser inserts an extra pixel between 
             the images.  The cost of perfectionism :O{
 -->
 
-<body id='body'>
-    <section class='container active' id='pad'>
-        <div class='buttons_row'>
-            <span class='label'>Tom 1</span>
-            <img id='Tom1_0' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_1' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_2' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_3' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_4' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_5' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_6' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_7' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_8' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_9' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_10' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_11' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_12' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_13' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_14' class='btn' src='./mididrum/images/button_off.png'><img id='Tom1_15' class='btn' src='./mididrum/images/button_off.png'>
-        </div>
-        <div class='buttons_row'>
-            <span class='label'>Tom 2</span>
-            <img id='Tom2_0' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_1' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_2' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_3' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_4' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_5' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_6' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_7' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_8' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_9' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_10' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_11' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_12' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_13' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_14' class='btn' src='./mididrum/images/button_off.png'><img id='Tom2_15' class='btn' src='./mididrum/images/button_off.png'>
-        </div>
-        <div class='buttons_row'>
-            <span class='label'>Tom 3</span>
-            <img id='Tom3_0' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_1' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_2' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_3' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_4' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_5' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_6' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_7' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_8' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_9' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_10' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_11' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_12' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_13' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_14' class='btn' src='./mididrum/images/button_off.png'><img id='Tom3_15' class='btn' src='./mididrum/images/button_off.png'>
-        </div>
-        <div class='buttons_row'>
-            <span class='label'>Hi-Hat</span>
-            <img id='HiHat_0' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_1' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_2' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_3' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_4' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_5' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_6' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_7' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_8' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_9' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_10' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_11' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_12' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_13' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_14' class='btn' src='./mididrum/images/button_off.png'><img id='HiHat_15' class='btn' src='./mididrum/images/button_off.png'>
-        </div>
-        <div class='buttons_row'>
-            <span class='label'>Snare</span>
-            <img id='Snare_0' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_1' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_2' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_3' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_4' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_5' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_6' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_7' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_8' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_9' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_10' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_11' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_12' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_13' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_14' class='btn' src='./mididrum/images/button_off.png'><img id='Snare_15' class='btn' src='./mididrum/images/button_off.png'>
-        </div>
-        <div class='buttons_row'>
-            <span class='label'>Kick</span>
-            <img id='Kick_0' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_1' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_2' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_3' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_4' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_5' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_6' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_7' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_8' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_9' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_10' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_11' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_12' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_13' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_14' class='btn' src='./mididrum/images/button_off.png'><img id='Kick_15' class='btn' src='./mididrum/images/button_off.png'>
-        </div>
-        <div class='buttons_row' id='LED_row'>
-            <span class='label'></span>
-            <img id='LED_0' src='./mididrum/images/LED_off.png'><img id='LED_1' src='./mididrum/images/LED_off.png'><img id='LED_2' src='./mididrum/images/LED_off.png'><img id='LED_3' src='./mididrum/images/LED_off.png'><img id='LED_4' src='./mididrum/images/LED_off.png'><img id='LED_5' src='./mididrum/images/LED_off.png'><img id='LED_6' src='./mididrum/images/LED_off.png'><img id='LED_7' src='./mididrum/images/LED_off.png'><img id='LED_8' src='./mididrum/images/LED_off.png'><img id='LED_9' src='./mididrum/images/LED_off.png'><img id='LED_10' src='./mididrum/images/LED_off.png'><img id='LED_11' src='./mididrum/images/LED_off.png'><img id='LED_12' src='./mididrum/images/LED_off.png'><img id='LED_13' src='./mididrum/images/LED_off.png'><img id='LED_14' src='./mididrum/images/LED_off.png'><img id='LED_15' src='./mididrum/images/LED_off.png'>
-        </div>
-    </section>
-    <section class='container active' id='params'>
-        <div id='paramsleft_container'>
-            <div id='kitcombo_container'>
-                <span class='label' id='kitlabel'>Kit</span>
-                <div class='combo' id='kitcombo'>
-                    <span id='kitname'></span>
-                    <img src='./mididrum/images/drop_arrow.png'>
-                    <ul class='combolist' id='kitlist'>
-                    </ul>
+    <body id='body'>
+        <section class='container active' id='pad'>
+            <div class='buttons_row'>
+                <span class='label'>Tom 1</span>
+                <img id='Tom1_0' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_1' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_2' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_3' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_4' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_5' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_6' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_7' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_8' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_9' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_10' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_11' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_12' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_13' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_14' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom1_15' class='btn' src='./mididrum/images/button_off.png'>
+            </div>
+            <div class='buttons_row'>
+                <span class='label'>Tom 2</span>
+                <img id='Tom2_0' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_1' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_2' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_3' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_4' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_5' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_6' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_7' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_8' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_9' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_10' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_11' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_12' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_13' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_14' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom2_15' class='btn' src='./mididrum/images/button_off.png'>
+            </div>
+            <div class='buttons_row'>
+                <span class='label'>Tom 3</span>
+                <img id='Tom3_0' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_1' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_2' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_3' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_4' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_5' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_6' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_7' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_8' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_9' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_10' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_11' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_12' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_13' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_14' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Tom3_15' class='btn' src='./mididrum/images/button_off.png'>
+            </div>
+            <div class='buttons_row'>
+                <span class='label'>Hi-Hat</span>
+                <img id='HiHat_0' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_1' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_2' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_3' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_4' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_5' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_6' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_7' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_8' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_9' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_10' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_11' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_12' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_13' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_14' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='HiHat_15' class='btn' src='./mididrum/images/button_off.png'>
+            </div>
+            <div class='buttons_row'>
+                <span class='label'>Snare</span>
+                <img id='Snare_0' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_1' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_2' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_3' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_4' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_5' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_6' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_7' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_8' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_9' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_10' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_11' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_12' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_13' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_14' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Snare_15' class='btn' src='./mididrum/images/button_off.png'>
+            </div>
+            <div class='buttons_row'>
+                <span class='label'>Kick</span>
+                <img id='Kick_0' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_1' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_2' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_3' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_4' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_5' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_6' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_7' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_8' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_9' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_10' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_11' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_12' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_13' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_14' class='btn' src='./mididrum/images/button_off.png'>
+                <img id='Kick_15' class='btn' src='./mididrum/images/button_off.png'>
+            </div>
+            <div class='buttons_row' id='LED_row'>
+                <span class='label'></span>
+                <img id='LED_0' src='./mididrum/images/LED_off.png'>
+                <img id='LED_1' src='./mididrum/images/LED_off.png'>
+                <img id='LED_2' src='./mididrum/images/LED_off.png'>
+                <img id='LED_3' src='./mididrum/images/LED_off.png'>
+                <img id='LED_4' src='./mididrum/images/LED_off.png'>
+                <img id='LED_5' src='./mididrum/images/LED_off.png'>
+                <img id='LED_6' src='./mididrum/images/LED_off.png'>
+                <img id='LED_7' src='./mididrum/images/LED_off.png'>
+                <img id='LED_8' src='./mididrum/images/LED_off.png'>
+                <img id='LED_9' src='./mididrum/images/LED_off.png'>
+                <img id='LED_10' src='./mididrum/images/LED_off.png'>
+                <img id='LED_11' src='./mididrum/images/LED_off.png'>
+                <img id='LED_12' src='./mididrum/images/LED_off.png'>
+                <img id='LED_13' src='./mididrum/images/LED_off.png'>
+                <img id='LED_14' src='./mididrum/images/LED_off.png'>
+                <img id='LED_15' src='./mididrum/images/LED_off.png'>
+            </div>
+        </section>
+        <section class='container active' id='params'>
+            <div id='paramsleft_container'>
+                <div id='kitcombo_container'>
+                    <span class='label' id='kitlabel'>Kit</span>
+                    <div class='combo' id='kitcombo'>
+                        <span id='kitname'></span>
+                        <img src='./mididrum/images/drop_arrow.png'>
+                        <ul class='combolist' id='kitlist'>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-         
-            <div id='tempo_container'>
-                <span class='label' id='tempolabel'>Tempo</span>
-                <div id='tempodisplay'>
-                <span id='tempo'></span>&nbsp;<span id='bpm'>bpm</span>
-                </div>
-                <img id='tempodec' src='./mididrum/images/tempo_dec.png'><img id='tempoinc' src='./mididrum/images/tempo_inc.png'>
-            </div>
-            <div class='slider_container' id='swing_container'>
-                <span class='label' id='swinglabel'>Swing</span>
-                <div class='slider_groove'>
-                    <img class='slider_track' src='./mididrum/images/sliderh_track.png'>
-                    <img class='slider_thumb' id='swing_thumb' src='./mididrum/images/sliderh_thumb.png'>
-                </div>
-            </div>
-        </div>
-        
-        <div class='vrule'></div>
-        <div class='slider_container' id='kick_container'>
-            <div class='slider_groove'>
-                <img class='slider_track' src='./mididrum/images/slider_track.png'>
-                <img class='slider_thumb' id='kick_thumb' src='./mididrum/images/slider_thumb.png'>
-            </div>
-            <div class='slider_label'>
-                Kick Pitch
-            </div>
-        </div>
-        <div class='slider_container' id='snare_container'>
-            <div class='slider_groove'>
-                <img class='slider_track' src='./mididrum/images/slider_track.png'>
-                <img class='slider_thumb' id='snare_thumb' src='./mididrum/images/slider_thumb.png'>
-            </div>
-            <div class='slider_label'>
-                Snare Pitch
-            </div>
-        </div>
-        <div class='slider_container' id='hihat_container'>
-            <div class='slider_groove'>
-                <img class='slider_track' src='./mididrum/images/slider_track.png'>
-                <img class='slider_thumb' id='hihat_thumb' src='./mididrum/images/slider_thumb.png'>
-            </div>
-            <div class='slider_label'>
-                Hi-Hat Pitch
-            </div>
-        </div>
-        <div class='slider_container' id='tom1_container'>
-            <div class='slider_groove'>
-                <img class='slider_track' src='./mididrum/images/slider_track.png'>
-                <img class='slider_thumb' id='tom1_thumb' src='./mididrum/images/slider_thumb.png'>
-            </div>
-            <div class='slider_label'>
-                Tom 1 Pitch
-            </div>
-        </div>
-        <div class='slider_container' id='tom2_container'>
-            <div class='slider_groove'>
-                <img class='slider_track' src='./mididrum/images/slider_track.png'>
-                <img class='slider_thumb' id='tom2_thumb' src='./mididrum/images/slider_thumb.png'>
-            </div>
-            <div class='slider_label'>
-                Tom 2 Pitch
-            </div>
-        </div>
-        <div class='slider_container' id='tom3_container'>
-            <div class='slider_groove'>
-                <img class='slider_track' src='./mididrum/images/slider_track.png'>
-                <img class='slider_thumb' id='tom3_thumb' src='./mididrum/images/slider_thumb.png'>
-            </div>
-            <div class='slider_label'>
-                Tom 3 Pitch
-            </div>
-        </div>
-    </section>
-    
-    <section class='container active' id='tools'>
-        <span class='label' id='beatlabel'>Beat</span>
-        <img id='play' src='./mididrum/images/btn_play_loading.gif' width='80' height='33'>
-        <img id='stop' src='./mididrum/images/btn_stop.png'>
-        <img id='save' src='./mididrum/images/btn_save.png'><img id='load' src='./mididrum/images/btn_load.png'><img id='reset' src='./mididrum/images/btn_reset.png'>
-        
-       
-        
-    </section>
-    
-    
-    <div class='container' id='save_container'>
-        <h3>
-            Save a Beat
-        </h3>
-        <p>
-            For security reasons, web browsers don't make it easy to save files directly to your hard drive.
-            But to save your beat just copy and paste the data block below into a text file.
-            To load the beat later click the Load button then paste the data block from your text file 
-            into the blank window.
-        </p>
-        <textarea id='save_textarea' spellcheck='false'></textarea>
-        <img id='save_ok' src='./mididrum/images/btn_ok.png'>
-    </div>
-    
-    <div class='container' id='load_container'>
-        <h3>
-            Load a Beat
-        </h3>
-        <p>
-            Paste the beat data into the blank window below and click OK.
-        </p>
-        <textarea id='load_textarea' spellcheck='false'></textarea>
-        <div id='load_buttons'>
-            <img id='load_ok' src='./mididrum/images/btn_ok.png'>
-            <img id='load_cancel' src='./mididrum/images/btn_cancel.png'>
-        </div>
-    </div>
-    
-    <div class='container' id="io">
-        Input:
-        <select id=midiIn onchange='changeMidiIn();'>
-            <option value="">Not connected</option>
-        </select>
-        Output:
-        <select id=midiOut onchange='changeMidiOut();'>
-            <option value="">Not connected</option>
-        </select>
-    </div>
-    
-<div id="MIDIPlugin"> </div>
 
-</body>
-</html>
+                <div id='tempo_container'>
+                    <span class='label' id='tempolabel'>Tempo</span>
+                    <div id='tempodisplay'>
+                        <span id='tempo'></span>&nbsp;
+                        <span id='bpm'>bpm</span>
+                    </div>
+                    <img id='tempodec' src='./mididrum/images/tempo_dec.png'>
+                    <img id='tempoinc' src='./mididrum/images/tempo_inc.png'>
+                </div>
+                <div class='slider_container' id='swing_container'>
+                    <span class='label' id='swinglabel'>Swing</span>
+                    <div class='slider_groove'>
+                        <img class='slider_track' src='./mididrum/images/sliderh_track.png'>
+                        <img class='slider_thumb' id='swing_thumb' src='./mididrum/images/sliderh_thumb.png'>
+                    </div>
+                </div>
+            </div>
+
+            <div class='vrule'></div>
+            <div class='slider_container' id='kick_container'>
+                <div class='slider_groove'>
+                    <img class='slider_track' src='./mididrum/images/slider_track.png'>
+                    <img class='slider_thumb' id='kick_thumb' src='./mididrum/images/slider_thumb.png'>
+                </div>
+                <div class='slider_label'>
+                    Kick Pitch
+                </div>
+            </div>
+            <div class='slider_container' id='snare_container'>
+                <div class='slider_groove'>
+                    <img class='slider_track' src='./mididrum/images/slider_track.png'>
+                    <img class='slider_thumb' id='snare_thumb' src='./mididrum/images/slider_thumb.png'>
+                </div>
+                <div class='slider_label'>
+                    Snare Pitch
+                </div>
+            </div>
+            <div class='slider_container' id='hihat_container'>
+                <div class='slider_groove'>
+                    <img class='slider_track' src='./mididrum/images/slider_track.png'>
+                    <img class='slider_thumb' id='hihat_thumb' src='./mididrum/images/slider_thumb.png'>
+                </div>
+                <div class='slider_label'>
+                    Hi-Hat Pitch
+                </div>
+            </div>
+            <div class='slider_container' id='tom1_container'>
+                <div class='slider_groove'>
+                    <img class='slider_track' src='./mididrum/images/slider_track.png'>
+                    <img class='slider_thumb' id='tom1_thumb' src='./mididrum/images/slider_thumb.png'>
+                </div>
+                <div class='slider_label'>
+                    Tom 1 Pitch
+                </div>
+            </div>
+            <div class='slider_container' id='tom2_container'>
+                <div class='slider_groove'>
+                    <img class='slider_track' src='./mididrum/images/slider_track.png'>
+                    <img class='slider_thumb' id='tom2_thumb' src='./mididrum/images/slider_thumb.png'>
+                </div>
+                <div class='slider_label'>
+                    Tom 2 Pitch
+                </div>
+            </div>
+            <div class='slider_container' id='tom3_container'>
+                <div class='slider_groove'>
+                    <img class='slider_track' src='./mididrum/images/slider_track.png'>
+                    <img class='slider_thumb' id='tom3_thumb' src='./mididrum/images/slider_thumb.png'>
+                </div>
+                <div class='slider_label'>
+                    Tom 3 Pitch
+                </div>
+            </div>
+        </section>
+
+        <section class='container active' id='tools'>
+            <span class='label' id='beatlabel'>Beat</span>
+            <img id='play' src='./mididrum/images/btn_play_loading.gif' width='80' height='33'>
+            <img id='stop' src='./mididrum/images/btn_stop.png'>
+            <img id='save' src='./mididrum/images/btn_save.png'>
+            <img id='load' src='./mididrum/images/btn_load.png'>
+            <img id='reset' src='./mididrum/images/btn_reset.png'>
+
+
+
+        </section>
+
+
+        <div class='container' id='save_container'>
+            <h3>
+                Save a Beat
+            </h3>
+            <p>
+                For security reasons, web browsers don't make it easy to save files directly to your hard drive. But to save your beat just
+                copy and paste the data block below into a text file. To load the beat later click the Load button then paste
+                the data block from your text file into the blank window.
+            </p>
+            <textarea id='save_textarea' spellcheck='false'></textarea>
+            <img id='save_ok' src='./mididrum/images/btn_ok.png'>
+        </div>
+
+        <div class='container' id='load_container'>
+            <h3>
+                Load a Beat
+            </h3>
+            <p>
+                Paste the beat data into the blank window below and click OK.
+            </p>
+            <textarea id='load_textarea' spellcheck='false'></textarea>
+            <div id='load_buttons'>
+                <img id='load_ok' src='./mididrum/images/btn_ok.png'>
+                <img id='load_cancel' src='./mididrum/images/btn_cancel.png'>
+            </div>
+        </div>
+
+        <div class='container' id="io">
+            Input:
+            <select id=midiIn onchange='changeMidiIn();'>
+                <option value="">Not connected</option>
+            </select>
+            Output:
+            <select id=midiOut onchange='changeMidiOut();'>
+                <option value="">Not connected</option>
+            </select>
+        </div>
+
+        <div id="MIDIPlugin"> </div>
+
+    </body>
+</template>
+
+<script>
+    let drummachine = document.currentScript.ownerDocument.querySelector("#wc-drummachine");
+    class DrumMachineGUI extends HTMLElement {
+  
+      constructor(plug) {
+        super();
+        this._plug = plug;
+        this._plug.gui = this;
+        this._root = this.attachShadow({ mode: 'open' });
+        this._root.appendChild(wahtemp.content.cloneNode(true));
+        this.isOn = false;
+        this.isOnBoost = false;
+        this.state = new Object();
+        this.setKnobs();
+        this.setSwitchListener();
+        this.setBoostListener();
+        //this.InitMidi();
+      }
+  
+      get properties() {
+        this.boundingRect = {
+          dataWidth: {
+            type: Number,
+            value: 180
+          },
+          dataHeight: {
+            type: Number,
+            value: 220
+          }
+        };
+        return this.boundingRect;
+      }
+  
+      static get observedAttributes() { return ['state']; }
+  
+      attributeChangedCallback() {
+        console.log(`Custom element ${this.is} attributes changed.`);
+        this.state = JSON.parse(this.getAttribute('state'));
+        console.log(this.state);
+        if (this.state.status == "enable") {
+          this._root.querySelector("#switch1").value = 1;
+          this.isOn = true;
+        }
+  
+        if (this.state.boost == "enable") {
+          this._root.querySelector('#switch2').value = 1;
+          this.isOnBoost = true;
+        }
+        this.knobs = this._root.querySelectorAll(".knob");
+        this.labels = this._root.querySelectorAll(".knob-label");
+  
+        for (var i = 0; i < this.knobs.length; i++) {
+          this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")] * 100;
+        }
+        console.log(this.knobs);
+  
+      }
+  
+  
+  
+      setKnobs() {
+        console.log('setknobs');
+        this._root.querySelector("#masterKnob").addEventListener('input', (e) => this._plug.setParam("effect", e.target.value));
+        this._root.querySelector("#mode").addEventListener('input', (e) => this._plug.setParam("mode", e.target.value));
+        this._root.querySelector("#knob").addEventListener('input', (e) => this._plug.setParam("freqMinMax", e.target.value));
+        this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("qMinMax", e.target.value));
+      }
+  
+      setSwitchListener() {
+        console.log("setswitch");
+        this._root.querySelector("#switch1").addEventListener('change', (e) => {
+          if (this.isOn) this.bypass();
+          else this.reactivate();
+          this.isOn = !this.isOn;
+        });
+      }
+  
+      bypass() {
+        this._plug.setParam("status", "disable");
+      }
+      reactivate() {
+        this._plug.setParam("status", "enable");
+      }
+  
+      setBoostListener(){
+        console.log("setBoost");
+        this._root.querySelector("#switch2").addEventListener('change', (e) => {
+          if (this.isOnBoost) this.bypassBoost();
+          else this.reactivateBoost();
+          this.isOnBoost = !this.isOnBoost;
+        });
+      }
+  
+      bypassBoost() {
+        this._plug.setParam("boost", "disable");
+      }
+      reactivateBoost() {
+        this._plug.setParam("boost", "enable");
+      }
+  
+    }
+    // Register the x-custom element with the browser
+  
+    try {
+      console.log("Element defined");
+      customElements.define('wasabi-drummachine', DrumMachineGUI);
+    } catch (error) {
+      console.log(error);
+      console.log("Element already defined");
+    }
+  
+  
+    createWahVox = (plug) => {
+      let elem = new WahVoxGUI(plug);
+      return elem;
+    }
+  
+      
+  
+   //window.onload=PedalWahGUI.InitMidi;
+  </script>
