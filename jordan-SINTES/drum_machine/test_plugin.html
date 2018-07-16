@@ -52,59 +52,7 @@
 		node.connect(ctx.destination);
 	});
     
-    Kit.prototype.setDemoIndex = function (index) {
-	this.demoIndex = index;
-}
-
-Kit.prototype.load = function () {
-	if (this.startedLoading)
-		return;
-
-	this.startedLoading = true;
-
-	var pathName = this.pathName();
-
-	var kickPath = pathName + "kick.wav";
-	var snarePath = pathName + "snare.wav";
-	var hihatPath = pathName + "hihat.wav";
-	var tom1Path = pathName + "tom1.wav";
-	var tom2Path = pathName + "tom2.wav";
-	var tom3Path = pathName + "tom3.wav";
-
-	//put to true to have sound position in function to the click position on drumMachine
-	this.loadSample(0, kickPath, false);
-	this.loadSample(1, snarePath, false);
-	this.loadSample(2, hihatPath, false);
-	this.loadSample(3, tom1Path, false);
-	this.loadSample(4, tom2Path, false);
-	this.loadSample(5, tom3Path, false);
-}
-
-Kit.prototype.loadSample = function (sampleID, url) {
-	// Load asynchronously
-
-	var request = new XMLHttpRequest();
-	request.open("GET", url, true);
-	request.responseType = "arraybuffer";
-
-	var kit = this;
-
-	request.onload = function () {
-		context.decodeAudioData(request.response, decodedFunctions[sampleID].bind(kit));
-
-		kit.instrumentLoadCount++;
-		if (kit.instrumentLoadCount == kit.instrumentCount) {
-			kit.isLoaded = true;
-
-			if (kit.demoIndex != -1) {
-				beatInitial.setKitLoaded();
-			}
-		}
-	}
-
-	request.send();
-}
-
+   
 	
    
 

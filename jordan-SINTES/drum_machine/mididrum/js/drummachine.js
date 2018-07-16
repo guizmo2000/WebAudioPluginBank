@@ -2,25 +2,10 @@
 // Events
 // init() once the page has finished loading.
 window.onload = init;
-
-var timerWorker = null; // Worker thread to send us scheduling messages.
-var context;
-var compressor;
-var masterGainNode;
-var filterNode;
-
-var timeoutId;
-
-var startTime;
 var lastDrawTime = -1;
-
-var kits;
-
 var kNumInstruments = 6; //Tom 1, Tom2, Tom 3, Hi-Hat...
 var kInitialKitIndex = 10;
 var kMaxSwing = .08;
-
-var currentKit;
 
 var beatReset = {"kitIndex":0,"tempo":100,"swingFactor":0,"kickPitchVal":0.5,"snarePitchVal":0.5,"hihatPitchVal":0.5,"tom1PitchVal":0.5,"tom2PitchVal":0.5,"tom3PitchVal":0.5,"rhythm1":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm2":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm3":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm4":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm5":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm6":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]};
 var beatInitial =  {"kitIndex":11,"tempo":100,"swingFactor":0,"kickPitchVal":0.46478873239436624,"snarePitchVal":0.45070422535211263,"hihatPitchVal":0.15492957746478875,"tom1PitchVal":0.7183098591549295,"tom2PitchVal":0.704225352112676,"tom3PitchVal":0.8028169014084507,"rhythm1":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm2":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm3":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm4":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm5":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm6":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]};
@@ -104,7 +89,6 @@ var kitNamePretty = [
 
 function Kit(name) {
     this.name = name;
-
     this.pathName = function() {
         var pathName = "mididrum/sounds/drum-samples/" + this.name + "/";
         return pathName;
