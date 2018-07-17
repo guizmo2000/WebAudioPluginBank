@@ -13,52 +13,18 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
     this.addParam({name: 'time',defaultValue: 0.5, minValue: 0, maxValue: 1 });
     this.addParam({name: 'mix',defaultValue: 0.5, minValue: 0, maxValue: 1 });
 
-    this.params = {
-      "feedback": this._descriptor.feedback.defaultValue,
-      "mix": this._descriptor.mix.defaultValue,
-      "time": this._descriptor.time.defaultValue,
-      "status": "disable"
-    }
-
-
-    this.setup();
+    // To have a on/off management
+    Object.assign({"status": "disable"},this.params);
+    super.setup();
   }
 
-  /*    ################     API METHODS    ###############   */
-  // p9 count inputs
-  get numberOfInputs(){
-    return this.inputs.length;
-  }
-
-  get numberOfOutputs(){
-    return this.outputs.length;
-  }
-  inputChannelCount(){
-    return 1;
-  }
-  outputChannelCount(){
-    return 1
-  }
-  
-  getDescriptor(){
-    return this._descriptor;
-  }
-
+  /*    ################     API METHODS Overriding    ###############   */
   getPatch(index) {
-    return null;
+    console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
   }
   setPatch(data, index) {
     console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
   }
-
-  getParam(key) {
-    try {
-      return this.params[key];
-    } catch (error) {
-      console.warn("this plugin does not implement this param")
-    }
-  }
-
   setParam(key, value) {
     //console.log(key, value);
     try {
@@ -69,22 +35,7 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
     }
   }
 
-
-
-
-  onMidi(msg) {
-    return msg;
-    //web midi api ?
-  }
-
   /*  #########  Personnal code for the web audio graph  #########   */
-
-  setup() {
-    //console.log("delay setup");
-    this.createNodes();
-    this.connectNodes();
-    this.linktoParams();
-  }
 
   createNodes() {
     this.delayNodeLeft = this.context.createDelay();
@@ -118,14 +69,7 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
     this.wetGainNode.connect(this._output);
   }
 
-  linktoParams() {
-    /*
-     * set default value for parameters and assign it to the web audio nodes
-     */
-    this.time = this.params.time;
-    this.feedback = this.params.feedback;
-    this.mix = this.params.mix;
-  }
+ // Setter part, it is here that you define the link between the params and the nodes values.
   set time(_time) {
     if (_time < this._descriptor.time.maxValue && _time > this._descriptor.time.minValue) this.params.time = _time;
     this.delayNodeLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
