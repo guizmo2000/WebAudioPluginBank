@@ -114,7 +114,7 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
                 }
             }
             Object.assign(this.jsoninfos, tmp);
-           // this.jsoninfos.push(tmp);
+            // this.jsoninfos.push(tmp);
         }
 
 
@@ -244,7 +244,9 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
         var desc = {};
         for (const item in this.inputs_items) {
             if (this.inputs_items.hasOwnProperty(item)) {
-                desc = Object.assign({[this.inputs_items[item].label]:{ minValue: this.inputs_items[item].min, maxValue: this.inputs_items[item].max, defaultValue: this.inputs_items[item].init }},desc);                
+                if (this.inputs_items[item].label != "bypass") {
+                    desc = Object.assign({ [this.inputs_items[item].label]: { minValue: this.inputs_items[item].min, maxValue: this.inputs_items[item].max, defaultValue: this.inputs_items[item].init } }, desc);
+                }
             }
         }
         return desc;
