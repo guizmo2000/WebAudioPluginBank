@@ -40,9 +40,7 @@
           resolve(true);
         });
 
-        node.getMetadata().then(meta=>{
-          console.log(meta);
-        });
+        console.log(node.getDescriptor());
         mediaSource.connect(node);
         node.connect(ctx.destination)
       })

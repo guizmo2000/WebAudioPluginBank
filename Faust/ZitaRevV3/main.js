@@ -241,7 +241,14 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
      * Returns an array of all input paths (to be used with setParamValue/getParamValue)
      */
     getDescriptor() {
-        return this.inputs_items;
+        let desc = new Object();
+        for (const item in this.inputs_items) {
+            if (this.inputs_items.hasOwnProperty(item)) {
+                Object.assign({[item.label]:{ minValue: item.min, maxValue: item.max, defaultValue: item.init }},desc)
+                
+            }
+        }
+        return desc;
     }
 
     /**
