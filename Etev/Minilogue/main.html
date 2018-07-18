@@ -142,7 +142,7 @@
         </div>
         <div class="row">
           <div class="column">
-            <webaudio-knob id="noise" class="knob" sprites="99" value="50" step="1" midilearn="true" diameter="20"></webaudio-knob>
+            <webaudio-knob id="noise" class="knob" sprites="99" min="0" max="10" value="0.1" step="0.1" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="noise-label">Noise</span>
           </div>
         </div>
@@ -438,7 +438,7 @@
       this.keyboard = new QwertyHancock(settings, this._root);
 
       this.keyboard.keyDown =  (note, frequency) => {
-        console.log(frequency);
+        //console.log(frequency);
         this._plug.noteOn(frequency + 32);
       };
 
