@@ -18,6 +18,7 @@
 <script src="./../../sdk/WebAudioSDK.js"></script>
 <script src="./drumMachine/main.js"></script>
 
+
 <body>
     <audio src="./../../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
 </body>
@@ -37,7 +38,7 @@
 	var mediaSource = ctx.createMediaElementSource(player);
 
     var pluginURL = "./drumMachine"; 
-	var plugin = new DrumMachine(ctx, pluginURL);
+	var plugin = new WasabiDrumMachine(ctx, pluginURL);
 
    plugin.load().then((node) => 
     {

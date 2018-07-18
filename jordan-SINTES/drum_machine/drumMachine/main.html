@@ -622,121 +622,482 @@
 <script>
     let drummachine = document.currentScript.ownerDocument.querySelector("#wc-drummachine");
     class DrumMachineGUI extends HTMLElement {
-  
-      constructor(plug) {
-        super();
-        this._plug = plug;
-        this._plug.gui = this;
-        this._root = this.attachShadow({ mode: 'open' });
-        this._root.appendChild(wahtemp.content.cloneNode(true));
-        this.isOn = false;
-        this.isOnBoost = false;
-        this.state = new Object();
-        this.setKnobs();
-        this.setSwitchListener();
-        this.setBoostListener();
-        //this.InitMidi();
-      }
-  
-      get properties() {
-        this.boundingRect = {
-          dataWidth: {
-            type: Number,
-            value: 180
-          },
-          dataHeight: {
-            type: Number,
-            value: 220
-          }
-        };
-        return this.boundingRect;
-      }
-  
-      static get observedAttributes() { return ['state']; }
-  
-      attributeChangedCallback() {
-        console.log(`Custom element ${this.is} attributes changed.`);
-        this.state = JSON.parse(this.getAttribute('state'));
-        console.log(this.state);
-        if (this.state.status == "enable") {
-          this._root.querySelector("#switch1").value = 1;
-          this.isOn = true;
+
+        constructor(plug) {
+            super();
+            this._plug = plug;
+            this._plug.gui = this;
+            this._root = this.attachShadow({ mode: 'open' });
+            this._root.appendChild(drummachine.content.cloneNode(true));
+            this.initControls();
+            this.initButtons();
+
+            this.makeKitList();
+            this.handleKit();
+            this.handleKitComboMouseDown();
+            this.handleBodyMouseDown();
+            this.handleButtonMouseDown();
+            this.handleKitMouseDown();
+            this.handleSliderMouseDown();
+            this.handleMouseMove();
+            this.isDescendantOfId();
+            this.handleMouseUp()
+            this.handlePlay();
+            this.handleSave();
+            this.handleStop();
+            this.handleSaveOk();
+            this.handleLoad();
+            this.handleLoadOk();
+            this.handleLoadCancel();
+            this.handleReset();
+
+            this.toggleSaveContainer();
+            this.toggleLoadContainer();
+
+            this.sliderSetValue();
+            this.loadBeat();
+
+
+            //this.InitMidi();
         }
-  
-        if (this.state.boost == "enable") {
-          this._root.querySelector('#switch2').value = 1;
-          this.isOnBoost = true;
+
+        get properties() {
+            this.boundingRect = {
+                dataWidth: {
+                    type: Number,
+                    value: 750
+                },
+                dataHeight: {
+                    type: Number,
+                    value: 300
+                }
+            };
+            return this.boundingRect;
         }
-        this.knobs = this._root.querySelectorAll(".knob");
-        this.labels = this._root.querySelectorAll(".knob-label");
-  
-        for (var i = 0; i < this.knobs.length; i++) {
-          this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")] * 100;
+
+        static get observedAttributes() { return ['state']; }
+
+        attributeChangedCallback() {
+            console.log(`Custom element ${this.is} attributes changed.`);
+            this.state = JSON.parse(this.getAttribute('state'));
+            console.log(this.state);
+            if (this.state.status == "enable") {
+                this._root.querySelector("#switch1").value = 1;
+                this.isOn = true;
+            }
+
+            if (this.state.boost == "enable") {
+                this._root.querySelector('#switch2').value = 1;
+                this.isOnBoost = true;
+            }
+
+            for (var i = 0; i < this.knobs.length; i++) {
+                this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")] * 100;
+            }
+            console.log(this.knobs);
+
         }
-        console.log(this.knobs);
-  
-      }
-  
-  
-  
-      setKnobs() {
-        console.log('setknobs');
-        this._root.querySelector("#masterKnob").addEventListener('input', (e) => this._plug.setParam("effect", e.target.value));
-        this._root.querySelector("#mode").addEventListener('input', (e) => this._plug.setParam("mode", e.target.value));
-        this._root.querySelector("#knob").addEventListener('input', (e) => this._plug.setParam("freqMinMax", e.target.value));
-        this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("qMinMax", e.target.value));
-      }
-  
-      setSwitchListener() {
-        console.log("setswitch");
-        this._root.querySelector("#switch1").addEventListener('change', (e) => {
-          if (this.isOn) this.bypass();
-          else this.reactivate();
-          this.isOn = !this.isOn;
-        });
-      }
-  
-      bypass() {
-        this._plug.setParam("status", "disable");
-      }
-      reactivate() {
-        this._plug.setParam("status", "enable");
-      }
-  
-      setBoostListener(){
-        console.log("setBoost");
-        this._root.querySelector("#switch2").addEventListener('change', (e) => {
-          if (this.isOnBoost) this.bypassBoost();
-          else this.reactivateBoost();
-          this.isOnBoost = !this.isOnBoost;
-        });
-      }
-  
-      bypassBoost() {
-        this._plug.setParam("boost", "disable");
-      }
-      reactivateBoost() {
-        this._plug.setParam("boost", "enable");
-      }
-  
+
+        initControls() {
+            // Initialize note buttons
+            //this.initButtons();
+            //this.makeKitList();
+
+
+            // sliders
+
+            this._root.getElementById('tom1_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('tom2_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('tom3_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('hihat_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('snare_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('kick_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('swing_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+
+
+
+            // tool buttons
+            this._root.getElementById('play').addEventListener('mousedown', this.handlePlay, true);
+            this._root.getElementById('stop').addEventListener('mousedown', this.handleStop, true);
+            this._root.getElementById('save').addEventListener('mousedown', this.handleSave, true);
+            this._root.getElementById('save_ok').addEventListener('mousedown', this.handleSaveOk, true);
+            this._root.getElementById('load').addEventListener('mousedown', this.handleLoad, true);
+            this._root.getElementById('load_ok').addEventListener('mousedown', this.handleLoadOk, true);
+            this._root.getElementById('load_cancel').addEventListener('mousedown', this.handleLoadCancel, true);
+            this._root.getElementById('reset').addEventListener('mousedown', this.handleReset, true);
+
+            var elBody = document.getElementById('body');
+            elBody.addEventListener('mousemove', handleMouseMove, true);
+            elBody.addEventListener('mouseup', handleMouseUp, true);
+
+            document.getElementById('tempoinc').addEventListener('mousedown', tempoIncrease, true);
+            document.getElementById('tempodec').addEventListener('mousedown', tempoDecrease, true);
+        }
+
+        initButtons() {
+            var elButton;
+
+            for (var i = 0; i < this.params.loopLength; ++i) {
+                for (var j = 0; j < this.params.kNumInstruments; j++) {
+                    elButton = document.getElementById(this.params.instruments[j] + '_' + i);
+                    elButton.addEventListener("mousedown", handleButtonMouseDown, true);
+                }
+            }
+        }
+
+        makeKitList() {
+            var elList = document.getElementById('kitlist');
+            var numKits = this.params.kitName.length;
+
+            for (var i = 0; i < numKits; i++) {
+                var elItem = document.createElement('li');
+                elItem.innerHTML = this.params.kitNamePretty[i];
+                elList.appendChild(elItem);
+                elItem.addEventListener("mousedown", handleKitMouseDown, true);
+            }
+        }
+
+        handleKit(event) {
+            var elKitCombo = this._root.querySelector('#kitcombo');
+            elKitCombo.addEventListener("mousedown", handleKitComboMouseDown, true);
+
+            document.body.addEventListener("mousedown", handleBodyMouseDown, true);
+        }
+
+        handleKitComboMouseDown(event) {
+            this._root.querySelector('#kitcombo').classList.toggle('active');
+        }
+
+        handleBodyMouseDown(event) {
+            var elKitcombo = this._root.querySelector('#kitcombo');
+
+            if (elKitcombo.classList.contains('active') && !isDescendantOfId(event.target, 'kitcombo_container')) {
+                elKitcombo.classList.remove('active');
+            }
+
+
+        }
+
+        handleButtonMouseDown(event) {
+            var notes = theBeat.rhythm1;
+
+            var instrumentIndex;
+            var rhythmIndex;
+
+            var elId = event.target.id;
+            rhythmIndex = elId.substr(elId.indexOf('_') + 1, 2);
+            instrumentIndex = instruments.indexOf(elId.substr(0, elId.indexOf('_')));
+
+            switch (instrumentIndex) {
+                case 0: notes = theBeat.rhythm1; break;
+                case 1: notes = theBeat.rhythm2; break;
+                case 2: notes = theBeat.rhythm3; break;
+                case 3: notes = theBeat.rhythm4; break;
+                case 4: notes = theBeat.rhythm5; break;
+                case 5: notes = theBeat.rhythm6; break;
+            }
+
+            notes[rhythmIndex] = (notes[rhythmIndex] + 1) % 3;
+
+            if (instrumentIndex == currentlyActiveInstrument)
+                showCorrectNote(rhythmIndex, notes[rhythmIndex]);
+
+            drawNote(notes[rhythmIndex], rhythmIndex, instrumentIndex);
+
+            var note = notes[rhythmIndex];
+
+            if (note) {
+                switch (instrumentIndex) {
+                    //put to true to have sound position in function to the click position on drumMachine
+                    case 0:  // Kick
+                        playNote(currentKit.kickBuffer, false, 0, 0, -2, 0.5 * 1, volumes[note] * 1.0, kickPitch, 0);
+                        break;
+
+                    case 1:  // Snare
+                        playNote(currentKit.snareBuffer, false, 0, 0, -2, 1, volumes[note] * 0.6, snarePitch, 0);
+                        break;
+
+                    case 2:  // Hihat
+                        // Pan the hihat according to sequence position.
+                        playNote(currentKit.hihatBuffer, false, 0.5 * rhythmIndex - 4, 0, -1.0, 1, volumes[note] * 0.7, hihatPitch, 0);
+                        break;
+
+                    case 3:  // Tom 1   
+                        playNote(currentKit.tom1, false, 0, 0, -2, 1, volumes[note] * 0.6, tom1Pitch, 0);
+                        break;
+
+                    case 4:  // Tom 2   
+                        playNote(currentKit.tom2, false, 0, 0, -2, 1, volumes[note] * 0.6, tom2Pitch, 0);
+                        break;
+
+                    case 5:  // Tom 3   
+                        playNote(currentKit.tom3, false, 0, 0, -2, 1, volumes[note] * 0.6, tom3Pitch, 0);
+                        break;
+                }
+            }
+        }
+
+        handleKitMouseDown(event) {
+            var index = kitNamePretty.indexOf(event.target.innerHTML);
+            theBeat.kitIndex = index;
+            currentKit = kits[index];
+            document.getElementById('kitname').innerHTML = kitNamePretty[index];
+        }
+
+        isDescendantOfId(el, id) {
+            if (el.parentElement) {
+                if (el.parentElement.id == id) {
+                    return true;
+                } else {
+                    return isDescendantOfId(el.parentElement, id);
+                }
+            } else {
+                return false;
+            }
+        }
+
+        handleSliderMouseDown(event) {
+            mouseCapture = event.target.id;
+
+            // calculate offset of mousedown on slider
+            var el = event.target;
+            if (mouseCapture == 'swing_thumb') {
+                var thumbX = 0;
+                do {
+                    thumbX += el.offsetLeft;
+                } while (el = el.offsetParent);
+
+                mouseCaptureOffset = event.pageX - thumbX;
+            } else {
+                var thumbY = 0;
+                do {
+                    thumbY += el.offsetTop;
+                } while (el = el.offsetParent);
+
+                mouseCaptureOffset = event.pageY - thumbY;
+            }
+        }
+
+        handleMouseMove(event) {
+            if (!mouseCapture) return;
+
+            var elThumb = document.getElementById(mouseCapture);
+            var elTrack = elThumb.parentNode;
+
+            if (mouseCapture != 'swing_thumb') {
+                var thumbH = elThumb.clientHeight;
+                var trackH = elTrack.clientHeight;
+                var travelH = trackH - thumbH;
+
+                var trackY = 0;
+                var el = elTrack;
+                do {
+                    trackY += el.offsetTop;
+                } while (el = el.offsetParent);
+
+                var offsetY = Math.max(0, Math.min(travelH, event.pageY - mouseCaptureOffset - trackY));
+                var value = 1.0 - offsetY / travelH;
+                elThumb.style.top = travelH * (1.0 - value) + 'px';
+            } else {
+                var thumbW = elThumb.clientWidth;
+                var trackW = elTrack.clientWidth;
+                var travelW = trackW - thumbW;
+
+                var trackX = 0;
+                var el = elTrack;
+                do {
+                    trackX += el.offsetLeft;
+                } while (el = el.offsetParent);
+
+                var offsetX = Math.max(0, Math.min(travelW, event.pageX - mouseCaptureOffset - trackX));
+                var value = offsetX / travelW;
+                elThumb.style.left = travelW * value + 'px';
+            }
+
+            sliderSetValue(mouseCapture, value);
+        }
+
+        handleMouseUp() {
+            mouseCapture = null;
+        }
+
+        handlePlay(event) {
+            noteTime = 0.0;
+            startTime = context.currentTime + 0.005;
+            schedule();
+            timerWorker.postMessage("start");
+
+            document.getElementById('play').classList.add('playing');
+            document.getElementById('stop').classList.add('playing');
+            if (midiOut) {
+                // turn off the play button
+                midiOut.send([0x80, 3, 32]);
+                // light up the stop button
+                midiOut.send([0x90, 7, 1]);
+            }
+        }
+
+        handleStop(event) {
+            timerWorker.postMessage("stop");
+
+            var elOld = document.getElementById('LED_' + (rhythmIndex + 14) % 16);
+            elOld.src = 'mididrum/images/LED_off.png';
+
+            hideBeat((rhythmIndex + 14) % 16);
+
+            rhythmIndex = 0;
+
+            document.getElementById('play').classList.remove('playing');
+            document.getElementById('stop').classList.remove('playing');
+            if (midiOut) {
+                // light up the play button
+                midiOut.send([0x90, 3, 32]);
+                // turn off the stop button
+                midiOut.send([0x80, 7, 1]);
+            }
+        }
+
+        handleSave(event) {
+            toggleSaveContainer();
+            var elTextarea = document.getElementById('save_textarea');
+            elTextarea.value = JSON.stringify(theBeat);
+        }
+
+        handleSaveOk(event) {
+            toggleSaveContainer();
+        }
+
+        handleLoad(event) {
+            toggleLoadContainer();
+        }
+
+        handleLoadOk(event) {
+            var elTextarea = document.getElementById('load_textarea');
+            theBeat = JSON.parse(elTextarea.value);
+
+            // Set drumkit
+            currentKit = kits[theBeat.kitIndex];
+            document.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
+
+
+
+            sliderSetValue('kick_thumb', theBeat.kickPitchVal);
+            sliderSetValue('snare_thumb', theBeat.snarePitchVal);
+            sliderSetValue('hihat_thumb', theBeat.hihatPitchVal);
+            sliderSetValue('tom1_thumb', theBeat.tom1PitchVal);
+            sliderSetValue('tom2_thumb', theBeat.tom2PitchVal);
+            sliderSetValue('tom3_thumb', theBeat.tom3PitchVal);
+            sliderSetValue('swing_thumb', theBeat.swingFactor);
+
+            // Clear out the text area post-processing
+            elTextarea.value = '';
+
+            toggleLoadContainer();
+            updateControls();
+        }
+
+        handleLoadCancel(event) {
+            toggleLoadContainer();
+        }
+
+        toggleSaveContainer() {
+            document.getElementById('pad').classList.toggle('active');
+            document.getElementById('params').classList.toggle('active');
+            document.getElementById('tools').classList.toggle('active');
+            document.getElementById('save_container').classList.toggle('active');
+        }
+
+        toggleLoadContainer() {
+            document.getElementById('pad').classList.toggle('active');
+            document.getElementById('params').classList.toggle('active');
+            document.getElementById('tools').classList.toggle('active');
+            document.getElementById('load_container').classList.toggle('active');
+        }
+
+        handleReset(event) {
+            handleStop();
+            loadBeat(beatReset);
+        }
+
+        loadBeat(beat) {
+            // Check that assets are loaded.
+            if (beat != beatReset && !beat.isLoaded())
+                return false;
+
+            handleStop();
+
+            theBeat = cloneBeat(beat);
+            currentKit = kits[theBeat.kitIndex];
+
+            // apply values from sliders
+            sliderSetValue('kick_thumb', theBeat.kickPitchVal);
+            sliderSetValue('snare_thumb', theBeat.snarePitchVal);
+            sliderSetValue('hihat_thumb', theBeat.hihatPitchVal);
+            sliderSetValue('tom1_thumb', theBeat.tom1PitchVal);
+            sliderSetValue('tom2_thumb', theBeat.tom2PitchVal);
+            sliderSetValue('tom3_thumb', theBeat.tom3PitchVal);
+            sliderSetValue('swing_thumb', theBeat.swingFactor);
+
+            updateControls();
+            setActiveInstrument(0);
+
+            return true;
+        }
+
+        sliderSetValue(slider, value) {
+            var pitchRate = Math.pow(2.0, 2.0 * (value - 0.5));
+
+            switch (slider) {
+                case 'kick_thumb':
+                    theBeat.kickPitchVal = value;
+                    kickPitch = pitchRate;
+                    break;
+                case 'snare_thumb':
+                    theBeat.snarePitchVal = value;
+                    snarePitch = pitchRate;
+                    break;
+                case 'hihat_thumb':
+                    theBeat.hihatPitchVal = value;
+                    hihatPitch = pitchRate;
+                    break;
+                case 'tom1_thumb':
+                    theBeat.tom1PitchVal = value;
+                    tom1Pitch = pitchRate;
+                    break;
+                case 'tom2_thumb':
+                    theBeat.tom2PitchVal = value;
+                    tom2Pitch = pitchRate;
+                    break;
+                case 'tom3_thumb':
+                    theBeat.tom3PitchVal = value;
+                    tom3Pitch = pitchRate;
+                    break;
+                case 'swing_thumb':
+                    theBeat.swingFactor = value;
+                    break;
+            }
+        }
+
     }
     // Register the x-custom element with the browser
-  
+
     try {
-      console.log("Element defined");
-      customElements.define('wasabi-drummachine', DrumMachineGUI);
+        console.log("Element defined");
+        customElements.define('wasabi-drummachine', DrumMachineGUI);
     } catch (error) {
-      console.log(error);
-      console.log("Element already defined");
+        console.log(error);
+        console.log("Element already defined");
     }
-  
-  
+
+
     createDrumMachine = (plug) => {
-      let elem = new DrumMachineGUI(plug);
-      return elem;
+        let elem = new DrumMachineGUI(plug);
+        return elem;
     }
-    
-      
-  
+
+
+
+
+
    //window.onload=PedalWahGUI.InitMidi;
-  </script>
+</script>
