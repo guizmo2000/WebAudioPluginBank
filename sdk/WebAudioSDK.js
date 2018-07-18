@@ -18,9 +18,9 @@ class CompositeAudioNode {
      * @param {AudioContext} context  
      * @param {JSON} options optional, if you want to set alternate values from the defaultOptions below
      */
-    let defaultValues = options ? options : { numberOfInputs: 1, numberOfOuputs: 1, channelCount: 2, channelCountMode: "Max", channelInterpretation: "speakers" };
+    let defaultValues = options ? options : { numberOfInputs: 1, numberOfOutputs: 1, channelCount: 2, channelCountMode: "Max", channelInterpretation: "speakers" };
     this._numberOfInputs = defaultValues.numberOfInputs;
-    this._numberOfOuputs = defaultValues.numberOfOuputs;
+    this._numberOfOutputs = defaultValues.numberOfOutputs;
     this._channelCount = defaultValues.channelCount;
     this._channelCountMode = defaultValues.channelCountMode;
     this._channelInterpretation = defaultValues.channelInterpretation;
@@ -154,11 +154,11 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     this._numberOfInputs = number;
   }
 
-  get numberOfOuputs() {
-    return this._numberOfOuputs;
+  get numberOfOutputs() {
+    return this._numberOfOutputs;
   }
-  set numberOfOuputs(number) {
-    this._numberOfOuputs = number;
+  set numberOfOutputs(number) {
+    this._numberOfOutputs = number;
   }
 
   /**

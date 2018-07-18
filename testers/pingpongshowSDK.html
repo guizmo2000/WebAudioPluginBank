@@ -40,7 +40,7 @@
           resolve(true);
         });
 
-        console.log(node.getDescriptor());
+        console.log(node.numberOfOutputs);
         mediaSource.connect(node);
         node.connect(ctx.destination)
       })
@@ -48,11 +48,7 @@
   }
 
   launchWAP();
-  // (async function loop() {
-  //   for (let i = 0; i < numberofWap; i++) {
-  //      launchWAP();
-  //   }
-  // })();
+  
 
 </script>
 
