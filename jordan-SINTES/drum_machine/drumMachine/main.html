@@ -628,10 +628,10 @@
             this._plug = plug;
             this._plug.gui = this;
             this._root = this.attachShadow({ mode: 'open' });
-            this._root.appendChild(wahtemp.content.cloneNode(true));
+            this._root.appendChild(drummachine.content.cloneNode(true));
             this.initControls();
             this.initButtons();
-            
+
             this.makeKitList();
             this.handleKit();
             this.handleKitComboMouseDown();
@@ -706,32 +706,25 @@
 
             // sliders
 
-            document.getElementById('tom1_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-            document.getElementById('tom2_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-            document.getElementById('tom3_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-            document.getElementById('hihat_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-            document.getElementById('snare_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-            document.getElementById('kick_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-            document.getElementById('swing_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
+            this._root.getElementById('tom1_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('tom2_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('tom3_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('hihat_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('snare_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('kick_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('swing_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
 
 
-            document.getElementById('tom1_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-            document.getElementById('tom2_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-            document.getElementById('tom3_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-            document.getElementById('hihat_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-            document.getElementById('snare_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-            document.getElementById('kick_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-            document.getElementById('swing_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
 
             // tool buttons
-            document.getElementById('play').addEventListener('mousedown', handlePlay, true);
-            document.getElementById('stop').addEventListener('mousedown', handleStop, true);
-            document.getElementById('save').addEventListener('mousedown', handleSave, true);
-            document.getElementById('save_ok').addEventListener('mousedown', handleSaveOk, true);
-            document.getElementById('load').addEventListener('mousedown', handleLoad, true);
-            document.getElementById('load_ok').addEventListener('mousedown', handleLoadOk, true);
-            document.getElementById('load_cancel').addEventListener('mousedown', handleLoadCancel, true);
-            document.getElementById('reset').addEventListener('mousedown', handleReset, true);
+            this._root.getElementById('play').addEventListener('mousedown', this.handlePlay, true);
+            this._root.getElementById('stop').addEventListener('mousedown', this.handleStop, true);
+            this._root.getElementById('save').addEventListener('mousedown', this.handleSave, true);
+            this._root.getElementById('save_ok').addEventListener('mousedown', this.handleSaveOk, true);
+            this._root.getElementById('load').addEventListener('mousedown', this.handleLoad, true);
+            this._root.getElementById('load_ok').addEventListener('mousedown', this.handleLoadOk, true);
+            this._root.getElementById('load_cancel').addEventListener('mousedown', this.handleLoadCancel, true);
+            this._root.getElementById('reset').addEventListener('mousedown', this.handleReset, true);
 
             var elBody = document.getElementById('body');
             elBody.addEventListener('mousemove', handleMouseMove, true);

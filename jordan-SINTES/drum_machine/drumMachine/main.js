@@ -243,7 +243,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	/*  #########  Personnal code for the web audio graph  #########   */
 
-
+// override setup 
 	setup() {
 		console.log("delay setup");
 		this.createNodes();
