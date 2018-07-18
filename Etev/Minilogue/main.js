@@ -42,8 +42,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.addParam({ name: 'pitch2', defaultValue: 1, minValue: 0.5, maxValue: 2 });
     this.addParam({ name: 'osc1gain', minValue: 0, maxValue: 3, defaultValue: 3 });
     this.addParam({ name: 'osc2gain', defaultValue: 3, minValue: 0, maxValue: 3 });
-    this.addParam({ name: 'osc1shape', defaultValue: 0.5, minValue: 0, maxValue: 50 });
-    this.addParam({ name: 'osc2shape', defaultValue: 0.5, minValue: 0, maxValue: 50 });
+    this.addParam({ name: 'osc1shape', defaultValue: 0.5, minValue: 0, maxValue: 100 });
+    this.addParam({ name: 'osc2shape', defaultValue: 0.5, minValue: 0, maxValue: 100 });
     this.addParam({ name: 'ampattack', defaultValue: 0.001, minValue: 0.001, maxValue: 5 });
     this.addParam({ name: 'ampdecay', defaultValue: 1, minValue: 0.001, maxValue: 5 });
     this.addParam({ name: 'ampsustain', defaultValue: 0.5, minValue: 0.001, maxValue: 1 });
@@ -54,7 +54,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.addParam({ name: 'egrelease', defaultValue: 1, minValue: 0.001, maxValue: 5 });
     this.addParam({ name: 'osc1Octave', defaultValue: 3, minValue: 1, maxValue: 5 });
     this.addParam({ name: 'osc2Octave', defaultValue: 3, minValue: 1, maxValue: 5 });
-    this.addParam({ name: 'noise', defaultValue: 0.1, minValue: 0.1, maxValue: 10 });
+    this.addParam({ name: 'noise', defaultValue: 0.1, minValue: 0.1, maxValue: 3 });
 
 
     // SDK behavior 
@@ -111,8 +111,10 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.highpass = this.params.highpass;
     this.osc1pitch = this.params.pitch1;
     this.osc2pitch = this.params.pitch2;
-    this.osc2gain = this.params.osc2gain;
     this.osc1gain = this.params.osc1gain;
+    this.osc2gain = this.params.osc2gain;
+    this.osc1shape = this.params.osc1shape;
+    this.osc2shape = this.params.osc2shape;
     this.lforate = this.params.lforate;
     this.lfoint = this.params.lfoint;
     this.feedback = this.params.feedback;
@@ -163,7 +165,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       this.killNote(key);
       this.noteOn(key);
     }
-    this.normalizeGain();
+    // this.normalizeGain();
 
   }
 
@@ -202,7 +204,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   set noise(_noise) {
     this.params.noise = _noise;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].whitenoiseGain.gain.setValueAtTime(_noise /100, this.context.currentTime);
+      if (this.voices[voice]) this.voices[voice].whitenoiseGain.gain.setValueAtTime(_noise / 100, this.context.currentTime);
     }
   }
 
@@ -231,7 +233,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   set osc1gain(_gain) {
     this.params.osc1gain = _gain;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].gainOsc1.gain.setValueAtTime(_gain /100, this.context.currentTime);
+      if (this.voices[voice]) this.voices[voice].gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
       if (this.voices[voice]) console.log("gainosc1 :", this.voices[voice].gainOsc1.gain.value, this.params.osc1gain);
 
     }
@@ -239,7 +241,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   set osc2gain(_gain) {
     this.params.osc2gain = _gain;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].gainOsc2.gain.setValueAtTime(_gain /100, this.context.currentTime);
+      if (this.voices[voice]) this.voices[voice].gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
     }
   }
   set osc1pitch(_pitch) {
@@ -272,14 +274,14 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   set osc1shape(_gain) {
     this.params.osc1shape = _gain;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].wshape1.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
+      if (this.voices[voice]) this.voices[voice].wshape1.curve = this.getDistortionCurve(_gain / 2);
     }
   }
 
   set osc2shape(_gain) {
     this.params.osc2shape = _gain;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].wshape2.curve = this.getDistortionCurve(this.normalize(_gain, 0, 150));
+      if (this.voices[voice]) this.voices[voice].wshape2.curve = this.getDistortionCurve(_gain / 2);
     }
   }
 
@@ -537,16 +539,13 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     }
     return curve;
   }
-  normalize(num, floor, ceil) {
-    if (!this.isNumber(num) || !this.isNumber(floor) || !this.isNumber(ceil))
-      return;
-
-    return ((ceil - floor) * num) / 1 + floor;
-  }
 
 }
-
 //------------------------------------------------Sound Processing ------------------------------------ 
+
+
+//------------------------------------------------ White noise Generator ------------------------------------ 
+
 
 class Noise {
   constructor(parent, ctx) {
@@ -665,8 +664,12 @@ class Voice {
     this.lfo.type = "triangle";
 
     // Waveshapers stage
+
     this.wshape1 = this.context.createWaveShaper();
     this.wshape2 = this.context.createWaveShaper();
+
+    // this.wshape1 = new DriveShaper(this.parent, this.context)
+    // this.wshape2 = new DriveShaper(this.parent, this.context)
 
     // Filter stage
     this.lowPassfilter = this.context.createBiquadFilter();
