@@ -657,6 +657,9 @@
             this.sliderSetValue();
             this.loadBeat();
 
+            this.tempoIncrease();
+            this.tempoDecrease();
+
 
             //this.InitMidi();
         }
@@ -681,27 +684,12 @@
             console.log(`Custom element ${this.is} attributes changed.`);
             this.state = JSON.parse(this.getAttribute('state'));
             console.log(this.state);
-            if (this.state.status == "enable") {
-                this._root.querySelector("#switch1").value = 1;
-                this.isOn = true;
-            }
-
-            if (this.state.boost == "enable") {
-                this._root.querySelector('#switch2').value = 1;
-                this.isOnBoost = true;
-            }
-
-            for (var i = 0; i < this.knobs.length; i++) {
-                this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")] * 100;
-            }
-            console.log(this.knobs);
-
         }
 
         initControls() {
             // Initialize note buttons
-            //this.initButtons();
-            //this.makeKitList();
+            this.initButtons();
+            this.makeKitList();
 
 
             // sliders
@@ -726,18 +714,18 @@
             this._root.getElementById('load_cancel').addEventListener('mousedown', this.handleLoadCancel, true);
             this._root.getElementById('reset').addEventListener('mousedown', this.handleReset, true);
 
-            var elBody = document.getElementById('body');
-            elBody.addEventListener('mousemove', handleMouseMove, true);
-            elBody.addEventListener('mouseup', handleMouseUp, true);
 
-            document.getElementById('tempoinc').addEventListener('mousedown', tempoIncrease, true);
-            document.getElementById('tempodec').addEventListener('mousedown', tempoDecrease, true);
+            this._root.getElementById('body').addEventListener('mousemove', handleMouseMove, true);
+            this._root.getElementById('body').addEventListener('mouseup', handleMouseUp, true);
+
+            this._root.getElementById('tempoinc').addEventListener('mousedown', this.tempoIncrease, true);
+            this._root.getElementById('tempodec').addEventListener('mousedown', this.tempoDecrease, true);
         }
 
         initButtons() {
             var elButton;
 
-            for (var i = 0; i < this.params.loopLength; ++i) {
+            for (var i = 0; i < this._plug.loopLength; ++i) {
                 for (var j = 0; j < this.params.kNumInstruments; j++) {
                     elButton = document.getElementById(this.params.instruments[j] + '_' + i);
                     elButton.addEventListener("mousedown", handleButtonMouseDown, true);
@@ -746,22 +734,22 @@
         }
 
         makeKitList() {
-            var elList = document.getElementById('kitlist');
-            var numKits = this.params.kitName.length;
+            var elList = this._root.getElementById('kitlist');
+            var numKits = this._plug.params.kitName.length;
 
             for (var i = 0; i < numKits; i++) {
                 var elItem = document.createElement('li');
-                elItem.innerHTML = this.params.kitNamePretty[i];
+                elItem.innerHTML = this._plug.params.kitNamePretty[i];
                 elList.appendChild(elItem);
-                elItem.addEventListener("mousedown", handleKitMouseDown, true);
+                elItem.addEventListener("mousedown", this.handleKitMouseDown, true);
             }
         }
 
         handleKit(event) {
             var elKitCombo = this._root.querySelector('#kitcombo');
-            elKitCombo.addEventListener("mousedown", handleKitComboMouseDown, true);
+            elKitCombo.addEventListener("mousedown", this.handleKitComboMouseDown, true);
 
-            document.body.addEventListener("mousedown", handleBodyMouseDown, true);
+            document.body.addEventListener("mousedown", this.handleBodyMouseDown, true);
         }
 
         handleKitComboMouseDown(event) {
@@ -771,7 +759,7 @@
         handleBodyMouseDown(event) {
             var elKitcombo = this._root.querySelector('#kitcombo');
 
-            if (elKitcombo.classList.contains('active') && !isDescendantOfId(event.target, 'kitcombo_container')) {
+            if (elKitcombo.classList.contains('active') && !this.isDescendantOfId(event.target, 'kitcombo_container')) {
                 elKitcombo.classList.remove('active');
             }
 
@@ -779,7 +767,7 @@
         }
 
         handleButtonMouseDown(event) {
-            var notes = theBeat.rhythm1;
+            var notes = this._plug.theBeat.rhythm1;
 
             var instrumentIndex;
             var rhythmIndex;
@@ -1076,6 +1064,16 @@
                     theBeat.swingFactor = value;
                     break;
             }
+        }
+
+        tempoIncrease() {
+            theBeat.tempo = Math.min(kMaxTempo, theBeat.tempo + 2);
+            document.getElementById('tempo').innerHTML = theBeat.tempo;
+        }
+
+        tempoDecrease() {
+            theBeat.tempo = Math.max(kMinTempo, theBeat.tempo - 2);
+            document.getElementById('tempo').innerHTML = theBeat.tempo;
         }
 
     }
