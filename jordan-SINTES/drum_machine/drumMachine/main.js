@@ -552,7 +552,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 	}
 
-	tempoIncrease() {
+	/*tempoIncrease() {
 		theBeat.tempo = Math.min(kMaxTempo, theBeat.tempo + 2);
 		document.getElementById('tempo').innerHTML = theBeat.tempo;
 	}
@@ -560,7 +560,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	tempoDecrease() {
 		theBeat.tempo = Math.max(kMinTempo, theBeat.tempo - 2);
 		document.getElementById('tempo').innerHTML = theBeat.tempo;
-	}
+	}*/
 
 	/*handleSliderMouseDown(event) {
 		mouseCapture = event.target.id;
@@ -1043,7 +1043,7 @@ class Kit {
 				kit.isLoaded = true;
 
 				if (kit.demoIndex != -1) {
-					this.beatInitial.setKitLoaded();
+					this.params.beatInitial.setKitLoaded();
 				}
 			}
 		}
