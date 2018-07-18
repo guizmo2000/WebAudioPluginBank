@@ -305,13 +305,7 @@ function initControls() {
     document.getElementById('swing_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
 
     
-    document.getElementById('tom1_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-    document.getElementById('tom2_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-    document.getElementById('tom3_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-    document.getElementById('hihat_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-    document.getElementById('snare_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-    document.getElementById('kick_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-    document.getElementById('swing_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
+
 
     // tool buttons
     document.getElementById('play').addEventListener('mousedown', handlePlay, true);
@@ -511,14 +505,6 @@ function handleSliderMouseDown(event) {
     }
 }
 
-function handleSliderDoubleClick(event) {
-    var id = event.target.id;
-    if (id != 'swing_thumb') {
-        mouseCapture = null;
-        sliderSetValue(event.target.id, 0.5);
-        updateControls();
-    }
-}
 
 function handleMouseMove(event) {
     if (!mouseCapture) return;

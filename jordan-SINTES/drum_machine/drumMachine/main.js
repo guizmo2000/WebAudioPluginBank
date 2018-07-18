@@ -153,8 +153,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			],
 
 		}
-
-
 		this.setup();
 	}
 
@@ -263,7 +261,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		var kits = new Array(numKits);
 		for (var i = 0; i < numKits; i++) {
 			kits[i] = new Kit(this.params.kitName[i]);
-			console.log(kits[i]);
 		}
 
 
@@ -350,15 +347,15 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		masterGainNode.gain.value = 0.7; // reduce overall volume to avoid clipping
 		masterGainNode.connect(filterNode);
 
-		var elKitCombo = document.getElementById('kitcombo');
-		elKitCombo.addEventListener("mousedown", handleKitComboMouseDown, true);
+		//var elKitCombo = document.querySelector('#kitcombo');
+		//elKitCombo.addEventListener("mousedown", handleKitComboMouseDown, true);
 
 
 
-		document.body.addEventListener("mousedown", handleBodyMouseDown, true);
+		//document.body.addEventListener("mousedown", handleBodyMouseDown, true);
 
-		initControls();
-		updateControls();
+		//this.initControls();
+		//this.updateControls();
 
 		var timerWorkerBlob = new Blob([
 			"var timeoutID=0;function schedule(){timeoutID=setTimeout(function(){postMessage('schedule'); schedule();},100);} onmessage = function(e) { if (e.data == 'start') { if (!timeoutID) schedule();} else if (e.data == 'stop') {if (timeoutID) clearTimeout(timeoutID); timeoutID=0;};}"]);
@@ -366,7 +363,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		// Obtain a blob URL reference to our worker 'file'.
 		var timerWorkerBlobURL = window.URL.createObjectURL(timerWorkerBlob);
 
-		timerWorker = new Worker(timerWorkerBlobURL);
+		var timerWorker = new Worker(timerWorkerBlobURL);
 		timerWorker.onmessage = function (e) {
 			schedule();
 		};
@@ -374,10 +371,10 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	}
 
-	initControls() {
+	/*initControls() {
 		// Initialize note buttons
-		initButtons();
-		makeKitList();
+		//this.initButtons();
+		//this.makeKitList();
 
 
 		// sliders
@@ -390,14 +387,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		document.getElementById('kick_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
 		document.getElementById('swing_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
 
-
-		document.getElementById('tom1_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-		document.getElementById('tom2_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-		document.getElementById('tom3_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-		document.getElementById('hihat_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-		document.getElementById('snare_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-		document.getElementById('kick_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
-		document.getElementById('swing_thumb').addEventListener('dblclick', handleSliderDoubleClick, true);
 
 		// tool buttons
 		document.getElementById('play').addEventListener('mousedown', handlePlay, true);
@@ -415,30 +404,30 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		document.getElementById('tempoinc').addEventListener('mousedown', tempoIncrease, true);
 		document.getElementById('tempodec').addEventListener('mousedown', tempoDecrease, true);
-	}
+	}*/
 
-	initButtons() {
+	/*initButtons() {
 		var elButton;
 
-		for (i = 0; i < loopLength; ++i) {
-			for (j = 0; j < kNumInstruments; j++) {
-				elButton = document.getElementById(instruments[j] + '_' + i);
+		for (var i = 0; i < this.params.loopLength; ++i) {
+			for (var j = 0; j < this.params.kNumInstruments; j++) {
+				elButton = document.getElementById(this.params.instruments[j] + '_' + i);
 				elButton.addEventListener("mousedown", handleButtonMouseDown, true);
 			}
 		}
-	}
+	}*/
 
-	makeKitList() {
+	/*makeKitList() {
 		var elList = document.getElementById('kitlist');
-		var numKits = kitName.length;
+		var numKits = this.params.kitName.length;
 
 		for (var i = 0; i < numKits; i++) {
 			var elItem = document.createElement('li');
-			elItem.innerHTML = kitNamePretty[i];
+			elItem.innerHTML = this.params.kitNamePretty[i];
 			elList.appendChild(elItem);
 			elItem.addEventListener("mousedown", handleKitMouseDown, true);
 		}
-	}
+	}*/
 
 	advanceNote() {
 		// Advance time by a 16th note...
@@ -573,7 +562,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		document.getElementById('tempo').innerHTML = theBeat.tempo;
 	}
 
-	handleSliderMouseDown(event) {
+	/*handleSliderMouseDown(event) {
 		mouseCapture = event.target.id;
 
 		// calculate offset of mousedown on slider
@@ -593,18 +582,11 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 			mouseCaptureOffset = event.pageY - thumbY;
 		}
-	}
+	}*/
 
-	handleSliderDoubleClick(event) {
-		var id = event.target.id;
-		if (id != 'swing_thumb') {
-			mouseCapture = null;
-			sliderSetValue(event.target.id, 0.5);
-			updateControls();
-		}
-	}
+	
 
-	handleMouseMove(event) {
+	/*handleMouseMove(event) {
 		if (!mouseCapture) return;
 
 		var elThumb = document.getElementById(mouseCapture);
@@ -641,13 +623,13 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 
 		sliderSetValue(mouseCapture, value);
-	}
+	}*/
 
-	handleMouseUp() {
+	/*handleMouseUp() {
 		mouseCapture = null;
-	}
+	}*/
 
-	sliderSetValue(slider, value) {
+	/*sliderSetValue(slider, value) {
 		var pitchRate = Math.pow(2.0, 2.0 * (value - 0.5));
 
 		switch (slider) {
@@ -679,11 +661,11 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				theBeat.swingFactor = value;
 				break;
 		}
-	}
+	}*/
 
 
 
-	handleButtonMouseDown(event) {
+	/*handleButtonMouseDown(event) {
 		var notes = theBeat.rhythm1;
 
 		var instrumentIndex;
@@ -740,20 +722,20 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 					break;
 			}
 		}
-	}
+	}*/
 
-	handleKitComboMouseDown(event) {
+	/*handleKitComboMouseDown(event) {
 		document.getElementById('kitcombo').classList.toggle('active');
-	}
+	}*/
 
-	handleKitMouseDown(event) {
+	/*handleKitMouseDown(event) {
 		var index = kitNamePretty.indexOf(event.target.innerHTML);
 		theBeat.kitIndex = index;
 		currentKit = kits[index];
 		document.getElementById('kitname').innerHTML = kitNamePretty[index];
-	}
+	}*/
 
-	handleBodyMouseDown(event) {
+	/*handleBodyMouseDown(event) {
 		var elKitcombo = document.getElementById('kitcombo');
 
 		if (elKitcombo.classList.contains('active') && !isDescendantOfId(event.target, 'kitcombo_container')) {
@@ -761,9 +743,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 
 
-	}
+	}*/
 
-	isDescendantOfId(el, id) {
+	/*isDescendantOfId(el, id) {
 		if (el.parentElement) {
 			if (el.parentElement.id == id) {
 				return true;
@@ -773,9 +755,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		} else {
 			return false;
 		}
-	}
+	}*/
 
-	handlePlay(event) {
+	/*handlePlay(event) {
 		noteTime = 0.0;
 		startTime = context.currentTime + 0.005;
 		schedule();
@@ -789,9 +771,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			// light up the stop button
 			midiOut.send([0x90, 7, 1]);
 		}
-	}
+	}*/
 
-	handleStop(event) {
+	/*handleStop(event) {
 		timerWorker.postMessage("stop");
 
 		var elOld = document.getElementById('LED_' + (rhythmIndex + 14) % 16);
@@ -809,15 +791,15 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			// turn off the stop button
 			midiOut.send([0x80, 7, 1]);
 		}
-	}
+	}*/
 
-	handleSave(event) {
+	/*handleSave(event) {
 		toggleSaveContainer();
 		var elTextarea = document.getElementById('save_textarea');
 		elTextarea.value = JSON.stringify(theBeat);
-	}
+	}*/
 
-	handleSaveOk(event) {
+	/*handleSaveOk(event) {
 		toggleSaveContainer();
 	}
 
@@ -896,7 +878,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		setActiveInstrument(0);
 
 		return true;
-	}
+	}*/
 
 	updateControls() {
 		for (i = 0; i < loopLength; ++i) {
