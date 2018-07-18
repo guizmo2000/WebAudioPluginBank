@@ -21,6 +21,7 @@
     plugin.loadGui().then((elem) => {
       document.body.appendChild(elem);
     });
+    console.log(node.params);
     node.connect(ctx.destination)
   })
 </script>
