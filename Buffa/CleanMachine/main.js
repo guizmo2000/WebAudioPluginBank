@@ -157,7 +157,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
 
   setup() {
 
-    this.createNodes();
+    setTimeout(this.createNodes(),1000);
     this.connectNodes();
     this.linktoParams();
   }
