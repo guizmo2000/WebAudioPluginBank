@@ -6,111 +6,40 @@
 window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
 
 
-  constructor(ctx,URL ,options) {
-    super(ctx,URL, options)
+  constructor(ctx, URL, options) {
+    super(ctx, URL, options)
     /*    ################     API PROPERTIES    ###############   */
-    this.state;
-
 
     this.addParam({ name: 'lowgain', defaultValue: 0.6, minValue: 0, maxValue: 1 });
     this.addParam({ name: 'midlowgain', defaultValue: 0.8, minValue: 0, maxValue: 1 });
     this.addParam({ name: 'midhighgain', defaultValue: 0.5, minValue: 0, maxValue: 1 });
     this.addParam({ name: 'highgain', defaultValue: 0.5, minValue: 0, maxValue: 1 });
 
-    // P2 : Json metadata
-    this.metadata = {
-      "name": "wasabi-Quadrafuzz",
-      "version": 1,
-      "category": "Overdrive",
-      "type": "Audio",
-      "description": "4 level control fuzz",
-      "thumbnailImage": "https://...",
-      "URLs": "https://.../doc",
-      "authorInformation": "Michel Buffa"
-    }
+    // To have a on/off management
+    Object.assign({ "status": "disable" }, this.params)
+    // Call the SDK protocol to build the WAP
+    super.setup();
 
-    // params 
-    this.params = {
-      "lowgain": this._descriptor.lowgain.defaultValue,
-      "midlowgain": this._descriptor.midlowgain.defaultValue,
-      "midhighgain": this._descriptor.midhighgain.defaultValue,
-      "highgain": this._descriptor.highgain.defaultValue,
-      "status": "disable"
-    }
-    // p5 patchnames
-    this.patchNames = ["patch1"];
-
-    this.setup();
   }
 
-  /*    ################     API METHODS    ###############   */
-
-  // p9 count inputs
-
-  get numberOfInputs() {
-    return this.inputs.length;
-  }
-
-  get numberOfOutputs() {
-    return this.outputs.length;
-  }
-
-  inputChannelCount() {
-    return 1;
-  }
-  outputChannelCount() {
-    return 1;
-  }
-  // getMetadata() {
-  //   return this.metadata;
-  // }
-
-  getDescriptor() {
-    return this._descriptor;
-  }
+  /*    ################     API METHODS Overriding    ###############   */
 
   getPatch(index) {
-    return null;
+    console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
   }
   setPatch(data, index) {
     console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
-  }
-
-  getParam(key) {
-    try {
-      return this.params[key];
-    } catch (error) {
-      console.warn("this plugin does not implement this param")
-    }
   }
 
   setParam(key, value) {
     try {
       this[key] = value;
     } catch (error) {
-
       console.warn("this plugin does not implement this param")
     }
   }
 
-  
-
-
-  onMidi(msg) {
-    return msg;
-    //web midi api ?
-  }
-
   /*  #########  Personnal code for the web audio graph  #########   */
-
-  setup() {
-    //console.log("Quadrafuzz setup");
-    this.createNodes();
-    this.connectNodes();
-    this.linktoParams();
-  }
-
-
   createNodes() {
 
     this.dryGainNode = this.context.createGain();
@@ -157,23 +86,10 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
     }
 
   }
-
-  linktoParams() {
-    /*
-     * set default value for parameters and assign it to the web audio nodes
-     */
-    this.lowgain = this.params.lowgain;
-    this.midlowgain = this.params.midlowgain;
-    this.midhighgain = this.params.midhighgain;
-    this.highgain = this.params.highgain;
-  }
-
   /*
       *
       *Tools to build sounds 
       */
-
-
   getDistortionCurve(gain) {
     var sampleRate = this.context.sampleRate;
     var curve = new Float32Array(sampleRate);
@@ -186,14 +102,9 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
     return curve;
   }
 
-
-
-
   isNumber(arg) {
     return toString.call(arg) === '[object Number]' && arg === +arg;
   }
-
-
 
   isInRange(arg, min, max) {
     if (!this.isNumber(arg) || !this.isNumber(min) || !this.isNumber(max))
@@ -211,12 +122,7 @@ window.QuadraFuzz = class QuadraFuzz extends WebAudioPluginCompositeNode {
     return ((ceil - floor) * num) / 1 + floor;
   }
 
-  /*
-    * Setters for each param
-    *
-    * 
-    */
-
+  // Setter part, it is here that you define the link between the params and the nodes values.
   set lowgain(_lowGain) {
     if (!this.isInRange(_lowGain, 0, 1))
       return;

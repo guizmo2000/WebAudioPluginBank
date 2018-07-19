@@ -103,7 +103,7 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
         }
 
         this.clean = function (tmp) {
-            console.log(tmp);
+            //console.log(tmp);
             for (var i = 0; i < tmp.items.length; i++) {
                 if (tmp.items[i].type != "vslider"
                     || tmp.items[i].type != "hslider"
@@ -114,7 +114,7 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
                 }
             }
             Object.assign(this.jsoninfos, tmp);
-           // this.jsoninfos.push(tmp);
+            // this.jsoninfos.push(tmp);
         }
 
 
@@ -241,7 +241,15 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
      * Returns an array of all input paths (to be used with setParamValue/getParamValue)
      */
     getDescriptor() {
-        return this.inputs_items;
+        var desc = {};
+        for (const item in this.inputs_items) {
+            if (this.inputs_items.hasOwnProperty(item)) {
+                if (this.inputs_items[item].label != "bypass") {
+                    desc = Object.assign({ [this.inputs_items[item].label]: { minValue: this.inputs_items[item].min, maxValue: this.inputs_items[item].max, defaultValue: this.inputs_items[item].init } }, desc);
+                }
+            }
+        }
+        return desc;
     }
 
     /**

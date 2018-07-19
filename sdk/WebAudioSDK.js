@@ -4,8 +4,6 @@
 // has connect/disconnect methods
 // A custom composite node can be derived from this prototype.
 
-
-
 class CompositeAudioNode {
   get _isCompositeAudioNode() {
     return true;
@@ -20,9 +18,9 @@ class CompositeAudioNode {
      * @param {AudioContext} context  
      * @param {JSON} options optional, if you want to set alternate values from the defaultOptions below
      */
-    let defaultValues = options ? options : { numberOfInputs: 1, numberOfOuputs: 1, channelCount: 2, channelCountMode: "Max", channelInterpretation: "speakers" };
+    let defaultValues = options ? options : { numberOfInputs: 1, numberOfOutputs: 1, channelCount: 2, channelCountMode: "Max", channelInterpretation: "speakers" };
     this._numberOfInputs = defaultValues.numberOfInputs;
-    this._numberOfOuputs = defaultValues.numberOfOuputs;
+    this._numberOfOutputs = defaultValues.numberOfOutputs;
     this._channelCount = defaultValues.channelCount;
     this._channelCountMode = defaultValues.channelCountMode;
     this._channelInterpretation = defaultValues.channelInterpretation;
@@ -90,13 +88,22 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
 
   /**
    * Build a key / value param descriptor with name as key
+   * Build the params object
+   * Build a getter
    * @param param 
    */
   addParam(param) {
+    // descriptor
     try {
-      this._descriptor = Object.assign({ [param.name]: { minValue: param.minValue, maxValue: param.maxValue, defaultValue: param.defaultValue } }, this._descriptor)
+      this._descriptor = Object.assign({ [param.name]: { minValue: param.minValue, maxValue: param.maxValue, defaultValue: param.defaultValue } }, this._descriptor);
     } catch (error) {
       console.err("The structure given does not match with the AudioParam :{ name:'name',defaultValue: 0.25, minValue: 0, maxValue: 1} Doc : https://webaudio.github.io/web-audio-api/#parameterdescriptors ");
+    }
+    // params
+    try {
+      this.params = Object.assign({ [param.name]: param.defaultValue }, this.params);
+    } catch (error) {
+      console.err("Parameter not assigned to the params object");
     }
   }
 
@@ -117,6 +124,7 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     });
   }
 
+
   /**
    * @param {*} key 
    * @param {*} value 
@@ -125,10 +133,20 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     throw new Error('You have to implement the method setParam!')
   }
 
-  getParam() {
-    throw new Error('You have to implement the method getParam!')
+  /**
+   * Default getParam management : return the current value of this.params[key];
+   */
+  getParam(key) {
+    try {
+      return this.params[key];
+    } catch (error) {
+      console.warn("this plugin does not implement this param")
+    }
   }
 
+  /**
+   * This getter can be override with the length of inputs tab.
+   */
   get numberOfInputs() {
     return this._numberOfInputs;
   }
@@ -136,11 +154,11 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
     this._numberOfInputs = number;
   }
 
-  get numberOfOuputs() {
-    return this._numberOfOuputs;
+  get numberOfOutputs() {
+    return this._numberOfOutputs;
   }
-  set numberOfOuputs(number) {
-    this._numberOfOuputs = number;
+  set numberOfOutputs(number) {
+    this._numberOfOutputs = number;
   }
 
   /**
@@ -159,10 +177,8 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
    * @param {*} index 
    */
   getPatch(index) { };
-
   setPatch(data, index) { };
 
-  getParam(key) { };
 
   /**
    * Return the params list with it's current values
@@ -192,10 +208,31 @@ class WebAudioPluginCompositeNode extends CompositeAudioNode {
       }
       resolve(data);
     })
-
-
-
   }
+
+  setup() {
+    this.createNodes();
+    this.connectNodes();
+    this.linktoParams();
+  }
+
+  createNodes(){
+    console.warn("you might override the createNodes() method to build your audio nodes")
+    // Build here all your audio nodes
+  }
+  connectNodes(){
+    console.warn("you might override the connectNodes() method to wire your audio graph")
+  }
+
+  // initialise the setters (so the nodes values) with the params values
+  linktoParams(){
+    for (const param in this.params) {
+      if (this.params.hasOwnProperty(param)) {
+        this[param] = this.params[param];
+      }
+    }
+  }
+
 
 
   onMidi(msg) { };

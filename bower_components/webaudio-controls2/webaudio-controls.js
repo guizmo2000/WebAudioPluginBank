@@ -301,7 +301,6 @@ ${this.basestyle}
 webaudio-knob{
   display:inline-block;
   position:relative;
-  z-index:1;
   margin:0;
   padding:0;
   cursor:pointer;

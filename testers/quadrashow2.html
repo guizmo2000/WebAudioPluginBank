@@ -38,43 +38,43 @@
 
   plugin.load().then((node) => {
 
-    //  plugin.loadGui().then((elem) =>{
-    //     document.body.appendChild(elem);
-    // listeners for testing load/save state
-    document.querySelector("#save").addEventListener('click', () => {
-      node.getState()
-        .then((data) => {
-          _settings = data;
-          console.log("State saved :", data);
+    plugin.loadGui().then((elem) => {
+      document.body.appendChild(elem);
+      //listeners for testing load/save state
+      document.querySelector("#save").addEventListener('click', () => {
+        node.getState()
+          .then((data) => {
+            _settings = data;
+            console.log("State saved :", data);
+          })
+      });
+
+      document.querySelector("#load").addEventListener('click', () => {
+        node.setState(_settings).then((data) => {
+          console.log("State restored :", data)
         })
-    });
+      });
 
-    document.querySelector("#load").addEventListener('click', () => {
-      node.setState(_settings).then((data) => {
-        console.log("State restored :", data)
-      })
-    });
+      document.querySelector("#fuzzOn").addEventListener('click', () => {
+        if (node.getParam("status") == "disable") {
+          node.setParam("status", "enable");
+        }
+        else {
+          node.setParam('status', 'disable');
+        }
 
-    document.querySelector("#fuzzOn").addEventListener('click', () => {
-      if (node.getParam("status") == "disable") {
-        node.setParam("status", "enable");
-      }
-      else {
-        node.setParam('status', 'disable');
-      }
+      });
 
+      document.querySelector("#gains").addEventListener('input', (e) => {
+        node.setParam("lowgain", parseFloat(e.target.value))
+        node.setParam("midlowgain", parseFloat(e.target.value));
+        node.setParam("midhighgain", parseFloat(e.target.value));
+        node.setParam("highgain", parseFloat(e.target.value));
+      });
     });
-
-    document.querySelector("#gains").addEventListener('input', (e) => {
-      node.setParam("lowgain", parseFloat(e.target.value))
-      node.setParam("midlowgain", parseFloat(e.target.value));
-      node.setParam("midhighgain", parseFloat(e.target.value));
-      node.setParam("highgain", parseFloat(e.target.value));
-    });
-    //});
 
     node.setParam("status", "disable");
-    node.getMetadata().then((meta)=>{
+    node.getMetadata().then((meta) => {
       console.log(meta)
     });
     mediaSource.connect(node);

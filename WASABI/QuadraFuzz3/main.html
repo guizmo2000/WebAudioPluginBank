@@ -1,241 +1,350 @@
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
-  WebAudioControlsOptions = {
-    useMidi: 1,
-  };
+	WebAudioControlsOptions = {
+		useMidi: 1,
+	};
 </script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template id="wc-quadrafuzz">
-  <style>
-    :host {
-      background: linear-gradient( rgb(77, 74, 78), rgb(194, 120, 36));
-      box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+<template>
+	<style>
+		.pedal {
+			display: block;
+			background-color: #AB2E24;
+			width: 120px;
+			height: 180px;
+			border-radius: 10px;
+			position: relative;
+			/* bring your own prefixes */
+			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
+			inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+			inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+			1px 0px 1px 0px rgba(0, 0, 0, 0.9),
+			0 2px 1px 0 rgba(0, 0, 0, 0.9),
+			1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+		}
 
 
-      width: 140px;
-      height: 180px;
-      display: block;
-      user-select: none;
-      cursor: move;
-      z-index: 9;
+		#background-image {
+			width: 120px;
+			height: 180px;
+			opacity: 1;
+		}
 
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
-    }
+		#resize {
+			position: absolute;
+			cursor: nwse-resize;
+			width: 10px;
+			height: 10px;
+			left: 112px;
+			top: 172px;
+			border: 1px solid black;
+		}
 
-    *:focus {
-      outline: 0;
-    }
+		.knob,
+		.switch,
+		.icon,
+		.label {
+			position: absolute;
+			cursor: pointer;
+		}
 
-    .pedalLabel,
-    .div_buttons {
-      border-radius: 8px;
-    }
+		.webaudioctrl-tooltip {
+			color: #000 !important;
+			font-size: 11px !important;
+		}
 
-    .div_menuPanel {
-      /* border-top-left-radius: 8px;
-        border-top-right-radius: 8px; */
-    }
+		.selected {
+			border: 1px dashed black;
+			cursor: move;
+		}
 
-    webaudio-switch {
-      left: -6px;
-    }
+		.selected:hover {
+			border: 1px dashed black;
+			cursor: move;
+		}
 
-    .pedalLabel {
-      /* background: rgba(0, 0, 0, 0.4); */
-      box-shadow: inset 0px 1px 5px #111;
-      border: 1px solid #ccc;
-      color: #ccc;
-      /* border:2px solid #aaa; */
-      padding: 4px 10px;
-      margin: 2px 0px;
+		.selected webaudio-knob {
+			cursor: move;
+		}
 
-      font-size: 10px;
-      text-align: center;
-      user-select: none;
-      /* font-family: Lemon\/Milk; */
-      font-family: helvetica;
-      text-transform: uppercase;
-    }
+		.selected webaudio-switch {
+			cursor: move;
+		}
 
-    .knob-label {
-      color: #ddd;
-      text-shadow: 0px 1px 1px #000;
+		.selected span {
+			cursor: move;
+		}
 
-      font-size: 6px;
-      margin-top: -2px;
+		.selected:hover span {
+			cursor: move;
+		}
 
-      text-align: center;
-      text-transform: uppercase;
-      overflow: hidden;
-      user-select: none;
-      font-family: helvetica;
+		.selected webaudio-slider {
+			cursor: move;
+		}
 
-    }
+		.selected:hover webaudio-knob {
+			cursor: move;
+		}
 
-    .elements {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
+		.selected:hover webaudio-switch {
+			cursor: move;
+		}
 
-      padding: 10px;
-    }
+		.selected:hover webaudio-slider {
+			cursor: move;
+		}
 
-    .column {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
 
-      flex: 1;
-      margin: 3px;
-    }
+		#switch1 {
+			bottom: 0px;
+			right: 28px;
+		}
 
-    .row {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: stretch;
-    }
-  </style>
-  <div class="row">
-    <div class="column">
-      <webaudio-knob id="knob1" class="knob" sprites="99" value="0.6" min="0" max="1" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob1-label">Low Gain</span>
-    </div>
-    <div class="column">
-      <webaudio-knob id="knob2" class="knob" sprites="99" value="0.8" min="0" max="1" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob2-label">Mid Low Gain</span>
-    </div>
-  </div>
-  <div class="row">
-    <div class="column">
-      <webaudio-knob id="knob3" class="knob" sprites="99" value="0.5" min="0" max="1" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob3-label">Mid High Gain</span>
-    </div>
-    <div class="column">
-      <webaudio-knob id="knob4" class="knob" sprites="99" value="0.6" min="0" max="1" step="0.01" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob4-label">High Gain</span>
-    </div>
-  </div>
+		#highgain {
+			left: 66px;
+			top: 70px;
+		}
 
-  <div class="row">
-    <div class="column">
-      <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-        width="32" height="20"></webaudio-switch>
-    </div>
-  </div>
-  <div class="row">
-    <div class="column">
-      <span class="pedalLabel">Quadrafuzz</span>
-    </div>
-  </div>
+		#highgain div {
+			color: #ffffff;
+			font-family: "Verdana";
+			font-size: 8px;
 
+		}
+
+		#midhighgain {
+			left: 12px;
+			top: 71px;
+		}
+
+		#midhighgain div {
+			color: #ffffff;
+			font-family: "Verdana";
+			font-size: 8px;
+
+		}
+
+		#midlowgain {
+			left: 65px;
+			top: 12px;
+		}
+
+		#midlowgain div {
+			color: #ffffff;
+			font-family: "Verdana";
+			font-size: 8px;
+
+		}
+
+		#lowgain {
+			left: 12px;
+			top: 12px;
+		}
+
+		#lowgain div {
+			color: #ffffff;
+			font-family: "Verdana";
+			font-size: 8px;
+
+		}
+
+		#label_413 {
+			left: 16px;
+			top: 130px;
+			color: #ffffff;
+			font-family: "Arial Black";
+			font-size: 14px;
+		}
+
+
+
+		.pedalLabel {
+			position: absolute;
+			top: 225px;
+			font-size: 25px;
+			font-family: Sansita;
+			/*{font}*/
+			text-align: center;
+			line-height: 30px;
+			/*{pedalfontsize}*/
+			width: 150px;
+			color: #6B0000;
+			/*{fontcolor}*/
+		}
+
+		.knob-label {
+			position: absolute;
+			font-size: 12px;
+			/*{knobfontsize}*/
+			line-height: 12px;
+			width: 64px;
+			max-width: 64px;
+			overflow: hidden;
+			text-align: center;
+			font-family: Sansita;
+			/*{font}*/
+			color: #6B0000;
+			/*{fontcolor}*/
+		}
+
+		#knob1-label {
+			top: 84px;
+			left: 43px;
+		}
+	</style>
+	<div class="pedal">
+		<img id="background-image">
+		<div class="switchCont" id="switch1">
+			<webaudio-switch class="switch" id="switch1" height="30" width="60"></webaudio-switch>
+		</div>
+		<div class="knob" id="highgain">
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.5" tooltip="High Frequency Gain %.2f"></webaudio-knob>
+			<div style="text-align:center">Highgain</div>
+		</div>
+		<div class="knob" id="midhighgain">
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.5" tooltip="Medium - High Frequency Gain %.2f"></webaudio-knob>
+			<div style="text-align:center">Midhighgain</div>
+		</div>
+		<div class="knob" id="midlowgain">
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.8" tooltip="Medium - Low Frequency Gain %.2f"></webaudio-knob>
+			<div style="text-align:center">Midlowgain</div>
+		</div>
+		<div class="knob" id="lowgain">
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.6" tooltip="Low Frequency Gain %.2f"></webaudio-knob>
+			<div style="text-align:center">Lowgain</div>
+		</div>
+		<div class="label" id="label_413">QuadraFuzz</div>
+	</div>
 </template>
 <script>
-  let quadratemp = document.currentScript.ownerDocument.querySelector("#wc-quadrafuzz");
-  // Ecapsulate the WebComponent class into a function, like this we can pass
-  // a parameter to its constructor (the audio node/audio processor)
-  class QuadraFuzzGui extends HTMLElement {
-
-    constructor(plug) {
-      super();
-      this._plug = plug;
-      this._plug.gui = this;
-      this._root = this.attachShadow({ mode: 'open' });
-      this._root.appendChild(quadratemp.content.cloneNode(true));
-      this.isOn = false;
-      this.state = new Object();
-      this.setKnobs();
-      this.setSwitchListener();
-
-    }
-
-    get properties() {
-      this.boundingRect = {
-        dataWidth: {
-          type: Number,
-          value: 120
-        },
-        dataHeight: {
-          type: Number,
-          value: 180
-        }
-      };
-      return this.boundingRect;
-    }
-
-    static get observedAttributes() { return ['state']; }
-
-    attributeChangedCallback() {
-      console.log(`Custom element ${this.is} attributes changed.`);
-      this.state = JSON.parse(this.getAttribute('state'));
-      console.log(this.state);
-      if (this.state.status == "enable") {
-        this._root.querySelector("#switch1").value = 1;
-        this.isOn = true;
-      }else{
-        this._root.querySelector("#switch1").value = 0;
-        this.isOn = false;
-      }
-      this.knobs = this._root.querySelectorAll(".knob");
-      this.labels = this._root.querySelectorAll(".knob-label");
-     // console.log(this.labels);
-
-      for (var i = 0; i < this.knobs.length; i++) {
-        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")];
-      }
-    }
+	let QuadraFuzzTemp = document.currentScript.ownerDocument.querySelector('template');
+	class QuadraFuzzGui extends HTMLElement {
 
 
-    setKnobs() {
-      //console.log('setknobs');
-      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("lowgain", e.target.value));
-      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("midlowgain", e.target.value));
-      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("midhighgain", e.target.value));
-      this._root.querySelector("#knob4").addEventListener('input', (e) => this._plug.setParam("highgain", e.target.value));
+		constructor(plug) {
+			super();
+			// The audio processor is a field of this GUI
+			this._plug = plug;
+			// The link is bidirectionnal to be catched by the processor if needed once the module is loaded (for features like presets)
+			this._plug.gui = this;
+			// bind shadow to the class and clone the template into it
+			this._root = this.attachShadow({ mode: 'open' });
+			this._root.appendChild(QuadraFuzzTemp.content.cloneNode(true));
+			// pre-selector for knobs div
+			this.knobs = this._root.querySelectorAll(".knob");
+			// initialisation of the on/off boolean 
+			this.isOn;
+			// initialisation of the GUI state (to be saved / recovered)
+			this.state = new Object();
+			// setting up the listeners and resources
+			this.setKnobs();
+			this.setSwitchListener();
+			this.setResources();
+
+		}
+
+		/**
+		 * The readables attributes given by the GUI
+		 */
+		get properties() {
+			this.boundingRect = {
+				dataWidth: {
+					type: Number,
+					value: 120
+				},
+				dataHeight: {
+					type: Number,
+					value: 180
+				}
+			};
+			return this.boundingRect;
+		}
+
+		static get observedAttributes() {
+			return ['state'];
+		}
 
 
-    }
+		attributeChangedCallback() {
+			// To recover the switch state when this GUI is loaded
+			this.state = JSON.parse(this.getAttribute('state'));
+			if (this.state.status == "enable") {
+				this._root.querySelector("#switch1").querySelector("webaudio-switch").value = 1;
+				this.isOn = true;
+			}
+			// to recover the Knobs states when this Gui is loaded, based on knobs id
+			for (var i = 0; i < this.knobs.length; i++) {
+				this.knobs[i].querySelector("webaudio-knob").value = this.state[this.knobs[i].id];
+			}
+
+		}
+
+		setResources() {
+			// Set up the background img & style
+			var background = this._root.querySelector("img");
+			background.src = this._plug.URL + '/assets/background.png';
+			background.style = 'border-radius : 5px;'
+			// Setting up the knobs imgs, those are loaded from the assets
+			this._root.querySelectorAll(".knob").forEach((knob) => {
+				console.log(knob.querySelector("webaudio-knob").src);
+				knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+			});
+			// Setting up the switches imgs, those are loaded from the assets
+			this._root.querySelector("#switch1").querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+		}
+
+		eventToKnob(rank) {
+			// bind knobs to a _plug param by its id
+			this.knobs[rank].querySelector("webaudio-knob").addEventListener('input', (e) =>
+				this._plug.setParam(this.knobs[rank].id, e.target.value));
+		}
+
+		setKnobs() {
+			// Loop on a function to get the real id at each steps
+			for (var i = 0; i < this.knobs.length; i++) {
+				this.eventToKnob(i);
+			}
+		}
+
+		bypass() {
+			// bypass the plug
+			this._plug.setParam("status", "disable");
+		}
 
 
+		reactivate() {
+			// reactivate the plug
+			this._plug.setParam("status", "enable");
+		}
 
-    setSwitchListener() {
-     // console.log("setswitch");
-      this._root.querySelector("#switch1").addEventListener('change', (e) => {
-        if (this.isOn) this.bypass()
-        else this.reactivate();
-        this.isOn = !this.isOn;
-      });
-    }
+		setSwitchListener() {
+			// set the GUI switch state and call the plug bypass / reactivation
+			this._root.querySelector("#switch1").querySelector("webaudio-switch").addEventListener('change', (e) => {
+				if (this.isOn) this.bypass()
+				else this.reactivate();
+				this.isOn = !this.isOn;
+			});
+		}
 
-    bypass() {
-      this._plug.setParam("status", "disable");
-    }
+	}
 
+	try {
+		// Define the custom element to the browser
+		customElements.define('wasabi-quadrafuzz', QuadraFuzzGui);
+		console.log("Element defined");
+	} catch (error) {
+		console.log(error);
+		console.log("Element already defined");
+	}
 
-    reactivate() {
-      this._plug.setParam("status", "enable");
-    }
-
-  }
-
-  try {
-    customElements.define('wasabi-quadrafuzz', QuadraFuzzGui);
-   // console.log("Element defined");
-  } catch (error) {
-    console.log(error);
-    console.log("Element already defined");
-  }
-
-
-  createQuadraFuzz = (plug) => {
-    let elem = new QuadraFuzzGui(plug);
-    return elem;
-  }
+	/**
+	 * Gui factory, called from the SDK. 
+	 * The name must be create+MyModule
+	*/
+	createQuadraFuzz = (plug) => {
+		
+		let elem = new QuadraFuzzGui(plug);
+		return elem;
+	}
 </script>

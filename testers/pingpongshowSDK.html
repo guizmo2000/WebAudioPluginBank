@@ -40,9 +40,7 @@
           resolve(true);
         });
 
-        node.getMetadata().then(meta=>{
-          console.log(meta);
-        });
+        console.log(node.numberOfOutputs);
         mediaSource.connect(node);
         node.connect(ctx.destination)
       })
@@ -50,11 +48,7 @@
   }
 
   launchWAP();
-  (async function loop() {
-    for (let i = 0; i < numberofWap; i++) {
-       launchWAP();
-    }
-  })();
+  
 
 </script>
 
