@@ -471,10 +471,12 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       //   for (let voice = 0; voice < this.voices.length; voice++) {
       //     if (this.voices[voice]) {
       //       this.voices[voice].gainLfo.disconnect();
-      //       if (this.voices[voice].gainLfo.gain.value < 2500 && this.voices[voice].gainLfo.gain.value > 50) {
-      //         this.voices[voice].wshape1.curve = this.getDistortionCurve(this.normalize(this.voices[voice].gainLfo.gain / 50, 0, 150));
-      //         this.voices[voice].wshape2.curve = this.getDistortionCurve(this.normalize(this.voices[voice].gainLfo.gain / 50, 0, 150));
-      //       }
+      //       this.voices[voice].wshape1.curve = this.getDistortionCurve(this.voices[voice].lfo.frequency);
+      //       this.voices[voice].wshape2.curve = this.getDistortionCurve(this.voices[voice].lfo.frequency);
+      //       this.voices[voice].lfodestination1 = this.voices[voice].gainOsc1;
+      //       this.voices[voice].lfodestination2 = this.voices[voice].gainOsc2;
+      //       this.voices[voice].gainLfo.connect(this.voices[voice].lfodestination2);
+      //       this.voices[voice].gainLfo.connect(this.voices[voice].lfodestination1);
       //     }
 
       //   }
@@ -643,7 +645,7 @@ class Voice {
 
     this.osc1 = this.context.createOscillator();
     this.osc2 = this.context.createOscillator();
-
+ 
     this.osc1.type = this.parent.params.wave1;
     this.osc2.type = this.parent.params.wave2;
     this.osc1currentOctave = this.parent.params.osc1Octave;
@@ -668,8 +670,6 @@ class Voice {
     this.wshape1 = this.context.createWaveShaper();
     this.wshape2 = this.context.createWaveShaper();
 
-    // this.wshape1 = new DriveShaper(this.parent, this.context)
-    // this.wshape2 = new DriveShaper(this.parent, this.context)
 
     // Filter stage
     this.lowPassfilter = this.context.createBiquadFilter();
@@ -726,12 +726,14 @@ class Voice {
         this.gainLfo.connect(this.lfodestination1);
         break;
 
-      case 'shape':
-        if (this.gainLfo.gain.value < 2500 && this.gainLfo.gain.value > 50) {
-          this.wshape1.curve = this.parent.getDistortionCurve(this.parent.normalize(this.gainLfo.gain / 50, 0, 150));
-          this.wshape2.curve = this.parent.getDistortionCurve(this.parent.normalize(this.gainLfo.gain / 50, 0, 150));
-        }
-        break;
+      // case 'shape':
+      //   this.wshape1.curve = this.parent.getDistortionCurve(this.lfo.frequency);
+      //   this.wshape2.curve = this.parent.getDistortionCurve(this.lfo.frequency);
+      //   this.lfodestination1 = this.gainOsc1;
+      //   this.lfodestination2 = this.gainOsc2;
+      //   this.gainLfo.connect(this.lfodestination1);
+      //   this.gainLfo.connect(this.lfodestination2);
+      //   break;
 
       case 'pitch':
         this.lfodestination1 = this.osc1.frequency;
