@@ -284,15 +284,15 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	showDemoAvailable(demoIndex /* zero-based */) {
 
-		this.showPlayAvailable();
-		this.loadBeat(beatInitial);
+		//this.showPlayAvailable();
+		//this.loadBeat(this.params.beatInitial);
 
 	}
 
-	showPlayAvailable() {
+	/*showPlayAvailable() {
 		var play = document.getElementById("play");
 		play.src = "mididrum/images/btn_play.png";
-	}
+	}*/
 
 	init() {
 		// Let the beat demos know when all of their assets have been loaded.
@@ -878,7 +878,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		return true;
 	}*/
 
-	updateControls() {
+	/*updateControls() {
 		for (i = 0; i < loopLength; ++i) {
 			for (j = 0; j < kNumInstruments; j++) {
 				switch (j) {
@@ -897,17 +897,17 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		document.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
 
 		document.getElementById('tempo').innerHTML = theBeat.tempo;
-	}
+	}*/
 
 
-	drawNote(draw, xindex, yindex) {
+	/*drawNote(draw, xindex, yindex) {
 		var elButton = document.getElementById(instruments[yindex] + '_' + xindex);
 		switch (draw) {
 			case 0: elButton.src = 'mididrum/images/button_off.png'; break;
 			case 1: elButton.src = 'mididrum/images/button_half.png'; break;
 			case 2: elButton.src = 'mididrum/images/button_on.png'; break;
 		}
-	}
+	}*/
 
 	drawPlayhead(xindex) {
 		var lastIndex = (xindex + 15) % 16;
