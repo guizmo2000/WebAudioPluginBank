@@ -44,6 +44,7 @@
 		}
 		.webaudioctrl-tooltip {
 			color: #000 !important;
+			font-size: 11px !important;
 		}
 
 		.selected {
@@ -192,19 +193,19 @@
 			<webaudio-switch class="switch" id="switch1" height="15" width="30"></webaudio-switch>
 		</div>
 		<div class="knob" id="highgain">
-			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.5"></webaudio-knob>
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.5" tooltip="High Frequency Gain %.2f"></webaudio-knob>
 			<div style="text-align:center">Highgain</div>
 		</div>
 		<div class="knob" id="midhighgain">
-			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.5"></webaudio-knob>
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.5" tooltip="Medium - High Frequency Gain %.2f"></webaudio-knob>
 			<div style="text-align:center">Midhighgain</div>
 		</div>
 		<div class="knob" id="midlowgain">
-			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.8"></webaudio-knob>
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.8"tooltip="Medium - Low Frequency Gain %.2f"></webaudio-knob>
 			<div style="text-align:center">Midlowgain</div>
 		</div>
 		<div class="knob" id="lowgain">
-			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.6"></webaudio-knob>
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.6" tooltip="Low Frequency Gain %.2f"></webaudio-knob>
 			<div style="text-align:center">Lowgain</div>
 		</div>
 		<div class="label" id="label_413">QuadraFuzz</div>
