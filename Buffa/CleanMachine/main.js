@@ -165,11 +165,11 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
   createNodes() {
     // Create WebAudio nodes
     this.eq = new Equalizer(this.context);
-    this.reverb = new Convolver(this.context, this.reverbImpulses, "reverbImpulses");
+    this.ampReverb = new Convolver(this.context, this.reverbImpulses, "reverbImpulses");
     this.cabinetSim = new Convolver(this.context, this.cabinetImpulses, "cabinetImpulses");
     this.boost = new Boost(this.context);
 
-    this.amp = new Amp(this.context, this.boost, this.eq, this.reverb, this.cabinetSim);
+    this.amp = new Amp(this.context, this.boost, this.eq, this.ampReverb, this.cabinetSim);
   }
 
   connectNodes() {
