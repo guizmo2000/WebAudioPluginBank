@@ -196,7 +196,7 @@
         }
 
         #tempodisplay {
-            background-image: url('../images/tempo_bg.png');
+            background-image: url('./mididrum/images/tempo_bg.png');
             width: 57px;
             height: 20px;
             display: inline-block;
@@ -633,9 +633,8 @@
             this.initButtons();
 
             this.makeKitList();
-            this.handleKit();
+            /*this.handleKit();
             this.handleKitComboMouseDown();
-            this.handleBodyMouseDown();
             this.handleButtonMouseDown();
             this.handleKitMouseDown();
             this.handleSliderMouseDown();
@@ -649,20 +648,20 @@
             this.handleLoad();
             this.handleLoadOk();
             this.handleLoadCancel();
-            this.handleReset();
+            this.handleReset();*/
 
             this.toggleSaveContainer();
             this.toggleLoadContainer();
 
             this.sliderSetValue();
-            this.loadBeat();
+            this.loadBeat(this._plug.params.beatInitial);
 
             this.tempoIncrease();
             this.tempoDecrease();
 
             this.showPlayAvailable();
             this.showDemoAvailable();
-
+            
 
             //this.InitMidi();
         }
@@ -748,19 +747,19 @@
             }
         }
 
-        handleKit(event) {
-            var elKitCombo = this._root.querySelector('#kitcombo');
+        handleKit() {
+            var elKitCombo = this._root.getElementById('kitcombo');
             elKitCombo.addEventListener("mousedown", this.handleKitComboMouseDown, true);
 
-            document.body.addEventListener("mousedown", this.handleBodyMouseDown, true);
+            this._root.getElementById('body').addEventListener("mousedown", this.handleBodyMouseDown, true);
         }
 
         handleKitComboMouseDown(event) {
-            this._root.querySelector('#kitcombo').classList.toggle('active');
+            this._root.getElementById('kitcombo').classList.toggle('active');
         }
 
         handleBodyMouseDown(event) {
-            var elKitcombo = this._root.querySelector('#kitcombo');
+            var elKitcombo = this._root.getElementById('kitcombo');
           
             if (elKitcombo.classList.contains('active') && !this.isDescendantOfId(event.target, 'kitcombo_container')) {
                 elKitcombo.classList.remove('active');
@@ -832,7 +831,7 @@
             var index = kitNamePretty.indexOf(event.target.innerHTML);
             theBeat.kitIndex = index;
             currentKit = kits[index];
-            document.getElementById('kitname').innerHTML = kitNamePretty[index];
+            this._root.getElementById('kitname').innerHTML = kitNamePretty[index];
         }
 
         isDescendantOfId(el, id) {
@@ -870,6 +869,7 @@
         }
 
         handleMouseMove(event) {
+            var mouseCapture = event.target.id;
             if (!mouseCapture) return;
 
             var elThumb = document.getElementById(mouseCapture);
@@ -909,7 +909,7 @@
         }
 
         handleMouseUp() {
-            mouseCapture = null;
+            var mouseCapture = null;
         }
 
         handlePlay(event) {
@@ -918,8 +918,8 @@
             schedule();
             timerWorker.postMessage("start");
 
-            document.getElementById('play').classList.add('playing');
-            document.getElementById('stop').classList.add('playing');
+            this._root.getElementById('play').classList.add('playing');
+            this._root.getElementById('stop').classList.add('playing');
             if (midiOut) {
                 // turn off the play button
                 midiOut.send([0x80, 3, 32]);
@@ -929,28 +929,28 @@
         }
 
         handleStop(event) {
-            timerWorker.postMessage("stop");
+            //timerWorker.postMessage("stop");
 
-            var elOld = document.getElementById('LED_' + (rhythmIndex + 14) % 16);
+            var elOld = this._root.getElementById('LED_' + (this._plug.params.rhythmIndex + 14) % 16);
             elOld.src = 'mididrum/images/LED_off.png';
 
-            hideBeat((rhythmIndex + 14) % 16);
+            //hideBeat((rhythmIndex + 14) % 16);
 
-            rhythmIndex = 0;
+            var rhythmIndex = 0;
 
-            document.getElementById('play').classList.remove('playing');
-            document.getElementById('stop').classList.remove('playing');
-            if (midiOut) {
+            this._root.getElementById('play').classList.remove('playing');
+            this._root.getElementById('stop').classList.remove('playing');
+            /*if (midiOut) {
                 // light up the play button
                 midiOut.send([0x90, 3, 32]);
                 // turn off the stop button
                 midiOut.send([0x80, 7, 1]);
-            }
+            }*/
         }
 
         handleSave(event) {
             toggleSaveContainer();
-            var elTextarea = document.getElementById('save_textarea');
+            var elTextarea = this._root.getElementById('save_textarea');
             elTextarea.value = JSON.stringify(theBeat);
         }
 
@@ -963,12 +963,12 @@
         }
 
         handleLoadOk(event) {
-            var elTextarea = document.getElementById('load_textarea');
+            var elTextarea = this._root.getElementById('load_textarea');
             theBeat = JSON.parse(elTextarea.value);
 
             // Set drumkit
             currentKit = kits[theBeat.kitIndex];
-            document.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
+            this._root.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
 
 
 
@@ -992,17 +992,17 @@
         }
 
         toggleSaveContainer() {
-            document.getElementById('pad').classList.toggle('active');
-            document.getElementById('params').classList.toggle('active');
-            document.getElementById('tools').classList.toggle('active');
-            document.getElementById('save_container').classList.toggle('active');
+            this._root.getElementById('pad').classList.toggle('active');
+            this._root.getElementById('params').classList.toggle('active');
+            this._root.getElementById('tools').classList.toggle('active');
+            this._root.getElementById('save_container').classList.toggle('active');
         }
 
         toggleLoadContainer() {
-            document.getElementById('pad').classList.toggle('active');
-            document.getElementById('params').classList.toggle('active');
-            document.getElementById('tools').classList.toggle('active');
-            document.getElementById('load_container').classList.toggle('active');
+            this._root.getElementById('pad').classList.toggle('active');
+            this._root.getElementById('params').classList.toggle('active');
+            this._root.getElementById('tools').classList.toggle('active');
+            this._root.getElementById('load_container').classList.toggle('active');
         }
 
         handleReset(event) {
@@ -1012,25 +1012,25 @@
 
         loadBeat(beat) {
             // Check that assets are loaded.
-            if (beat != beatReset && !beat.isLoaded())
+            if (beat != this._plug.params.beatReset && !beat.isLoaded())
                 return false;
 
-            handleStop();
+            this.handleStop();
 
-            theBeat = cloneBeat(beat);
-            currentKit = kits[theBeat.kitIndex];
+            var theBeat = this._plug.beatReset;
+            //currentKit = kits[theBeat.kitIndex];
 
             // apply values from sliders
-            sliderSetValue('kick_thumb', theBeat.kickPitchVal);
-            sliderSetValue('snare_thumb', theBeat.snarePitchVal);
-            sliderSetValue('hihat_thumb', theBeat.hihatPitchVal);
-            sliderSetValue('tom1_thumb', theBeat.tom1PitchVal);
-            sliderSetValue('tom2_thumb', theBeat.tom2PitchVal);
-            sliderSetValue('tom3_thumb', theBeat.tom3PitchVal);
-            sliderSetValue('swing_thumb', theBeat.swingFactor);
+            this.sliderSetValue('kick_thumb',  this._plug.params.theBeat.kickPitchVal);
+            this.sliderSetValue('snare_thumb', this._plug.params.theBeat.snarePitchVal);
+            this.sliderSetValue('hihat_thumb', this._plug.params.theBeat.hihatPitchVal);
+            this.sliderSetValue('tom1_thumb',  this._plug.params.theBeat.tom1PitchVal);
+            this.sliderSetValue('tom2_thumb',  this._plug.params.theBeat.tom2PitchVal);
+            this.sliderSetValue('tom3_thumb',  this._plug.params.theBeat.tom3PitchVal);
+            this.sliderSetValue('swing_thumb', this._plug.params.theBeat.swingFactor);
 
-            updateControls();
-            setActiveInstrument(0);
+            this.updateControls();
+           // setActiveInstrument(0);
 
             return true;
         }
@@ -1040,56 +1040,86 @@
 
             switch (slider) {
                 case 'kick_thumb':
-                    theBeat.kickPitchVal = value;
-                    kickPitch = pitchRate;
+                    this._plug.params.theBeat.kickPitchVal = value;
+                    this._plug.params.kickPitch = pitchRate;
                     break;
                 case 'snare_thumb':
-                    theBeat.snarePitchVal = value;
-                    snarePitch = pitchRate;
+                    this._plug.params.theBeat.snarePitchVal = value;
+                    this._plug.params.snarePitch = pitchRate;
                     break;
                 case 'hihat_thumb':
-                    theBeat.hihatPitchVal = value;
-                    hihatPitch = pitchRate;
+                    this._plug.params.theBeat.hihatPitchVal = value;
+                    this._plug.params.hihatPitch = pitchRate;
                     break;
                 case 'tom1_thumb':
-                    theBeat.tom1PitchVal = value;
-                    tom1Pitch = pitchRate;
+                    this._plug.params.theBeat.tom1PitchVal = value;
+                    this._plug.params.tom1Pitch = pitchRate;
                     break;
                 case 'tom2_thumb':
-                    theBeat.tom2PitchVal = value;
-                    tom2Pitch = pitchRate;
+                    this._plug.params.theBeat.tom2PitchVal = value;
+                    this._plug.params.tom2Pitch = pitchRate;
                     break;
                 case 'tom3_thumb':
-                    theBeat.tom3PitchVal = value;
-                    tom3Pitch = pitchRate;
+                    this._plug.params.theBeat.tom3PitchVal = value;
+                    this._plug.params.tom3Pitch = pitchRate;
                     break;
                 case 'swing_thumb':
-                    theBeat.swingFactor = value;
+                this._plug.params.theBeat.swingFactor = value;
                     break;
             }
         }
 
         tempoIncrease() {
-            theBeat.tempo = Math.min(kMaxTempo, theBeat.tempo + 2);
-            document.getElementById('tempo').innerHTML = theBeat.tempo;
+            this._plug.params.theBeat.tempo = Math.min(this._plug.params.kMaxTempo, this._plug.params.theBeat.tempo + 2);
+            this._root.getElementById('tempo').innerHTML = this._plug.params.theBeat.tempo;
         }
 
         tempoDecrease() {
-            theBeat.tempo = Math.max(kMinTempo, theBeat.tempo - 2);
-            document.getElementById('tempo').innerHTML = theBeat.tempo;
+            this._plug.params.theBeat.tempo = Math.max(this._plug.params.kMinTempo, this._plug.params.theBeat.tempo - 2);
+            this._root.getElementById('tempo').innerHTML = this._plug.params.theBeat.tempo;
         }
 
         showPlayAvailable() {
-            var play = document.getElementById("play");
+            var play = this._root.getElementById("play");
             play.src = "mididrum/images/btn_play.png";
         }
 
         showDemoAvailable(demoIndex /* zero-based*/) {
 
             this.showPlayAvailable();
-            this.loadBeat(beatInitial);
+            this.loadBeat(this._plug.params.beatInitial);
 
         }
+
+        updateControls() {
+		for (var i = 0; i < this._plug.params.loopLength; ++i) {
+			for (var j = 0; j < this._plug.params.kNumInstruments; j++) {
+				switch (j) {
+					case 0: this._plug.params.notes = this._plug.params.theBeat.rhythm1; break;
+					case 1: this._plug.params.notes = this._plug.params.theBeat.rhythm2; break;
+					case 2: this._plug.params.notes = this._plug.params.theBeat.rhythm3; break;
+					case 3: this._plug.params.notes = this._plug.params.theBeat.rhythm4; break;
+					case 4: this._plug.params.notes = this._plug.params.theBeat.rhythm5; break;
+					case 5: this._plug.params.notes = this._plug.params.theBeat.rhythm6; break;
+				}
+
+				this.drawNote(this._plug.params.notes[i], i, j);
+			}
+		}
+
+		this._root.getElementById('kitname').innerHTML = this._plug.params.kitNamePretty[this._plug.params.theBeat.kitIndex];
+
+		this._root.getElementById('tempo').innerHTML = this._plug.params.theBeat.tempo;
+    }
+    
+    drawNote(draw, xindex, yindex) {
+		var elButton = this._root.getElementById(this._plug.params.instruments[yindex] + '_' + xindex);
+		switch (draw) {
+			case 0: elButton.src = 'mididrum/images/button_off.png'; break;
+			case 1: elButton.src = 'mididrum/images/button_half.png'; break;
+			case 2: elButton.src = 'mididrum/images/button_on.png'; break;
+		}
+	}
 
     }
     // Register the x-custom element with the browser
