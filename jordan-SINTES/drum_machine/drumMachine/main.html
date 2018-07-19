@@ -340,7 +340,7 @@
             the images.  The cost of perfectionism :O{
 -->
 
-    <body id='body'>
+    <div id='body'>
         <section class='container active' id='pad'>
             <div class='buttons_row'>
                 <span class='label'>Tom 1</span>
@@ -616,7 +616,7 @@
 
         <div id="MIDIPlugin"> </div>
 
-    </body>
+    </div>
 </template>
 
 <script>
@@ -659,6 +659,9 @@
 
             this.tempoIncrease();
             this.tempoDecrease();
+
+            this.showPlayAvailable();
+            this.showDemoAvailable();
 
 
             //this.InitMidi();
@@ -715,8 +718,8 @@
             this._root.getElementById('reset').addEventListener('mousedown', this.handleReset, true);
 
 
-            this._root.getElementById('body').addEventListener('mousemove', handleMouseMove, true);
-            this._root.getElementById('body').addEventListener('mouseup', handleMouseUp, true);
+            this._root.getElementById('body').addEventListener('mousemove', this.handleMouseMove, true);
+            this._root.getElementById('body').addEventListener('mouseup', this.handleMouseUp, true);
 
             this._root.getElementById('tempoinc').addEventListener('mousedown', this.tempoIncrease, true);
             this._root.getElementById('tempodec').addEventListener('mousedown', this.tempoDecrease, true);
@@ -725,10 +728,10 @@
         initButtons() {
             var elButton;
 
-            for (var i = 0; i < this._plug.loopLength; ++i) {
-                for (var j = 0; j < this.params.kNumInstruments; j++) {
-                    elButton = document.getElementById(this.params.instruments[j] + '_' + i);
-                    elButton.addEventListener("mousedown", handleButtonMouseDown, true);
+            for (var i = 0; i < this._plug.params.loopLength; ++i) {
+                for (var j = 0; j < this._plug.params.kNumInstruments; j++) {
+                    elButton = this._root.getElementById(this._plug.params.instruments[j] + '_' + i);
+                    elButton.addEventListener("mousedown", this.handleButtonMouseDown, true);
                 }
             }
         }
@@ -758,7 +761,7 @@
 
         handleBodyMouseDown(event) {
             var elKitcombo = this._root.querySelector('#kitcombo');
-
+          
             if (elKitcombo.classList.contains('active') && !this.isDescendantOfId(event.target, 'kitcombo_container')) {
                 elKitcombo.classList.remove('active');
             }
@@ -767,7 +770,7 @@
         }
 
         handleButtonMouseDown(event) {
-            var notes = this._plug.theBeat.rhythm1;
+            var notes = this._plug.params.theBeat.rhythm1;
 
             var instrumentIndex;
             var rhythmIndex;
@@ -1074,6 +1077,18 @@
         tempoDecrease() {
             theBeat.tempo = Math.max(kMinTempo, theBeat.tempo - 2);
             document.getElementById('tempo').innerHTML = theBeat.tempo;
+        }
+
+        showPlayAvailable() {
+            var play = document.getElementById("play");
+            play.src = "mididrum/images/btn_play.png";
+        }
+
+        showDemoAvailable(demoIndex /* zero-based*/) {
+
+            this.showPlayAvailable();
+            this.loadBeat(beatInitial);
+
         }
 
     }

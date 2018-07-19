@@ -5,9 +5,11 @@
 * Comment: Scheduling web audio with precisions: https://www.html5rocks.com/en/tutorials/audio/scheduling/
 */
 
+
+
 window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
-
+	
 	/*    ################     API PROPERTIES    ###############   */
 
 	constructor(ctx, options) {
@@ -63,29 +65,25 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
 
-			cloneBeat: function cloneBeat(source) {
-				var beat = new Object();
+			
 
-				beat.kitIndex = source.kitIndex;
-				beat.tempo = source.tempo;
-				beat.swingFactor = source.swingFactor;
-				beat.kickPitchVal = source.kickPitchVal;
-				beat.snarePitchVal = source.snarePitchVal;
-				beat.hihatPitchVal = source.hihatPitchVal;
-				beat.tom1PitchVal = source.tom1PitchVal;
-				beat.tom2PitchVal = source.tom2PitchVal;
-				beat.tom3PitchVal = source.tom3PitchVal;
-				beat.rhythm1 = source.rhythm1.slice(0);        // slice(0) is an easy way to copy the full array
-				beat.rhythm2 = source.rhythm2.slice(0);
-				beat.rhythm3 = source.rhythm3.slice(0);
-				beat.rhythm4 = source.rhythm4.slice(0);
-				beat.rhythm5 = source.rhythm5.slice(0);
-				beat.rhythm6 = source.rhythm6.slice(0);
-
-				return beat;
+			theBeat: {
+				"kitIndex": 11,
+				"tempo": 100,
+				"swingFactor": 0,
+				"kickPitchVal": 0.46478873239436624,
+				"snarePitchVal": 0.45070422535211263,
+				"hihatPitchVal": 0.15492957746478875,
+				"tom1PitchVal": 0.7183098591549295,
+				"tom2PitchVal": 0.704225352112676,
+				"tom3PitchVal": 0.8028169014084507,
+				"rhythm1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm3": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
-
-
 
 
 
@@ -260,7 +258,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		var numKits = this.params.kitName.length;
 		var kits = new Array(numKits);
 		for (var i = 0; i < numKits; i++) {
-			kits[i] = new Kit(this.params.kitName[i]);
+			kits[i] = new Kit(this.params.kitName[i], this);
 		}
 
 
@@ -286,8 +284,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	showDemoAvailable(demoIndex /* zero-based */) {
 
-		showPlayAvailable();
-		loadBeat(beatInitial);
+		this.showPlayAvailable();
+		this.loadBeat(beatInitial);
 
 	}
 
@@ -301,20 +299,20 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		// Add some new methods to support this.
 		this.params.beatInitial.isKitLoaded = false;
 
-		this.params.beatInitial.setKitLoaded = function () {
+		this.params.beatInitial.setKitLoaded =  () => {
 			this.isKitLoaded = true;
-			this.checkIsLoaded();
+			this.params.beatInitial.checkIsLoaded();
 		};
 
 
 
-		this.params.beatInitial.checkIsLoaded = function () {
-			if (this.isLoaded()) {
-				showDemoAvailable(this.index);
+		this.params.beatInitial.checkIsLoaded =  () => {
+			if (this.params.beatInitial.isLoaded()) {
+				this.showDemoAvailable(this.index);
 			}
 		};
 
-		this.params.beatInitial.isLoaded = function () {
+		this.params.beatInitial.isLoaded =  () => {
 			return this.isKitLoaded;
 		};
 
@@ -982,8 +980,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 
 class Kit {
-	constructor(name) {
+	constructor(name, parent) {
 		this.name = name;
+		this.parent = parent;
 		this.kickBuffer = 0;
 		this.snareBuffer = 0;
 		this.hihatBuffer = 0;
@@ -1029,21 +1028,22 @@ class Kit {
 	};
 
 	loadSample(sampleID, url) {
+		
 		var request = new XMLHttpRequest();
 		request.open("GET", url, true);
 		request.responseType = "arraybuffer";
 
 		var kit = this;
 
-		request.onload = function () {
+		request.onload = () => {
 			//this.context.decodeAudioData(request.response, decodedFunctions[sampleID].bind(kit));
-
+			
 			kit.instrumentLoadCount++;
 			if (kit.instrumentLoadCount == kit.instrumentCount) {
 				kit.isLoaded = true;
 
 				if (kit.demoIndex != -1) {
-					this.params.beatInitial.setKitLoaded();
+					this.parent.params.beatInitial.setKitLoaded();
 				}
 			}
 		}
@@ -1052,6 +1052,29 @@ class Kit {
 	}
 
 }
+
+function cloneBeat(source) {
+	var beat = new Object();
+
+	beat.kitIndex = source.kitIndex;
+	beat.tempo = source.tempo;
+	beat.swingFactor = source.swingFactor;
+	beat.kickPitchVal = source.kickPitchVal;
+	beat.snarePitchVal = source.snarePitchVal;
+	beat.hihatPitchVal = source.hihatPitchVal;
+	beat.tom1PitchVal = source.tom1PitchVal;
+	beat.tom2PitchVal = source.tom2PitchVal;
+	beat.tom3PitchVal = source.tom3PitchVal;
+	beat.rhythm1 = source.rhythm1.slice(0);        // slice(0) is an easy way to copy the full array
+	beat.rhythm2 = source.rhythm2.slice(0);
+	beat.rhythm3 = source.rhythm3.slice(0);
+	beat.rhythm4 = source.rhythm4.slice(0);
+	beat.rhythm5 = source.rhythm5.slice(0);
+	beat.rhythm6 = source.rhythm6.slice(0);
+
+	return beat;
+}
+
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
