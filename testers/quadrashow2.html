@@ -38,8 +38,8 @@
 
   plugin.load().then((node) => {
 
-    // plugin.loadGui().then((elem) => {
-    //   document.body.appendChild(elem);
+    plugin.loadGui().then((elem) => {
+      document.body.appendChild(elem);
       //listeners for testing load/save state
       document.querySelector("#save").addEventListener('click', () => {
         node.getState()
@@ -71,7 +71,7 @@
         node.setParam("midhighgain", parseFloat(e.target.value));
         node.setParam("highgain", parseFloat(e.target.value));
       });
-  //  });
+    });
 
     node.setParam("status", "disable");
     node.getMetadata().then((meta) => {

@@ -186,34 +186,24 @@
 		}
 	</style>
 	<div class="pedal">
-		<div id="resize"></div>
-
-		<!-- <p class="knob-label" id="knob1-label" contenteditable="true">FREQ</p> -->
 		<img id="background-image">
-
 		<div class="switchCont" id="switch1">
-			<webaudio-switch src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/switches/switch_1.png"
-			 class="switch" id="switch1" height="15" width="30"></webaudio-switch>
+			<webaudio-switch class="switch" id="switch1" height="15" width="30"></webaudio-switch>
 		</div>
-
 		<div class="knob" id="highgain">
-			<webaudio-knob src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/knobs/MiniMoog_Main.png"
-			 height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.5"></webaudio-knob>
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.5"></webaudio-knob>
 			<div style="text-align:center">Highgain</div>
 		</div>
 		<div class="knob" id="midhighgain">
-			<webaudio-knob src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/knobs/MiniMoog_Main.png"
-			 height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.5"></webaudio-knob>
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.5"></webaudio-knob>
 			<div style="text-align:center">Midhighgain</div>
 		</div>
 		<div class="knob" id="midlowgain">
-			<webaudio-knob src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/knobs/MiniMoog_Main.png"
-			 height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.8"></webaudio-knob>
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.8"></webaudio-knob>
 			<div style="text-align:center">Midlowgain</div>
 		</div>
 		<div class="knob" id="lowgain">
-			<webaudio-knob src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay2Amine/img/knobs/MiniMoog_Main.png"
-			 height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.6"></webaudio-knob>
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="1" step="0.01" value="0.6"></webaudio-knob>
 			<div style="text-align:center">Lowgain</div>
 		</div>
 		<div class="label" id="label_413">QuadraFuzz</div>
@@ -228,10 +218,11 @@
 
 			super();
 			this._plug = plug;
-			//this._plug.gui = this;
+			this._plug.gui = this;
 			console.log(this._plug);
 			this._root = this.attachShadow({ mode: 'open' });
-			this._root.appendChild(QuadraFuzzTemp.content.cloneNode(true));			
+			this._root.appendChild(QuadraFuzzTemp.content.cloneNode(true));
+			this.knobs = this._root.querySelectorAll(".knob");
 			this.isOn;
 			this.state = new Object();
 			this.setKnobs();
@@ -270,26 +261,33 @@
 				this._root.querySelector("#switch1").querySelector("webaudio-switch").value = 1;
 				this.isOn = true;
 			}
-			this.knobs = this._root.querySelectorAll(".knob");
-			this.labels = this._root.querySelectorAll(".knob-label");
 			for (var i = 0; i < this.knobs.length; i++) {
-				this.knobs[i].querySelector("webaudio-konb").value = this.state[this.knobs[i].id];
+				this.knobs[i].querySelector("webaudio-knob").value = this.state[this.knobs[i].id];
 			}
 
 		}
 
-		setResources(){
+		setResources() {
 			var background = this._root.querySelector("img");
-			background.src = this._plug.URL+'/assets/background.png';
+			background.src = this._plug.URL + '/assets/background.png';
 			background.style = 'border-radius : 5px;'
+			this._root.querySelectorAll(".knob").forEach((knob) => {
+				console.log(knob.querySelector("webaudio-knob").src);
+				knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+			});
+			this._root.querySelector("#switch1").querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+		}
+
+		eventToKnob(rank) {
+			this.knobs[rank].querySelector("webaudio-knob").addEventListener('input', (e) =>
+				this._plug.setParam(this.knobs[rank].id, e.target.value));
 		}
 
 		setKnobs() {
-			this._root.querySelector("#highgain").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("highgain", e.target.value));
-			this._root.querySelector("#midhighgain").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("midhighgain", e.target.value));
-			this._root.querySelector("#midlowgain").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("midlowgain", e.target.value));
-			this._root.querySelector("#lowgain").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("lowgain", e.target.value));
-
+			// must a function here to have real value of id.
+			for (var i = 0; i < this.knobs.length; i++) {
+				this.eventToKnob(i);
+			}
 		}
 
 		bypass() {
@@ -319,7 +317,7 @@
 		console.log("Element already defined");
 	}
 
- createQuadraFuzz = (plug) => {
+	createQuadraFuzz = (plug) => {
 		let elem = new QuadraFuzzGui(plug);
 		return elem;
 	}
