@@ -146,11 +146,11 @@
       this.boundingRect = {
         dataWidth: {
           type: Number,
-          value: 120
+          value: 600
         },
         dataHeight: {
           type: Number,
-          value: 180
+          value: 350
         }
       };
       return this.boundingRect;
@@ -182,10 +182,7 @@
 
 
     setKnobs() {
-     // console.log('setknobs');
-      this._root.querySelector("#knob1").addEventListener('input', (e) => this._plug.setParam("feedback", e.target.value / 100));
-      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("time", e.target.value / 100));
-      this._root.querySelector("#knob3").addEventListener('input', (e) => this._plug.setParam("mix", e.target.value / 100));
+     
 
     }
 
@@ -217,7 +214,7 @@
   }
 
 
-  createPingPongDelay = (plug) => {
+  createCleanMachine = (plug) => {
     let elem = new PingPongDelayGui(plug);
     return elem;
   }
