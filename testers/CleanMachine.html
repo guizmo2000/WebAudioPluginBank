@@ -12,30 +12,7 @@
 <body>
   <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
  
-  <select id="menuPresets">
-    <option value=0>Clean 1</option>
-    <option value=1>Crunch 1</option>
-    <option value=2>Clean 2</option>
-    <option value=3>Funk Blues Clean</option>
-    <option value=4>Marshall Hi Gain</option>
-    <option value=5>Aerosmith WTW</option>
-    <option value=6>MW 1</option>
-    <option value=7>Hells Bells</option>
-    <option value=8>Smoke on the Water</option>
-    <option value=9>Neat Neat Neat/Punk</option>
-    <option value=10>Crunch 2</option>
-    <option value=11>Noisy 1</option>
-    <option value=12>Marshall Hi-Gain 2</option>
-    <option value=13>Clean 3</option>
-    <option value=14>ELectro Acoustic</option>
-    <option value=15>Heartbreak Riff</option>
-    <option value=16>Light My Knob</option>
-    <option value=17>Gainsbourgh Funk</option>
-    <option value=18>Revolution Beatles</option>
-    <option value=19>Noisy 2</option>
-    <option value=20>Highway to Hell</option>
-    <option value=21>Love RnRoll</option>
-  </select>
+  
   <p>
     Volume : <input type="range" value=5 min=0 max=10 step=0.1 id="volumeSlider">
   </p>
@@ -58,25 +35,11 @@
   function launchWAP() {
     return new Promise((resolve, reject) => {
       plugin.load().then((node)=>{
-    console.log("plugin clean machine loadé...")
-      // menu presets
-      let menuPresets = document.querySelector("#menuPresets");
-      menuPresets.onchange = (e) => {
-        let index = e.target.value;
-        node.setPatch(null, index);
-      }
-
-      let volumeSlider = document.querySelector("#volumeSlider");
-      volumeSlider.oninput = (e) => {
-        let vol = e.target.value;
-        console.log('vol = ' + vol);
-        node.setParam("volume", vol);
-      }
-    /*
+    
      plugin.loadGui().then((elem)=>{
        document.body.appendChild(elem);
      });
-     */
+     
     mediaSource.connect(node);
     node.connect(ctx.destination);
     })

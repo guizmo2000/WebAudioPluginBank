@@ -9,6 +9,8 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
     /*    ################     API PROPERTIES    ###############   */
     super(ctx, URL, options)
 
+    this.params = {status:"disable"}
+
     this.addParam({
       name: 'volume',
       defaultValue: 5,
@@ -58,30 +60,6 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
       maxValue: 10
     });
 
-    //this.addParam({name: 'time',defaultValue: 0.5, minValue: 0, maxValue: 1 });
-    //this.addParam({name: 'mix',defaultValue: 0.5, minValue: 0, maxValue: 1 });
-
-    /*this.params = {
-      "feedback": this._descriptor.feedback.defaultValue,
-      "mix": this._descriptor.mix.defaultValue,
-      "time": this._descriptor.time.defaultValue,
-      "status": "disable"
-    }
-*/
-
-    // ** this should be inherited ** if one prefers to use the default values from the this.addParam calls
-    this.params = {
-      volume: 5,
-      master: 6,
-      drive: 0,
-      bass: 5,
-      middle: 4,
-      treble: 3,
-      reverb: 2,
-      presence: 5,
-      status: "disable"
-    }
-
 
     this.reverbImpulses = [{
         name: "Fender Hot Rod",
@@ -114,7 +92,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
       }
     ];
 
-    this.setup();
+    super.setup();
   }
 
   /*    ################     API METHODS    ###############   */
@@ -155,12 +133,6 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
 
   /*  #########  Personnal code for the web audio graph  #########   */
 
-  setup() {
-
-    setTimeout(this.createNodes(),1000);
-    this.connectNodes();
-    this.linktoParams();
-  }
 
   createNodes() {
     // Create WebAudio nodes
@@ -203,17 +175,17 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
 
   }
 
-  linktoParams() {
-    /*
-     * set default value for parameters and assign it to the web audio nodes
-     */
+  // linktoParams() {
+  //   /*
+  //    * set default value for parameters and assign it to the web audio nodes
+  //    */
 
-    /*
-    this.time = this.params.time;
-    this.feedback = this.params.feedback;
-    this.mix = this.params.mix;
-    */
-  }
+  //   /*
+  //   this.time = this.params.time;
+  //   this.feedback = this.params.feedback;
+  //   this.mix = this.params.mix;
+  //   */
+  // }
 
   set volume(val) {
     this.params.volume = val;
@@ -255,27 +227,9 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
     this.amp.changePresenceFilterValue(val);
   }
 
-  /*
-  set time(_time) {
-  
-    if (_time < this._descriptor.time.maxValue && _time > this._descriptor.time.minValue) this.params.time = _time;
-    this.delayNodeLeft.delayTime.setValueAtTime(_time, this.context.currentTime);
-    this.delayNodeRight.delayTime.setValueAtTime(_time, this.context.currentTime);
-  }
-
-  set feedback(_feedback) {
-    if (_feedback < this._descriptor.feedback.maxValue && _feedback > this._descriptor.feedback.minValue) this.params.feedback = _feedback;
-    this.feedbackGainNode.gain.setValueAtTime(parseFloat(_feedback, 10), this.context.currentTime);
-  }
-
-  set mix(_mix) {
-    if (_mix < this._descriptor.mix.maxValue && _mix > this._descriptor.mix.minValue) this.params.mix = _mix;
-    this.dryGainNode.gain.setValueAtTime(this.getDryLevel(this.params.mix), this.context.currentTime);
-    this.wetGainNode.gain.setValueAtTime(this.getWetLevel(this.params.mix), this.context.currentTime);
-  }
-*/
   set status(_sig) {
-    let bypassOn = (_sig === "disable");
+    console.log(_sig);
+    let bypassOn = (_sig !== "disable");
 
     this.amp.bypass(bypassOn);
     // cas reactivation ? 

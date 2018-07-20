@@ -1,7 +1,7 @@
   {
     "documentation": "...",
     "name": "CleanMachine",
-    "thumbnail": "WasabiPingPongDelay.png",
+    "thumbnail": "assets/clean.png",
     "vendor": "Wasabi",
     "category":"AmpSim",
     "version": "1.0"

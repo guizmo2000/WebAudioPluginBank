@@ -1,221 +1,429 @@
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
-  WebAudioControlsOptions = {
-    useMidi: 1,
-  };
+	WebAudioControlsOptions = {
+		useMidi: 1,
+	};
 </script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template id="wc-pingpongdelay">
-  <style>
-    :host {
-      background: linear-gradient( rgb(77, 74, 78), rgb(194, 68, 36));
-      box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+<template>
+	<style>
+		.pedal {
+			display: block;
+			width: 450px;
+			height: 150px;
+			border-radius: 10px;
+			position: relative;
+			/* bring your own prefixes */
+		}
 
 
-      width: 120px;
-      height: 180px;
-      display: block;
-      user-select: none;
-      cursor: move;
-      z-index: 9;
+		#background-image {
+			width: 450px;
+			height: 150px;
+			opacity: 1;
+		}
 
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
-    }
+		#resize {
+			position: absolute;
+			cursor: nwse-resize;
+			width: 10px;
+			height: 10px;
+			left: 412px;
+			top: 185px;
+			border: 1px solid black;
+		}
 
-    .pedalLabel,
-    .div_buttons {
-      border-radius: 8px;
-    }
+		.knob,
+		.switch,
+		.icon,
+		.label {
+			position: absolute;
+			cursor: pointer;
+		}
 
-    .div_menuPanel {
-      /* border-top-left-radius: 8px;
-        border-top-right-radius: 8px; */
-    }
 
-    webaudio-switch {
-      left: -6px;
-    }
 
-    .pedalLabel {
-      /* background: rgba(0, 0, 0, 0.4); */
-      box-shadow: inset 0px 1px 5px #111;
-      border: 1px solid #ccc;
-      color: #ccc;
-      padding: 4px 10px;
+		.selected {
+			border: 1px dashed black;
+			cursor: move;
+		}
 
-      font-size: 10px;
-      text-align: center;
-      user-select: none;
-      font-family: helvetica;
-      text-transform: uppercase;
-    }
+		.selected:hover {
+			border: 1px dashed black;
+			cursor: move;
+		}
 
-    .knob-label {
-      color: #ddd;
-      text-shadow: 0px 1px 1px #000;
+		.selected webaudio-knob {
+			cursor: move;
+		}
 
-      font-size: 6px;
-      margin-top: -2px;
+		.selected webaudio-switch {
+			cursor: move;
+		}
 
-      text-align: center;
-      text-transform: uppercase;
-      overflow: hidden;
-      user-select: none;
-      font-family: helvetica;
+		.selected span {
+			cursor: move;
+		}
 
-    }
+		.selected:hover span {
+			cursor: move;
+		}
 
-    .elements {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
+		.selected webaudio-slider {
+			cursor: move;
+		}
 
-      padding: 10px;
-    }
+		.selected:hover webaudio-knob {
+			cursor: move;
+		}
 
-    .column {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
+		.selected:hover webaudio-switch {
+			cursor: move;
+		}
 
-      flex: 1;
-      margin: 3px;
-    }
+		.selected:hover webaudio-slider {
+			cursor: move;
+		}
 
-    .row {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: stretch;
-    }
-  </style>
-  <div class="row">
-    <div class="column">
-      <webaudio-knob id="knob1" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" data-role="feedback" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob1-label">FEEDBACK</span>
-    </div>
-    <div class="column">
-      <webaudio-knob id="knob2" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" data-role="time" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob2-label">TIME</span>
-    </div>
-  </div>
-  <div class="row">
-    <div class="column">
-      <webaudio-knob id="knob3" class="knob" sprites="99" value="50" step="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-        width="40" height="40" data-role="mix" diameter="24"></webaudio-knob>
-      <span class="knob-label" id="knob3-label">MIX</span>
-    </div>
-  </div>
 
-  <div class="row">
-    <div class="column">
-      <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-        width="32" height="20"></webaudio-switch>
-    </div>
-  </div>
+		#switch1 {
+			bottom: 20px;
+			right: 10px;
+		}
 
-  <div class="row">
-    <div class="column">
-      <span class="pedalLabel">Ping Pong Delay</span>
-    </div>
-  </div>
+		#presence {
+			left: 375px;
+			top: 20px;
+		}
 
+
+		#presence div {
+			color: #000000;
+			font-family: "Shady Lane";
+			font-size: 11px;
+
+		}
+
+
+		#reverb {
+			left: 325px;
+			top: 20px;
+		}
+
+		#reverb div {
+			color: #000000;
+			font-family: "Shady Lane";
+			font-size: 11px;
+
+		}
+
+		#treble {
+			left: 275px;
+			top: 20px;
+		}
+
+		#treble div {
+			color: #000000;
+			font-family: "Shady Lane";
+			font-size: 11px;
+
+		}
+
+		#middle {
+			left: 225px;
+			top: 20px;
+		}
+
+		#middle div {
+			color: #000000;
+			font-family: "Shady Lane";
+			font-size: 11px;
+
+		}
+
+		#bass {
+			left: 175px;
+			top: 20px;
+		}
+
+		#bass div {
+			color: #000000;
+			font-family: "Shady Lane";
+			font-size: 11px;
+
+		}
+
+		#drive {
+			left: 125px;
+			top: 20px;
+		}
+
+		#drive div {
+			color: #000000;
+			font-family: "Shady Lane";
+			font-size: 11px;
+
+		}
+
+		#master {
+			left: 75px;
+			top: 20px;
+		}
+
+		#master div {
+			color: #000000;
+			font-family: "Shady Lane";
+			font-size: 11px;
+
+		}
+
+		#volume {
+			left: 25px;
+			top: 20px;
+		}
+
+		#volume div {
+			color: #000000;
+			font-family: "Shady Lane";
+			font-size: 11px;
+
+		}
+
+		#label_713 {
+
+			left: 150px;
+			top: 95px;
+			color: #000000;
+			font-family: "Shady Lane";
+			font-size: 30px;
+		}
+
+		@font-face {
+			font-family: "Shady Lane";
+			src: url('./assets/ShadyLane');
+		}
+
+
+
+		.knob-label {
+			position: absolute;
+			font-size: 12px;
+			/*{knobfontsize}*/
+			line-height: 12px;
+			width: 64px;
+			max-width: 64px;
+			overflow: hidden;
+			text-align: center;
+			font-family: Sansita;
+			/*{font}*/
+			color: #6B0000;
+			/*{fontcolor}*/
+		}
+
+		#knob1-label {
+			top: 84px;
+			left: 43px;
+		}
+
+		#menuPresets {
+			border-style: solid;
+			border-width: 2px;
+			border-color: #000000;
+			background-color: rgba(255, 102, 0, 0.767);
+			position: absolute;
+			width: 100px;
+			left: 30px;
+			top: 100px;
+			color: #000000;
+			font-family: "Arial Black";
+			font-size: 11px;
+		}
+	</style>
+	<div class="pedal">
+		<img id="background-image">
+
+		<div class="switchCont" id="switch1">
+			<webaudio-switch class="switch" id="switch1" height="30" width="60"></webaudio-switch>
+		</div>
+
+		<div class="knob  " id="presence">
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="1" value="5"></webaudio-knob>
+			<div style="text-align:center">Presence</div>
+		</div>
+		<div class="knob  " id="reverb">
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="1" value="2"></webaudio-knob>
+			<div style="text-align:center">Reverb</div>
+		</div>
+		<div class="knob " id="treble">
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="1" value="3"></webaudio-knob>
+			<div style="text-align:center">Treble</div>
+		</div>
+		<div class="knob " id="middle">
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="1" value="4"></webaudio-knob>
+			<div style="text-align:center">Middle</div>
+		</div>
+		<div class="knob " id="bass">
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="1" value="5"></webaudio-knob>
+			<div style="text-align:center">Bass</div>
+		</div>
+		<div class="knob " id="drive">
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="1" value="0"></webaudio-knob>
+			<div style="text-align:center">Drive</div>
+		</div>
+		<div class="knob " id="master">
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="1" value="6"></webaudio-knob>
+			<div style="text-align:center">Master</div>
+		</div>
+		<div class="knob " id="volume">
+			<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="1" value="5"></webaudio-knob>
+			<div style="text-align:center">Volume</div>
+		</div>
+		<select id="menuPresets">
+			<option value=0>Clean 1</option>
+			<option value=1>Crunch 1</option>
+			<option value=2>Clean 2</option>
+			<option value=3>Funk Blues Clean</option>
+			<option value=4>Marshall Hi Gain</option>
+			<option value=5>Aerosmith WTW</option>
+			<option value=6>MW 1</option>
+			<option value=7>Hells Bells</option>
+			<option value=8>Smoke on the Water</option>
+			<option value=9>Neat Neat Neat/Punk</option>
+			<option value=10>Crunch 2</option>
+			<option value=11>Noisy 1</option>
+			<option value=12>Marshall Hi-Gain 2</option>
+			<option value=13>Clean 3</option>
+			<option value=14>ELectro Acoustic</option>
+			<option value=15>Heartbreak Riff</option>
+			<option value=16>Light My Knob</option>
+			<option value=17>Gainsbourgh Funk</option>
+			<option value=18>Revolution Beatles</option>
+			<option value=19>Noisy 2</option>
+			<option value=20>Highway to Hell</option>
+			<option value=21>Love RnRoll</option>
+		</select>
+		<div class="label" id="label_713">Clean Machine</div>
+	</div>
 </template>
 <script>
-  let delaytemp = document.currentScript.ownerDocument.querySelector("#wc-pingpongdelay");
-  class PingPongDelayGui extends HTMLElement {
-
-    constructor(plug) {
-      super();
-      this._plug = plug;
-      this._plug.gui = this;
-      this._root = this.attachShadow({ mode: 'open' });
-      this._root.appendChild(delaytemp.content.cloneNode(true));
-      this.isOn = false;
-      this.state = new Object();
-      this.setKnobs();
-      this.setSwitchListener();
-    }
-
-    get properties() {
-      this.boundingRect = {
-        dataWidth: {
-          type: Number,
-          value: 600
-        },
-        dataHeight: {
-          type: Number,
-          value: 350
-        }
-      };
-      return this.boundingRect;
-    }
-
-    static get observedAttributes() { return ['state']; }
-
-    attributeChangedCallback() {
-      console.log(`Custom element ${this.is} attributes changed.`);
-      this.state = JSON.parse(this.getAttribute('state'));
-      console.log(this.state);
-      if (this.state.status == "enable") {
-        this._root.querySelector("#switch1").value = 1;
-        this.isOn = true;
-      }else{
-        this._root.querySelector("#switch1").value = 0;
-        this.isOn = false;
-      }
-      this.knobs = this._root.querySelectorAll(".knob");
-      this.labels = this._root.querySelectorAll(".knob-label");
-
-      for (var i = 0; i < this.knobs.length; i++) {
-        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")] * 100;
-      }
-      //console.log(this.knobs);
-
-    }
+	let CleanMachineTemp = document.currentScript.ownerDocument.querySelector('template');
+	class CleanMachineGui extends HTMLElement {
 
 
+		constructor(plug) {
 
-    setKnobs() {
-     
+			super();
+			this._plug = plug;
+			this._plug.gui = this;
+			this._root = this.attachShadow({ mode: 'open' });
+			this._root.appendChild(CleanMachineTemp.content.cloneNode(true));
+			this.knobs = this._root.querySelectorAll(".knob");
+			this.isOn;
+			this.state = new Object();
+			this.setKnobs();
+			this.setSwitchListener();
+			this.setResources();
+		}
 
-    }
+		get properties() {
 
-    setSwitchListener() {
-     // console.log("setswitch");
-      this._root.querySelector("#switch1").addEventListener('change', (e) => {
-        if (this.isOn) this.bypass()
-        else this.reactivate();
-        this.isOn = !this.isOn;
-      });
-    }
+			this.boundingRect = {
+				dataWidth: {
+					type: Number,
+					value: 450
+				},
+				dataHeight: {
+					type: Number,
+					value: 150
+				}
+			};
+			return this.boundingRect;
 
-    bypass() {
-      this._plug.setParam("status", "disable");
-    }
-    reactivate() {
-      this._plug.setParam("status", "enable");
-    }
+		}
 
-  }
-  // Register the x-custom element with the browser
+		static get observedAttributes() {
 
-  try {
-   // console.log("Element defined");
-    customElements.define('wasabi-pingpongdelay', PingPongDelayGui);
-  } catch (error) {
-    console.log(error);
-    console.log("Element already defined");
-  }
+			return ['state'];
+
+		}
+
+		attributeChangedCallback() {
+
+			this.state = JSON.parse(this.getAttribute('state'));
+			console.log(this.state);
+			if (this.state.status == "enable") {
+				this._root.querySelector("#switch1").querySelector("webaudio-switch").value = 1;
+				this.isOn = true;
+			}
+			this.knobs = this._root.querySelectorAll(".knob");
+			this.labels = this._root.querySelectorAll(".knob-label");
+			for (var i = 0; i < this.knobs.length; i++) {
+				this.knobs[i].querySelector("webaudio-konb").value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")] * 100;
+			}
+
+		}
+		setResources() {
+			let menuPresets = this._root.querySelector("#menuPresets");
+			menuPresets.onchange = (e) => {
+				let index = e.target.value;
+				this._plug.setPatch(null, index);
+			}
+			// Set up the background img & style
+			var background = this._root.querySelector("img");
+			background.src = this._plug.URL + '/assets/CleanMachine.png';
+			background.style = 'border-radius :10px;'
+			// Setting up the knobs imgs, those are loaded from the assets
+			this._root.querySelectorAll(".knob").forEach((knob) => {
+				knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/Jambalaya.png');
+			});
+			// Setting up the switches imgs, those are loaded from the assets
+			this._root.querySelector("#switch1").querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_2.png');
+		}
+
+		eventToKnob(rank) {
+			// bind knobs to a _plug param by its id
+			this.knobs[rank].querySelector("webaudio-knob").addEventListener('input', (e) =>
+				this._plug.setParam(this.knobs[rank].id, e.target.value));
+		}
+
+		setKnobs() {
+			// Loop on a function to get the real id at each steps
+			for (var i = 0; i < this.knobs.length; i++) {
+				this.eventToKnob(i);
+			}
+		}
 
 
-  createCleanMachine = (plug) => {
-    let elem = new PingPongDelayGui(plug);
-    return elem;
-  }
+		bypass() {
+			// bypass the plug
+			this._plug.setParam("status", "disable");
+		}
+
+
+		reactivate() {
+			// reactivate the plug
+			this._plug.setParam("status", "enable");
+		}
+
+		setSwitchListener() {
+			// set the GUI switch state and call the plug bypass / reactivation
+			this._root.querySelector("#switch1").querySelector("webaudio-switch").addEventListener('change', (e) => {
+				if (this.isOn) this.bypass()
+				else this.reactivate();
+				this.isOn = !this.isOn;
+			});
+		}
+
+	}
+	try {
+		customElements.define('wasabi-cleanmachine', CleanMachineGui);
+		console.log("Element defined");
+	} catch (error) {
+		console.log(error);
+		console.log("Element already defined");
+	}
+	createCleanMachine = (plug) => {
+		let elem = new CleanMachineGui(plug);
+		return elem;
+	}
 </script>
