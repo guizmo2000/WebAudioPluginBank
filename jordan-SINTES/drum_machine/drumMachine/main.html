@@ -633,31 +633,12 @@
             this.initButtons();
 
             this.makeKitList();
-            /*this.handleKit();
-            this.handleKitComboMouseDown();
-            this.handleButtonMouseDown();
-            this.handleKitMouseDown();
-            this.handleSliderMouseDown();
-            this.handleMouseMove();
-            this.isDescendantOfId();
-            this.handleMouseUp()
-            this.handlePlay();
-            this.handleSave();
-            this.handleStop();
-            this.handleSaveOk();
-            this.handleLoad();
-            this.handleLoadOk();
-            this.handleLoadCancel();
-            this.handleReset();*/
-
             this.toggleSaveContainer();
             this.toggleLoadContainer();
 
             this.sliderSetValue();
             this.loadBeat(this._plug.params.beatInitial);
 
-            this.tempoIncrease();
-            this.tempoDecrease();
 
             this.showPlayAvailable();
             this.showDemoAvailable();
@@ -720,8 +701,8 @@
             this._root.getElementById('body').addEventListener('mousemove', this.handleMouseMove, true);
             this._root.getElementById('body').addEventListener('mouseup', this.handleMouseUp, true);
 
-            this._root.getElementById('tempoinc').addEventListener('mousedown', this.tempoIncrease, true);
-            this._root.getElementById('tempodec').addEventListener('mousedown', this.tempoDecrease, true);
+            this._root.getElementById('tempoinc').addEventListener('mousedown', this._plug.tempoIncrease(), true);
+            this._root.getElementById('tempodec').addEventListener('mousedown', this._plug.tempoDecrease(), true);
         }
 
         initButtons() {
@@ -730,7 +711,7 @@
             for (var i = 0; i < this._plug.params.loopLength; ++i) {
                 for (var j = 0; j < this._plug.params.kNumInstruments; j++) {
                     elButton = this._root.getElementById(this._plug.params.instruments[j] + '_' + i);
-                    elButton.addEventListener("mousedown", this.handleButtonMouseDown, true);
+                    elButton.addEventListener("mousedown", this._plug.handleButtonMouseDown, true);
                 }
             }
         }
@@ -867,12 +848,13 @@
                 mouseCaptureOffset = event.pageY - thumbY;
             }
         }
-
+    
         handleMouseMove(event) {
             var mouseCapture = event.target.id;
             if (!mouseCapture) return;
-
-            var elThumb = document.getElementById(mouseCapture);
+            console.log(mouseCapture);
+           var elThumb = this._root.getElementById(mouseCapture);
+            
             var elTrack = elThumb.parentNode;
 
             if (mouseCapture != 'swing_thumb') {
@@ -1069,15 +1051,6 @@
             }
         }
 
-        tempoIncrease() {
-            this._plug.params.theBeat.tempo = Math.min(this._plug.params.kMaxTempo, this._plug.params.theBeat.tempo + 2);
-            this._root.getElementById('tempo').innerHTML = this._plug.params.theBeat.tempo;
-        }
-
-        tempoDecrease() {
-            this._plug.params.theBeat.tempo = Math.max(this._plug.params.kMinTempo, this._plug.params.theBeat.tempo - 2);
-            this._root.getElementById('tempo').innerHTML = this._plug.params.theBeat.tempo;
-        }
 
         showPlayAvailable() {
             var play = this._root.getElementById("play");
