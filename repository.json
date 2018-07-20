@@ -14,6 +14,8 @@
     "channelmixeur":"https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer",
     "mixer":"https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/Mixer",
     "minilogue":"https://wasabi.i3s.unice.fr/WebAudioPluginBank/Etev/Minilogue",
-    "wah":"https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/wah_effect/WahVox"
+    "wah":"https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/wah_effect/WahVox",
+    "CleanMachine":"https://wasabi.i3s.unice.fr/WebAudioPluginBank/Buffa/CleanMachine"
+
   }
 }

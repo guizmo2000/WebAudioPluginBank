@@ -306,6 +306,7 @@ class WebAudioPluginFactory {
             // the file has been loaded, instanciate GUI
             // and get back the HTML elem
             // the  create Gui method is called 
+            console.log('create' + this.classname.toString());
             var element = window['create' + this.classname.toString()](this.plug);
             resolve(element);
           }
