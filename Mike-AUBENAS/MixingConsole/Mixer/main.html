@@ -159,8 +159,6 @@
 			this.firstsChannel(that = this);
 			this.setMaster();
 			this.setAddChannel();
-		}
-		get properties() {
 			this.boundingRect = {
 				dataWidth: {
 					type: Number,
@@ -171,7 +169,15 @@
 					value: 260
 				}
 			};
+		
+		}
+
+		get properties() {
 			return this.boundingRect;
+		}
+
+		setWidth(value){
+			this.boundingRect.dataWidth.value = value;
 		}
 
 
