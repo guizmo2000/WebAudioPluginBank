@@ -630,18 +630,7 @@
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(drummachine.content.cloneNode(true));
             this.initControls();
-            this.initButtons();
-
-            this.makeKitList();
-            this.toggleSaveContainer();
-            this.toggleLoadContainer();
-
-            this.sliderSetValue();
-            this.loadBeat(this._plug.params.beatInitial);
-
-
-            this.showPlayAvailable();
-            this.showDemoAvailable();
+           
             
 
             //this.InitMidi();
@@ -677,18 +666,18 @@
 
             // sliders
 
-            this._root.getElementById('tom1_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
-            this._root.getElementById('tom2_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
-            this._root.getElementById('tom3_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
-            this._root.getElementById('hihat_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
-            this._root.getElementById('snare_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
-            this._root.getElementById('kick_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
-            this._root.getElementById('swing_thumb').addEventListener('mousedown', this.handleSliderMouseDown, true);
+            this._root.getElementById('tom1_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true);
+            this._root.getElementById('tom2_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true);
+            this._root.getElementById('tom3_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true);
+            this._root.getElementById('hihat_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true)
+            this._root.getElementById('snare_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true)
+            this._root.getElementById('kick_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true)
+            this._root.getElementById('swing_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true)
 
 
 
             // tool buttons
-            this._root.getElementById('play').addEventListener('mousedown', this.handlePlay, true);
+            this._root.getElementById('play').addEventListener('mousedown', (event) => this._plug.handlePlay(event), true);
             this._root.getElementById('stop').addEventListener('mousedown', this.handleStop, true);
             this._root.getElementById('save').addEventListener('mousedown', this.handleSave, true);
             this._root.getElementById('save_ok').addEventListener('mousedown', this.handleSaveOk, true);
@@ -698,11 +687,11 @@
             this._root.getElementById('reset').addEventListener('mousedown', this.handleReset, true);
 
 
-            this._root.getElementById('body').addEventListener('mousemove', this.handleMouseMove, true);
-            this._root.getElementById('body').addEventListener('mouseup', this.handleMouseUp, true);
+            this._root.getElementById('body').addEventListener('mousemove', (event) => this._plug.handleMouseMove(event), true);
+            this._root.getElementById('body').addEventListener('mouseup', () => this._plug.handleMouseUp(), true);
 
-            this._root.getElementById('tempoinc').addEventListener('mousedown', this._plug.tempoIncrease(), true);
-            this._root.getElementById('tempodec').addEventListener('mousedown', this._plug.tempoDecrease(), true);
+            this._root.querySelector('#tempoinc').addEventListener('mousedown', () => this._plug.tempoIncrease(), true);
+            this._root.getElementById('tempodec').addEventListener('mousedown', () => this._plug.tempoDecrease(), true);
         }
 
         initButtons() {
@@ -827,88 +816,8 @@
             }
         }
 
-        handleSliderMouseDown(event) {
-            mouseCapture = event.target.id;
-
-            // calculate offset of mousedown on slider
-            var el = event.target;
-            if (mouseCapture == 'swing_thumb') {
-                var thumbX = 0;
-                do {
-                    thumbX += el.offsetLeft;
-                } while (el = el.offsetParent);
-
-                mouseCaptureOffset = event.pageX - thumbX;
-            } else {
-                var thumbY = 0;
-                do {
-                    thumbY += el.offsetTop;
-                } while (el = el.offsetParent);
-
-                mouseCaptureOffset = event.pageY - thumbY;
-            }
-        }
-    
-        handleMouseMove(event) {
-            var mouseCapture = event.target.id;
-            if (!mouseCapture) return;
-            console.log(mouseCapture);
-           var elThumb = this._root.getElementById(mouseCapture);
-            
-            var elTrack = elThumb.parentNode;
-
-            if (mouseCapture != 'swing_thumb') {
-                var thumbH = elThumb.clientHeight;
-                var trackH = elTrack.clientHeight;
-                var travelH = trackH - thumbH;
-
-                var trackY = 0;
-                var el = elTrack;
-                do {
-                    trackY += el.offsetTop;
-                } while (el = el.offsetParent);
-
-                var offsetY = Math.max(0, Math.min(travelH, event.pageY - mouseCaptureOffset - trackY));
-                var value = 1.0 - offsetY / travelH;
-                elThumb.style.top = travelH * (1.0 - value) + 'px';
-            } else {
-                var thumbW = elThumb.clientWidth;
-                var trackW = elTrack.clientWidth;
-                var travelW = trackW - thumbW;
-
-                var trackX = 0;
-                var el = elTrack;
-                do {
-                    trackX += el.offsetLeft;
-                } while (el = el.offsetParent);
-
-                var offsetX = Math.max(0, Math.min(travelW, event.pageX - mouseCaptureOffset - trackX));
-                var value = offsetX / travelW;
-                elThumb.style.left = travelW * value + 'px';
-            }
-
-            sliderSetValue(mouseCapture, value);
-        }
-
-        handleMouseUp() {
-            var mouseCapture = null;
-        }
-
-        handlePlay(event) {
-            noteTime = 0.0;
-            startTime = context.currentTime + 0.005;
-            schedule();
-            timerWorker.postMessage("start");
-
-            this._root.getElementById('play').classList.add('playing');
-            this._root.getElementById('stop').classList.add('playing');
-            if (midiOut) {
-                // turn off the play button
-                midiOut.send([0x80, 3, 32]);
-                // light up the stop button
-                midiOut.send([0x90, 7, 1]);
-            }
-        }
+       
+        
 
         handleStop(event) {
             //timerWorker.postMessage("stop");
@@ -1017,39 +926,7 @@
             return true;
         }
 
-        sliderSetValue(slider, value) {
-            var pitchRate = Math.pow(2.0, 2.0 * (value - 0.5));
-
-            switch (slider) {
-                case 'kick_thumb':
-                    this._plug.params.theBeat.kickPitchVal = value;
-                    this._plug.params.kickPitch = pitchRate;
-                    break;
-                case 'snare_thumb':
-                    this._plug.params.theBeat.snarePitchVal = value;
-                    this._plug.params.snarePitch = pitchRate;
-                    break;
-                case 'hihat_thumb':
-                    this._plug.params.theBeat.hihatPitchVal = value;
-                    this._plug.params.hihatPitch = pitchRate;
-                    break;
-                case 'tom1_thumb':
-                    this._plug.params.theBeat.tom1PitchVal = value;
-                    this._plug.params.tom1Pitch = pitchRate;
-                    break;
-                case 'tom2_thumb':
-                    this._plug.params.theBeat.tom2PitchVal = value;
-                    this._plug.params.tom2Pitch = pitchRate;
-                    break;
-                case 'tom3_thumb':
-                    this._plug.params.theBeat.tom3PitchVal = value;
-                    this._plug.params.tom3Pitch = pitchRate;
-                    break;
-                case 'swing_thumb':
-                this._plug.params.theBeat.swingFactor = value;
-                    break;
-            }
-        }
+        
 
 
         showPlayAvailable() {
