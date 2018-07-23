@@ -86,7 +86,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			},
 
 
-
+			context: new AudioContext(),
 
 			kickPitch: 0,
 			snarePitch: 0,
@@ -476,7 +476,10 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 
 	schedule() {
-		var currentTime = context.currentTime;
+
+		var noteTime = 0.0;
+		var startTime = this.params.context.currentTime + 0.005;
+		var currentTime = this.params.context.currentTime;
 
 		// The sequence starts at startTime, so normalize currentTime so that it's 0 at the start of the sequence.
 		currentTime -= startTime;
@@ -486,39 +489,39 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			var contextPlayTime = noteTime + startTime;
 
 			// Kick
-			if (theBeat.rhythm1[rhythmIndex] && instrumentActive[0]) {
+			if (this.params.theBeat.rhythm1[this.params.rhythmIndex] && instrumentActive[0]) {
 				playNote(currentKit.kickBuffer, false, 0, 0, -2, 0.5, volumes[theBeat.rhythm1[rhythmIndex]] * 1.0, kickPitch, contextPlayTime);
 			}
 
 			// Snare
-			if (theBeat.rhythm2[rhythmIndex] && instrumentActive[1]) {
+			if (this.params.theBeat.rhythm2[this.params.rhythmIndex] && instrumentActive[1]) {
 				playNote(currentKit.snareBuffer, false, 0, 0, -2, 1, volumes[theBeat.rhythm2[rhythmIndex]] * 0.6, snarePitch, contextPlayTime);
 			}
 
 			// Hihat
-			if (theBeat.rhythm3[rhythmIndex] && instrumentActive[2]) {
+			if (this.params.theBeat.rhythm3[this.params.rhythmIndex] && instrumentActive[2]) {
 				// Pan the hihat according to sequence position.
 				playNote(currentKit.hihatBuffer, true, 0.5 * rhythmIndex - 4, 0, -1.0, 1, volumes[theBeat.rhythm3[rhythmIndex]] * 0.7, hihatPitch, contextPlayTime);
 			}
 
 			// Toms    
-			if (theBeat.rhythm4[rhythmIndex] && instrumentActive[3]) {
+			if (this.params.theBeat.rhythm4[this.params.rhythmIndex] && instrumentActive[3]) {
 				playNote(currentKit.tom1, false, 0, 0, -2, 1, volumes[theBeat.rhythm4[rhythmIndex]] * 0.6, tom1Pitch, contextPlayTime);
 			}
 
-			if (theBeat.rhythm5[rhythmIndex] && instrumentActive[4]) {
+			if (this.params.theBeat.rhythm5[this.params.rhythmIndex] && instrumentActive[4]) {
 				playNote(currentKit.tom2, false, 0, 0, -2, 1, volumes[theBeat.rhythm5[rhythmIndex]] * 0.6, tom2Pitch, contextPlayTime);
 			}
 
-			if (theBeat.rhythm6[rhythmIndex] && instrumentActive[5]) {
+			if (this.params.theBeat.rhythm6[this.params.rhythmIndex] && instrumentActive[5]) {
 				playNote(currentKit.tom3, false, 0, 0, -2, 1, volumes[theBeat.rhythm6[rhythmIndex]] * 0.6, tom3Pitch, contextPlayTime);
 			}
 
 
 			// Attempt to synchronize drawing time with sound
-			if (noteTime != lastDrawTime) {
-				lastDrawTime = noteTime;
-				drawPlayhead((rhythmIndex + 15) % 16);
+			if (noteTime != this.params.lastDrawTime) {
+				this.params.lastDrawTime = noteTime;
+				this.drawPlayhead((this.params.rhythmIndex + 15) % 16);
 			}
 
 			advanceNote();
@@ -555,44 +558,50 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		
 		this.params.theBeat.tempo = Math.min(this.params.kMaxTempo, this.params.theBeat.tempo + 2);
 		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
+		console.log(this.params.theBeat.tempo);
 	}
 
 	tempoDecrease() {
 		this.params.theBeat.tempo = Math.max(this.params.kMinTempo, this.params.theBeat.tempo - 2);
 		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
+		console.log(this.params.theBeat.tempo);
 	}
 
-	/*handleSliderMouseDown(event) {
-		mouseCapture = event.target.id;
+	
 
+	
+
+	
+
+	handleSliderMouseDown(event) {
+		this.params.mouseCapture = event.target.id;
 		// calculate offset of mousedown on slider
 		var el = event.target;
-		if (mouseCapture == 'swing_thumb') {
+		if (this.params.mouseCapture == 'swing_thumb') {
 			var thumbX = 0;
 			do {
 				thumbX += el.offsetLeft;
 			} while (el = el.offsetParent);
 
-			mouseCaptureOffset = event.pageX - thumbX;
+			this.params.mouseCaptureOffset = event.pageX - thumbX;
 		} else {
 			var thumbY = 0;
 			do {
 				thumbY += el.offsetTop;
 			} while (el = el.offsetParent);
 
-			mouseCaptureOffset = event.pageY - thumbY;
+			this.params.mouseCaptureOffset = event.pageY - thumbY;
 		}
-	}*/
+	}
 
-	
-
-	/*handleMouseMove(event) {
-		if (!mouseCapture) return;
-
-		var elThumb = document.getElementById(mouseCapture);
+	handleMouseMove(event) {
+		if (!this.params.mouseCapture) return;
+		
+		var elThumb = this.gui._root.getElementById(this.params.mouseCapture);
+		console.log(elThumb)
 		var elTrack = elThumb.parentNode;
-
-		if (mouseCapture != 'swing_thumb') {
+		
+		if (this.params.mouseCapture != 'swing_thumb') {
 			var thumbH = elThumb.clientHeight;
 			var trackH = elTrack.clientHeight;
 			var travelH = trackH - thumbH;
@@ -603,7 +612,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				trackY += el.offsetTop;
 			} while (el = el.offsetParent);
 
-			var offsetY = Math.max(0, Math.min(travelH, event.pageY - mouseCaptureOffset - trackY));
+			var offsetY = Math.max(0, Math.min(travelH, event.pageY - this.params.mouseCaptureOffset - trackY));
 			var value = 1.0 - offsetY / travelH;
 			elThumb.style.top = travelH * (1.0 - value) + 'px';
 		} else {
@@ -617,51 +626,51 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				trackX += el.offsetLeft;
 			} while (el = el.offsetParent);
 
-			var offsetX = Math.max(0, Math.min(travelW, event.pageX - mouseCaptureOffset - trackX));
+			var offsetX = Math.max(0, Math.min(travelW, event.pageX - this.params.mouseCaptureOffset - trackX));
 			var value = offsetX / travelW;
 			elThumb.style.left = travelW * value + 'px';
 		}
 
-		sliderSetValue(mouseCapture, value);
-	}*/
+		this.sliderSetValue(this.params.mouseCapture, value);
+	}
 
-	/*handleMouseUp() {
-		mouseCapture = null;
-	}*/
+	handleMouseUp() {
+		this.params.mouseCapture = null;
+	}
 
-	/*sliderSetValue(slider, value) {
+	sliderSetValue(slider, value) {
 		var pitchRate = Math.pow(2.0, 2.0 * (value - 0.5));
 
 		switch (slider) {
 			case 'kick_thumb':
-				theBeat.kickPitchVal = value;
-				kickPitch = pitchRate;
+				this.params.theBeat.kickPitchVal = value;
+				this.params.kickPitch = pitchRate;
 				break;
 			case 'snare_thumb':
-				theBeat.snarePitchVal = value;
-				snarePitch = pitchRate;
+			this.params.theBeat.snarePitchVal = value;
+			this.params.snarePitch = pitchRate;
 				break;
 			case 'hihat_thumb':
-				theBeat.hihatPitchVal = value;
-				hihatPitch = pitchRate;
+			this.params.theBeat.hihatPitchVal = value;
+			this.params.hihatPitch = pitchRate;
 				break;
 			case 'tom1_thumb':
-				theBeat.tom1PitchVal = value;
-				tom1Pitch = pitchRate;
+			this.params.theBeat.tom1PitchVal = value;
+			this.params.tom1Pitch = pitchRate;
 				break;
 			case 'tom2_thumb':
-				theBeat.tom2PitchVal = value;
-				tom2Pitch = pitchRate;
+			this.params.theBeat.tom2PitchVal = value;
+			this.params.tom2Pitch = pitchRate;
 				break;
 			case 'tom3_thumb':
-				theBeat.tom3PitchVal = value;
-				tom3Pitch = pitchRate;
+			this.params.theBeat.tom3PitchVal = value;
+			this.params.tom3Pitch = pitchRate;
 				break;
 			case 'swing_thumb':
-				theBeat.swingFactor = value;
+			this.params.theBeat.swingFactor = value;
 				break;
 		}
-	}*/
+	}
 
 
 
@@ -757,21 +766,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 	}*/
 
-	/*handlePlay(event) {
-		noteTime = 0.0;
-		startTime = context.currentTime + 0.005;
-		schedule();
-		timerWorker.postMessage("start");
-
-		document.getElementById('play').classList.add('playing');
-		document.getElementById('stop').classList.add('playing');
-		if (midiOut) {
-			// turn off the play button
-			midiOut.send([0x80, 3, 32]);
-			// light up the stop button
-			midiOut.send([0x90, 7, 1]);
-		}
-	}*/
+	
 
 	/*handleStop(event) {
 		timerWorker.postMessage("stop");
@@ -914,14 +909,14 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	drawPlayhead(xindex) {
 		var lastIndex = (xindex + 15) % 16;
 
-		var elNew = document.getElementById('LED_' + xindex);
-		var elOld = document.getElementById('LED_' + lastIndex);
+		var elNew = this.gui._root.getElementById('LED_' + xindex);
+		var elOld = this.gui._root.getElementById('LED_' + lastIndex);
 
 		elNew.src = 'mididrum/images/LED_on.png';
 		elOld.src = 'mididrum/images/LED_off.png';
 
-		hideBeat(lastIndex);
-		showBeat(xindex);
+		this.hideBeat(lastIndex);
+		this.showBeat(xindex);
 	}
 
 	filterFrequencyFromCutoff(cutoff) {
