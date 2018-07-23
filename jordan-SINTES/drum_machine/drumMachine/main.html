@@ -660,8 +660,8 @@
 
         initControls() {
             // Initialize note buttons
-            this.initButtons();
-            this.makeKitList();
+            this._plug.initButtons();
+            this._plug.makeKitList();
 
 
             // sliders
@@ -690,51 +690,28 @@
             this._root.getElementById('body').addEventListener('mousemove', (event) => this._plug.handleMouseMove(event), true);
             this._root.getElementById('body').addEventListener('mouseup', () => this._plug.handleMouseUp(), true);
 
-            this._root.querySelector('#tempoinc').addEventListener('mousedown', () => this._plug.tempoIncrease(), true);
+            this._root.getElementById('tempoinc').addEventListener('mousedown', () => this._plug.tempoIncrease(), true);
             this._root.getElementById('tempodec').addEventListener('mousedown', () => this._plug.tempoDecrease(), true);
+        
+            this._root.getElementById('kitcombo').addEventListener("mousedown", (event) => this.handleKitComboMouseDown(event), true);
+            document.body.addEventListener("mousedown",  this.handleBodyMouseDown, true);
         }
 
-        initButtons() {
-            var elButton;
+      
 
-            for (var i = 0; i < this._plug.params.loopLength; ++i) {
-                for (var j = 0; j < this._plug.params.kNumInstruments; j++) {
-                    elButton = this._root.getElementById(this._plug.params.instruments[j] + '_' + i);
-                    elButton.addEventListener("mousedown", this._plug.handleButtonMouseDown, true);
-                }
-            }
-        }
-
-        makeKitList() {
-            var elList = this._root.getElementById('kitlist');
-            var numKits = this._plug.params.kitName.length;
-
-            for (var i = 0; i < numKits; i++) {
-                var elItem = document.createElement('li');
-                elItem.innerHTML = this._plug.params.kitNamePretty[i];
-                elList.appendChild(elItem);
-                elItem.addEventListener("mousedown", this.handleKitMouseDown, true);
-            }
-        }
-
-        handleKit() {
-            var elKitCombo = this._root.getElementById('kitcombo');
-            elKitCombo.addEventListener("mousedown", this.handleKitComboMouseDown, true);
-
-            this._root.getElementById('body').addEventListener("mousedown", this.handleBodyMouseDown, true);
-        }
+    
 
         handleKitComboMouseDown(event) {
             this._root.getElementById('kitcombo').classList.toggle('active');
         }
 
         handleBodyMouseDown(event) {
-            var elKitcombo = this._root.getElementById('kitcombo');
+            var elKitcombo = document.getElementById('kitcombo');
           
             if (elKitcombo.classList.contains('active') && !this.isDescendantOfId(event.target, 'kitcombo_container')) {
                 elKitcombo.classList.remove('active');
             }
-
+            console.log(this._plug.params.kitIndex);
 
         }
 

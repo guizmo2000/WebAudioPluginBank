@@ -345,12 +345,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		masterGainNode.gain.value = 0.7; // reduce overall volume to avoid clipping
 		masterGainNode.connect(filterNode);
 
-		//var elKitCombo = document.querySelector('#kitcombo');
-		//elKitCombo.addEventListener("mousedown", handleKitComboMouseDown, true);
-
-
-
-		//document.body.addEventListener("mousedown", handleBodyMouseDown, true);
+		
+		
 
 		//this.initControls();
 		//this.updateControls();
@@ -404,28 +400,29 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		document.getElementById('tempodec').addEventListener('mousedown', tempoDecrease, true);
 	}*/
 
-	/*initButtons() {
+	initButtons() {
+		console.log("ok");
 		var elButton;
 
 		for (var i = 0; i < this.params.loopLength; ++i) {
 			for (var j = 0; j < this.params.kNumInstruments; j++) {
-				elButton = document.getElementById(this.params.instruments[j] + '_' + i);
-				elButton.addEventListener("mousedown", handleButtonMouseDown, true);
+				elButton = this.gui._root.getElementById(this.params.instruments[j] + '_' + i);
+				elButton.addEventListener("mousedown", this.handleButtonMouseDown, true);
 			}
 		}
-	}*/
+	}
 
-	/*makeKitList() {
-		var elList = document.getElementById('kitlist');
+	makeKitList() {
+		var elList = this.gui._root.getElementById('kitlist');
 		var numKits = this.params.kitName.length;
 
 		for (var i = 0; i < numKits; i++) {
 			var elItem = document.createElement('li');
 			elItem.innerHTML = this.params.kitNamePretty[i];
 			elList.appendChild(elItem);
-			elItem.addEventListener("mousedown", handleKitMouseDown, true);
+			elItem.addEventListener("mousedown", this.handleKitMouseDown, true);
 		}
-	}*/
+	}
 
 	advanceNote() {
 		// Advance time by a 16th note...
@@ -558,13 +555,11 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		
 		this.params.theBeat.tempo = Math.min(this.params.kMaxTempo, this.params.theBeat.tempo + 2);
 		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
-		console.log(this.params.theBeat.tempo);
 	}
 
 	tempoDecrease() {
 		this.params.theBeat.tempo = Math.max(this.params.kMinTempo, this.params.theBeat.tempo - 2);
 		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
-		console.log(this.params.theBeat.tempo);
 	}
 
 	
@@ -575,6 +570,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	handleSliderMouseDown(event) {
 		this.params.mouseCapture = event.target.id;
+		
 		// calculate offset of mousedown on slider
 		var el = event.target;
 		if (this.params.mouseCapture == 'swing_thumb') {
@@ -596,9 +592,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	handleMouseMove(event) {
 		if (!this.params.mouseCapture) return;
-		
 		var elThumb = this.gui._root.getElementById(this.params.mouseCapture);
-		console.log(elThumb)
 		var elTrack = elThumb.parentNode;
 		
 		if (this.params.mouseCapture != 'swing_thumb') {

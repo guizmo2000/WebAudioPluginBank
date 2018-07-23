@@ -485,7 +485,6 @@ function tempoDecrease() {
 
 function handleSliderMouseDown(event) {
     mouseCapture = event.target.id;
-    console.log(mouseCapture);
     // calculate offset of mousedown on slider
     var el = event.target;
     if (mouseCapture == 'swing_thumb') {
@@ -508,10 +507,8 @@ function handleSliderMouseDown(event) {
 
 function handleMouseMove(event) {
     if (!mouseCapture) return;
-    console.log(mouseCapture)
     var elThumb = document.getElementById(mouseCapture);
     var elTrack = elThumb.parentNode;
-    console.log(elTrack)
     if (mouseCapture != 'swing_thumb') {
         var thumbH = elThumb.clientHeight;
         var trackH = elTrack.clientHeight;
