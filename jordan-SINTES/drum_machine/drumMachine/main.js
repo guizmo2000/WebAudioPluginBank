@@ -85,6 +85,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
 
+			kits:null,
+			currentKit: null,
+
 
 			context: new AudioContext(),
 
@@ -256,16 +259,16 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		// Initialize drum kits
 		var numKits = this.params.kitName.length;
-		var kits = new Array(numKits);
+		this.params.kits = new Array(numKits);
 		for (var i = 0; i < numKits; i++) {
-			kits[i] = new Kit(this.params.kitName[i], this);
+			this.params.kits[i] = new Kit(this.params.kitName[i], this);
 		}
 
 
 
 		// Start loading the assets used by the presets first, in order of the presets.
 		for (var demoIndex = 0; demoIndex < 2; ++demoIndex) {
-			var kit = kits[this.params.beatInitial.kitIndex];
+			var kit = this.params.kits[this.params.beatInitial.kitIndex];
 			kit.setDemoIndex(demoIndex);
 			kit.load();
 		}
@@ -273,13 +276,13 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		// Then load the remaining assets.
 		// Note that any assets which have previously started loading will be skipped over.
 		for (var i = 0; i < numKits; i++) {
-			kits[i].load();
+			this.params.kits[i].load();
 		}
 
 
 
 		// Setup initial drumkit
-		var currentKit = kits[this.params.kInitialKitIndex];
+		this.params.currentKit = this.params.kits[this.params.kInitialKitIndex];
 	}
 
 	showDemoAvailable(demoIndex /* zero-based */) {
@@ -401,7 +404,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}*/
 
 	initButtons() {
-		console.log("ok");
 		var elButton;
 
 		for (var i = 0; i < this.params.loopLength; ++i) {
@@ -412,17 +414,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 	}
 
-	makeKitList() {
-		var elList = this.gui._root.getElementById('kitlist');
-		var numKits = this.params.kitName.length;
-
-		for (var i = 0; i < numKits; i++) {
-			var elItem = document.createElement('li');
-			elItem.innerHTML = this.params.kitNamePretty[i];
-			elList.appendChild(elItem);
-			elItem.addEventListener("mousedown", this.handleKitMouseDown, true);
-		}
-	}
+	
 
 	advanceNote() {
 		// Advance time by a 16th note...
@@ -487,31 +479,31 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 			// Kick
 			if (this.params.theBeat.rhythm1[this.params.rhythmIndex] && instrumentActive[0]) {
-				playNote(currentKit.kickBuffer, false, 0, 0, -2, 0.5, volumes[theBeat.rhythm1[rhythmIndex]] * 1.0, kickPitch, contextPlayTime);
+				playNote(this.params.currentKit.kickBuffer, false, 0, 0, -2, 0.5, volumes[theBeat.rhythm1[rhythmIndex]] * 1.0, kickPitch, contextPlayTime);
 			}
 
 			// Snare
 			if (this.params.theBeat.rhythm2[this.params.rhythmIndex] && instrumentActive[1]) {
-				playNote(currentKit.snareBuffer, false, 0, 0, -2, 1, volumes[theBeat.rhythm2[rhythmIndex]] * 0.6, snarePitch, contextPlayTime);
+				playNote(this.params.currentKit.snareBuffer, false, 0, 0, -2, 1, volumes[theBeat.rhythm2[rhythmIndex]] * 0.6, snarePitch, contextPlayTime);
 			}
 
 			// Hihat
 			if (this.params.theBeat.rhythm3[this.params.rhythmIndex] && instrumentActive[2]) {
 				// Pan the hihat according to sequence position.
-				playNote(currentKit.hihatBuffer, true, 0.5 * rhythmIndex - 4, 0, -1.0, 1, volumes[theBeat.rhythm3[rhythmIndex]] * 0.7, hihatPitch, contextPlayTime);
+				playNote(this.params.currentKit.hihatBuffer, true, 0.5 * rhythmIndex - 4, 0, -1.0, 1, volumes[theBeat.rhythm3[rhythmIndex]] * 0.7, hihatPitch, contextPlayTime);
 			}
 
 			// Toms    
 			if (this.params.theBeat.rhythm4[this.params.rhythmIndex] && instrumentActive[3]) {
-				playNote(currentKit.tom1, false, 0, 0, -2, 1, volumes[theBeat.rhythm4[rhythmIndex]] * 0.6, tom1Pitch, contextPlayTime);
+				playNote(this.params.currentKit.tom1, false, 0, 0, -2, 1, volumes[theBeat.rhythm4[rhythmIndex]] * 0.6, tom1Pitch, contextPlayTime);
 			}
 
 			if (this.params.theBeat.rhythm5[this.params.rhythmIndex] && instrumentActive[4]) {
-				playNote(currentKit.tom2, false, 0, 0, -2, 1, volumes[theBeat.rhythm5[rhythmIndex]] * 0.6, tom2Pitch, contextPlayTime);
+				playNote(this.params.currentKit.tom2, false, 0, 0, -2, 1, volumes[theBeat.rhythm5[rhythmIndex]] * 0.6, tom2Pitch, contextPlayTime);
 			}
 
 			if (this.params.theBeat.rhythm6[this.params.rhythmIndex] && instrumentActive[5]) {
-				playNote(currentKit.tom3, false, 0, 0, -2, 1, volumes[theBeat.rhythm6[rhythmIndex]] * 0.6, tom3Pitch, contextPlayTime);
+				playNote(this.params.currentKit.tom3, false, 0, 0, -2, 1, volumes[theBeat.rhythm6[rhythmIndex]] * 0.6, tom3Pitch, contextPlayTime);
 			}
 
 
@@ -528,22 +520,22 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	playDrum(noteNumber, velocity) {
 		switch (noteNumber) {
 			case 0x24:
-				playNote(currentKit.kickBuffer, false, 0, 0, -2, 0.5, (velocity / 127), kickPitch, 0);
+				playNote(this.params.currentKit.kickBuffer, false, 0, 0, -2, 0.5, (velocity / 127), kickPitch, 0);
 				break;
 			case 0x26:
-				playNote(currentKit.snareBuffer, false, 0, 0, -2, 1, (velocity / 127), snarePitch, 0);
+				playNote(this.params.currentKit.snareBuffer, false, 0, 0, -2, 1, (velocity / 127), snarePitch, 0);
 				break;
 			case 0x28:
-				playNote(currentKit.hihatBuffer, true, 0, 0, -1.0, 1, (velocity / 127), hihatPitch, 0);
+				playNote(this.params.currentKit.hihatBuffer, true, 0, 0, -1.0, 1, (velocity / 127), hihatPitch, 0);
 				break;
 			case 0x2d:
-				playNote(currentKit.tom1, false, 0, 0, -2, 1, (velocity / 127), tom1Pitch, 0);
+				playNote(this.params.currentKit.tom1, false, 0, 0, -2, 1, (velocity / 127), tom1Pitch, 0);
 				break;
 			case 0x2f:
-				playNote(currentKit.tom2, false, 0, 0, -2, 1, (velocity / 127), tom2Pitch, 0);
+				playNote(this.params.currentKit.tom2, false, 0, 0, -2, 1, (velocity / 127), tom2Pitch, 0);
 				break;
 			case 0x32:
-				playNote(currentKit.tom3, false, 0, 0, -2, 1, (velocity / 127), tom3Pitch, 0);
+				playNote(this.params.currentKit.tom3, false, 0, 0, -2, 1, (velocity / 127), tom3Pitch, 0);
 				break;
 			default:
 				console.log("note:0x" + noteNumber.toString(16));

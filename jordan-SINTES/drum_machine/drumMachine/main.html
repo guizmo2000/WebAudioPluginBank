@@ -661,7 +661,7 @@
         initControls() {
             // Initialize note buttons
             this._plug.initButtons();
-            this._plug.makeKitList();
+            this.makeKitList();
 
 
             // sliders
@@ -694,7 +694,7 @@
             this._root.getElementById('tempodec').addEventListener('mousedown', () => this._plug.tempoDecrease(), true);
         
             this._root.getElementById('kitcombo').addEventListener("mousedown", (event) => this.handleKitComboMouseDown(event), true);
-            document.body.addEventListener("mousedown",  this.handleBodyMouseDown, true);
+            this._root.addEventListener("mousedown", (event) => this.handleBodyMouseDown(event), true);
         }
 
       
@@ -703,20 +703,21 @@
 
         handleKitComboMouseDown(event) {
             this._root.getElementById('kitcombo').classList.toggle('active');
+           
         }
 
         handleBodyMouseDown(event) {
-            var elKitcombo = document.getElementById('kitcombo');
+            var elKitcombo = this._root.getElementById('kitcombo');
           
             if (elKitcombo.classList.contains('active') && !this.isDescendantOfId(event.target, 'kitcombo_container')) {
                 elKitcombo.classList.remove('active');
             }
-            console.log(this._plug.params.kitIndex);
-
+            
+           
         }
 
         handleButtonMouseDown(event) {
-            var notes = this._plug.params.theBeat.rhythm1;
+            var notes = this._plug.params.theBeat.kickPitch;
 
             var instrumentIndex;
             var rhythmIndex;
@@ -774,11 +775,25 @@
             }
         }
 
+        makeKitList() {
+		var elList = this._root.getElementById('kitlist');
+		var numKits = this._plug.params.kitName.length;
+
+		for (var i = 0; i < numKits; i++) {
+			var elItem = document.createElement('li');
+			elItem.innerHTML = this._plug.params.kitNamePretty[i];
+			elList.appendChild(elItem);
+			elItem.addEventListener("mousedown", (event) =>this.handleKitMouseDown(event), true);
+		}
+	}
+
         handleKitMouseDown(event) {
-            var index = kitNamePretty.indexOf(event.target.innerHTML);
-            theBeat.kitIndex = index;
-            currentKit = kits[index];
-            this._root.getElementById('kitname').innerHTML = kitNamePretty[index];
+            var index = this._plug.params.kitNamePretty.indexOf(event.target.innerHTML);
+            this._plug.params.theBeat.kitIndex = index;
+        //TODO, correcting this function to select a kit
+            this._plug.params.currentKit = this._plug.params.kits[index];
+            this._root.getElementById('kitname').innerHTML = this._plug.params.kitNamePretty[index];
+            console.log(this._plug.params.theBeat.kitIndex);
         }
 
         isDescendantOfId(el, id) {
@@ -786,7 +801,7 @@
                 if (el.parentElement.id == id) {
                     return true;
                 } else {
-                    return isDescendantOfId(el.parentElement, id);
+                    return this.isDescendantOfId(el.parentElement, id);
                 }
             } else {
                 return false;
