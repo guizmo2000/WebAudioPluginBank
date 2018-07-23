@@ -4,10 +4,21 @@
 		useMidi: 1,
 	};
 </script>
+<style>
+	@font-face {
+		font-family: 'shady_laneregular';
+		src: url('./assets/shadylane-webfont.woff2') format('woff2'),
+		url('./assets/shadylane-webfont.woff') format('woff');
+		font-weight: normal;
+		font-style: normal;
+
+	}
+</style>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template>
 	<style>
 		.pedal {
+			font: 'shady_laneregular', 'Arial Black';
 			display: block;
 			width: 450px;
 			height: 150px;
@@ -95,6 +106,9 @@
 			left: 375px;
 			top: 20px;
 		}
+
+
+
 
 
 		#presence div {
@@ -198,14 +212,7 @@
 			font-size: 30px;
 		}
 
-		@font-face {
-    font-family: 'shady_laneregular';
-    src: url('./assets/shadylane-webfont.woff2') format('woff2'),
-         url('./assets/shadylane-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
 
-}
 
 
 
