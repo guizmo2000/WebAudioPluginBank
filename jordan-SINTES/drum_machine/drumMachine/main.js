@@ -550,15 +550,17 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 	}
 
-	/*tempoIncrease() {
-		theBeat.tempo = Math.min(kMaxTempo, theBeat.tempo + 2);
-		document.getElementById('tempo').innerHTML = theBeat.tempo;
+	//TODO: See why function works just the first time and see how to manage the position of the functions
+	tempoIncrease() {
+		
+		this.params.theBeat.tempo = Math.min(this.params.kMaxTempo, this.params.theBeat.tempo + 2);
+		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
 	}
 
 	tempoDecrease() {
-		theBeat.tempo = Math.max(kMinTempo, theBeat.tempo - 2);
-		document.getElementById('tempo').innerHTML = theBeat.tempo;
-	}*/
+		this.params.theBeat.tempo = Math.max(this.params.kMinTempo, this.params.theBeat.tempo - 2);
+		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
+	}
 
 	/*handleSliderMouseDown(event) {
 		mouseCapture = event.target.id;
