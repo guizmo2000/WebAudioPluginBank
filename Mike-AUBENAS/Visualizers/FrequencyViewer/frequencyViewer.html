@@ -78,7 +78,7 @@
 	 *	https://fr.wikipedia.org/wiki/VU-m%C3%A8tre
 	 */
 
-	let vuMeter = document.currentScript.ownerDocument.querySelector("#wc-frequency-viewer");
+	let freqMeter = document.currentScript.ownerDocument.querySelector("#wc-frequency-viewer");
 
 	class FrequencyViewer extends HTMLElement
 	{
@@ -90,7 +90,7 @@
 			if(audioContext)
 			{
 				this._root = this.attachShadow({ mode: 'open' });
-				this._root.appendChild(vuMeter.content.cloneNode(true));
+				this._root.appendChild(freqMeter.content.cloneNode(true));
 				this.isOn = true;
 
 				this.canvas = this._root.querySelector("canvas");
