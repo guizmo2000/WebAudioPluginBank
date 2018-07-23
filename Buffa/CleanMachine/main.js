@@ -102,7 +102,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
   }
   setPatch(data, index) {
     console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
-    this.amp.setPresetByIndex(index);
+    this.amp.setPresetByIndex(this,index);
   }
 
   getParam(key) {
@@ -381,8 +381,7 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
     // Build web audio graph, set default preset
     buildGraph();
     initPresets();
-
-    setDefaultPreset();
+   // setDefaultPreset();
     console.log("running");
   }
 
@@ -489,7 +488,7 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
   }
 
 
-  function changeLowCutFreqValue(sliderVal) {
+  function changeLowCutFreqValue(sliderVal) {    
     var value = parseFloat(sliderVal);
     lowCutFilter.frequency.value = value;
 
@@ -1542,11 +1541,12 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
     */
   }
 
-  function setPresetByIndex(index) {
-    setPreset(presets[index]);
+  function setPresetByIndex(parent,index) {
+    console.log(parent);
+    setPreset(parent,presets[index]);
   }
 
-  function setPreset(p) {
+  function setPreset(parent,p) {
     if (p.distoName === undefined) {
       p.distoName = "standard";
     }
@@ -1571,17 +1571,25 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
     changeQValues(p.Q2, 1);
     changeQValues(p.Q3, 2);
     changeQValues(p.Q4, 3);
+    //changeOutputGain(p.OG);
+    parent.volume = p.OG;
 
-    changeOutputGain(p.OG);
+    //changeBassFilterValue(p.BF);
+    parent.bass = p.BF;
+    //changeMidFilterValue(p.MF);
+    parent.middle = p.MF;
 
-    changeBassFilterValue(p.BF);
-    changeMidFilterValue(p.MF);
-    changeTrebleFilterValue(p.TF);
-    changePresenceFilterValue(p.PF);
+    //changeTrebleFilterValue(p.TF);
+    parent.treble = p.TF;
+    //changePresenceFilterValue(p.PF);
+    parent.presence = p.PF;
 
-    changeMasterVolume(p.MV);
 
-    changeReverbGain(p.RG);
+    //changeMasterVolume(p.MV);
+    parent.master = p.MV;
+
+    //changeReverbGain(p.RG);
+    parent.reverb = p.RG;
     changeReverbImpulse(p.RN);
 
     changeRoom(p.CG);
@@ -1591,6 +1599,12 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
 
 
     changeDistoTypeFromPreset(p.distoName);
+
+    try {
+      parent.gui.setAttribute('state', JSON.stringify(parent.params));
+    } catch (error) {
+      console.warn("state not setted to the GUI", error);
+    }
   }
 
   function getPresets() {
