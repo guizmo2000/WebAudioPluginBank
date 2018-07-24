@@ -1,0 +1,177 @@
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script>
+  WebAudioControlsOptions = {
+    useMidi: 1,
+  };
+</script>
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<template>
+  <style>
+    :host {
+			display: block;
+			background-color: #AB2E24;
+			width: 300px;
+			height: 180px;
+			border-radius: 10px;
+			position: relative;
+			/* bring your own prefixes */
+			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
+			inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+			inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+			1px 0px 1px 0px rgba(0, 0, 0, 0.9),
+			0 2px 1px 0 rgba(0, 0, 0, 0.9),
+			1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+		}
+    #dspcode{
+      position: absolute;
+      left: 20px;
+      top:15px;
+
+    }
+    #compile{
+      position: absolute;
+      left: 20px;
+      top:150px;
+    }
+  </style>
+  <div class="pedal">
+      <textarea id="dspcode"name="textarea" rows="10" cols="40">
+     Paste here your dsp code
+   </textarea>
+  </div>
+  <button id="compile" type="button">Compile DSP</button>
+</template>
+<script>
+  let embeddedEditortemp = document.currentScript.ownerDocument.querySelector('template');
+  class EmbeddedEditorGUI extends HTMLElement {
+
+
+    constructor(plug) {
+      super();
+      // The audio processor is a field of this GUI
+      this._plug = plug;
+      // The link is bidirectionnal to be catched by the processor if needed once the module is loaded (for features like presets)
+      this._plug.gui = this;
+      // bind shadow to the class and clone the template into it
+      this._root = this.attachShadow({ mode: 'open' });
+      this._root.appendChild(embeddedEditortemp.content.cloneNode(true));
+      // pre-selector for knobs div
+      this.knobs = this._root.querySelectorAll(".knob");
+      // initialisation of the on/off boolean 
+      this.isOn;
+      // initialisation of the GUI state (to be saved / recovered)
+      this.state = new Object();
+      // setting up the listeners and resources
+     // this.setKnobs();
+      //this.setSwitchListener();
+      //this.setResources();
+
+    }
+
+		/**
+		 * The readables attributes given by the GUI
+		 */
+    get properties() {
+      this.boundingRect = {
+        dataWidth: {
+          type: Number,
+          value: 120
+        },
+        dataHeight: {
+          type: Number,
+          value: 180
+        }
+      };
+      return this.boundingRect;
+    }
+
+    static get observedAttributes() {
+      return ['state'];
+    }
+
+
+    attributeChangedCallback() {
+      // To recover the switch state when this GUI is loaded
+      // this.state = JSON.parse(this.getAttribute('state'));
+      // if (this.state.status == "enable") {
+      //   this._root.querySelector("#switch1").querySelector("webaudio-switch").value = 1;
+      //   this.isOn = true;
+      // }
+      // // to recover the Knobs states when this Gui is loaded, based on knobs id
+      // for (var i = 0; i < this.knobs.length; i++) {
+      //   this.knobs[i].querySelector("webaudio-knob").value = this.state[this.knobs[i].id];
+      // }
+
+    }
+
+    // setResources() {
+    //   // Set up the background img & style
+    //   var background = this._root.querySelector("img");
+    //   background.src = this._plug.URL + '/assets/background.png';
+    //   background.style = 'border-radius : 5px;'
+    //   // Setting up the knobs imgs, those are loaded from the assets
+    //   this._root.querySelectorAll(".knob").forEach((knob) => {
+    //     console.log(knob.querySelector("webaudio-knob").src);
+    //     knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+    //   });
+    //   // Setting up the switches imgs, those are loaded from the assets
+    //   this._root.querySelector("#switch1").querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+    // }
+
+    // eventToKnob(rank) {
+    //   // bind knobs to a _plug param by its id
+    //   this.knobs[rank].querySelector("webaudio-knob").addEventListener('input', (e) =>
+    //     this._plug.setParam(this.knobs[rank].id, e.target.value));
+    // }
+
+    // setKnobs() {
+    //   // Loop on a function to get the real id at each steps
+    //   for (var i = 0; i < this.knobs.length; i++) {
+    //     this.eventToKnob(i);
+    //   }
+    // }
+
+
+
+
+    // bypass() {
+    //   // bypass the plug
+    //   this._plug.setParam("status", "disable");
+    // }
+
+
+    // reactivate() {
+    //   // reactivate the plug
+    //   this._plug.setParam("status", "enable");
+    // }
+
+    // setSwitchListener() {
+    //   // set the GUI switch state and call the plug bypass / reactivation
+    //   this._root.querySelector("#switch1").querySelector("webaudio-switch").addEventListener('change', (e) => {
+    //     if (this.isOn) this.bypass()
+    //     else this.reactivate();
+    //     this.isOn = !this.isOn;
+    //   });
+    // }
+
+  }
+
+  try {
+    // Define the custom element to the browser
+    customElements.define('wasabi-embeddededitor', EmbeddedEditorGUI);
+    console.log("Element defined");
+  } catch (error) {
+    console.log(error);
+    console.log("Element already defined");
+  }
+
+	/**
+	 * Gui factory, called from the SDK. 
+	 * The name must be create+MyModule
+	*/
+  createEmbeddedEditor = (plug) => {
+
+    let elem = new EmbeddedEditorGUI(plug);
+    return elem;
+  }
+</script>

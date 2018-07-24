@@ -1,0 +1,8 @@
+{
+  "documentation": "...",
+  "name": "EmbeddedEditor",
+  "thumbnail": "./assets/WasabiQuadraFuzz.png",
+  "vendor": "Wasabi",
+  "category":"editor",
+  "version": "1.2"
+}

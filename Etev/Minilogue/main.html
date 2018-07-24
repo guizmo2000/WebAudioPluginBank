@@ -151,7 +151,7 @@
         <span class="pedalLabel">OSC</span>
         <div class="row">
           <div class="column">
-            <webaudio-slider class="knob" id="osc1octave" midilearn="1" midicc="1.1" value="3" min="1" max="5" step="1" width="15" height="24"
+            <webaudio-slider class="knob" id="osc1octave" midilearn="1"  value="3" min="1" max="5" step="1" width="15" height="24"
               tooltip="Slider-L"></webaudio-slider>
             <span class="knob-label" id="osc1pitch-label">Osc1 octave</span>
           </div>
@@ -173,6 +173,11 @@
             <webaudio-knob id="osc1gain" class="knob" sprites="99" min="0" max="3" value="3" step="0.01" midilearn="true" diameter="20"></webaudio-knob>
             <span class="knob-label" id="osc1gain-label">Osc1 Gain</span>
           </div>
+          <!-- <div class="column">
+              <webaudio-slider class="selector" id="ringmodulation" midilearn="1" value="0" min="0" max="1" step="1" width="15" height="24"
+                tooltip="Slider-L"></webaudio-slider>
+              <span class="knob-label" id="osc1pitch-label">Ring</span>
+            </div> -->
         </div>
         <div class="row">
           <div class="column">
@@ -401,6 +406,8 @@
       for (var i = 0; i < this.knobs.length; i++) {
         this.eventToKnob(i);
       }
+      // ring need an onchange and not on-input
+      // this._root.querySelector("#ringmodulation").addEventListener('change',(e) =>this._plug.setParam('ringmodulation',e.target.value));
     }
 
     setViewer() {
@@ -412,16 +419,6 @@
 
 
     setKeyboard() {
-      //   var keyboard = this._root.querySelector('#keyboard');
-      //   keyboard.addEventListener('change', (e) => {
-      //     if (e.note[0]) {
-      //       this._plug.noteOn(e.note[1] + 36);
-      //     }
-      //     else {
-      //       this._plug.noteOff(e.note[1] + 36);
-      //     }
-
-      //   });
 
       var settings = {
         id: 'keyboard',

@@ -13,17 +13,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.voices = [];
     parent = this;
 
-    // P2 : Json metadata
-    this._metadata = {
-      "name": "etev-minilogue",
-      "version": 1,
-      "category": "Synth",
-      "type": "Audio",
-      "description": "4 voices synth with filter, delay, lfo, ring modulator",
-      "thumbnailImage": "https://...",
-      "URLs": "https://.../doc",
-      "authorInformation": "Guillaume Etevenard, i3s trainee in Nice - Sophia-Antipolis, France"
-    }
 
     // assign manually the params which does not fit the defaultvalue/max/min schema
     this.params = { "wave1": "sawtooth", "status": "disable", "wave2": "sawtooth", "lfodest": "cutoff" };
@@ -55,9 +44,11 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.addParam({ name: 'osc1Octave', defaultValue: 3, minValue: 1, maxValue: 5 });
     this.addParam({ name: 'osc2Octave', defaultValue: 3, minValue: 1, maxValue: 5 });
     this.addParam({ name: 'noise', defaultValue: 0.1, minValue: 0.1, maxValue: 3 });
+    this.addParam({ name: 'ringmodulation', defaultValue: 0, minValue: 0, maxValue: 1 });
 
 
-    // SDK behavior 
+
+    // SDK behavior overriding (for voices schema)
     this.setup();
   }
 
@@ -131,6 +122,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.osc1octave = this.params.osc1Octave;
     this.osc2octave = this.params.osc2Octave;
     this.noise = this.params.noise;
+    this.ringmodulation = this.params.ringmodulation
 
   }
 
@@ -234,7 +226,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.params.osc1gain = _gain;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
-      if (this.voices[voice]) console.log("gainosc1 :", this.voices[voice].gainOsc1.gain.value, this.params.osc1gain);
 
     }
   }
@@ -495,10 +486,35 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
         break;
     }
   }
-
-
   set delay(_sig) {
     this.params.status = _sig
+  }
+  set ringmodulation(_sig) {
+    this.params.ringmodulation = _sig;
+    switch (_sig) {
+      case 0:
+        for (let voice = 0; voice < this.voices.length; voice++) {
+          if (this.voices[voice]) {
+            //this.voices[voice].wshape2.connect(this.gainOsc2);
+
+          }
+
+        }
+
+        break;
+
+      case 1:
+        for (let voice = 0; voice < this.voices.length; voice++) {
+          if (this.voices[voice]) {
+            this.voices[voice].wshape2.disconnect(this.voices[voice].gainOsc2);
+            this.voices[voice].osc2.connect(this.voices[voice].ringGain.gain);
+            this.voices[voice].ringGain.connect(this.voices[voice].gainOsc2);
+
+          }
+
+        }
+        break;
+    }
   }
 
 
@@ -545,75 +561,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 }
 //------------------------------------------------Sound Processing ------------------------------------ 
 
-
-//------------------------------------------------ White noise Generator ------------------------------------ 
-
-
-class Noise {
-  constructor(parent, ctx) {
-    this.parent = parent;
-    this.context = ctx;
-    this.buildNode();
-  }
-
-  buildNode() {
-    this.noiseData = new Float32Array(44100 * 5);
-    this.noiseBuffer = null;
-    for (var i = 0, imax = this.noiseData.length; i < imax; i++) {
-      this.noiseData[i] = Math.random() * 2 - 1;
-    }
-
-    if (this.noiseBuffer === null) {
-      this.noiseBuffer = this.context.createBuffer(1, this.noiseData.length, this.context.sampleRate);
-      this.noiseBuffer.getChannelData(0).set(this.noiseData);
-    }
-    this.bufferSource = this.context.createBufferSource();
-
-    this.bufferSource.buffer = this.noiseBuffer;
-    this.bufferSource.loop = true;
-  }
-
-}
-
-//----------------------------------------------- The Delay Part ------------------------------------------
-
-/**
- * Taken from PingPongDelay audio processor
- */
-
-class Delay {
-  constructor(parent, ctx) {
-    this.parent = parent;
-    this.context = ctx;
-    this.buildNode()
-  }
-
-  buildNode() {
-    this.delayNodeLeft = this.context.createDelay();
-    this.delayNodeRight = this.context.createDelay();
-    this.dryGainNode = this.context.createGain();
-    this.wetGainNode = this.context.createGain();
-    this.feedbackGainNode = this.context.createGain();
-    this.channelMerger = this.context.createChannelMerger(2);
-
-    this.delayNodeLeft.connect(this.channelMerger, 0, 0);
-    this.delayNodeRight.connect(this.channelMerger, 0, 1);
-    this.feedbackGainNode.connect(this.delayNodeLeft);
-    this.delayNodeRight.connect(this.feedbackGainNode);
-
-    this.delayNodeLeft.connect(this.delayNodeRight);
-    // // wet mix
-
-    // // wet out
-    this.channelMerger.connect(this.wetGainNode);
-
-
-    this.wetGainNode.connect(this.parent._output);
-    this.dryGainNode.connect(this.parent._output);
-  }
-}
-
-
 //------------------------------------------------- Voice Class --------------------------------------------
 /**
  * This is the heart of the synth. A Voice is the sound created when a key is pressed. it uses
@@ -645,7 +592,7 @@ class Voice {
 
     this.osc1 = this.context.createOscillator();
     this.osc2 = this.context.createOscillator();
- 
+
     this.osc1.type = this.parent.params.wave1;
     this.osc2.type = this.parent.params.wave2;
     this.osc1currentOctave = this.parent.params.osc1Octave;
@@ -666,7 +613,6 @@ class Voice {
     this.lfo.type = "triangle";
 
     // Waveshapers stage
-
     this.wshape1 = this.context.createWaveShaper();
     this.wshape2 = this.context.createWaveShaper();
 
@@ -685,6 +631,7 @@ class Voice {
     this.amp = this.context.createGain();
     this.enveloppeGain = this.context.createGain();
     this.whitenoiseGain = this.context.createGain();
+    this.ringGain = this.context.createGain();
 
 
     //Enveloppe stage
@@ -709,6 +656,7 @@ class Voice {
 
     this.osc1.connect(this.wshape1);
     this.osc2.connect(this.wshape2);
+    this.wshape1.connect(this.ringGain);
     this.wshape1.connect(this.gainOsc1);
     this.wshape2.connect(this.gainOsc2);
     this.whitenoise.bufferSource.connect(this.whitenoiseGain);
@@ -764,247 +712,261 @@ class Voice {
   }
 
 }
+
+//------------------------------------------------ White noise Generator ------------------------------------ 
+
+
+class Noise {
+  constructor(parent, ctx) {
+    this.parent = parent;
+    this.context = ctx;
+    this.buildNode();
+  }
+
+  buildNode() {
+    this.noiseData = new Float32Array(44100 * 5);
+    this.noiseBuffer = null;
+    for (var i = 0, imax = this.noiseData.length; i < imax; i++) {
+      this.noiseData[i] = Math.random() * 2 - 1;
+    }
+
+    if (this.noiseBuffer === null) {
+      this.noiseBuffer = this.context.createBuffer(1, this.noiseData.length, this.context.sampleRate);
+      this.noiseBuffer.getChannelData(0).set(this.noiseData);
+    }
+    this.bufferSource = this.context.createBufferSource();
+
+    this.bufferSource.buffer = this.noiseBuffer;
+    this.bufferSource.loop = true;
+  }
+
+}
+
+//----------------------------------------------- Stereo Delay  ------------------------------------------
+
+/**
+ * Taken from PingPongDelay audio processor
+ */
+
+class Delay {
+  constructor(parent, ctx) {
+    this.parent = parent;
+    this.context = ctx;
+    this.buildNode()
+  }
+
+  buildNode() {
+    this.delayNodeLeft = this.context.createDelay();
+    this.delayNodeRight = this.context.createDelay();
+    this.dryGainNode = this.context.createGain();
+    this.wetGainNode = this.context.createGain();
+    this.feedbackGainNode = this.context.createGain();
+    this.channelMerger = this.context.createChannelMerger(2);
+
+    this.delayNodeLeft.connect(this.channelMerger, 0, 0);
+    this.delayNodeRight.connect(this.channelMerger, 0, 1);
+    this.feedbackGainNode.connect(this.delayNodeLeft);
+    this.delayNodeRight.connect(this.feedbackGainNode);
+
+    this.delayNodeLeft.connect(this.delayNodeRight);
+    // // wet mix
+
+    // // wet out
+    this.channelMerger.connect(this.wetGainNode);
+
+
+    this.wetGainNode.connect(this.parent._output);
+    this.dryGainNode.connect(this.parent._output);
+  }
+}
+
+//------------------------------------------------ Enveloppe generator ------------------------------------ 
+
 // ADSR node from https://github.com/rsimmons/fastidious-envelope-generator
-function assert(v) {
-  if (!v) {
-    throw new Error('Assertion error');
+// Refactored in ES6
+
+
+
+class EnvGen {
+  constructor(audioContext, targetParam) {
+    this._audioContext = audioContext;
+    this._targetParam = targetParam;
+    this.INITIAL_LEVEL = 0;
+    this.ATTACK_LEVEL = 1;
+    this.MODES = ['AD', 'ASR', 'ADSR'];
+    // Default settings
+    this._mode = 'ADSR';
+    this._attackTime = 1;
+    this._decayTime = 1;
+    this._sustainLevel = 1;
+    this._releaseTime = 1;
+    this._targetParam.value = this.INITIAL_LEVEL;
+
+    // In case there was preexisting automation on the target parameter, we reset it here to known state.
+    this._targetParam.cancelScheduledValues(0);
+    this._targetParam.setValueAtTime(this.INITIAL_LEVEL, 0);
+
+    this._scheduledSegments = [{
+      beginTime: 0,
+      beginValue: this.INITIAL_LEVEL,
+      targetValue: this.INITIAL_LEVEL,
+      timeConst: 1, // doesn't matter what this is since beginValue === targetValue
+    }];
+
+    // Track info about last gate we received
+    this._lastGateTime = audioContext.currentTime;
+    this._lastGateState = false;
   }
-}
-var INITIAL_LEVEL = 0;
-var ATTACK_LEVEL = 1;
-function EnvGen(audioContext, targetParam, parent) {
-  // Support instantiating w/o new
-  if (!(this instanceof EnvGen)) {
-    return new EnvGen(audioContext, targetParam);
-  }
-
-  this._audioContext = audioContext;
-  this._targetParam = targetParam;
-
-  var _this = this;
-
-  Object.defineProperty(this, 'mode', {
-    get: function () { return _this._mode; },
-    set: function (value) {
-      if (_this.MODES.indexOf(value) >= 0) {
-        // If we're currently in a 'sustain' state, and we switched into AD mode,
-        // we would get stuck in sustain state. So just to be safe, whenever mode
-        // is changed we fake a gate-off signal.
-        _this.gate(false, Math.max(this._lastGateTime, audioContext.currentTime));
-
-        _this._mode = value;
-      }
-    }
-  });
-
-  Object.defineProperty(this, 'attackTime', {
-    get: function () { return _this._attackTime; },
-    set: function (value) {
-      if ((typeof (value) === 'number') && !isNaN(value) && (value > 0)) {
-        _this._attackTime = value;
-      }
-    }
-  });
-
-  Object.defineProperty(this, 'decayTime', {
-    get: function () { return _this._decayTime; },
-    set: function (value) {
-      if ((typeof (value) === 'number') && !isNaN(value) && (value > 0)) {
-        _this._decayTime = value;
-      }
-    }
-  });
-
-  Object.defineProperty(this, 'sustainLevel', {
-    get: function () { return _this._sustainLevel; },
-    set: function (value) {
-      if ((typeof (value) === 'number') && !isNaN(value) && (value >= 0) && (value <= 1)) {
-        _this._sustainLevel = value;
-      }
-    }
-  });
-
-  Object.defineProperty(this, 'releaseTime', {
-    get: function () { return _this._releaseTime; },
-    set: function (value) {
-      if ((typeof (value) === 'number') && !isNaN(value) && (value > 0)) {
-        _this._releaseTime = value;
-      }
-    }
-  });
-
-  // Default settings
-  this._mode = 'ADSR';
-  this._attackTime = 1;
-  this._decayTime = 1;
-  this._sustainLevel = 1;
-  this._releaseTime = 1;
-
-  this._targetParam.value = INITIAL_LEVEL;
-
-  // In case there was preexisting automation on the target parameter, we reset it here to known state.
-  this._targetParam.cancelScheduledValues(0);
-  this._targetParam.setValueAtTime(INITIAL_LEVEL, 0);
-
-  // All segments are exponential approaches to target values (setTargetAtTime)
-  // Each segment has properties:
-  //  beginTime
-  //  beginValue
-  //  targetValue
-  //  timeConst: 1/abs(slope-of-log(value))
-  // The _scheduledSegments array is kept in time-order, and always has at least one element.
-  this._scheduledSegments = [{
-    beginTime: 0,
-    beginValue: INITIAL_LEVEL,
-    targetValue: INITIAL_LEVEL,
-    timeConst: 1, // doesn't matter what this is since beginValue === targetValue
-  }];
-
-  // Track info about last gate we received
-  this._lastGateTime = audioContext.currentTime;
-  this._lastGateState = false;
-}
-
-EnvGen.prototype.MODES = ['AD', 'ASR', 'ADSR'];
-
-// Schedule a segment with the target AudioParam, and add it to our internal tracking.
-// It must start after our current last segment
-EnvGen.prototype._appendSegment = function (beginTime, beginValue, targetValue, timeConst) {
-  assert(beginTime >= this._scheduledSegments[this._scheduledSegments.length - 1].beginTime); // sanity check
-
-  // Set an anchor point for new segment to start from
-  this._targetParam.setValueAtTime(beginValue, beginTime);
-
-  // Schedule the new segment
-  this._targetParam.setTargetAtTime(targetValue, beginTime, timeConst);
-
-  this._scheduledSegments.push({
-    beginTime: beginTime,
-    beginValue: beginValue,
-    targetValue: targetValue,
-    timeConst: timeConst,
-  });
-};
-
-// Schedule a segment that starts at the given time, which may be during or before previously scheduled segments
-EnvGen.prototype._scheduleSegmentFromTime = function (time, targetValue, timeConst) {
-  // Find what scheduled segment (if any) would be active at given time
-  var activeIdx;
-  for (var i = 0; i < this._scheduledSegments.length; i++) {
-    if ((time >= this._scheduledSegments[i].beginTime) && ((i === (this._scheduledSegments.length - 1) || (time < this._scheduledSegments[i + 1].beginTime)))) {
-      activeIdx = i;
-      break;
+  // Assert tool
+  assert(v) {
+    if (!v) {
+      throw new Error('Assertion error');
     }
   }
-  assert(activeIdx !== undefined); // There must always be some active segment at any (current or future) time
 
-  var activeSeg = this._scheduledSegments[activeIdx];
-
-  // Determine the mid-segment value at the given time
-  var interruptValue = activeSeg.targetValue + (activeSeg.beginValue - activeSeg.targetValue) * Math.exp((activeSeg.beginTime - time) / activeSeg.timeConst);
-
-  // Truncate _scheduledSegments array to end at the active segment
-  this._scheduledSegments.length = activeIdx + 1;
-
-  // Cancel all segments from the interrupt time onwward
-  this._targetParam.cancelScheduledValues(time);
-
-  // Append the new segment from the interrupted point
-  this._appendSegment(time, interruptValue, targetValue, timeConst);
-};
-
-// Schedule a segment that starts when the last previously-scheduled segment reaches the given value threshold
-EnvGen.prototype._scheduleSegmentFromValueThreshold = function (valueThreshold, targetValue, timeConst) {
-  var lastSeg = this._scheduledSegments[this._scheduledSegments.length - 1];
-
-  // Determine the time that the last segment will hit the given value threshold
-  var interruptTime = Math.abs(Math.log((lastSeg.targetValue - valueThreshold) / (lastSeg.targetValue - lastSeg.beginValue)) * lastSeg.timeConst) + lastSeg.beginTime;
-
-  // Append the new segment from the interrupt time
-  this._appendSegment(interruptTime, valueThreshold, targetValue, timeConst);
-};
-
-// Cull segments from this._scheduledSegments end before beforeTime 
-EnvGen.prototype._cullScheduledSegments = function (beforeTime) {
-  for (var i = 0; i < (this._scheduledSegments.length - 1); i++) {
-    // Because we only track beginTime (not endTime), we need to look one segment ahead
-    if (beforeTime < this._scheduledSegments[i + 1].beginTime) {
-      break;
+  // Params
+  get mode() { return this._mode }
+  set mode(value) {
+    if (this.MODES.indexOf(value) >= 0) {
+      this.gate(false, Math.max(this._lastGateTime, this._audioContext.currentTime));
+      this._mode = value;
     }
   }
-  // When we exit the loop, i will be the index of the segment that should be the first one remaining
+  get attackTime() { return this._attackTime; }
+  set attackTime(value) { if ((typeof (value) === 'number') && !isNaN(value) && (value > 0)) { this._attackTime = value; } }
 
-  this._scheduledSegments = this._scheduledSegments.slice(i);
+  get decayTime() { return this._decayTime; }
+  set decayTime(value) { if ((typeof (value) === 'number') && !isNaN(value) && (value > 0)) { this._decayTime = value; } }
 
-  assert(this._scheduledSegments.length > 0); // sanity check
-  assert(this._scheduledSegments[0].beginTime <= beforeTime); // sanity check
-};
+  get sustainLevel() { return this._sustainLevel; }
+  set sustainLevel(value) { if ((typeof (value) === 'number') && !isNaN(value) && (value >= 0) && (value <= 1)) { this._sustainLevel = value; } }
 
-EnvGen.prototype.gate = function (on, time) {
-  // Note the current AudioContext time
-  var ct = this._audioContext.currentTime;
 
-  // Default time parameter to current time
-  time = (time === undefined) ? ct : time;
+  get releaseTime() { return this._releaseTime; }
+  set releaseTime(value) { if ((typeof (value) === 'number') && !isNaN(value) && (value > 0)) { this._releaseTime = value; } }
 
-  // Gates can only have times >= the times of previously supplied gates.
-  // If we receive a bad one, log a warning and ignore
-  if (time < this._lastGateTime) {
-    console.warn('Received gate with time earlier than a previous gate');
-    return;
+  _appendSegment(beginTime, beginValue, targetValue, timeConst) {
+    this.assert(beginTime >= this._scheduledSegments[this._scheduledSegments.length - 1].beginTime); // sanity check
+    // Set an anchor point for new segment to start from
+    this._targetParam.setValueAtTime(beginValue, beginTime);
+    // Schedule the new segment
+    this._targetParam.setTargetAtTime(targetValue, beginTime, timeConst);
+    this._scheduledSegments.push({
+      beginTime: beginTime,
+      beginValue: beginValue,
+      targetValue: targetValue,
+      timeConst: timeConst,
+    });
   }
-  this._lastGateTime = time;
-  this._lastGateState = on;
 
-  // Cull scheduled segments that we are tracking that are now in the past
-  this._cullScheduledSegments(ct);
 
-  if (on) {
-    // Schedule attack
-    // To make an attack that reaches maximum level (1) in a finite amount of time,
-    //  we aim to exponentially approach a value that is greater than 1, and then
-    //  stop the attack when it reaches 1. This is how analog envgens work.
-    var ATTACK_LINEARITY = 100 // Make this nearly-linear. We could expose as a parameter later on
-    var attackTargetLevel = 1 / (1 - Math.exp(-this._attackTime / ATTACK_LINEARITY));
-    this._scheduleSegmentFromTime(time, attackTargetLevel, ATTACK_LINEARITY);
+  // Schedule a segment that starts at the given time, which may be during or before previously scheduled segments
+  _scheduleSegmentFromTime(time, targetValue, timeConst) {
+    // Find what scheduled segment (if any) would be active at given time
+    var activeIdx;
+    for (var i = 0; i < this._scheduledSegments.length; i++) {
+      if ((time >= this._scheduledSegments[i].beginTime) && ((i === (this._scheduledSegments.length - 1) || (time < this._scheduledSegments[i + 1].beginTime)))) {
+        activeIdx = i;
+        break;
+      }
+    }
+    this.assert(activeIdx !== undefined); // There must always be some active segment at any (current or future) time
+    var activeSeg = this._scheduledSegments[activeIdx];
+    // Determine the mid-segment value at the given time
+    var interruptValue = activeSeg.targetValue + (activeSeg.beginValue - activeSeg.targetValue) * Math.exp((activeSeg.beginTime - time) / activeSeg.timeConst);
+    // Truncate _scheduledSegments array to end at the active segment
+    this._scheduledSegments.length = activeIdx + 1;
+    // Cancel all segments from the interrupt time onwward
+    this._targetParam.cancelScheduledValues(time);
+    // Append the new segment from the interrupted point
+    this._appendSegment(time, interruptValue, targetValue, timeConst);
+  };
 
-    // Schedule whatever phase that comes after attack (decay or sustain)
-    if ((this._mode === 'AD') || (this._mode === 'ADSR')) {
-      // Determine target level to which we will decay
-      var decayTargetLevel;
-      if (this._mode === 'AD') {
-        decayTargetLevel = INITIAL_LEVEL;
+
+  // Schedule a segment that starts when the last previously-scheduled segment reaches the given value threshold
+  _scheduleSegmentFromValueThreshold(valueThreshold, targetValue, timeConst) {
+    var lastSeg = this._scheduledSegments[this._scheduledSegments.length - 1];
+    // Determine the time that the last segment will hit the given value threshold
+    var interruptTime = Math.abs(Math.log((lastSeg.targetValue - valueThreshold) / (lastSeg.targetValue - lastSeg.beginValue)) * lastSeg.timeConst) + lastSeg.beginTime;
+    // Append the new segment from the interrupt time
+    this._appendSegment(interruptTime, valueThreshold, targetValue, timeConst);
+  };
+
+  // Cull segments from this._scheduledSegments end before beforeTime 
+  _cullScheduledSegments(beforeTime) {
+    for (var i = 0; i < (this._scheduledSegments.length - 1); i++) {
+      // Because we only track beginTime (not endTime), we need to look one segment ahead
+      if (beforeTime < this._scheduledSegments[i + 1].beginTime) {
+        break;
+      }
+    }
+    // When we exit the loop, i will be the index of the segment that should be the first one remaining
+    this._scheduledSegments = this._scheduledSegments.slice(i);
+    this.assert(this._scheduledSegments.length > 0); // sanity check
+    this.assert(this._scheduledSegments[0].beginTime <= beforeTime); // sanity check
+  };
+
+  gate(on, time) {
+    // Note the current AudioContext time
+    var ct = this._audioContext.currentTime;
+    // Default time parameter to current time
+    time = (time === undefined) ? ct : time;
+    // Gates can only have times >= the times of previously supplied gates.
+    // If we receive a bad one, log a warning and ignore
+    if (time < this._lastGateTime) {
+      console.warn('Received gate with time earlier than a previous gate');
+      return;
+    }
+    this._lastGateTime = time;
+    this._lastGateState = on;
+    // Cull scheduled segments that we are tracking that are now in the past
+    this._cullScheduledSegments(ct);
+    if (on) {
+      // Schedule attack
+      // To make an attack that reaches maximum level (1) in a finite amount of time,
+      //  we aim to exponentially approach a value that is greater than 1, and then
+      //  stop the attack when it reaches 1. This is how analog envgens work.
+      var ATTACK_LINEARITY = 100 // Make this nearly-linear. We could expose as a parameter later on
+      var attackTargetLevel = 1 / (1 - Math.exp(-this._attackTime / ATTACK_LINEARITY));
+      this._scheduleSegmentFromTime(time, attackTargetLevel, ATTACK_LINEARITY);
+      // Schedule whatever phase that comes after attack (decay or sustain)
+      if ((this._mode === 'AD') || (this._mode === 'ADSR')) {
+        // Determine target level to which we will decay
+        var decayTargetLevel;
+        if (this._mode === 'AD') {
+          decayTargetLevel = this.INITIAL_LEVEL;
+        } else {
+          decayTargetLevel = this._sustainLevel;
+        }
+        // Schedule decay
+        this._scheduleSegmentFromValueThreshold(this.ATTACK_LEVEL, decayTargetLevel, this._decayTime);
+      } else if (this._mode === 'ASR') {
+        // Schedule sustain
+        this._scheduleSegmentFromValueThreshold(this.ATTACK_LEVEL, this.ATTACK_LEVEL, 1); // timeConst here doesn't really matter
       } else {
-        decayTargetLevel = this._sustainLevel;
+        this.assert(false); // invalid mode
       }
-
-      // Schedule decay
-      this._scheduleSegmentFromValueThreshold(ATTACK_LEVEL, decayTargetLevel, this._decayTime);
-    } else if (this._mode === 'ASR') {
-      // Schedule sustain
-      this._scheduleSegmentFromValueThreshold(ATTACK_LEVEL, ATTACK_LEVEL, 1); // timeConst here doesn't really matter
     } else {
-      assert(false); // invalid mode
+      if (this._mode === 'AD') {
+        // We ignore gate-off when in AD mode
+      } else if ((this._mode === 'ASR') || (this._mode === 'ADSR')) {
+        // Schedule release
+        this._scheduleSegmentFromTime(time, this.INITIAL_LEVEL, this._releaseTime);
+      } else {
+        this.assert(false); // invalid mode
+      }
     }
-  } else {
-    if (this._mode === 'AD') {
-      // We ignore gate-off when in AD mode
-    } else if ((this._mode === 'ASR') || (this._mode === 'ADSR')) {
-      // Schedule release
-      this._scheduleSegmentFromTime(time, INITIAL_LEVEL, this._releaseTime);
-    } else {
-      assert(false); // invalid mode
-    }
-  }
-};
+  };
 
-EnvGen.prototype.gateOn = function (time) {
-  this.gate(true, time);
-};
+  gateOn(time) {
+    this.gate(true, time);
+  };
 
-EnvGen.prototype.gateOff = function (time) {
-  this.gate(false, time);
-};
+  gateOff(time) {
+    this.gate(false, time);
+  };
+
+}
 
 
 window.WasabiMinilogue = class WasabiMinilogue extends WebAudioPluginFactory {
