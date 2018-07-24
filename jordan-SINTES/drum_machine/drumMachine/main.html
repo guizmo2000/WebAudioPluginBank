@@ -746,8 +746,8 @@
 
             notes[rhythmIndex] = (notes[rhythmIndex] + 1) % 3;
 
-            if (instrumentIndex == this._plug.params.currentlyActiveInstrument)
-                this._plug.showCorrectNote(rhythmIndex, notes[rhythmIndex]);
+            /*if (instrumentIndex == this._plug.params.currentlyActiveInstrument)
+                this._plug.showCorrectNote(rhythmIndex, notes[rhythmIndex]);*/
 
             this.drawNote(notes[rhythmIndex], rhythmIndex, instrumentIndex);
 
