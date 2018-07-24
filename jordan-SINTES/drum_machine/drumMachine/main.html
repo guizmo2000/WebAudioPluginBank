@@ -754,6 +754,7 @@
             var note = notes[rhythmIndex];
 
             if (note) {
+    
                 switch (instrumentIndex) {
                     //put to true to have sound position in function to the click position on drumMachine
                     case 0:  // Kick
@@ -900,45 +901,9 @@
             loadBeat(beatReset);
         }
 
-        loadBeat(beat) {
-            // Check that assets are loaded.
-            if (beat != this._plug.params.beatReset && !beat.isLoaded())
-                return false;
-
-            this.handleStop();
-
-            var theBeat = this._plug.beatReset;
-            //currentKit = kits[theBeat.kitIndex];
-
-            // apply values from sliders
-            this.sliderSetValue('kick_thumb', this._plug.params.theBeat.kickPitchVal);
-            this.sliderSetValue('snare_thumb', this._plug.params.theBeat.snarePitchVal);
-            this.sliderSetValue('hihat_thumb', this._plug.params.theBeat.hihatPitchVal);
-            this.sliderSetValue('tom1_thumb', this._plug.params.theBeat.tom1PitchVal);
-            this.sliderSetValue('tom2_thumb', this._plug.params.theBeat.tom2PitchVal);
-            this.sliderSetValue('tom3_thumb', this._plug.params.theBeat.tom3PitchVal);
-            this.sliderSetValue('swing_thumb', this._plug.params.theBeat.swingFactor);
-
-            this.updateControls();
-            // setActiveInstrument(0);
-
-            return true;
-        }
 
 
 
-
-        showPlayAvailable() {
-            var play = this._root.getElementById("play");
-            play.src = "mididrum/images/btn_play.png";
-        }
-
-        showDemoAvailable(demoIndex /* zero-based*/) {
-
-            this.showPlayAvailable();
-            this.loadBeat(this._plug.params.beatInitial);
-
-        }
 
         updateControls() {
             for (var i = 0; i < this._plug.params.loopLength; ++i) {

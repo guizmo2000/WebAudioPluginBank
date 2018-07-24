@@ -89,9 +89,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			currentKit: null,
 			currentlyActiveInstrument: 0,
 			midiOut: null,
+			masterGainNode: null,
 
-
-			context: new AudioContext(),
+			context: null,
 
 			kickPitch: 0,
 			snarePitch: 0,
@@ -145,6 +145,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"The Cheebacabra 1",
 				"The Cheebacabra 2"
 			],
+
+			buffer: 0,
 
 			decodedFunctions: [
 				function (buffer) { this.kickBuffer = buffer; },
@@ -289,29 +291,29 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	showDemoAvailable(demoIndex /* zero-based */) {
 
-		//this.showPlayAvailable();
-		//this.loadBeat(this.params.beatInitial);
+		var ok = () =>this.showPlayAvailable();
+		this.loadBeat(this.params.beatInitial);
 
 	}
 
-	/*showPlayAvailable() {
-		var play = document.getElementById("play");
+	showPlayAvailable() {
+		var play = this.gui._root.getElementById("play");
 		play.src = "mididrum/images/btn_play.png";
-	}*/
+	}
 
 	init() {
 		// Let the beat demos know when all of their assets have been loaded.
 		// Add some new methods to support this.
 		this.params.beatInitial.isKitLoaded = false;
 
-		this.params.beatInitial.setKitLoaded =  () => {
+		this.params.beatInitial.setKitLoaded =  ()=>{
 			this.isKitLoaded = true;
 			this.params.beatInitial.checkIsLoaded();
 		};
 
 
 
-		this.params.beatInitial.checkIsLoaded =  () => {
+		this.params.beatInitial.checkIsLoaded = () =>{
 			if (this.params.beatInitial.isLoaded()) {
 				this.showDemoAvailable(this.index);
 			}
@@ -325,13 +327,13 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		// NOTE: THIS NOW RELIES ON THE MONKEYPATCH LIBRARY TO LOAD
 		// IN CHROME AND SAFARI (until they release unprefixed)
-		var context = new AudioContext();
+		this.params.context = new AudioContext();
 
 		var finalMixNode;
-		if (context.createDynamicsCompressor) {
+		if (this.params.context.createDynamicsCompressor) {
 			// Create a dynamics compressor to sweeten the overall mix.
-			var compressor = context.createDynamicsCompressor();
-			compressor.connect(context.destination);
+			var compressor = this.params.context.createDynamicsCompressor();
+			compressor.connect(this.params.context.destination);
 			finalMixNode = compressor;
 		} else {
 			// No compressor available in this implementation.
@@ -339,16 +341,16 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 
 		// create master filter node
-		var filterNode = context.createBiquadFilter();
+		var filterNode = this.params.context.createBiquadFilter();
 		filterNode.type = "lowpass";
-		filterNode.frequency.value = 0.5 * context.sampleRate;
+		filterNode.frequency.value = 0.5 * this.params.context.sampleRate;
 		filterNode.Q.value = 1;
 		filterNode.connect(finalMixNode);
 
 		// Create master volume.
-		var masterGainNode = context.createGain();
-		masterGainNode.gain.value = 0.7; // reduce overall volume to avoid clipping
-		masterGainNode.connect(filterNode);
+		this.params.masterGainNode = this.params.context.createGain();
+		this.params.masterGainNode.gain.value = 0.7; // reduce overall volume to avoid clipping
+		this.params.masterGainNode.connect(filterNode);
 
 		
 		
@@ -436,7 +438,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		// Optionally, connect to a panner
 		var finalNode;
 		if (pan) {
-			var panner = context.createPanner();
+			var panner = this.params.context.createPanner();
 			panner.panningModel = "HRTF";
 			voice.connect(panner);
 			finalNode = panner;
@@ -445,13 +447,13 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 
 		// Connect to dry mix
-		var dryGainNode = context.createGain();
+		var dryGainNode = this.params.context.createGain();
 		dryGainNode.gain.value = mainGain;
 		finalNode.connect(dryGainNode);
-		dryGainNode.connect(masterGainNode);
+		dryGainNode.connect(this.params.masterGainNode);
 
 		// Connect to wet mix
-		var wetGainNode = context.createGain();
+		var wetGainNode = this.params.context.createGain();
 		wetGainNode.gain.value = sendGain;
 		finalNode.connect(wetGainNode);
 
@@ -473,6 +475,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 			// Kick
 			if (this.params.theBeat.rhythm1[this.params.rhythmIndex] && instrumentActive[0]) {
+				console.log(this.params.currentKit.kickBuffer)
 				playNote(this.params.currentKit.kickBuffer, false, 0, 0, -2, 0.5, volumes[theBeat.rhythm1[rhythmIndex]] * 1.0, kickPitch, contextPlayTime);
 			}
 
@@ -835,32 +838,32 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	handleReset(event) {
 		handleStop();
 		loadBeat(beatReset);
-	}
+	}*/
 
 	loadBeat(beat) {
 		// Check that assets are loaded.
-		if (beat != beatReset && !beat.isLoaded())
+		if (beat != this.params.beatReset && !beat.isLoaded())
 			return false;
 
-		handleStop();
+		var ok = () =>this.gui._root.handleStop();
 
-		theBeat = cloneBeat(beat);
-		currentKit = kits[theBeat.kitIndex];
+		
+		this.params.currentKit = this.params.kits[this.params.theBeat.kitIndex];
 
 		// apply values from sliders
-		sliderSetValue('kick_thumb', theBeat.kickPitchVal);
-		sliderSetValue('snare_thumb', theBeat.snarePitchVal);
-		sliderSetValue('hihat_thumb', theBeat.hihatPitchVal);
-		sliderSetValue('tom1_thumb', theBeat.tom1PitchVal);
-		sliderSetValue('tom2_thumb', theBeat.tom2PitchVal);
-		sliderSetValue('tom3_thumb', theBeat.tom3PitchVal);
-		sliderSetValue('swing_thumb', theBeat.swingFactor);
+		this.sliderSetValue('kick_thumb', this.params.theBeat.kickPitchVal);
+		this.sliderSetValue('snare_thumb', this.params.theBeat.snarePitchVal);
+		this.sliderSetValue('hihat_thumb', this.params.theBeat.hihatPitchVal);
+		this.sliderSetValue('tom1_thumb', this.params.theBeat.tom1PitchVal);
+		this.sliderSetValue('tom2_thumb', this.params.theBeat.tom2PitchVal);
+		this.sliderSetValue('tom3_thumb', this.params.theBeat.tom3PitchVal);
+		this.sliderSetValue('swing_thumb', this.params.theBeat.swingFactor);
 
-		updateControls();
-		setActiveInstrument(0);
+		var ok = ()=>this.gui._root.updateControls();
+		//setActiveInstrument(0);
 
 		return true;
-	}*/
+	}
 
 	/*updateControls() {
 		for (i = 0; i < loopLength; ++i) {
@@ -1020,7 +1023,8 @@ class Kit {
 		var kit = this;
 
 		request.onload = () => {
-			//this.context.decodeAudioData(request.response, decodedFunctions[sampleID].bind(kit));
+			var context = new AudioContext()
+			context.decodeAudioData(request.response, this.parent.params.decodedFunctions[sampleID].bind(kit));
 			
 			kit.instrumentLoadCount++;
 			if (kit.instrumentLoadCount == kit.instrumentCount) {
