@@ -630,8 +630,8 @@
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(drummachine.content.cloneNode(true));
             this.initControls();
-           
-            
+
+
 
             //this.InitMidi();
         }
@@ -660,7 +660,7 @@
 
         initControls() {
             // Initialize note buttons
-            this._plug.initButtons();
+            this.initButtons();
             this.makeKitList();
 
 
@@ -692,30 +692,39 @@
 
             this._root.getElementById('tempoinc').addEventListener('mousedown', () => this._plug.tempoIncrease(), true);
             this._root.getElementById('tempodec').addEventListener('mousedown', () => this._plug.tempoDecrease(), true);
-        
+
             this._root.getElementById('kitcombo').addEventListener("mousedown", (event) => this.handleKitComboMouseDown(event), true);
             this._root.addEventListener("mousedown", (event) => this.handleBodyMouseDown(event), true);
         }
 
-      
 
-    
+        initButtons() {
+            var elButton;
+
+            for (var i = 0; i < this._plug.params.loopLength; ++i) {
+                for (var j = 0; j < this._plug.params.kNumInstruments; j++) {
+                    elButton = this._root.getElementById(this._plug.params.instruments[j] + '_' + i);
+                    elButton.addEventListener("mousedown", (event) => this.handleButtonMouseDown(event), true);
+                }
+            }
+        }
+
 
         handleKitComboMouseDown(event) {
             this._root.getElementById('kitcombo').classList.toggle('active');
-           
+
         }
 
         handleBodyMouseDown(event) {
             var elKitcombo = this._root.getElementById('kitcombo');
-          
+
             if (elKitcombo.classList.contains('active') && !this.isDescendantOfId(event.target, 'kitcombo_container')) {
                 elKitcombo.classList.remove('active');
             }
-            
-           
-        }
 
+
+        }
+        //TODO: see this function how it works, particularry drawNote
         handleButtonMouseDown(event) {
             var notes = this._plug.params.theBeat.kickPitch;
 
@@ -724,23 +733,23 @@
 
             var elId = event.target.id;
             rhythmIndex = elId.substr(elId.indexOf('_') + 1, 2);
-            instrumentIndex = instruments.indexOf(elId.substr(0, elId.indexOf('_')));
+            instrumentIndex = this._plug.params.instruments.indexOf(elId.substr(0, elId.indexOf('_')));
 
             switch (instrumentIndex) {
-                case 0: notes = theBeat.rhythm1; break;
-                case 1: notes = theBeat.rhythm2; break;
-                case 2: notes = theBeat.rhythm3; break;
-                case 3: notes = theBeat.rhythm4; break;
-                case 4: notes = theBeat.rhythm5; break;
-                case 5: notes = theBeat.rhythm6; break;
+                case 0: notes = this._plug.params.theBeat.rhythm1; break;
+                case 1: notes = this._plug.params.theBeat.rhythm2; break;
+                case 2: notes = this._plug.params.theBeat.rhythm3; break;
+                case 3: notes = this._plug.params.theBeat.rhythm4; break;
+                case 4: notes = this._plug.params.theBeat.rhythm5; break;
+                case 5: notes = this._plug.params.theBeat.rhythm6; break;
             }
 
             notes[rhythmIndex] = (notes[rhythmIndex] + 1) % 3;
 
-            if (instrumentIndex == currentlyActiveInstrument)
-                showCorrectNote(rhythmIndex, notes[rhythmIndex]);
+            if (instrumentIndex == this._plug.params.currentlyActiveInstrument)
+                this._plug.showCorrectNote(rhythmIndex, notes[rhythmIndex]);
 
-            drawNote(notes[rhythmIndex], rhythmIndex, instrumentIndex);
+            this.drawNote(notes[rhythmIndex], rhythmIndex, instrumentIndex);
 
             var note = notes[rhythmIndex];
 
@@ -748,52 +757,50 @@
                 switch (instrumentIndex) {
                     //put to true to have sound position in function to the click position on drumMachine
                     case 0:  // Kick
-                        playNote(currentKit.kickBuffer, false, 0, 0, -2, 0.5 * 1, volumes[note] * 1.0, kickPitch, 0);
+                        this._plug.playNote(this._plug.params.currentKit.kickBuffer, false, 0, 0, -2, 0.5 * 1, this._plug.params.volumes[note] * 1.0, this._plug.params.kickPitch, 0);
                         break;
 
                     case 1:  // Snare
-                        playNote(currentKit.snareBuffer, false, 0, 0, -2, 1, volumes[note] * 0.6, snarePitch, 0);
+                        this._plug.playNote(this._plug.params.currentKit.snareBuffer, false, 0, 0, -2, 1, this._plug.params.volumes[note] * 0.6, this._plug.params.snarePitch, 0);
                         break;
 
                     case 2:  // Hihat
                         // Pan the hihat according to sequence position.
-                        playNote(currentKit.hihatBuffer, false, 0.5 * rhythmIndex - 4, 0, -1.0, 1, volumes[note] * 0.7, hihatPitch, 0);
+                        this._plug.playNote(this._plug.params.currentKit.hihatBuffer, false, 0.5 * this._plug.params.rhythmIndex - 4, 0, -1.0, 1, this._plug.params.volumes[note] * 0.7, this._plug.params.hihatPitch, 0);
                         break;
 
                     case 3:  // Tom 1   
-                        playNote(currentKit.tom1, false, 0, 0, -2, 1, volumes[note] * 0.6, tom1Pitch, 0);
+                        this._plug.playNote(this._plug.params.currentKit.tom1, false, 0, 0, -2, 1, this._plug.params.volumes[note] * 0.6, this._plug.params.tom1Pitch, 0);
                         break;
 
                     case 4:  // Tom 2   
-                        playNote(currentKit.tom2, false, 0, 0, -2, 1, volumes[note] * 0.6, tom2Pitch, 0);
+                        this._plug.playNote(this._plug.params.currentKit.tom2, false, 0, 0, -2, 1, this._plug.params.volumes[note] * 0.6, this._plug.params.tom2Pitch, 0);
                         break;
 
                     case 5:  // Tom 3   
-                        playNote(currentKit.tom3, false, 0, 0, -2, 1, volumes[note] * 0.6, tom3Pitch, 0);
+                        this._plug.playNote(this._plug.params.currentKit.tom3, false, 0, 0, -2, 1, this._plug.params.volumes[note] * 0.6, this._plug.params.tom3Pitch, 0);
                         break;
                 }
             }
         }
 
         makeKitList() {
-		var elList = this._root.getElementById('kitlist');
-		var numKits = this._plug.params.kitName.length;
+            var elList = this._root.getElementById('kitlist');
+            var numKits = this._plug.params.kitName.length;
 
-		for (var i = 0; i < numKits; i++) {
-			var elItem = document.createElement('li');
-			elItem.innerHTML = this._plug.params.kitNamePretty[i];
-			elList.appendChild(elItem);
-			elItem.addEventListener("mousedown", (event) =>this.handleKitMouseDown(event), true);
-		}
-	}
+            for (var i = 0; i < numKits; i++) {
+                var elItem = document.createElement('li');
+                elItem.innerHTML = this._plug.params.kitNamePretty[i];
+                elList.appendChild(elItem);
+                elItem.addEventListener("mousedown", (event) => this.handleKitMouseDown(event), true);
+            }
+        }
 
         handleKitMouseDown(event) {
             var index = this._plug.params.kitNamePretty.indexOf(event.target.innerHTML);
             this._plug.params.theBeat.kitIndex = index;
-        //TODO, correcting this function to select a kit
             this._plug.params.currentKit = this._plug.params.kits[index];
             this._root.getElementById('kitname').innerHTML = this._plug.params.kitNamePretty[index];
-            console.log(this._plug.params.theBeat.kitIndex);
         }
 
         isDescendantOfId(el, id) {
@@ -808,8 +815,8 @@
             }
         }
 
-       
-        
+
+
 
         handleStop(event) {
             //timerWorker.postMessage("stop");
@@ -904,21 +911,21 @@
             //currentKit = kits[theBeat.kitIndex];
 
             // apply values from sliders
-            this.sliderSetValue('kick_thumb',  this._plug.params.theBeat.kickPitchVal);
+            this.sliderSetValue('kick_thumb', this._plug.params.theBeat.kickPitchVal);
             this.sliderSetValue('snare_thumb', this._plug.params.theBeat.snarePitchVal);
             this.sliderSetValue('hihat_thumb', this._plug.params.theBeat.hihatPitchVal);
-            this.sliderSetValue('tom1_thumb',  this._plug.params.theBeat.tom1PitchVal);
-            this.sliderSetValue('tom2_thumb',  this._plug.params.theBeat.tom2PitchVal);
-            this.sliderSetValue('tom3_thumb',  this._plug.params.theBeat.tom3PitchVal);
+            this.sliderSetValue('tom1_thumb', this._plug.params.theBeat.tom1PitchVal);
+            this.sliderSetValue('tom2_thumb', this._plug.params.theBeat.tom2PitchVal);
+            this.sliderSetValue('tom3_thumb', this._plug.params.theBeat.tom3PitchVal);
             this.sliderSetValue('swing_thumb', this._plug.params.theBeat.swingFactor);
 
             this.updateControls();
-           // setActiveInstrument(0);
+            // setActiveInstrument(0);
 
             return true;
         }
 
-        
+
 
 
         showPlayAvailable() {
@@ -934,34 +941,34 @@
         }
 
         updateControls() {
-		for (var i = 0; i < this._plug.params.loopLength; ++i) {
-			for (var j = 0; j < this._plug.params.kNumInstruments; j++) {
-				switch (j) {
-					case 0: this._plug.params.notes = this._plug.params.theBeat.rhythm1; break;
-					case 1: this._plug.params.notes = this._plug.params.theBeat.rhythm2; break;
-					case 2: this._plug.params.notes = this._plug.params.theBeat.rhythm3; break;
-					case 3: this._plug.params.notes = this._plug.params.theBeat.rhythm4; break;
-					case 4: this._plug.params.notes = this._plug.params.theBeat.rhythm5; break;
-					case 5: this._plug.params.notes = this._plug.params.theBeat.rhythm6; break;
-				}
+            for (var i = 0; i < this._plug.params.loopLength; ++i) {
+                for (var j = 0; j < this._plug.params.kNumInstruments; j++) {
+                    switch (j) {
+                        case 0: this._plug.params.notes = this._plug.params.theBeat.rhythm1; break;
+                        case 1: this._plug.params.notes = this._plug.params.theBeat.rhythm2; break;
+                        case 2: this._plug.params.notes = this._plug.params.theBeat.rhythm3; break;
+                        case 3: this._plug.params.notes = this._plug.params.theBeat.rhythm4; break;
+                        case 4: this._plug.params.notes = this._plug.params.theBeat.rhythm5; break;
+                        case 5: this._plug.params.notes = this._plug.params.theBeat.rhythm6; break;
+                    }
 
-				this.drawNote(this._plug.params.notes[i], i, j);
-			}
-		}
+                    this.drawNote(this._plug.params.notes[i], i, j);
+                }
+            }
 
-		this._root.getElementById('kitname').innerHTML = this._plug.params.kitNamePretty[this._plug.params.theBeat.kitIndex];
+            this._root.getElementById('kitname').innerHTML = this._plug.params.kitNamePretty[this._plug.params.theBeat.kitIndex];
 
-		this._root.getElementById('tempo').innerHTML = this._plug.params.theBeat.tempo;
-    }
-    
-    drawNote(draw, xindex, yindex) {
-		var elButton = this._root.getElementById(this._plug.params.instruments[yindex] + '_' + xindex);
-		switch (draw) {
-			case 0: elButton.src = 'mididrum/images/button_off.png'; break;
-			case 1: elButton.src = 'mididrum/images/button_half.png'; break;
-			case 2: elButton.src = 'mididrum/images/button_on.png'; break;
-		}
-	}
+            this._root.getElementById('tempo').innerHTML = this._plug.params.theBeat.tempo;
+        }
+
+        drawNote(draw, xindex, yindex) {
+            var elButton = this._root.getElementById(this._plug.params.instruments[yindex] + '_' + xindex);
+            switch (draw) {
+                case 0: elButton.src = 'mididrum/images/button_off.png'; break;
+                case 1: elButton.src = 'mididrum/images/button_half.png'; break;
+                case 2: elButton.src = 'mididrum/images/button_on.png'; break;
+            }
+        }
 
     }
     // Register the x-custom element with the browser

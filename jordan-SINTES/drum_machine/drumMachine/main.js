@@ -87,6 +87,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 			kits:null,
 			currentKit: null,
+			currentlyActiveInstrument: 0,
+			midiOut: null,
 
 
 			context: new AudioContext(),
@@ -403,16 +405,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		document.getElementById('tempodec').addEventListener('mousedown', tempoDecrease, true);
 	}*/
 
-	initButtons() {
-		var elButton;
-
-		for (var i = 0; i < this.params.loopLength; ++i) {
-			for (var j = 0; j < this.params.kNumInstruments; j++) {
-				elButton = this.gui._root.getElementById(this.params.instruments[j] + '_' + i);
-				elButton.addEventListener("mousedown", this.handleButtonMouseDown, true);
-			}
-		}
-	}
+	//TODO: See this function, depending with handlebuttonmousedown
+	
 
 	
 
@@ -435,7 +429,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	playNote(buffer, pan, x, y, z, sendGain, mainGain, playbackRate, noteTime) {
 		// Create the note
-		var voice = context.createBufferSource();
+		var voice = this.params.context.createBufferSource();
 		voice.buffer = buffer;
 		voice.playbackRate.value = playbackRate;
 
@@ -555,7 +549,14 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 
 	
-
+	showCorrectNote( index, note ) {
+		// note==0 -> off
+		// note==1 -> light hit
+		// note==2 -> loud hit
+	  
+		if (this.params.midiOut && outputIsLivid)
+		  midiOut.send( [0x90, 32 + index, note * 32] );
+	  }
 	
 
 	
