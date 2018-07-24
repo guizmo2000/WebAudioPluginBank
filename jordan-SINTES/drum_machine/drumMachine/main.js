@@ -284,6 +284,26 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 
 	connectNodes() {
+
+		if(pan){
+			this._input.connect(this.panner);
+			this.panner.connect(this.dryGainNode);
+			this.panner.connect(this.wetGainNode);
+		}else{
+			this._input.connect(this.voice);
+			this.voice.connect(this.dryGainNode);
+			this.voice.connect(this.wetGainNode);
+		}
+		
+		this.dryGainNode.connect(this.masterGainNode);
+		this.masterGainNode.connect(this.filterNode);
+		
+		if (this.context.createDynamicsCompressor) {
+			this.filterNode.connect(this.compressor);
+			this.compressor.connect(this._output);
+		}else{
+			this.filterNode.connect(this._output)
+		}
 		
 	}
 
