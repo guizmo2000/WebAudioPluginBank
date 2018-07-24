@@ -21,7 +21,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
 
     // assign manually the params which does not fit the defaultvalue/max/min schema
-    this.params = { "wave1": "sawtooth", "status": "disable", "wave2": "sawtooth", "lfodest": "cutoff" };
+    this.params = { "wave1": "sawtooth", "status": "disable", "wave2": "sawtooth", "lfodest": "cutoff", "mode": "poly" };
 
     // P3 : Json descriptor
     this.addParam({ name: 'lfoint', defaultValue: 20, minValue: 1, maxValue: 1000 });
@@ -51,6 +51,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.addParam({ name: 'osc2Octave', defaultValue: 3, minValue: 1, maxValue: 5 });
     this.addParam({ name: 'noise', defaultValue: 0.1, minValue: 0.1, maxValue: 3 });
     this.addParam({ name: 'ringmodulation', defaultValue: 0, minValue: 0, maxValue: 1 });
+
 
 
 
@@ -131,6 +132,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     // this.ringmodulation = this.params.ringmodulation
     this.wave1 = this.params.wave1;
     this.wave2 = this.params.wave2;
+    this.mode = this.params.mode;
 
   }
 
@@ -149,22 +151,62 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       }
       this.playedvoices.push(key);
       // The params are initiated to have the latest values
-      this.voices[key] = new Voice(this.context, key, parent);
-      // The voice is assigned at it's range in the voice table
-      this.setInitialParamValues();
-      // wire the voices graph with the persistant one
-      this.voices[key].amp.connect(this._output);
-      this.voices[key].amp.connect(this.gainforAnalyse);
-      // active the ADSR node
-      this.voices[key].ampEnveloppe.gateOn();
-      // connect to normalisation 
-      if (this.params.status == "disable") this.voices[key].amp.connect(this.normalize);
-      else if (this.params.status == "enable") {
-        this.ppdelay.dryGainNode.gain.value = 0.1;
-        this.ppdelay.wetGainNode.gain.value = 1;
-        this.voices[key].amp.connect(this.ppdelay.feedbackGainNode);
-        this.voices[key].amp.connect(this.ppdelay.dryGainNode);
+      if (this.params.mode == "poly") {
+        this.voices[key] = new Voice(this.context, key, parent);
+        // The voice is assigned at it's range in the voice table
+        this.setInitialParamValues();
+        // wire the voices graph with the persistant one
+        this.voices[key].amp.connect(this._output);
+        this.voices[key].amp.connect(this.gainforAnalyse);
+        // active the ADSR node
+        this.voices[key].ampEnveloppe.gateOn();
+        // connect to normalisation 
+        if (this.params.status == "disable") this.voices[key].amp.connect(this.normalize);
+        else if (this.params.status == "enable") {
+          this.ppdelay.dryGainNode.gain.value = 0.1;
+          this.ppdelay.wetGainNode.gain.value = 1;
+          this.voices[key].amp.connect(this.ppdelay.feedbackGainNode);
+          this.voices[key].amp.connect(this.ppdelay.dryGainNode);
+        }
+
       }
+      else if (this.params.mode == "mono") {
+
+        this.voices[key] = new Voice(this.context, key, parent);
+        this.voices[key - 12] = new Voice(this.context, key - 12, parent);
+        this.voices[key - 24] = new Voice(this.context, key - 24, parent);
+
+
+        this.setInitialParamValues();
+        // wire the voices graph with the persistant one
+        this.voices[key].amp.connect(this._output);
+        this.voices[key].amp.connect(this.gainforAnalyse);
+        this.voices[key-12].amp.connect(this._output);
+        this.voices[key-12].amp.connect(this.gainforAnalyse);
+        this.voices[key-24].amp.connect(this._output);
+        this.voices[key-24].amp.connect(this.gainforAnalyse);
+        // active the ADSR node
+        this.voices[key].ampEnveloppe.gateOn();
+        this.voices[key-12].ampEnveloppe.gateOn();
+        this.voices[key-24].ampEnveloppe.gateOn();
+
+        // connect to normalisation 
+        if (this.params.status == "disable") {
+          this.voices[key].amp.connect(this.normalize);
+          this.voices[key-12].amp.connect(this.normalize);
+          this.voices[key-24].amp.connect(this.normalize);
+
+        }
+        else if (this.params.status == "enable") {
+          this.ppdelay.dryGainNode.gain.value = 0.1;
+          this.ppdelay.wetGainNode.gain.value = 1;
+          this.voices[key].amp.connect(this.ppdelay.feedbackGainNode);
+          this.voices[key].amp.connect(this.ppdelay.dryGainNode);
+        }
+
+      }
+
+
 
     } else {
       this.killNote(key);
@@ -178,6 +220,11 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     if (this.voices[key] != null) {
       // the voice is pull off the playedvoice array when noteoff
       this.playedvoices.splice(this.playedvoices.indexOf(key));
+      if(this.params.mode == "mono"){
+        this.voices[key-12].ampEnveloppe.gateOff();
+        this.voices[key-24].ampEnveloppe.gateOff();
+
+      }
       this.voices[key].ampEnveloppe.gateOff();
       // Shut off the note playing and clear it 
 
@@ -186,7 +233,17 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   }
 
   killNote(key) {
-    console.log("kill"+key)
+    console.log("kill" + key)
+    if(this.params.mode == "mono"){
+    this.voices[key-12].osc1.stop();
+    this.voices[key-12].osc2.stop();
+    this.voices[key-12].lfo.stop();
+    this.voices[key-12].whitenoise.bufferSource.stop(this.context.currentTime);
+    this.voices[key-24].osc1.stop();
+    this.voices[key-24].osc2.stop();
+    this.voices[key-24].lfo.stop();
+    this.voices[key-24].whitenoise.bufferSource.stop(this.context.currentTime);
+    }
     this.voices[key].osc1.stop();
     this.voices[key].osc2.stop();
     this.voices[key].lfo.stop();
@@ -528,6 +585,17 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
         }
         break;
+    }
+  }
+
+  set mode(_mode) {
+    this.params.mode = _mode;
+    switch (_mode) {
+      case "poly": this.maxVoices = 4; break;
+      case "duo": this.maxVoices = 2; break;
+      case "mono": this.maxVoices = 1; break;
+      case "unison": this.maxVoices = 1; break;
+      case "arp": this.maxVoices = 1; break;
     }
   }
 
