@@ -87,11 +87,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 			kits:null,
 			currentKit: null,
-			currentlyActiveInstrument: 0,
-			midiOut: null,
-
-
-			context: new AudioContext(),
+			masterGainNode: null,
+			instrumentActive : [true,true,true,true,true,true],
 
 			kickPitch: 0,
 			snarePitch: 0,
@@ -108,6 +105,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			kMinTempo: 52,
 			kMaxTempo: 180,
 			noteTime: 0.0,
+			startTime: 0.0,
+
+			timerWorker:null,
 
 			instruments: ['Kick', 'Snare', 'HiHat', 'Tom1', 'Tom2', 'Tom3'],
 			volumes: [0, 0.3, 1],
@@ -145,6 +145,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"The Cheebacabra 1",
 				"The Cheebacabra 2"
 			],
+
+			buffer: 0,
 
 			decodedFunctions: [
 				function (buffer) { this.kickBuffer = buffer; },
@@ -244,7 +246,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		//web midi api ?
 	}
 
-	/*  #########  Personnal code for the web audio graph  #########   */
+	/*  #########  DRUMMACHINE METHOD  #########   */
 
 // override setup 
 	setup() {
@@ -252,9 +254,66 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.createNodes();
 		this.connectNodes();
 		this.linktoParams();
-		this.init();
+		//this.init();
+	}
+
+	createNodes() {
+		this.dryGainNode = this.context.createGain();
+		this.dryGainNode.gain.value = 0.5
+		
+		this.wetGainNode = this.context.createGain();
+		this.wetGainNode.gain.value = -2;
+
+		this.masterGainNode = this.context.createGain();
+		this.masterGainNode.gain.value = 0.7;
+
+		this.compressor = this.context.createDynamicsCompressor();
+
+		this.filterNode = this.context.createBiquadFilter();
+		this.filterNode.type = "lowpass";
+		this.filterNode.frequency.value = 0.5 * this.context.sampleRate;
+		this.filterNode.Q.value = 1;
+		
+		
+		this.voice = this.context.createBufferSource();
+		
+		this.panner = this.context.createPanner();
+		this.panner.panningModel = "HRTF";
+	}
 
 
+
+	connectNodes() {
+
+		if(pan){
+			this._input.connect(this.panner);
+			this.panner.connect(this.dryGainNode);
+			this.panner.connect(this.wetGainNode);
+		}else{
+			this._input.connect(this.voice);
+			this.voice.connect(this.dryGainNode);
+			this.voice.connect(this.wetGainNode);
+		}
+		
+		this.dryGainNode.connect(this.masterGainNode);
+		this.masterGainNode.connect(this.filterNode);
+		
+		if (this.context.createDynamicsCompressor) {
+			this.filterNode.connect(this.compressor);
+			this.compressor.connect(this._output);
+		}else{
+			this.filterNode.connect(this._output)
+		}
+		
+	}
+
+
+
+	linktoParams() {
+		/*
+		 * set default value for parameters and assign it to the web audio nodes
+		 */
+		
 	}
 
 	startLoadingAssets() {
@@ -265,8 +324,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		for (var i = 0; i < numKits; i++) {
 			this.params.kits[i] = new Kit(this.params.kitName[i], this);
 		}
-
-
 
 		// Start loading the assets used by the presets first, in order of the presets.
 		for (var demoIndex = 0; demoIndex < 2; ++demoIndex) {
@@ -287,31 +344,24 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.params.currentKit = this.params.kits[this.params.kInitialKitIndex];
 	}
 
+	//TODO: see correction with this function
 	showDemoAvailable(demoIndex /* zero-based */) {
-
-		//this.showPlayAvailable();
-		//this.loadBeat(this.params.beatInitial);
-
+		this.loadBeat(this.params.beatInitial);
 	}
-
-	/*showPlayAvailable() {
-		var play = document.getElementById("play");
-		play.src = "mididrum/images/btn_play.png";
-	}*/
 
 	init() {
 		// Let the beat demos know when all of their assets have been loaded.
 		// Add some new methods to support this.
 		this.params.beatInitial.isKitLoaded = false;
 
-		this.params.beatInitial.setKitLoaded =  () => {
+		this.params.beatInitial.setKitLoaded =  ()=>{
 			this.isKitLoaded = true;
 			this.params.beatInitial.checkIsLoaded();
 		};
 
 
 
-		this.params.beatInitial.checkIsLoaded =  () => {
+		this.params.beatInitial.checkIsLoaded = () =>{
 			if (this.params.beatInitial.isLoaded()) {
 				this.showDemoAvailable(this.index);
 			}
@@ -325,33 +375,29 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		// NOTE: THIS NOW RELIES ON THE MONKEYPATCH LIBRARY TO LOAD
 		// IN CHROME AND SAFARI (until they release unprefixed)
-		var context = new AudioContext();
 
 		var finalMixNode;
-		if (context.createDynamicsCompressor) {
+		if (this.context.createDynamicsCompressor) {
 			// Create a dynamics compressor to sweeten the overall mix.
-			var compressor = context.createDynamicsCompressor();
-			compressor.connect(context.destination);
+			var compressor = this.context.createDynamicsCompressor();
+			compressor.connect(this.context.destination);
 			finalMixNode = compressor;
 		} else {
 			// No compressor available in this implementation.
-			finalMixNode = context.destination;
+			finalMixNode = this._output;
 		}
 
 		// create master filter node
-		var filterNode = context.createBiquadFilter();
+		var filterNode = this.context.createBiquadFilter();
 		filterNode.type = "lowpass";
-		filterNode.frequency.value = 0.5 * context.sampleRate;
+		filterNode.frequency.value = 0.5 * this.context.sampleRate;
 		filterNode.Q.value = 1;
 		filterNode.connect(finalMixNode);
 
 		// Create master volume.
-		var masterGainNode = context.createGain();
-		masterGainNode.gain.value = 0.7; // reduce overall volume to avoid clipping
-		masterGainNode.connect(filterNode);
-
-		
-		
+		this.params.masterGainNode = this.context.createGain();
+		this.params.masterGainNode.gain.value = 0.7; // reduce overall volume to avoid clipping
+		this.params.masterGainNode.connect(filterNode);
 
 		//this.initControls();
 		//this.updateControls();
@@ -362,81 +408,41 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		// Obtain a blob URL reference to our worker 'file'.
 		var timerWorkerBlobURL = window.URL.createObjectURL(timerWorkerBlob);
 
-		var timerWorker = new Worker(timerWorkerBlobURL);
-		timerWorker.onmessage = function (e) {
-			schedule();
+		this.params.timerWorker = new Worker(timerWorkerBlobURL);
+		this.params.timerWorker.onmessage =  (e) => {
+			this.schedule();
 		};
-		timerWorker.postMessage('init'); // Start the worker.
+		this.params.timerWorker.postMessage('init'); // Start the worker.
 
 	}
 
-	/*initControls() {
-		// Initialize note buttons
-		//this.initButtons();
-		//this.makeKitList();
-
-
-		// sliders
-
-		document.getElementById('tom1_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-		document.getElementById('tom2_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-		document.getElementById('tom3_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-		document.getElementById('hihat_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-		document.getElementById('snare_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-		document.getElementById('kick_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-		document.getElementById('swing_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
-
-
-		// tool buttons
-		document.getElementById('play').addEventListener('mousedown', handlePlay, true);
-		document.getElementById('stop').addEventListener('mousedown', handleStop, true);
-		document.getElementById('save').addEventListener('mousedown', handleSave, true);
-		document.getElementById('save_ok').addEventListener('mousedown', handleSaveOk, true);
-		document.getElementById('load').addEventListener('mousedown', handleLoad, true);
-		document.getElementById('load_ok').addEventListener('mousedown', handleLoadOk, true);
-		document.getElementById('load_cancel').addEventListener('mousedown', handleLoadCancel, true);
-		document.getElementById('reset').addEventListener('mousedown', handleReset, true);
-
-		var elBody = document.getElementById('body');
-		elBody.addEventListener('mousemove', handleMouseMove, true);
-		elBody.addEventListener('mouseup', handleMouseUp, true);
-
-		document.getElementById('tempoinc').addEventListener('mousedown', tempoIncrease, true);
-		document.getElementById('tempodec').addEventListener('mousedown', tempoDecrease, true);
-	}*/
-
-	//TODO: See this function, depending with handlebuttonmousedown
-	
-
-	
-
 	advanceNote() {
 		// Advance time by a 16th note...
-		var secondsPerBeat = 60.0 / theBeat.tempo;
+		var secondsPerBeat = 60.0 / this.params.theBeat.tempo;
 
-		rhythmIndex++;
-		if (rhythmIndex == loopLength) {
-			rhythmIndex = 0;
+		this.params.rhythmIndex++;
+		if (this.params.rhythmIndex == this.params.loopLength) {
+			this.params.rhythmIndex = 0;
 		}
 
 		// apply swing    
-		if (rhythmIndex % 2) {
-			noteTime += (0.25 + kMaxSwing * theBeat.swingFactor) * secondsPerBeat;
+		if (this.params.rhythmIndex % 2) {
+			this.params.noteTime += (0.25 + this.params.kMaxSwing * this.params.theBeat.swingFactor) * secondsPerBeat;
 		} else {
-			noteTime += (0.25 - kMaxSwing * theBeat.swingFactor) * secondsPerBeat;
+			this.params.noteTime += (0.25 - this.params.kMaxSwing * this.params.theBeat.swingFactor) * secondsPerBeat;
 		}
 	}
 
 	playNote(buffer, pan, x, y, z, sendGain, mainGain, playbackRate, noteTime) {
 		// Create the note
-		var voice = this.params.context.createBufferSource();
+		var voice = this.context.createBufferSource();
 		voice.buffer = buffer;
 		voice.playbackRate.value = playbackRate;
 
 		// Optionally, connect to a panner
 		var finalNode;
 		if (pan) {
-			var panner = context.createPanner();
+			var panner = this.context.createPanner();
 			panner.panningModel = "HRTF";
 			voice.connect(panner);
 			finalNode = panner;
@@ -445,13 +451,13 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 
 		// Connect to dry mix
-		var dryGainNode = context.createGain();
+		var dryGainNode = this.context.createGain();
 		dryGainNode.gain.value = mainGain;
 		finalNode.connect(dryGainNode);
-		dryGainNode.connect(masterGainNode);
+		dryGainNode.connect(this.params.masterGainNode);
 
 		// Connect to wet mix
-		var wetGainNode = context.createGain();
+		var wetGainNode = this.context.createGain();
 		wetGainNode.gain.value = sendGain;
 		finalNode.connect(wetGainNode);
 
@@ -460,83 +466,58 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	schedule() {
 
-		var noteTime = 0.0;
-		var startTime = this.params.context.currentTime + 0.005;
-		var currentTime = this.params.context.currentTime;
+		//this.params.noteTime = 0.0;
+		//this.params.startTime = this.context.currentTime + 0.005;
+		var currentTime = this.context.currentTime;
 
 		// The sequence starts at startTime, so normalize currentTime so that it's 0 at the start of the sequence.
-		currentTime -= startTime;
+		currentTime -= this.params.startTime;
 
-		while (noteTime < currentTime + 0.120) {
+		while (this.params.noteTime < currentTime + 0.120) {
 			// Convert noteTime to context time.
-			var contextPlayTime = noteTime + startTime;
+			var contextPlayTime = this.params.noteTime + this.params.startTime;
 
 			// Kick
-			if (this.params.theBeat.rhythm1[this.params.rhythmIndex] && instrumentActive[0]) {
-				playNote(this.params.currentKit.kickBuffer, false, 0, 0, -2, 0.5, volumes[theBeat.rhythm1[rhythmIndex]] * 1.0, kickPitch, contextPlayTime);
+			if (this.params.theBeat.rhythm1[this.params.rhythmIndex] /*&& this.params.instrumentActive[0]*/) {
+
+				this.playNote(this.params.currentKit.kickBuffer, false, 0, 0, -2, 0.5, this.params.volumes[this.params.theBeat.rhythm1[this.params.rhythmIndex]] * 1.0, this.params.kickPitch, contextPlayTime);
 			}
 
 			// Snare
-			if (this.params.theBeat.rhythm2[this.params.rhythmIndex] && instrumentActive[1]) {
-				playNote(this.params.currentKit.snareBuffer, false, 0, 0, -2, 1, volumes[theBeat.rhythm2[rhythmIndex]] * 0.6, snarePitch, contextPlayTime);
+			if (this.params.theBeat.rhythm2[this.params.rhythmIndex]/* && this.params.instrumentActive[1]*/) {
+				this.playNote(this.params.currentKit.snareBuffer, false, 0, 0, -2, 1, this.params.volumes[this.params.theBeat.rhythm2[this.params.rhythmIndex]] * 0.6, this.params.snarePitch, contextPlayTime);
 			}
 
 			// Hihat
-			if (this.params.theBeat.rhythm3[this.params.rhythmIndex] && instrumentActive[2]) {
+			if (this.params.theBeat.rhythm3[this.params.rhythmIndex]/* && this.params.instrumentActive[2]*/) {
 				// Pan the hihat according to sequence position.
-				playNote(this.params.currentKit.hihatBuffer, true, 0.5 * rhythmIndex - 4, 0, -1.0, 1, volumes[theBeat.rhythm3[rhythmIndex]] * 0.7, hihatPitch, contextPlayTime);
+				this.playNote(this.params.currentKit.hihatBuffer, true, 0.5 * this.params.rhythmIndex - 4, 0, -1.0, 1, this.params.volumes[this.params.theBeat.rhythm3[this.params.rhythmIndex]] * 0.7, this.params.hihatPitch, contextPlayTime);
 			}
 
 			// Toms    
-			if (this.params.theBeat.rhythm4[this.params.rhythmIndex] && instrumentActive[3]) {
-				playNote(this.params.currentKit.tom1, false, 0, 0, -2, 1, volumes[theBeat.rhythm4[rhythmIndex]] * 0.6, tom1Pitch, contextPlayTime);
+			if (this.params.theBeat.rhythm4[this.params.rhythmIndex] /*&& this.params.instrumentActive[3]*/) {
+				this.playNote(this.params.currentKit.tom1, false, 0, 0, -2, 1, this.params.volumes[this.params.theBeat.rhythm4[this.params.rhythmIndex]] * 0.6, this.params.tom1Pitch, contextPlayTime);
 			}
 
-			if (this.params.theBeat.rhythm5[this.params.rhythmIndex] && instrumentActive[4]) {
-				playNote(this.params.currentKit.tom2, false, 0, 0, -2, 1, volumes[theBeat.rhythm5[rhythmIndex]] * 0.6, tom2Pitch, contextPlayTime);
+			if (this.params.theBeat.rhythm5[this.params.rhythmIndex] /*&& this.params.instrumentActive[4]*/) {
+				this.playNote(this.params.currentKit.tom2, false, 0, 0, -2, 1, this.params.volumes[this.params.theBeat.rhythm5[this.params.rhythmIndex]] * 0.6, this.params.tom2Pitch, contextPlayTime);
 			}
 
-			if (this.params.theBeat.rhythm6[this.params.rhythmIndex] && instrumentActive[5]) {
-				playNote(this.params.currentKit.tom3, false, 0, 0, -2, 1, volumes[theBeat.rhythm6[rhythmIndex]] * 0.6, tom3Pitch, contextPlayTime);
+			if (this.params.theBeat.rhythm6[this.params.rhythmIndex] /*&& this.params.instrumentActive[5]*/) {
+				this.playNote(this.params.currentKit.tom3, false, 0, 0, -2, 1, this.params.volumes[this.params.theBeat.rhythm6[this.params.rhythmIndex]] * 0.6, this.params.tom3Pitch, contextPlayTime);
 			}
 
 
 			// Attempt to synchronize drawing time with sound
-			if (noteTime != this.params.lastDrawTime) {
-				this.params.lastDrawTime = noteTime;
+			if (this.params.noteTime != this.params.lastDrawTime) {
+				this.params.lastDrawTime = this.params.noteTime;
 				this.drawPlayhead((this.params.rhythmIndex + 15) % 16);
 			}
 
-			advanceNote();
+			this.advanceNote();
 		}
 	}
 
-	playDrum(noteNumber, velocity) {
-		switch (noteNumber) {
-			case 0x24:
-				playNote(this.params.currentKit.kickBuffer, false, 0, 0, -2, 0.5, (velocity / 127), kickPitch, 0);
-				break;
-			case 0x26:
-				playNote(this.params.currentKit.snareBuffer, false, 0, 0, -2, 1, (velocity / 127), snarePitch, 0);
-				break;
-			case 0x28:
-				playNote(this.params.currentKit.hihatBuffer, true, 0, 0, -1.0, 1, (velocity / 127), hihatPitch, 0);
-				break;
-			case 0x2d:
-				playNote(this.params.currentKit.tom1, false, 0, 0, -2, 1, (velocity / 127), tom1Pitch, 0);
-				break;
-			case 0x2f:
-				playNote(this.params.currentKit.tom2, false, 0, 0, -2, 1, (velocity / 127), tom2Pitch, 0);
-				break;
-			case 0x32:
-				playNote(this.params.currentKit.tom3, false, 0, 0, -2, 1, (velocity / 127), tom3Pitch, 0);
-				break;
-			default:
-				console.log("note:0x" + noteNumber.toString(16));
-		}
-	}
-
-	//TODO: See why function works just the first time and see how to manage the position of the functions
 	tempoIncrease() {
 		
 		this.params.theBeat.tempo = Math.min(this.params.kMaxTempo, this.params.theBeat.tempo + 2);
@@ -547,19 +528,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.params.theBeat.tempo = Math.max(this.params.kMinTempo, this.params.theBeat.tempo - 2);
 		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
 	}
-
-	
-	showCorrectNote( index, note ) {
-		// note==0 -> off
-		// note==1 -> light hit
-		// note==2 -> loud hit
-	  
-		if (this.params.midiOut && outputIsLivid)
-		  midiOut.send( [0x90, 32 + index, note * 32] );
-	  }
-	
-
-	
 
 	handleSliderMouseDown(event) {
 		this.params.mouseCapture = event.target.id;
@@ -659,239 +627,44 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 	}
 
-
-
-	/*handleButtonMouseDown(event) {
-		var notes = theBeat.rhythm1;
-
-		var instrumentIndex;
-		var rhythmIndex;
-
-		var elId = event.target.id;
-		rhythmIndex = elId.substr(elId.indexOf('_') + 1, 2);
-		instrumentIndex = instruments.indexOf(elId.substr(0, elId.indexOf('_')));
-
-		switch (instrumentIndex) {
-			case 0: notes = theBeat.rhythm1; break;
-			case 1: notes = theBeat.rhythm2; break;
-			case 2: notes = theBeat.rhythm3; break;
-			case 3: notes = theBeat.rhythm4; break;
-			case 4: notes = theBeat.rhythm5; break;
-			case 5: notes = theBeat.rhythm6; break;
+	handlePlay(event) {
+		this.params.noteTime = 0.0;
+		this.params.startTime = this.context.currentTime + 0.005;
+		this.schedule();
+		this.params.timerWorker.postMessage("start");
+	
+		this.gui._root.getElementById('play').classList.add('playing');
+		this.gui._root.getElementById('stop').classList.add('playing');
+	       
 		}
-
-		notes[rhythmIndex] = (notes[rhythmIndex] + 1) % 3;
-
-		if (instrumentIndex == currentlyActiveInstrument)
-			showCorrectNote(rhythmIndex, notes[rhythmIndex]);
-
-		drawNote(notes[rhythmIndex], rhythmIndex, instrumentIndex);
-
-		var note = notes[rhythmIndex];
-
-		if (note) {
-			switch (instrumentIndex) {
-				//put to true to have sound position in function to the click position on drumMachine
-				case 0:  // Kick
-					playNote(currentKit.kickBuffer, false, 0, 0, -2, 0.5 * 1, volumes[note] * 1.0, kickPitch, 0);
-					break;
-
-				case 1:  // Snare
-					playNote(currentKit.snareBuffer, false, 0, 0, -2, 1, volumes[note] * 0.6, snarePitch, 0);
-					break;
-
-				case 2:  // Hihat
-					// Pan the hihat according to sequence position.
-					playNote(currentKit.hihatBuffer, false, 0.5 * rhythmIndex - 4, 0, -1.0, 1, volumes[note] * 0.7, hihatPitch, 0);
-					break;
-
-				case 3:  // Tom 1   
-					playNote(currentKit.tom1, false, 0, 0, -2, 1, volumes[note] * 0.6, tom1Pitch, 0);
-					break;
-
-				case 4:  // Tom 2   
-					playNote(currentKit.tom2, false, 0, 0, -2, 1, volumes[note] * 0.6, tom2Pitch, 0);
-					break;
-
-				case 5:  // Tom 3   
-					playNote(currentKit.tom3, false, 0, 0, -2, 1, volumes[note] * 0.6, tom3Pitch, 0);
-					break;
-			}
-		}
-	}*/
-
-	/*handleKitComboMouseDown(event) {
-		document.getElementById('kitcombo').classList.toggle('active');
-	}*/
-
-	/*handleKitMouseDown(event) {
-		var index = kitNamePretty.indexOf(event.target.innerHTML);
-		theBeat.kitIndex = index;
-		currentKit = kits[index];
-		document.getElementById('kitname').innerHTML = kitNamePretty[index];
-	}*/
-
-	/*handleBodyMouseDown(event) {
-		var elKitcombo = document.getElementById('kitcombo');
-
-		if (elKitcombo.classList.contains('active') && !isDescendantOfId(event.target, 'kitcombo_container')) {
-			elKitcombo.classList.remove('active');
-		}
-
-
-	}*/
-
-	/*isDescendantOfId(el, id) {
-		if (el.parentElement) {
-			if (el.parentElement.id == id) {
-				return true;
-			} else {
-				return isDescendantOfId(el.parentElement, id);
-			}
-		} else {
-			return false;
-		}
-	}*/
-
 	
 
-	/*handleStop(event) {
-		timerWorker.postMessage("stop");
 
-		var elOld = document.getElementById('LED_' + (rhythmIndex + 14) % 16);
-		elOld.src = 'mididrum/images/LED_off.png';
-
-		hideBeat((rhythmIndex + 14) % 16);
-
-		rhythmIndex = 0;
-
-		document.getElementById('play').classList.remove('playing');
-		document.getElementById('stop').classList.remove('playing');
-		if (midiOut) {
-			// light up the play button
-			midiOut.send([0x90, 3, 32]);
-			// turn off the stop button
-			midiOut.send([0x80, 7, 1]);
-		}
-	}*/
-
-	/*handleSave(event) {
-		toggleSaveContainer();
-		var elTextarea = document.getElementById('save_textarea');
-		elTextarea.value = JSON.stringify(theBeat);
-	}*/
-
-	/*handleSaveOk(event) {
-		toggleSaveContainer();
-	}
-
-	handleLoad(event) {
-		toggleLoadContainer();
-	}
-
-	handleLoadOk(event) {
-		var elTextarea = document.getElementById('load_textarea');
-		theBeat = JSON.parse(elTextarea.value);
-
-		// Set drumkit
-		currentKit = kits[theBeat.kitIndex];
-		document.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
-
-
-
-		sliderSetValue('kick_thumb', theBeat.kickPitchVal);
-		sliderSetValue('snare_thumb', theBeat.snarePitchVal);
-		sliderSetValue('hihat_thumb', theBeat.hihatPitchVal);
-		sliderSetValue('tom1_thumb', theBeat.tom1PitchVal);
-		sliderSetValue('tom2_thumb', theBeat.tom2PitchVal);
-		sliderSetValue('tom3_thumb', theBeat.tom3PitchVal);
-		sliderSetValue('swing_thumb', theBeat.swingFactor);
-
-		// Clear out the text area post-processing
-		elTextarea.value = '';
-
-		toggleLoadContainer();
-		updateControls();
-	}
-
-	handleLoadCancel(event) {
-		toggleLoadContainer();
-	}
-
-	toggleSaveContainer() {
-		document.getElementById('pad').classList.toggle('active');
-		document.getElementById('params').classList.toggle('active');
-		document.getElementById('tools').classList.toggle('active');
-		document.getElementById('save_container').classList.toggle('active');
-	}
-
-	toggleLoadContainer() {
-		document.getElementById('pad').classList.toggle('active');
-		document.getElementById('params').classList.toggle('active');
-		document.getElementById('tools').classList.toggle('active');
-		document.getElementById('load_container').classList.toggle('active');
-	}
-
-	handleReset(event) {
-		handleStop();
-		loadBeat(beatReset);
-	}
-
+	//TODO: see correction with this function
 	loadBeat(beat) {
 		// Check that assets are loaded.
-		if (beat != beatReset && !beat.isLoaded())
+		if (beat != this.params.beatReset && !beat.isLoaded())
 			return false;
 
-		handleStop();
+		var active = () =>this.gui._root.handleStop();
 
-		theBeat = cloneBeat(beat);
-		currentKit = kits[theBeat.kitIndex];
+		
+		this.params.currentKit = this.params.kits[this.params.theBeat.kitIndex];
 
 		// apply values from sliders
-		sliderSetValue('kick_thumb', theBeat.kickPitchVal);
-		sliderSetValue('snare_thumb', theBeat.snarePitchVal);
-		sliderSetValue('hihat_thumb', theBeat.hihatPitchVal);
-		sliderSetValue('tom1_thumb', theBeat.tom1PitchVal);
-		sliderSetValue('tom2_thumb', theBeat.tom2PitchVal);
-		sliderSetValue('tom3_thumb', theBeat.tom3PitchVal);
-		sliderSetValue('swing_thumb', theBeat.swingFactor);
+		this.sliderSetValue('kick_thumb', this.params.theBeat.kickPitchVal);
+		this.sliderSetValue('snare_thumb', this.params.theBeat.snarePitchVal);
+		this.sliderSetValue('hihat_thumb', this.params.theBeat.hihatPitchVal);
+		this.sliderSetValue('tom1_thumb', this.params.theBeat.tom1PitchVal);
+		this.sliderSetValue('tom2_thumb', this.params.theBeat.tom2PitchVal);
+		this.sliderSetValue('tom3_thumb', this.params.theBeat.tom3PitchVal);
+		this.sliderSetValue('swing_thumb', this.params.theBeat.swingFactor);
 
-		updateControls();
-		setActiveInstrument(0);
+		var active = ()=>this.gui._root.updateControls();
+		//this.setActiveInstrument(0);
 
 		return true;
-	}*/
-
-	/*updateControls() {
-		for (i = 0; i < loopLength; ++i) {
-			for (j = 0; j < kNumInstruments; j++) {
-				switch (j) {
-					case 0: notes = theBeat.rhythm1; break;
-					case 1: notes = theBeat.rhythm2; break;
-					case 2: notes = theBeat.rhythm3; break;
-					case 3: notes = theBeat.rhythm4; break;
-					case 4: notes = theBeat.rhythm5; break;
-					case 5: notes = theBeat.rhythm6; break;
-				}
-
-				drawNote(notes[i], i, j);
-			}
-		}
-
-		document.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
-
-		document.getElementById('tempo').innerHTML = theBeat.tempo;
-	}*/
-
-
-	/*drawNote(draw, xindex, yindex) {
-		var elButton = document.getElementById(instruments[yindex] + '_' + xindex);
-		switch (draw) {
-			case 0: elButton.src = 'mididrum/images/button_off.png'; break;
-			case 1: elButton.src = 'mididrum/images/button_half.png'; break;
-			case 2: elButton.src = 'mididrum/images/button_on.png'; break;
-		}
-	}*/
+	}
 
 	drawPlayhead(xindex) {
 		var lastIndex = (xindex + 15) % 16;
@@ -902,8 +675,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		elNew.src = 'mididrum/images/LED_on.png';
 		elOld.src = 'mididrum/images/LED_off.png';
 
-		this.hideBeat(lastIndex);
-		this.showBeat(xindex);
+		//this.hideBeat(lastIndex);
+		//this.showBeat(xindex);
 	}
 
 	filterFrequencyFromCutoff(cutoff) {
@@ -926,39 +699,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		if (filterNode)
 			filterNode.Q.value = Q;
 	}
-
-
-	createNodes() {
-		this.dryGainNode = this.context.createGain();
-		this.wetGainNode = this.context.createGain();
-
-
-		this.bandPass = this.context.createBiquadFilter();
-		this.bandPass.type = "bandpass";
-		this.bandPass.frequency.value = 750;
-
-	}
-
-
-
-	connectNodes() {
-		this._input.connect(this.dryGainNode);
-		this.dryGainNode.connect(this.bandPass);
-		this.bandPass.connect(this.wetGainNode);
-		this.wetGainNode.connect(this._output);
-	}
-
-
-
-	linktoParams() {
-		/*
-		 * set default value for parameters and assign it to the web audio nodes
-		 */
-		this.effect = this.params.effect;
-		this.mode = this.params.mode;
-	}
-
-
 
 }
 
@@ -1020,7 +760,8 @@ class Kit {
 		var kit = this;
 
 		request.onload = () => {
-			//this.context.decodeAudioData(request.response, decodedFunctions[sampleID].bind(kit));
+			var context = new AudioContext()
+			context.decodeAudioData(request.response, this.parent.params.decodedFunctions[sampleID].bind(kit));
 			
 			kit.instrumentLoadCount++;
 			if (kit.instrumentLoadCount == kit.instrumentCount) {
