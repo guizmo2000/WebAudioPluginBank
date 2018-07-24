@@ -92,7 +92,7 @@ if(window.customElements){
     sliderKnobwidth:0,
     sliderKnobheight:0,
     sliderDitchlength:0,
-    sliderColors:"#000;#000;#fff",
+    sliderColors:"#bbb;#444;#fff",
     switchWidth:0,
     switchHeight:0,
     switchDiameter:24,

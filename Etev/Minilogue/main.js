@@ -9,9 +9,15 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   constructor(ctx, URL, options) {
     /*    ################     API PROPERTIES    ###############   */
     super(ctx, URL, options)
+
+    // fields about structure
     this.state;
+    // to controle the number of notes played simultanely
+    this.playedvoices = [];
     this.voices = [];
     parent = this;
+    // max number of voices, depends to "voice-mode"
+    this.maxVoices = 4;
 
 
     // assign manually the params which does not fit the defaultvalue/max/min schema
@@ -122,7 +128,9 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.osc1octave = this.params.osc1Octave;
     this.osc2octave = this.params.osc2Octave;
     this.noise = this.params.noise;
-    this.ringmodulation = this.params.ringmodulation
+    // this.ringmodulation = this.params.ringmodulation
+    this.wave1 = this.params.wave1;
+    this.wave2 = this.params.wave2;
 
   }
 
@@ -132,11 +140,16 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
    * @param {Int} key 
    */
   noteOn(key) {
-    that = this;
     // The voices table test if the same note is not already played
     if (this.voices[key] == null) {
+      // we block at 4 voices
+      if (this.playedvoices.length == this.maxVoices) {
+        this.killNote(this.playedvoices[0]);
+        this.playedvoices.shift();
+      }
+      this.playedvoices.push(key);
       // The params are initiated to have the latest values
-      this.voices[key] = new Voice(this.context, key, that);
+      this.voices[key] = new Voice(this.context, key, parent);
       // The voice is assigned at it's range in the voice table
       this.setInitialParamValues();
       // wire the voices graph with the persistant one
@@ -163,6 +176,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
   noteOff(key) {
     if (this.voices[key] != null) {
+      // the voice is pull off the playedvoice array when noteoff
+      this.playedvoices.splice(this.playedvoices.indexOf(key));
       this.voices[key].ampEnveloppe.gateOff();
       // Shut off the note playing and clear it 
 
@@ -171,7 +186,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   }
 
   killNote(key) {
-    //console.log("kill"+key)
+    console.log("kill"+key)
     this.voices[key].osc1.stop();
     this.voices[key].osc2.stop();
     this.voices[key].lfo.stop();
@@ -181,8 +196,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   }
 
   normalizeGain() {
-    // mistake : we cant divise by the voices length, because it never changes... look at "not null" or something
-    this.normalize.gain.setValueAtTime(1 / this.voices.length, this.context.currentTime);
+    this.normalize.gain.setValueAtTime(1 / this.playedvoices.length, this.context.currentTime);
   }
 
 
