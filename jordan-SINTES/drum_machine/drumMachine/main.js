@@ -109,6 +109,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			kMinTempo: 52,
 			kMaxTempo: 180,
 			noteTime: 0.0,
+			startTime: 0.0,
+
+			timerWorker:null,
 
 			instruments: ['Kick', 'Snare', 'HiHat', 'Tom1', 'Tom2', 'Tom3'],
 			volumes: [0, 0.3, 1],
@@ -366,11 +369,11 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		// Obtain a blob URL reference to our worker 'file'.
 		var timerWorkerBlobURL = window.URL.createObjectURL(timerWorkerBlob);
 
-		var timerWorker = new Worker(timerWorkerBlobURL);
-		timerWorker.onmessage = function (e) {
-			schedule();
+		this.params.timerWorker = new Worker(timerWorkerBlobURL);
+		this.params.timerWorker.onmessage = function (e) {
+			var active = () =>this.schedule();
 		};
-		timerWorker.postMessage('init'); // Start the worker.
+		this.params.timerWorker.postMessage('init'); // Start the worker.
 
 	}
 
@@ -464,16 +467,16 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	schedule() {
 
-		var noteTime = 0.0;
-		var startTime = this.params.context.currentTime + 0.005;
+		this.params.noteTime = 0.0;
+		this.params.startTime = this.params.context.currentTime + 0.005;
 		var currentTime = this.params.context.currentTime;
 
 		// The sequence starts at startTime, so normalize currentTime so that it's 0 at the start of the sequence.
-		currentTime -= startTime;
+		currentTime -= this.params.startTime;
 
-		while (noteTime < currentTime + 0.120) {
+		while (this.params.noteTime < currentTime + 0.120) {
 			// Convert noteTime to context time.
-			var contextPlayTime = noteTime + startTime;
+			var contextPlayTime = this.params.noteTime + this.params.startTime;
 
 			// Kick
 			if (this.params.theBeat.rhythm1[this.params.rhythmIndex] && this.params.instrumentActive[0]) {
@@ -507,8 +510,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 
 			// Attempt to synchronize drawing time with sound
-			if (noteTime != this.params.lastDrawTime) {
-				this.params.lastDrawTime = noteTime;
+			if (this.params.noteTime != this.params.lastDrawTime) {
+				this.params.lastDrawTime = this.params.noteTime;
 				this.drawPlayhead((this.params.rhythmIndex + 15) % 16);
 			}
 
@@ -665,14 +668,14 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 
 	handlePlay(event) {
-		var noteTime = 0.0;
-		var startTime = this.params.context.currentTime + 0.005;
+		this.params.noteTime = 0.0;
+		this.params.startTime = this.params.context.currentTime + 0.005;
 		this.schedule();
-		timerWorker.postMessage("start");
+		this.params.timerWorker.postMessage("start");
 	
-		document.getElementById('play').classList.add('playing');
-		document.getElementById('stop').classList.add('playing');
-		if (midiOut) {
+		this.gui._root.getElementById('play').classList.add('playing');
+		this.gui._root.getElementById('stop').classList.add('playing');
+		if (this.params.midiOut) {
 			// turn off the play button
 			midiOut.send( [0x80, 3, 32] );
 			// light up the stop button
@@ -879,10 +882,36 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.sliderSetValue('swing_thumb', this.params.theBeat.swingFactor);
 
 		var active = ()=>this.gui._root.updateControls();
-		//setActiveInstrument(0);
+		this.setActiveInstrument(0);
 
 		return true;
 	}
+
+	setActiveInstrument(index) {
+		//turn off the last lit-up instrument
+		if (this.params.midiOut&&outputIsLivid)
+		  midiOut.send( [0x80, keyForInstrument(this.params.currentlyActiveInstrument), 0x00] );
+	  
+		this.params.currentlyActiveInstrument = index;
+	  
+		// turn on the new instrument button
+		if (this.params.midiOut&&outputIsLivid)
+		  this.params.midiOut.send( [0x90, keyForInstrument(index), colorForIntrument(index)] );
+	  
+		var notes = this.params.theBeat.rhythm1;
+	  
+		switch (this.params.currentlyActiveInstrument) {
+			case 0: notes = this.params.theBeat.rhythm1; break;
+			case 1: notes = this.params.theBeat.rhythm2; break;
+			case 2: notes = this.params.theBeat.rhythm3; break;
+			case 3: notes = this.params.theBeat.rhythm4; break;
+			case 4: notes = this.params.theBeat.rhythm5; break;
+			case 5: notes = this.params.theBeat.rhythm6; break;
+		}
+	  
+		for (var beat=0; beat<16; beat++)
+		  this.showCorrectNote( beat, notes[beat] );
+	  }
 
 	/*updateControls() {
 		for (i = 0; i < loopLength; ++i) {
