@@ -175,7 +175,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		return this.outputs.length;
 	}
 	inputChannelCount() {
-		return 1;
+		return 0;
 	}
 	outputChannelCount() {
 		return 1
@@ -632,7 +632,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	handleReset(event) {
 		this.handleStop();
-		this.loadBeat(this.params.beatReset);
+		var beatReset = () => this.cloneBeat(this.params.beatReset);
+		this.loadBeat(beatReset);
 	}
 
 

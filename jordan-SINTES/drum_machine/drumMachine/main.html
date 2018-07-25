@@ -632,7 +632,7 @@
             this._root.appendChild(drummachine.content.cloneNode(true));
             this.initControls();
             this.setResources();
-
+            this.blockElement();
 
             //this.InitMidi();
         }
@@ -958,6 +958,22 @@
             this._root.querySelector("#load_ok").setAttribute('src', this._plug.URL + '/images/btn_ok.png');
             this._root.querySelector("#load_cancel").setAttribute('src', this._plug.URL + '/images/btn_cancel.png');
 
+        }
+
+        blockElement(){
+            this._root.querySelectorAll(".btn").forEach((btn)=>{
+                btn.addEventListener("mousedown",(e)=>{e.stopPropagation()})
+            })
+
+            this._root.querySelectorAll(".slider_track").forEach((sliderTr)=>{
+                sliderTr.addEventListener("mousedown",(e)=>{e.stopPropagation()})
+            })
+
+            this._root.querySelectorAll(".slider_thumb").forEach((sliderTh)=>{
+                sliderTh.addEventListener("mousedown",(e)=>{e.stopPropagation()})
+            })
+            this._root.querySelector(".slider_htrack").addEventListener("mousedown",(e)=>{e.stopPropagation()})
+            this._root.querySelector(".slider_hthumb").addEventListener("mousedown",(e)=>{e.stopPropagation()})
         }
 
     }
