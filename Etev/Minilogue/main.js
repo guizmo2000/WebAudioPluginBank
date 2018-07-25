@@ -177,8 +177,9 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
   noteOff(key) {
     if (this.voices[key] != null) {
-      // the voice is pull off the playedvoice array when noteoff
       this.playedvoices.splice(this.playedvoices.indexOf(key));
+
+      // the voice is pull off the playedvoice array when noteoff
       switch (this.params.mode) {
         case "poly": this.noteOffpoly(key); break;
         case "duo": this.noteOffDuo(key); break;
@@ -187,6 +188,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
         case "arp": this.noteOffArp(key); break;
       }
     }
+
   }
 
   killNote(key) {
@@ -295,7 +297,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.voices[key].osc1.stop();
     this.voices[key].osc2.stop();
     this.voices[key].lfo.stop();
-    this.voices[key].whitenoise.bufferSource.stop(this.context.currentTime);
+    this.voices[key].whitenoise.bufferSource.stop(this.context.currentTime +0.01);
     delete this.voices[key];
   }
 
@@ -305,11 +307,11 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       this.voices[key - 12].osc1.stop();
       this.voices[key - 12].osc2.stop();
       this.voices[key - 12].lfo.stop();
-      this.voices[key - 12].whitenoise.bufferSource.stop(this.context.currentTime);
+      this.voices[key - 12].whitenoise.bufferSource.stop(this.context.currentTime +0.01);
       this.voices[key - 24].osc1.stop();
       this.voices[key - 24].osc2.stop();
       this.voices[key - 24].lfo.stop();
-      this.voices[key - 24].whitenoise.bufferSource.stop(this.context.currentTime);
+      this.voices[key - 24].whitenoise.bufferSource.stop(this.context.currentTime +0.01);
       delete this.voices[key - 12];
       delete this.voices[key - 24];
     } catch (error) {
@@ -323,7 +325,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       this.duovoices[key].osc1.stop();
       this.duovoices[key].osc2.stop();
       this.duovoices[key].lfo.stop();
-      this.duovoices[key].whitenoise.bufferSource.stop(this.context.currentTime);
+      this.duovoices[key].whitenoise.bufferSource.stop(this.context.currentTime +0.01);
       delete this.duovoices[key];
     } catch (error) {
       console.log("changetoduo?")
@@ -338,12 +340,12 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       this.unisonvoices1[key].osc1.stop();
       this.unisonvoices1[key].osc2.stop();
       this.unisonvoices1[key].lfo.stop();
-      this.unisonvoices1[key].whitenoise.bufferSource.stop(this.context.currentTime);
+      this.unisonvoices1[key].whitenoise.bufferSource.stop(this.context.currentTime +0.01);
       delete this.duovoices[key];
       this.unisonvoices2[key].osc1.stop();
       this.unisonvoices2[key].osc2.stop();
       this.unisonvoices2[key].lfo.stop();
-      this.unisonvoices2[key].whitenoise.bufferSource.stop(this.context.currentTime);
+      this.unisonvoices2[key].whitenoise.bufferSource.stop(this.context.currentTime +0.01);
       delete this.unisonvoices2[key];
     } catch (error) {
       console.log("changetounison?")
