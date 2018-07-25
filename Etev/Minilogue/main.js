@@ -43,8 +43,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.addParam({ name: 'mix', defaultValue: 0.5, minValue: 0, maxValue: 1 });
     this.addParam({ name: 'pitch1', defaultValue: 1, minValue: 0.5, maxValue: 2 });
     this.addParam({ name: 'pitch2', defaultValue: 1, minValue: 0.5, maxValue: 2 });
-    this.addParam({ name: 'osc1gain',  defaultValue: 10,minValue: 0, maxValue: 10 });
-    this.addParam({ name: 'osc2gain', defaultValue: 10, minValue: 0, maxValue: 10 });
+    this.addParam({ name: 'osc1gain',  defaultValue: 15,minValue: 0, maxValue: 15 });
+    this.addParam({ name: 'osc2gain', defaultValue: 15, minValue: 0, maxValue: 15 });
     this.addParam({ name: 'osc1shape', defaultValue: 0.5, minValue: 0, maxValue: 100 });
     this.addParam({ name: 'osc2shape', defaultValue: 0.5, minValue: 0, maxValue: 100 });
     this.addParam({ name: 'ampattack', defaultValue: 0.001, minValue: 0.001, maxValue: 5 });
@@ -90,10 +90,10 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   // Override Setup actions
   setup() {
     console.log("setup");
-    this.ppdelay = new Delay(parent, this.context);
     this.createIO();
     this.normalize = this.context.createGain();
     this.normalize.connect(this._output);
+    this.ppdelay = new Delay(parent, this.context);
     this.gainforAnalyse = this.context.createGain();
     this.normalize.connect(this.gainforAnalyse);
     this.gainforAnalyse.gain.value = 3;
@@ -192,7 +192,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   }
 
   killNote(key) {
-    console.log("kill" + key)
     switch (this.params.mode) {
       case "poly": this.killNotepoly(key); break;
       case "duo": this.killNoteDuo(key); break;
@@ -219,15 +218,12 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     // The voice is assigned at it's range in the voice table
     this.setInitialParamValues();
     // wire the voices graph with the persistant one
-    //this.voices[key].amp.connect(this.normalize);
     this.voices[key].amp.connect(this.gainforAnalyse);
     // active the ADSR node
     this.voices[key].ampEnveloppe.gateOn();
     // connect to normalisation 
     if (this.params.status == "disable") this.voices[key].amp.connect(this.normalize);
     else if (this.params.status == "enable") {
-      this.ppdelay.dryGainNode.gain.value = 0.1;
-      this.ppdelay.wetGainNode.gain.value = 1;
       this.voices[key].amp.connect(this.ppdelay.feedbackGainNode);
       this.voices[key].amp.connect(this.ppdelay.dryGainNode);
     }
@@ -303,7 +299,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.voices[key].lfo.stop();
     this.voices[key].whitenoise.bufferSource.stop(this.context.currentTime);
     delete this.voices[key];
-    console.log(this.voices[key]);
   }
 
   killNoteMono(key) {
@@ -1283,9 +1278,8 @@ class Delay {
     // // wet out
     this.channelMerger.connect(this.wetGainNode);
 
-
-    this.wetGainNode.connect(this.parent._output);
-    this.dryGainNode.connect(this.parent._output);
+    this.wetGainNode.connect(this.parent.normalize);
+    this.dryGainNode.connect(this.parent.normalize);
   }
 }
 
