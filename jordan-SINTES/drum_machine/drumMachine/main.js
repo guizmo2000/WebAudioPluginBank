@@ -616,6 +616,20 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	}
 
+	handleStop(event) {
+		this.params.timerWorker.postMessage("stop");
+		var elOld = this.gui._root.getElementById('LED_' + (this.params.rhythmIndex + 14) % 16);
+		elOld.src = 'mididrum/images/LED_off.png';
+
+	
+
+		this.params.rhythmIndex = 0;
+
+		this.gui._root.getElementById('play').classList.remove('playing');
+		this.gui._root.getElementById('stop').classList.remove('playing');
+	  
+	}
+
 
 
 	//TODO: see correction with this function

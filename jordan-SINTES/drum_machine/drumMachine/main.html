@@ -669,7 +669,7 @@
 
             // tool buttons
             this._root.getElementById('play').addEventListener('mousedown', (event) => this._plug.handlePlay(event), true);
-            this._root.getElementById('stop').addEventListener('mousedown', this.handleStop, true);
+            this._root.getElementById('stop').addEventListener('mousedown', (event) => this._plug.handleStop(event), true);
             this._root.getElementById('save').addEventListener('mousedown', this.handleSave, true);
             this._root.getElementById('save_ok').addEventListener('mousedown', this.handleSaveOk, true);
             this._root.getElementById('load').addEventListener('mousedown', this.handleLoad, true);
@@ -810,20 +810,7 @@
 
 
 
-        handleStop(event) {
-            //timerWorker.postMessage("stop");
-
-            var elOld = this._root.getElementById('LED_' + (this._plug.params.rhythmIndex + 14) % 16);
-            elOld.src = 'mididrum/images/LED_off.png';
-
-            //hideBeat((rhythmIndex + 14) % 16);
-
-            var rhythmIndex = 0;
-
-            this._root.getElementById('play').classList.remove('playing');
-            this._root.getElementById('stop').classList.remove('playing');
-          
-        }
+       
 
         handleSave(event) {
             toggleSaveContainer();
