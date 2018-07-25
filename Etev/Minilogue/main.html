@@ -120,7 +120,7 @@
 
     #voicedepth{left:515px;top:95px;}
 
-    #wheel{left:70px;top:145px;}
+    #wheel{left:40px;top:145px;}
 
     #wheel webaudio-slider .webaudio-slider-body{transform: rotate(20deg);}
 
@@ -191,7 +191,7 @@
   </div>
   <div class="section" id="mixer">MIXER</div>
   <div id="osc1gain" class="knob">
-    <webaudio-knob  sprites="99" min="0" max="3" value="3" step="0.01" midilearn="true" tooltip="Gain for osc1 %.2f"
+    <webaudio-knob  sprites="99" min="0" max="10" value="10" step="0.01" midilearn="true" tooltip="Gain for osc1 %.2f"
       diameter="24"></webaudio-knob>
       <div style="text-align:center">Gain</div>
   </div>
@@ -217,7 +217,7 @@
       <div style="text-align:center">Shape</div>
   </div>
   <div id="osc2gain" class="knob">
-    <webaudio-knob  sprites="99" min="0" max="3" step="0.01" value="3" midilearn="true" tooltip="Gain for osc2 %.2f"
+    <webaudio-knob  sprites="99" min="0" max="10" step="0.01" value="10" midilearn="true" tooltip="Gain for osc2 %.2f"
       diameter="24"></webaudio-knob>
       <div style="text-align:center">Gain</div>
   </div>
@@ -321,7 +321,7 @@
   </div>
   <div id="freqview"></div>
   <div class="modebutton" id="poly">
-    <webaudio-switch  midilearn="1"   width="20" height="20" tooltip="(not implemented yet)"></webaudio-switch>
+    <webaudio-switch  midilearn="1" value="1"   width="20" height="20" tooltip="(not implemented yet)"></webaudio-switch>
     <div style="text-align:center">Poly</div>
   </div>
   <div  class="modebutton" id="duo">
@@ -345,13 +345,12 @@
       <div style="text-align:center">Arp</div>
   </div>
   <div id="voicedepth" class="knob">
-    <webaudio-knob  min="0" max="10" sprites="99" value="0" step="1" midilearn="true" diameter="24"
+    <webaudio-knob  min="0" max="100" sprites="99" value="0" step="1" midilearn="true" diameter="24"
       tooltip="detune or sub (not implemented yet)"></webaudio-knob>
       <div style="text-align:center">Depth</div>
   </div>
   <div class="slide" id="wheel">
     <webaudio-slider midilearn="1" value="50" min="1" max="100" step="1" direction="horz" width="50" height="14" tooltip="Wheel %d (not implemented yet)"></webaudio-slider>
-    <div style="text-align:center">Wheel</div>
   </div>
       <div id="keyboard"></div>
 </template>
@@ -366,8 +365,10 @@
       this._root.appendChild(minitemp.content.cloneNode(true));
       this.knobs = [];
       this.slides =[];
+      this.modes = [];
       this._root.querySelectorAll(".knob").forEach((knob)=>{this.knobs.push(knob)});
       this._root.querySelectorAll('.slide').forEach((slide)=>{this.slides.push(slide)});
+      this._root.querySelectorAll('.modebutton').forEach((button)=>{this.modes.push(button)})
       this.isDelayOn = false;
       this.bypassDelay();
       this.setKnobs();
@@ -381,9 +382,6 @@
       this._root.querySelector('#midiport').onchange = (evt) => this.SelectMidi(evt.target.selectedIndex - 1);
       this.InitMidi();
       this.kb = this._root.querySelector("#keyboard");
-
-
-
     }
 
     get properties() {
@@ -399,6 +397,7 @@
       };
       return this.boundingRect;
     }
+
     static get observedAttributes() { return ['state']; }
 
     attributeChangedCallback() {
@@ -406,10 +405,9 @@
       this.state = JSON.parse(this.getAttribute('state'));
       console.log(this.state);
       if (this.state.status == "enable") {
-        this._root.querySelector("#switch1").value = 1;
+        this._root.querySelector("#switchDelay").querySelector("webaudio-switch").value = 1;
         this.isDelayOn = true;
       }
-      this.labels = this._root.querySelectorAll(".knob-label");
 
      for (var i = 0; i < this.knobs.length; i++) {
 				this.knobs[i].querySelector("webaudio-knob").value = this.state[this.knobs[i].id];
@@ -419,26 +417,42 @@
 			}
 
     }
-    eventToKnob(rank) {
-      this.knobs[rank].querySelector("webaudio-knob").addEventListener('input', (e) =>
-        this._plug.setParam(this.knobs[rank].id, e.target.convValue));
-    }
-    eventToSlide(rank) {
-      console.log(this.slides[rank]);
-      this.slides[rank].querySelector("webaudio-slider").addEventListener('change', (e) =>
-        this._plug.setParam(this.slides[rank].id, e.target.convValue));
-    }
+    
 
     setKnobs() {
-      // must a function here to have real value of id.
       for (var i = 0; i < this.knobs.length; i++) {
         this.eventToKnob(i);
       }
       for (var j = 0; j < this.slides.length; j++) {
         this.eventToSlide(j);
       }
+      for(var k = 0;k<this.modes.length; k++){
+        this.eventToModes(k);
+      }
       // ring need an onchange and not on-input
       // this._root.querySelector("#ringmodulation").addEventListener('change',(e) =>this._plug.setParam('ringmodulation',e.target.value));
+    }
+
+    eventToKnob(rank) {
+      this.knobs[rank].querySelector("webaudio-knob").addEventListener('input', (e) =>
+        this._plug.setParam(this.knobs[rank].id, e.target.convValue));
+    }
+    eventToSlide(rank) {
+      this.slides[rank].querySelector("webaudio-slider").addEventListener('change', (e) =>
+        this._plug.setParam(this.slides[rank].id, e.target.convValue));
+    }
+    eventToModes(rank) {
+        this.modes[rank].querySelector("webaudio-switch").addEventListener('change', (e) =>{
+        if(this.modes[rank].querySelector("webaudio-switch").value == 1){
+          this._plug.setParam("mode", this.modes[rank].id);
+          for (let l = 0;l<this.modes.length;l++) {
+            console.log()
+            if(this.modes[l] !=this.modes[rank]){
+              this.modes[l].querySelector("webaudio-switch").value = 0;
+            }
+          }
+        }
+      });
     }
 
     setViewer() {
