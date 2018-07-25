@@ -189,6 +189,12 @@
             top: 0;
         }
 
+        .slider_hthumb {
+            position: absolute;
+            left: 10px;
+            top: 0;
+        }
+
         .slider_label {
             text-align: center;
             margin-top: 13px;
@@ -480,7 +486,7 @@
                     <span class='label' id='kitlabel'>Kit</span>
                     <div class='combo' id='kitcombo'>
                         <span id='kitname'></span>
-                        <img src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/drop_arrow.png'>
+                        <img id = "arrow" >
                         <ul class='combolist' id='kitlist'>
                         </ul>
                     </div>
@@ -492,14 +498,14 @@
                         <span id='tempo'></span>&nbsp;
                         <span id='bpm'>bpm</span>
                     </div>
-                    <img id='tempodec' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/tempo_dec.png'>
-                    <img id='tempoinc' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/tempo_inc.png'>
+                    <img id='tempodec'>
+                    <img id='tempoinc'>
                 </div>
                 <div class='slider_container' id='swing_container'>
                     <span class='label' id='swinglabel'>Swing</span>
                     <div class='slider_groove'>
-                        <img class='slider_track' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/sliderh_track.png'>
-                        <img class='slider_thumb' id='swing_thumb' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/sliderh_thumb.png'>
+                        <img class='slider_htrack'>
+                        <img class='slider_hthumb' id='swing_thumb'>
                     </div>
                 </div>
             </div>
@@ -507,8 +513,8 @@
             <div class='vrule'></div>
             <div class='slider_container' id='kick_container'>
                 <div class='slider_groove'>
-                    <img class='slider_track' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/slider_track.png'>
-                    <img class='slider_thumb' id='kick_thumb' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/slider_thumb.png'>
+                    <img class='slider_track'>
+                    <img class='slider_thumb' id='kick_thumb' >
                 </div>
                 <div class='slider_label'>
                     Kick Pitch
@@ -516,8 +522,8 @@
             </div>
             <div class='slider_container' id='snare_container'>
                 <div class='slider_groove'>
-                    <img class='slider_track' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/slider_track.png'>
-                    <img class='slider_thumb' id='snare_thumb' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/slider_thumb.png'>
+                    <img class='slider_track'>
+                    <img class='slider_thumb' id='snare_thumb' >
                 </div>
                 <div class='slider_label'>
                     Snare Pitch
@@ -525,8 +531,8 @@
             </div>
             <div class='slider_container' id='hihat_container'>
                 <div class='slider_groove'>
-                    <img class='slider_track' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/slider_track.png'>
-                    <img class='slider_thumb' id='hihat_thumb' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/slider_thumb.png'>
+                    <img class='slider_track'>
+                    <img class='slider_thumb' id='hihat_thumb'>
                 </div>
                 <div class='slider_label'>
                     Hi-Hat Pitch
@@ -534,8 +540,8 @@
             </div>
             <div class='slider_container' id='tom1_container'>
                 <div class='slider_groove'>
-                    <img class='slider_track' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/slider_track.png'>
-                    <img class='slider_thumb' id='tom1_thumb' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/slider_thumb.png'>
+                    <img class='slider_track'>
+                    <img class='slider_thumb' id='tom1_thumb'>
                 </div>
                 <div class='slider_label'>
                     Tom 1 Pitch
@@ -543,8 +549,8 @@
             </div>
             <div class='slider_container' id='tom2_container'>
                 <div class='slider_groove'>
-                    <img class='slider_track' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/slider_track.png'>
-                    <img class='slider_thumb' id='tom2_thumb' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/slider_thumb.png'>
+                    <img class='slider_track'>
+                    <img class='slider_thumb' id='tom2_thumb'>
                 </div>
                 <div class='slider_label'>
                     Tom 2 Pitch
@@ -552,8 +558,8 @@
             </div>
             <div class='slider_container' id='tom3_container'>
                 <div class='slider_groove'>
-                    <img class='slider_track' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/slider_track.png'>
-                    <img class='slider_thumb' id='tom3_thumb' src='https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/slider_thumb.png'>
+                    <img class='slider_track'>
+                    <img class='slider_thumb' id='tom3_thumb'>
                 </div>
                 <div class='slider_label'>
                     Tom 3 Pitch
@@ -915,6 +921,14 @@
                 led.setAttribute('src', this._plug.URL + '/images/LED_off.png')
             })
 
+            this._root.querySelectorAll(".slider_track").forEach((sliderTr)=>{
+                sliderTr.setAttribute('src', this._plug.URL + '/images/slider_track.png')
+            })
+
+            this._root.querySelectorAll(".slider_thumb").forEach((sliderTh)=>{
+                sliderTh.setAttribute('src', this._plug.URL + '/images/slider_thumb.png')
+            })
+
             this._root.querySelector("#preload1").setAttribute('src', this._plug.URL + '/images/btn_play.png');
             this._root.querySelector("#preload2").setAttribute('src', this._plug.URL + '/images/btn_load.png');
             this._root.querySelector("#preload3").setAttribute('src', this._plug.URL + '/images/btn_reset.png');
@@ -922,6 +936,25 @@
             this._root.querySelector("#preload5").setAttribute('src', this._plug.URL + '/images/button_half.png');
             this._root.querySelector("#preload6").setAttribute('src', this._plug.URL + '/images/button_on.png');
             this._root.querySelector("#preload7").setAttribute('src', this._plug.URL + '/images/LED_ON.png');
+
+            this._root.querySelector("#arrow").setAttribute('src', this._plug.URL + '/images/drop_arrow.png');
+
+            this._root.querySelector("#tempodec").setAttribute('src', this._plug.URL + '/images/tempo_dec.png');
+            this._root.querySelector("#tempoinc").setAttribute('src', this._plug.URL + '/images/tempo_inc.png');
+
+            this._root.querySelector(".slider_htrack").setAttribute('src', this._plug.URL + '/images/sliderh_track.png');
+            this._root.querySelector(".slider_hthumb").setAttribute('src', this._plug.URL + '/images/sliderh_thumb.png');
+            
+            this._root.querySelector("#play").setAttribute('src', this._plug.URL + '/images/btn_play.png');
+            this._root.querySelector("#stop").setAttribute('src', this._plug.URL + '/images/btn_stop.png');
+            this._root.querySelector("#save").setAttribute('src', this._plug.URL + '/images/btn_save.png');
+            this._root.querySelector("#load").setAttribute('src', this._plug.URL + '/images/btn_load.png');
+            this._root.querySelector("#reset").setAttribute('src', this._plug.URL + '/images/btn_reset.png');
+
+            this._root.querySelector("#load_textarea").setAttribute('src', this._plug.URL + '/images/btn_ok.png');
+            this._root.querySelector("#load_ok").setAttribute('src', this._plug.URL + '/images/btn_ok.png');
+            this._root.querySelector("#load_cancel").setAttribute('src', this._plug.URL + '/images/btn_cancel.png');
+
         }
 
     }
