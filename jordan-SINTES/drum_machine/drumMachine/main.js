@@ -9,7 +9,7 @@
 
 window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
-	
+
 	/*    ################     API PROPERTIES    ###############   */
 
 	constructor(ctx, options) {
@@ -65,7 +65,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
 
-			
+
 
 			theBeat: {
 				"kitIndex": 11,
@@ -85,10 +85,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
 
-			kits:null,
+			kits: null,
 			currentKit: null,
-			masterGainNode: null,
-			instrumentActive : [true,true,true,true,true,true],
+			instrumentActive: [true, true, true, true, true, true],
 
 			kickPitch: 0,
 			snarePitch: 0,
@@ -107,7 +106,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			noteTime: 0.0,
 			startTime: 0.0,
 
-			timerWorker:null,
+			timerWorker: null,
 
 			instruments: ['Kick', 'Snare', 'HiHat', 'Tom1', 'Tom2', 'Tom3'],
 			volumes: [0, 0.3, 1],
@@ -248,21 +247,17 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	/*  #########  DRUMMACHINE METHOD  #########   */
 
-// override setup 
+	// override setup 
 	setup() {
 		console.log("delay setup");
 		this.createNodes();
 		this.connectNodes();
 		this.linktoParams();
-		//this.init();
+		this.init();
 	}
 
 	createNodes() {
 		this.dryGainNode = this.context.createGain();
-		this.dryGainNode.gain.value = 0.5
-		
-		this.wetGainNode = this.context.createGain();
-		this.wetGainNode.gain.value = -2;
 
 		this.masterGainNode = this.context.createGain();
 		this.masterGainNode.gain.value = 0.7;
@@ -273,38 +268,26 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.filterNode.type = "lowpass";
 		this.filterNode.frequency.value = 0.5 * this.context.sampleRate;
 		this.filterNode.Q.value = 1;
-		
-		
+
 		this.voice = this.context.createBufferSource();
-		
-		this.panner = this.context.createPanner();
-		this.panner.panningModel = "HRTF";
+
+
 	}
 
 
 
 	connectNodes() {
-
-		if(pan){
-			this._input.connect(this.panner);
-			this.panner.connect(this.dryGainNode);
-			this.panner.connect(this.wetGainNode);
-		}else{
-			this._input.connect(this.voice);
-			this.voice.connect(this.dryGainNode);
-			this.voice.connect(this.wetGainNode);
-		}
-		
+		this.voice.connect(this.dryGainNode);
 		this.dryGainNode.connect(this.masterGainNode);
 		this.masterGainNode.connect(this.filterNode);
-		
+
 		if (this.context.createDynamicsCompressor) {
 			this.filterNode.connect(this.compressor);
 			this.compressor.connect(this._output);
-		}else{
+		} else {
 			this.filterNode.connect(this._output)
 		}
-		
+
 	}
 
 
@@ -313,7 +296,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		/*
 		 * set default value for parameters and assign it to the web audio nodes
 		 */
-		
+
 	}
 
 	startLoadingAssets() {
@@ -354,20 +337,20 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		// Add some new methods to support this.
 		this.params.beatInitial.isKitLoaded = false;
 
-		this.params.beatInitial.setKitLoaded =  ()=>{
+		this.params.beatInitial.setKitLoaded = () => {
 			this.isKitLoaded = true;
 			this.params.beatInitial.checkIsLoaded();
 		};
 
 
 
-		this.params.beatInitial.checkIsLoaded = () =>{
+		this.params.beatInitial.checkIsLoaded = () => {
 			if (this.params.beatInitial.isLoaded()) {
 				this.showDemoAvailable(this.index);
 			}
 		};
 
-		this.params.beatInitial.isLoaded =  () => {
+		this.params.beatInitial.isLoaded = () => {
 			return this.isKitLoaded;
 		};
 
@@ -376,8 +359,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		// NOTE: THIS NOW RELIES ON THE MONKEYPATCH LIBRARY TO LOAD
 		// IN CHROME AND SAFARI (until they release unprefixed)
 
-		var finalMixNode;
-		if (this.context.createDynamicsCompressor) {
+		//var finalMixNode;
+		/*if (this.context.createDynamicsCompressor) {
 			// Create a dynamics compressor to sweeten the overall mix.
 			var compressor = this.context.createDynamicsCompressor();
 			compressor.connect(this.context.destination);
@@ -385,19 +368,19 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		} else {
 			// No compressor available in this implementation.
 			finalMixNode = this._output;
-		}
+		}*/
 
 		// create master filter node
-		var filterNode = this.context.createBiquadFilter();
+		/*var filterNode = this.context.createBiquadFilter();
 		filterNode.type = "lowpass";
 		filterNode.frequency.value = 0.5 * this.context.sampleRate;
 		filterNode.Q.value = 1;
-		filterNode.connect(finalMixNode);
+		filterNode.connect(finalMixNode);*/
 
 		// Create master volume.
-		this.params.masterGainNode = this.context.createGain();
+		/*this.params.masterGainNode = this.context.createGain();
 		this.params.masterGainNode.gain.value = 0.7; // reduce overall volume to avoid clipping
-		this.params.masterGainNode.connect(filterNode);
+		this.params.masterGainNode.connect(filterNode);*/
 
 		//this.initControls();
 		//this.updateControls();
@@ -409,7 +392,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		var timerWorkerBlobURL = window.URL.createObjectURL(timerWorkerBlob);
 
 		this.params.timerWorker = new Worker(timerWorkerBlobURL);
-		this.params.timerWorker.onmessage =  (e) => {
+		this.params.timerWorker.onmessage = (e) => {
 			this.schedule();
 		};
 		this.params.timerWorker.postMessage('init'); // Start the worker.
@@ -435,33 +418,28 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	playNote(buffer, pan, x, y, z, sendGain, mainGain, playbackRate, noteTime) {
 		// Create the note
-		var voice = this.context.createBufferSource();
-		voice.buffer = buffer;
-		voice.playbackRate.value = playbackRate;
+		this.voice = this.context.createBufferSource();
+		this.voice.buffer = buffer;
+		this.voice.playbackRate.value = playbackRate;
 
 		// Optionally, connect to a panner
 		var finalNode;
 		if (pan) {
 			var panner = this.context.createPanner();
 			panner.panningModel = "HRTF";
-			voice.connect(panner);
+			this.voice.connect(panner);
 			finalNode = panner;
 		} else {
-			finalNode = voice;
+			finalNode = this.voice;
 		}
 
 		// Connect to dry mix
-		var dryGainNode = this.context.createGain();
-		dryGainNode.gain.value = mainGain;
-		finalNode.connect(dryGainNode);
-		dryGainNode.connect(this.params.masterGainNode);
+		//dryGainNode = this.context.createGain();
+		this.dryGainNode.gain.value = mainGain;
+		finalNode.connect(this.dryGainNode);
+		//this.dryGainNode.connect(this.masterGainNode);
 
-		// Connect to wet mix
-		var wetGainNode = this.context.createGain();
-		wetGainNode.gain.value = sendGain;
-		finalNode.connect(wetGainNode);
-
-		voice.start(noteTime);
+		this.voice.start(noteTime);
 	}
 
 	schedule() {
@@ -519,7 +497,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 
 	tempoIncrease() {
-		
+
 		this.params.theBeat.tempo = Math.min(this.params.kMaxTempo, this.params.theBeat.tempo + 2);
 		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
 	}
@@ -531,7 +509,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	handleSliderMouseDown(event) {
 		this.params.mouseCapture = event.target.id;
-		
+
 		// calculate offset of mousedown on slider
 		var el = event.target;
 		if (this.params.mouseCapture == 'swing_thumb') {
@@ -555,7 +533,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		if (!this.params.mouseCapture) return;
 		var elThumb = this.gui._root.getElementById(this.params.mouseCapture);
 		var elTrack = elThumb.parentNode;
-		
+
 		if (this.params.mouseCapture != 'swing_thumb') {
 			var thumbH = elThumb.clientHeight;
 			var trackH = elTrack.clientHeight;
@@ -602,27 +580,27 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				this.params.kickPitch = pitchRate;
 				break;
 			case 'snare_thumb':
-			this.params.theBeat.snarePitchVal = value;
-			this.params.snarePitch = pitchRate;
+				this.params.theBeat.snarePitchVal = value;
+				this.params.snarePitch = pitchRate;
 				break;
 			case 'hihat_thumb':
-			this.params.theBeat.hihatPitchVal = value;
-			this.params.hihatPitch = pitchRate;
+				this.params.theBeat.hihatPitchVal = value;
+				this.params.hihatPitch = pitchRate;
 				break;
 			case 'tom1_thumb':
-			this.params.theBeat.tom1PitchVal = value;
-			this.params.tom1Pitch = pitchRate;
+				this.params.theBeat.tom1PitchVal = value;
+				this.params.tom1Pitch = pitchRate;
 				break;
 			case 'tom2_thumb':
-			this.params.theBeat.tom2PitchVal = value;
-			this.params.tom2Pitch = pitchRate;
+				this.params.theBeat.tom2PitchVal = value;
+				this.params.tom2Pitch = pitchRate;
 				break;
 			case 'tom3_thumb':
-			this.params.theBeat.tom3PitchVal = value;
-			this.params.tom3Pitch = pitchRate;
+				this.params.theBeat.tom3PitchVal = value;
+				this.params.tom3Pitch = pitchRate;
 				break;
 			case 'swing_thumb':
-			this.params.theBeat.swingFactor = value;
+				this.params.theBeat.swingFactor = value;
 				break;
 		}
 	}
@@ -632,12 +610,26 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.params.startTime = this.context.currentTime + 0.005;
 		this.schedule();
 		this.params.timerWorker.postMessage("start");
-	
+
 		this.gui._root.getElementById('play').classList.add('playing');
 		this.gui._root.getElementById('stop').classList.add('playing');
-	       
-		}
+
+	}
+
+	handleStop(event) {
+		this.params.timerWorker.postMessage("stop");
+		var elOld = this.gui._root.getElementById('LED_' + (this.params.rhythmIndex + 14) % 16);
+		elOld.src = 'https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/LED_off.png';
+
 	
+
+		this.params.rhythmIndex = 0;
+
+		this.gui._root.getElementById('play').classList.remove('playing');
+		this.gui._root.getElementById('stop').classList.remove('playing');
+	  
+	}
+
 
 
 	//TODO: see correction with this function
@@ -646,9 +638,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		if (beat != this.params.beatReset && !beat.isLoaded())
 			return false;
 
-		var active = () =>this.gui._root.handleStop();
+		var active = () => this.gui._root.handleStop();
 
-		
+
 		this.params.currentKit = this.params.kits[this.params.theBeat.kitIndex];
 
 		// apply values from sliders
@@ -660,7 +652,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.sliderSetValue('tom3_thumb', this.params.theBeat.tom3PitchVal);
 		this.sliderSetValue('swing_thumb', this.params.theBeat.swingFactor);
 
-		var active = ()=>this.gui._root.updateControls();
+		var active = () => this.gui._root.updateControls();
 		//this.setActiveInstrument(0);
 
 		return true;
@@ -672,14 +664,14 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		var elNew = this.gui._root.getElementById('LED_' + xindex);
 		var elOld = this.gui._root.getElementById('LED_' + lastIndex);
 
-		elNew.src = 'mididrum/images/LED_on.png';
-		elOld.src = 'mididrum/images/LED_off.png';
+		elNew.src = 'https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/LED_on.png';
+		elOld.src = 'https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/LED_off.png';
 
 		//this.hideBeat(lastIndex);
 		//this.showBeat(xindex);
 	}
 
-	filterFrequencyFromCutoff(cutoff) {
+	/*filterFrequencyFromCutoff(cutoff) {
 		var nyquist = 0.5 * context.sampleRate;
 
 		// spreads over a ~ten-octave range, from 20Hz - 20kHz.
@@ -698,7 +690,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	setFilterQ(Q) {
 		if (filterNode)
 			filterNode.Q.value = Q;
-	}
+	}*/
 
 }
 
@@ -721,7 +713,7 @@ class Kit {
 	}
 
 	pathName() {
-		var pathName = "mididrum/sounds/drum-samples/" + this.name + "/";
+		var pathName = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/sounds/drum-samples/" + this.name + "/";
 		return pathName;
 	};
 	setDemoIndex(index) {
@@ -752,7 +744,7 @@ class Kit {
 	};
 
 	loadSample(sampleID, url) {
-		
+
 		var request = new XMLHttpRequest();
 		request.open("GET", url, true);
 		request.responseType = "arraybuffer";
@@ -760,9 +752,9 @@ class Kit {
 		var kit = this;
 
 		request.onload = () => {
-			var context = new AudioContext()
-			context.decodeAudioData(request.response, this.parent.params.decodedFunctions[sampleID].bind(kit));
-			
+		
+			this.parent.context.decodeAudioData(request.response, this.parent.params.decodedFunctions[sampleID].bind(kit));
+
 			kit.instrumentLoadCount++;
 			if (kit.instrumentLoadCount == kit.instrumentCount) {
 				kit.isLoaded = true;
