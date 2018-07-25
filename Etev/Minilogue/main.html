@@ -494,6 +494,9 @@
         octaves: 3
       };
       var tmp = this._root.querySelector("#keyboard")
+      tmp.addEventListener("drag",(e)=>{e.preventDefault()});
+
+      
       this.keyboard = new QwertyHancock(settings, this._root);
 
       this.keyboard.keyDown = (note, frequency) => {
