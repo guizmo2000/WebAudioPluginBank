@@ -961,6 +961,10 @@
         }
 
         blockElement(){
+            this._root.querySelectorAll(".btn").forEach((btn)=>{
+                btn.addEventListener("mousedown",(e)=>{e.stopPropagation()})
+            })
+
             this._root.querySelectorAll(".slider_track").forEach((sliderTr)=>{
                 sliderTr.addEventListener("mousedown",(e)=>{e.stopPropagation()})
             })
