@@ -57,6 +57,11 @@
             margin-bottom: 12px;
         }
 
+        .led{
+            width: 37px;
+            height: 10px;
+        }
+
         
 
         .label {
@@ -206,13 +211,14 @@
         }
 
         #tempodisplay {
-            background-image: url('https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/tempo_bg.png');
+            background-color: white;
             width: 57px;
             height: 20px;
             display: inline-block;
             vertical-align: top;
             padding: 10px 20px;
             text-align: right;
+            font-size: 10px;
             color: rgb(76, 76, 76);
         }
 
@@ -679,7 +685,7 @@
             this._root.getElementById('load').addEventListener('mousedown', this.handleLoad, true);
             this._root.getElementById('load_ok').addEventListener('mousedown', this.handleLoadOk, true);
             this._root.getElementById('load_cancel').addEventListener('mousedown', this.handleLoadCancel, true);
-            this._root.getElementById('reset').addEventListener('mousedown', this.handleReset, true);
+            this._root.getElementById('reset').addEventListener('mousedown', (event) => this._plug.handleReset(event), true);
 
 
             this._root.getElementById('body').addEventListener('mousemove', (event) => this._plug.handleMouseMove(event), true);
@@ -873,10 +879,7 @@
             this._root.getElementById('load_container').classList.toggle('active');
         }
 
-        handleReset(event) {
-            handleStop();
-            loadBeat(beatReset);
-        }
+        
 
 
 
