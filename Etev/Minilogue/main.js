@@ -77,11 +77,9 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
   // Override the param set management
   setParam(key, value) {
-    console.log(key, value);
     try {
       this[key] = (value);
     } catch (error) {
-
       console.log(error)
     }
   }
@@ -215,8 +213,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
   // Voice behavior in poly mode
   noteOnPoly(key) {
     this.voices[key] = new Voice(this.context, key, parent);
-    // The voice is assigned at it's range in the voice table
     this.setInitialParamValues();
+    // The voice is assigned at it's range in the voice table
     // wire the voices graph with the persistant one
     this.voices[key].amp.connect(this.gainforAnalyse);
     // active the ADSR node
@@ -476,6 +474,84 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       if (this.unisonvoices2[voice]) this.unisonvoices2[voice].gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
     }
   }
+
+  set osc1octave(_octave) {
+    this.params.osc1Octave = _octave;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) {
+        this.voices[voice].osc1currentOctave = _octave;
+        this.voices[voice].basefrequency1 = 440 * Math.pow(2, ((this.voices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
+        this.voices[voice].osc1.frequency.setValueAtTime(this.voices[voice].basefrequency1, this.context.currentTime);
+      }
+      if (this.voices[voice] - 12) {
+        this.voices[voice - 12].osc1currentOctave = _octave;
+        this.voices[voice - 12].basefrequency1 = 440 * Math.pow(2, ((this.voices[voice - 12].getkey() + 12 * (_octave - 3)) - 69) / 12);
+        this.voices[voice - 12].osc1.frequency.setValueAtTime(this.voices[voice - 12].basefrequency1, this.context.currentTime);
+      }
+      if (this.voices[voice - 24]) {
+        this.voices[voice - 24].osc1currentOctave = _octave;
+        this.voices[voice - 24].basefrequency1 = 440 * Math.pow(2, ((this.voices[voice - 24].getkey() + 12 * (_octave - 3)) - 69) / 12);
+        this.voices[voice - 24].osc1.frequency.setValueAtTime(this.voices[voice - 24].basefrequency1, this.context.currentTime);
+      }
+      if (this.duovoices[voice]) {
+        this.duovoices[voice].osc1currentOctave = _octave;
+        this.duovoices[voice].basefrequency1 = 440 * Math.pow(2, ((this.duovoices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
+        this.duovoices[voice].osc1.frequency.setValueAtTime(this.duovoices[voice].basefrequency1, this.context.currentTime);
+      }
+      if (this.unisonvoices1[voice]) {
+        this.unisonvoices1[voice].osc1currentOctave = _octave;
+        this.unisonvoices1[voice].basefrequency1 = 440 * Math.pow(2, ((this.unisonvoices1[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
+        this.unisonvoices1[voice].osc1.frequency.setValueAtTime(this.unisonvoices1[voice].basefrequency1, this.context.currentTime);
+      }
+      if (this.unisonvoices2[voice]) {
+        this.unisonvoices2[voice].osc1currentOctave = _octave;
+        this.unisonvoices2[voice].basefrequency1 = 440 * Math.pow(2, ((this.unisonvoices2[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
+        this.unisonvoices2[voice].osc1.frequency.setValueAtTime(this.unisonvoices2[voice].basefrequency1, this.context.currentTime);
+      }
+
+    }
+
+  }
+  set osc2octave(_octave) {
+    this.params.osc2Octave = _octave;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) {
+        this.voices[voice].osc2currentOctave = _octave;
+        this.voices[voice].basefrequency2 = 440 * Math.pow(2, ((this.voices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
+        this.voices[voice].osc2.frequency.setValueAtTime(this.voices[voice].basefrequency2, this.context.currentTime);
+      }
+      if (this.voices[voice] - 12) {
+        this.voices[voice - 12].osc2currentOctave = _octave;
+        this.voices[voice - 12].basefrequency2 = 440 * Math.pow(2, ((this.voices[voice - 12].getkey() + 12 * (_octave - 3)) - 69) / 12);
+        this.voices[voice - 12].osc2.frequency.setValueAtTime(this.voices[voice - 12].basefrequency2, this.context.currentTime);
+      }
+      if (this.voices[voice - 24]) {
+
+        this.voices[voice - 24].osc2currentOctave = _octave;
+        this.voices[voice - 24].basefrequency2 = 440 * Math.pow(2, ((this.voices[voice - 24].getkey() + 12 * (_octave - 3)) - 69) / 12);
+        this.voices[voice - 24].osc2.frequency.setValueAtTime(this.voices[voice - 24].basefrequency2, this.context.currentTime);
+      }
+      if (this.duovoices[voice]) {
+
+        this.duovoices[voice].osc2currentOctave = _octave;
+        this.duovoices[voice].basefrequency2 = 440 * Math.pow(2, ((this.duovoices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
+        this.duovoices[voice].osc2.frequency.setValueAtTime(this.duovoices[voice].basefrequency2, this.context.currentTime);
+      }
+      if (this.unisonvoices1[voice]) {
+
+        this.unisonvoices1[voice].osc2currentOctave = _octave;
+        this.unisonvoices1[voice].basefrequency2 = 440 * Math.pow(2, ((this.unisonvoices1[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
+        this.unisonvoices1[voice].osc2.frequency.setValueAtTime(this.unisonvoices1[voice].basefrequency2, this.context.currentTime);
+      }
+      if (this.unisonvoices2[voice]) {
+
+        this.unisonvoices2[voice].osc2currentOctave = _octave;
+        this.unisonvoices2[voice].basefrequency2 = 440 * Math.pow(2, ((this.unisonvoices2[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
+        this.unisonvoices2[voice].osc2.frequency.setValueAtTime(this.unisonvoices2[voice].basefrequency2, this.context.currentTime);
+      }
+    }
+
+  }
   set osc1pitch(_pitch) {
     this.params.pitch1 = _pitch;
     for (let voice = 0; voice < this.voices.length; voice++) {
@@ -491,11 +567,11 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.params.pitch2 = _pitch;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].osc2.frequency.setValueAtTime(this.voices[voice].basefrequency2 * (_pitch), this.context.currentTime);
-      if (this.voices[voice - 12]) this.voices[voice - 12].osc1.frequency.setValueAtTime(this.voices[voice - 12].basefrequency2 * (_pitch), this.context.currentTime);
-      if (this.voices[voice - 24]) this.voices[voice - 24].osc1.frequency.setValueAtTime(this.voices[voice - 24].basefrequency2 * (_pitch), this.context.currentTime);
-      if (this.duovoices[voice]) this.duovoices[voice].osc1.frequency.setValueAtTime(this.duovoices[voice].basefrequency2 * (_pitch), this.context.currentTime);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].osc1.frequency.setValueAtTime(this.unisonvoices1[voice].basefrequency2 * (_pitch), this.context.currentTime);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].osc1.frequency.setValueAtTime(this.unisonvoices2[voice].basefrequency2 * (_pitch), this.context.currentTime);
+      if (this.voices[voice - 12]) this.voices[voice - 12].osc2.frequency.setValueAtTime(this.voices[voice - 12].basefrequency2 * (_pitch), this.context.currentTime);
+      if (this.voices[voice - 24]) this.voices[voice - 24].osc2.frequency.setValueAtTime(this.voices[voice - 24].basefrequency2 * (_pitch), this.context.currentTime);
+      if (this.duovoices[voice]) this.duovoices[voice].osc2.frequency.setValueAtTime(this.duovoices[voice].basefrequency2 * (_pitch), this.context.currentTime);
+      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].osc2.frequency.setValueAtTime(this.unisonvoices1[voice].basefrequency2 * (_pitch), this.context.currentTime);
+      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].osc2.frequency.setValueAtTime(this.unisonvoices2[voice].basefrequency2 * (_pitch), this.context.currentTime);
     }
   }
   set lforate(_rate) {
@@ -653,84 +729,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     }
   }
 
-
-  set osc1octave(_octave) {
-    this.params.osc1Octave = _octave;
-    for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) {
-        this.voices[voice].osc1currentOctave = _octave;
-        this.voices[voice].basefrequency1 = 440 * Math.pow(2, ((this.voices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.voices[voice].osc1.frequency.setValueAtTime(this.voices[voice].basefrequency1, this.context.currentTime);
-      }
-      if (this.voices[voice] - 12) {
-        this.voices[voice - 12].osc1currentOctave = _octave;
-        this.voices[voice - 12].basefrequency1 = 440 * Math.pow(2, ((this.voices[voice - 12].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.voices[voice - 12].osc1.frequency.setValueAtTime(this.voices[voice - 12].basefrequency1, this.context.currentTime);
-      }
-      if (this.voices[voice - 24]) {
-        this.voices[voice - 24].osc1currentOctave = _octave;
-        this.voices[voice - 24].basefrequency1 = 440 * Math.pow(2, ((this.voices[voice - 24].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.voices[voice - 24].osc1.frequency.setValueAtTime(this.voices[voice - 24].basefrequency1, this.context.currentTime);
-      }
-      if (this.duovoices[voice]) {
-        this.duovoices[voice].osc1currentOctave = _octave;
-        this.duovoices[voice].basefrequency1 = 440 * Math.pow(2, ((this.duovoices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.duovoices[voice].osc1.frequency.setValueAtTime(this.duovoices[voice].basefrequency1, this.context.currentTime);
-      }
-      if (this.unisonvoices1[voice]) {
-        this.unisonvoices1[voice].osc1currentOctave = _octave;
-        this.unisonvoices1[voice].basefrequency1 = 440 * Math.pow(2, ((this.unisonvoices1[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.unisonvoices1[voice].osc1.frequency.setValueAtTime(this.unisonvoices1[voice].basefrequency1, this.context.currentTime);
-      }
-      if (this.unisonvoices2[voice]) {
-        this.unisonvoices2[voice].osc1currentOctave = _octave;
-        this.unisonvoices2[voice].basefrequency1 = 440 * Math.pow(2, ((this.unisonvoices2[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.unisonvoices2[voice].osc1.frequency.setValueAtTime(this.unisonvoices2[voice].basefrequency1, this.context.currentTime);
-      }
-
-    }
-
-  }
-  set osc2octave(_octave) {
-    this.params.osc2Octave = _octave;
-    for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) {
-        this.voices[voice].osc2currentOctave = _octave;
-        this.voices[voice].basefrequency2 = 440 * Math.pow(2, ((this.voices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.voices[voice].osc2.frequency.setValueAtTime(this.voices[voice].basefrequency2, this.context.currentTime);
-      }
-      if (this.voices[voice] - 12) {
-        this.voices[voice - 12].osc2currentOctave = _octave;
-        this.voices[voice - 12].basefrequency2 = 440 * Math.pow(2, ((this.voices[voice - 12].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.voices[voice - 12].osc2.frequency.setValueAtTime(this.voices[voice - 12].basefrequency2, this.context.currentTime);
-      }
-      if (this.voices[voice - 24]) {
-
-        this.voices[voice - 24].osc2currentOctave = _octave;
-        this.voices[voice - 24].basefrequency2 = 440 * Math.pow(2, ((this.voices[voice - 24].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.voices[voice - 24].osc2.frequency.setValueAtTime(this.voices[voice - 24].basefrequency2, this.context.currentTime);
-      }
-      if (this.duovoices[voice]) {
-
-        this.duovoices[voice].osc2currentOctave = _octave;
-        this.duovoices[voice].basefrequency2 = 440 * Math.pow(2, ((this.duovoices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.duovoices[voice].osc2.frequency.setValueAtTime(this.duovoices[voice].basefrequency2, this.context.currentTime);
-      }
-      if (this.unisonvoices1[voice]) {
-
-        this.unisonvoices1[voice].osc2currentOctave = _octave;
-        this.unisonvoices1[voice].basefrequency2 = 440 * Math.pow(2, ((this.unisonvoices1[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.unisonvoices1[voice].osc2.frequency.setValueAtTime(this.unisonvoices1[voice].basefrequency2, this.context.currentTime);
-      }
-      if (this.unisonvoices2[voice]) {
-
-        this.unisonvoices2[voice].osc2currentOctave = _octave;
-        this.unisonvoices2[voice].basefrequency2 = 440 * Math.pow(2, ((this.unisonvoices2[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.unisonvoices2[voice].osc2.frequency.setValueAtTime(this.unisonvoices2[voice].basefrequency2, this.context.currentTime);
-      }
-    }
-
-  }
 
   set wave1(_sig) {
     switch (_sig) {
@@ -1102,12 +1100,11 @@ class Voice {
     this.osc1currentOctave = this.parent.params.osc1Octave;
     this.osc2currentOctave = this.parent.params.osc2Octave;
 
-
-
-    this.basefrequency1 = 440 * Math.pow(2, ((key + 12 * (this.osc1currentOctave - 3)) - 69) / 12);
-    this.basefrequency2 = 440 * Math.pow(2, ((key + 12 * (this.osc2currentOctave - 3)) - 69) / 12);
-    this.osc1.frequency.setValueAtTime(this.basefrequency1, this.context.currentTime);
-    this.osc2.frequency.setValueAtTime(this.basefrequency2, this.context.currentTime);
+     this.basefrequency1 = 440 * Math.pow(2, ((key + 12 * (this.osc1currentOctave - 3)) - 69) / 12);
+     this.basefrequency2 = 440 * Math.pow(2, ((key + 12 * (this.osc2currentOctave - 3)) - 69) / 12);
+ 
+    this.osc1.frequency.setValueAtTime(this.basefrequency1 * this.parent.params.pitch1, this.context.currentTime + 0.01); 
+    this.osc2.frequency.setValueAtTime(this.basefrequency1 * this.parent.params.pitch1, this.context.currentTime + 0.01);
 
 
     // OSC stages
