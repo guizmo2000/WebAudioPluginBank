@@ -630,16 +630,22 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	  
 	}
 
+	handleReset(event) {
+		this.handleStop();
+		this.loadBeat(this.params.beatReset);
+	}
+
 
 
 	//TODO: see correction with this function
 	loadBeat(beat) {
+		this.cloneBeat(this.params.theBeat);
 		// Check that assets are loaded.
 		if (beat != this.params.beatReset && !beat.isLoaded())
 			return false;
 
 		var active = () => this.gui._root.handleStop();
-
+		
 
 		this.params.currentKit = this.params.kits[this.params.theBeat.kitIndex];
 
@@ -656,6 +662,28 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		//this.setActiveInstrument(0);
 
 		return true;
+	}
+
+	cloneBeat(source) {
+		var beat = new Object();
+	
+		beat.kitIndex = source.kitIndex;
+		beat.tempo = source.tempo;
+		beat.swingFactor = source.swingFactor;
+		beat.kickPitchVal = source.kickPitchVal;
+		beat.snarePitchVal = source.snarePitchVal;
+		beat.hihatPitchVal = source.hihatPitchVal;
+		beat.tom1PitchVal = source.tom1PitchVal;
+		beat.tom2PitchVal = source.tom2PitchVal;
+		beat.tom3PitchVal = source.tom3PitchVal;
+		beat.rhythm1 = source.rhythm1.slice(0);        // slice(0) is an easy way to copy the full array
+		beat.rhythm2 = source.rhythm2.slice(0);
+		beat.rhythm3 = source.rhythm3.slice(0);
+		beat.rhythm4 = source.rhythm4.slice(0);
+		beat.rhythm5 = source.rhythm5.slice(0);
+		beat.rhythm6 = source.rhythm6.slice(0);
+	
+		return beat;
 	}
 
 	drawPlayhead(xindex) {
@@ -770,27 +798,7 @@ class Kit {
 
 }
 
-function cloneBeat(source) {
-	var beat = new Object();
 
-	beat.kitIndex = source.kitIndex;
-	beat.tempo = source.tempo;
-	beat.swingFactor = source.swingFactor;
-	beat.kickPitchVal = source.kickPitchVal;
-	beat.snarePitchVal = source.snarePitchVal;
-	beat.hihatPitchVal = source.hihatPitchVal;
-	beat.tom1PitchVal = source.tom1PitchVal;
-	beat.tom2PitchVal = source.tom2PitchVal;
-	beat.tom3PitchVal = source.tom3PitchVal;
-	beat.rhythm1 = source.rhythm1.slice(0);        // slice(0) is an easy way to copy the full array
-	beat.rhythm2 = source.rhythm2.slice(0);
-	beat.rhythm3 = source.rhythm3.slice(0);
-	beat.rhythm4 = source.rhythm4.slice(0);
-	beat.rhythm5 = source.rhythm5.slice(0);
-	beat.rhythm6 = source.rhythm6.slice(0);
-
-	return beat;
-}
 
 
 
