@@ -619,7 +619,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	handleStop(event) {
 		this.params.timerWorker.postMessage("stop");
 		var elOld = this.gui._root.getElementById('LED_' + (this.params.rhythmIndex + 14) % 16);
-		elOld.src = 'https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/LED_off.png';
+		elOld.src = this.URL + '/images/LED_off.png';
 
 	
 
@@ -664,15 +664,15 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		var elNew = this.gui._root.getElementById('LED_' + xindex);
 		var elOld = this.gui._root.getElementById('LED_' + lastIndex);
 
-		elNew.src = 'https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/LED_on.png';
-		elOld.src = 'https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/LED_off.png';
+		elNew.src = this.URL + '/images/LED_on.png';
+		elOld.src = this.URL + '/images/LED_off.png';
 
 		//this.hideBeat(lastIndex);
 		//this.showBeat(xindex);
 	}
 
-	/*filterFrequencyFromCutoff(cutoff) {
-		var nyquist = 0.5 * context.sampleRate;
+	filterFrequencyFromCutoff(cutoff) {
+		var nyquist = 0.5 * this.context.sampleRate;
 
 		// spreads over a ~ten-octave range, from 20Hz - 20kHz.
 		var filterFrequency = Math.pow(2, (11 * cutoff)) * 40;
@@ -683,14 +683,14 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 
 	setFilterCutoff(cutoff) {
-		if (filterNode)
-			filterNode.frequency.value = filterFrequencyFromCutoff(cutoff);
+		if (this.filterNode)
+			this.filterNode.frequency.value = filterFrequencyFromCutoff(cutoff);
 	}
 
 	setFilterQ(Q) {
-		if (filterNode)
-			filterNode.Q.value = Q;
-	}*/
+		if (this.filterNode)
+			this.filterNode.Q.value = Q;
+	}
 
 }
 
@@ -713,7 +713,7 @@ class Kit {
 	}
 
 	pathName() {
-		var pathName = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/sounds/drum-samples/" + this.name + "/";
+		var pathName =  this.parent.URL + "/sounds/drum-samples/" + this.name + "/";
 		return pathName;
 	};
 	setDemoIndex(index) {
