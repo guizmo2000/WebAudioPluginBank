@@ -632,7 +632,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	handleReset(event) {
 		this.handleStop();
-		this.loadBeat(this.params.beatReset);
+		var beatReset = () => this.cloneBeat(this.params.beatReset);
+		this.loadBeat(beatReset);
 	}
 
 
