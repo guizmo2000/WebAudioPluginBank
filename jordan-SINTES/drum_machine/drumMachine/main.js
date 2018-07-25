@@ -619,7 +619,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	handleStop(event) {
 		this.params.timerWorker.postMessage("stop");
 		var elOld = this.gui._root.getElementById('LED_' + (this.params.rhythmIndex + 14) % 16);
-		elOld.src = 'mididrum/images/LED_off.png';
+		elOld.src = 'https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/LED_off.png';
 
 	
 
@@ -664,8 +664,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		var elNew = this.gui._root.getElementById('LED_' + xindex);
 		var elOld = this.gui._root.getElementById('LED_' + lastIndex);
 
-		elNew.src = 'mididrum/images/LED_on.png';
-		elOld.src = 'mididrum/images/LED_off.png';
+		elNew.src = 'https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/LED_on.png';
+		elOld.src = 'https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/images/LED_off.png';
 
 		//this.hideBeat(lastIndex);
 		//this.showBeat(xindex);
@@ -713,7 +713,7 @@ class Kit {
 	}
 
 	pathName() {
-		var pathName = "mididrum/sounds/drum-samples/" + this.name + "/";
+		var pathName = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/drum_machine/drumMachine/sounds/drum-samples/" + this.name + "/";
 		return pathName;
 	};
 	setDemoIndex(index) {
