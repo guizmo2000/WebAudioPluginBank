@@ -494,7 +494,7 @@
         octaves: 3
       };
       var tmp = this._root.querySelector("#keyboard")
-      this._root.querySelector("#keyboard").addEventListener("mousemove",(e)=>{e.stopPropagation()});
+      this._root.querySelector("#keyboard").addEventListener("mousemove",(e)=>{e.preventDefault()});
 
       
       this.keyboard = new QwertyHancock(settings, this._root);
