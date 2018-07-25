@@ -753,7 +753,7 @@ class Kit {
 
 		request.onload = () => {
 		
-			ctx.decodeAudioData(request.response, this.parent.params.decodedFunctions[sampleID].bind(kit));
+			this.parent.context.decodeAudioData(request.response, this.parent.params.decodedFunctions[sampleID].bind(kit));
 
 			kit.instrumentLoadCount++;
 			if (kit.instrumentLoadCount == kit.instrumentCount) {
