@@ -168,7 +168,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	// p9 count inputs
 	get numberOfInputs() {
-		0;
+		return 0;
 	}
 
 	get numberOfOutputs() {
@@ -621,32 +621,32 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		var elOld = this.gui._root.getElementById('LED_' + (this.params.rhythmIndex + 14) % 16);
 		elOld.src = this.URL + '/images/LED_off.png';
 
-	
+
 
 		this.params.rhythmIndex = 0;
 
 		this.gui._root.getElementById('play').classList.remove('playing');
 		this.gui._root.getElementById('stop').classList.remove('playing');
-	  
+
 	}
 
 	handleReset(event) {
 		this.handleStop();
-		var beatReset = () => this.cloneBeat(this.params.beatReset);
-		this.loadBeat(beatReset);
+		this.loadBeat(this.params.beatReset);
+		this.updateControls();
 	}
 
 
 
 	//TODO: see correction with this function
 	loadBeat(beat) {
-		this.cloneBeat(this.params.theBeat);
+		
 		// Check that assets are loaded.
 		if (beat != this.params.beatReset && !beat.isLoaded())
 			return false;
 
-		var active = () => this.gui._root.handleStop();
-		
+
+		this.params.theBeat = this.cloneBeat(this.params.beatReset);
 
 		this.params.currentKit = this.params.kits[this.params.theBeat.kitIndex];
 
@@ -659,15 +659,48 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.sliderSetValue('tom3_thumb', this.params.theBeat.tom3PitchVal);
 		this.sliderSetValue('swing_thumb', this.params.theBeat.swingFactor);
 
-		var active = () => this.gui._root.updateControls();
-		//this.setActiveInstrument(0);
+
+		//this.handleStop();
+		//this.updateControls();
+
+
 
 		return true;
 	}
 
+	updateControls() {
+		for (var i = 0; i < this.params.loopLength; ++i) {
+			for (var j = 0; j < this.params.kNumInstruments; j++) {
+				switch (j) {
+					case 0: this.params.notes = this.params.theBeat.rhythm1; break;
+					case 1: this.params.notes = this.params.theBeat.rhythm2; break;
+					case 2: this.params.notes = this.params.theBeat.rhythm3; break;
+					case 3: this.params.notes = this.params.theBeat.rhythm4; break;
+					case 4: this.params.notes = this.params.theBeat.rhythm5; break;
+					case 5: this.params.notes = this.params.theBeat.rhythm6; break;
+				}
+				this.drawNote(this.params.notes[i], i, j);
+			}
+		}
+		this.gui._root.getElementById('kitname').innerHTML = this.params.kitNamePretty[this.params.theBeat.kitIndex];
+		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
+
+	}
+
+	drawNote(draw, xindex, yindex) {
+		var elButton = this.gui._root.getElementById(this.params.instruments[yindex] + '_' + xindex);
+		switch (draw) {
+			case 0: elButton.src = this.URL + '/images/button_off.png'; break;
+			case 1: elButton.src = this.URL + '/images/button_half.png'; break;
+			case 2: elButton.src = this.URL + '/images/button_on.png'; break;
+		}
+	}
+
+
+
 	cloneBeat(source) {
 		var beat = new Object();
-	
+
 		beat.kitIndex = source.kitIndex;
 		beat.tempo = source.tempo;
 		beat.swingFactor = source.swingFactor;
@@ -683,7 +716,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		beat.rhythm4 = source.rhythm4.slice(0);
 		beat.rhythm5 = source.rhythm5.slice(0);
 		beat.rhythm6 = source.rhythm6.slice(0);
-	
+
 		return beat;
 	}
 
@@ -742,7 +775,7 @@ class Kit {
 	}
 
 	pathName() {
-		var pathName =  this.parent.URL + "/sounds/drum-samples/" + this.name + "/";
+		var pathName = this.parent.URL + "/sounds/drum-samples/" + this.name + "/";
 		return pathName;
 	};
 	setDemoIndex(index) {
@@ -781,7 +814,7 @@ class Kit {
 		var kit = this;
 
 		request.onload = () => {
-		
+
 			this.parent.context.decodeAudioData(request.response, this.parent.params.decodedFunctions[sampleID].bind(kit));
 
 			kit.instrumentLoadCount++;

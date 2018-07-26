@@ -10,11 +10,11 @@
     <style>
         /* Styles for Drum Machine Demo */
 
-        body {
-            background-color: rgb(245, 245, 245);
+        #body {
+            background-color: rgb(255, 255, 255);
             color: rgb(77, 13, 13);
             font-family: 'Droid Sans', Arial, sans-serif;
-            font-size: 13px;
+            font-size: 8.5px;
         }
 
         * {
@@ -27,23 +27,23 @@
 
         #version {
             font-weight: bold;
-            font-size: 12px;
+            font-size: 6px;
         }
 
         .container {
             border-radius: 10px;
-            border: 1px solid rgb(128, 3, 3);
-            width: 750px;
+            border: 0.5px solid rgb(128, 3, 3);
+            width: 375px;
             background-color: rgb(189, 30, 30);
             margin: 0px auto;
-            padding: 20px 20px 15px 20px;
-            -webkit-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
+            padding: 10px 10px 7.5px 10px;
+            -webkit-box-shadow: 0px 1px 1.5px rgba(0, 0, 0, 0.2);
             display: none;
         }
 
         #io {
             display: block;
-            padding: 5px 20px;
+            padding: 2.5px 10px;
         }
 
         .container.active {
@@ -53,13 +53,13 @@
         .buttons_row {}
 
         #LED_row {
-            margin-top: 8px;
-            margin-bottom: 12px;
+            margin-top: 4px;
+            margin-bottom: 6px;
         }
 
         .led{
-            width: 37px;
-            height: 10px;
+            width: 18.5px;
+            height: 5px;
         }
 
         
@@ -67,52 +67,52 @@
         .label {
             display: inline-block;
             vertical-align: top;
-            width: 60px;
+            width: 30px;
             position: relative;
-            top: 12px;
+            top: 6px;
             text-align: right;
-            margin-right: 15px;
+            margin-right: 7.5px;
         }
 
         #pad {
-            height: 268px;
+            height: 134px;
         }
 
         #params {
-            height: 155px;
+            height: 77.5px;
         }
 
         #tools {
-            height: 36px;
+            height: 18px;
         }
 
         #paramsleft_container {
             display: inline-block;
             vertical-align: top;
-            margin-right: 13px;
+            margin-right: 6.5px;
         }
 
         .btn {
             padding: 0;
             margin: 0;
             border: 0;
-            height: 37px;
-            width: 37px;
+            height: 18.5px;
+            width: 18.5px;
         }
 
         #kitlabel,
         #effectlabel,
         #swinglabel {
-            top: 6px;
+            top: 3px;
         }
 
         #beatlabel {
-            top: 8px;
+            top: 4px;
         }
 
         .combo {
-            width: 158px;
-            height: 15px;
+            width: 79px;
+            height: 7.5px;
             background: -webkit-gradient(linear, left top, left bottom, from(rgb(255, 255, 255)),
             color-stop(2%, rgb(255, 255, 255)), color-stop(5%, rgb(244, 244, 244)),
             color-stop(90%, rgb(255, 255, 255)), to(rgb(232, 232, 232)));
@@ -128,27 +128,27 @@
 
         .combo img {
             position: absolute;
-            left: 150px;
-            top: 11px;
+            left: 75px;
+            top: 5.5px;
         }
 
         .combolist {
             list-style-type: none;
             position: absolute;
-            top: 27px;
-            left: -1px;
+            top: 13.5px;
+            left: -0.5px;
             margin: 0;
             background-color: rgb(249, 249, 249);
-            border-radius: 2px;
-            border: 1px solid rgb(200, 200, 200);
-            width: 160px;
-            padding: 5px;
+            border-radius: 1px;
+            border: 0.5px solid rgb(200, 200, 200);
+            width: 80px;
+            padding: 2.5px;
             display: none;
             z-index: 1;
         }
 
         #effectlist {
-            height: 200px;
+            height: 100px;
             overflow: auto;
         }
 
@@ -157,8 +157,8 @@
         }
 
         .combolist li {
-            padding: 2px;
-            border-radius: 2px;
+            padding: 1px;
+            border-radius: 1px;
         }
 
         .combolist li:hover {
@@ -167,18 +167,18 @@
         }
 
         .slider_container {
-            width: 50px;
-            height: 175px;
-            margin: 0 1px;
+            width: 25px;
+            height: 87.5px;
+            margin: 0 0.5px;
             position: relative;
             display: inline-block;
             vertical-align: top;
         }
 
         #swing_container {
-            width: 250px;
-            height: 30px;
-            margin-bottom: 10px;
+            width: 125px;
+            height: 15px;
+            margin-bottom: 5px;
         }
 
         .slider_groove {
@@ -190,66 +190,91 @@
 
         .slider_thumb {
             position: absolute;
-            left: 10px;
+            left: 5px;
             top: 0;
+            width:15px;
+            height: 15px;
+        }
+
+        .slider_track {
+           
+            width:25px;
+            height: 50px;
         }
 
         .slider_hthumb {
             position: absolute;
-            left: 10px;
+            left: 5px;
             top: 0;
+            width:15px;
+            height: 15px;
         }
+
+        .slider_htrack {
+           
+           width:75px;
+           height: 15px;
+       }
 
         .slider_label {
             text-align: center;
-            margin-top: 13px;
+            margin-top: 6.5px;
         }
 
         #tempo_container {
-            height: 40px;
-            margin-bottom: 10px;
+            height: 20px;
+            margin-bottom: 5px;
         }
 
         #tempodisplay {
             background-color: white;
-            width: 57px;
-            height: 20px;
+            width: 28.5px;
+            height: 10px;
             display: inline-block;
             vertical-align: top;
-            padding: 10px 20px;
+            padding: 5px 10px;
             text-align: right;
-            font-size: 10px;
+            font-size: 4px;
             color: rgb(76, 76, 76);
         }
 
         #tempo {
             font-weight: bold;
-            font-size: 18px;
+            font-size: 8px;
         }
 
         #bpm {
-            font-size: 14px;
+            font-size: 5px;
         }
 
         #tempoinc,
         #tempodec {
             position: relative;
-            top: 3px;
-            left: 1px;
+            top: 0.5px;
+            left: 0.5px;
+            width: 20px;
+            height: 20px;
         }
 
         .vrule {
-            width: 1px;
-            height: 160px;
+            width: 0.5px;
+            height: 80px;
             background-color: rgb(128, 3, 3);
-            margin: 0 8px;
+            margin: 0 4px;
             display: inline-block;
             vertical-align: top;
         }
 
         #play,
         #stop {
-            margin-right: 12px;
+            margin-right: 6px;
+            width: 40px;
+            height: 20px;
+        }
+
+        #reset {
+            width: 40px;
+            height: 20px;
         }
 
         #stop {
@@ -265,20 +290,20 @@
         }
 
         #demos_container {
-            margin-left: 10px;
+            margin-left: 5px;
         }
 
         #save_container,
         #load_container {
-            height: 521px;
+            height:  270.5px;
         }
 
         #save_textarea,
         #load_textarea {
-            width: 607px;
-            height: 270px;
-            margin: 20px 40px;
-            font-size: 12px;
+            width: 303.5px;
+            height: 135px;
+            margin: 10px 20px;
+            font-size: 6px;
             -webkit-user-select: text !important;
         }
 
@@ -289,41 +314,41 @@
 
         #load_buttons {
             margin: 0 auto;
-            width: 160px;
+            width: 80px;
         }
 
         #load_ok,
         #load_cancel {
-            margin: 0 3px;
+            margin: 0 1.5px;
         }
 
         #loading {
             position: fixed;
             left: 0;
             top: 0;
-            width: 100%;
-            height: 100%;
+            width: 50%;
+            height: 50%;
             background-color: rgba(0, 0, 0, 0.5);
         }
 
         #loadingcard {
             background: -webkit-gradient(linear, left top, left bottom, from(rgb(235, 235, 235)),
             to(rgb(255, 255, 255)));
-            -webkit-box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
-            width: 260px;
-            height: 60px;
-            border-radius: 10px;
-            margin: 210px auto;
-            padding: 10px;
+            -webkit-box-shadow: 0px 1px 1.5px rgba(0, 0, 0, 0.2);
+            width: 130px;
+            height: 30px;
+            border-radius: 5px;
+            margin: 105px auto;
+            padding: 5px;
         }
 
         #loadingtext {
             text-align: center;
-            margin: 5px 0;
+            margin: 2.5px 0;
         }
 
         #loadingcard img {
-            margin: 15px auto;
+            margin: 7.5px auto;
             display: block;
         }
 
@@ -577,8 +602,8 @@
             <span class='label' id='beatlabel'>Beat</span>
             <img id='play' width='80' height='33'>
             <img id='stop'>
-            <img id='save'>
-            <img id='load'>
+            <!--<img id='save'>-->
+            <!--<img id='load'>-->
             <img id='reset'>
 
 
@@ -641,11 +666,11 @@
             this.boundingRect = {
                 dataWidth: {
                     type: Number,
-                    value: 750
+                    value: 375
                 },
                 dataHeight: {
                     type: Number,
-                    value: 750
+                    value: 375
                 }
             };
             return this.boundingRect;
@@ -680,9 +705,9 @@
             // tool buttons
             this._root.getElementById('play').addEventListener('mousedown', (event) => this._plug.handlePlay(event), true);
             this._root.getElementById('stop').addEventListener('mousedown', (event) => this._plug.handleStop(event), true);
-            this._root.getElementById('save').addEventListener('mousedown', this.handleSave, true);
+           // this._root.getElementById('save').addEventListener('mousedown', this.handleSave, true);
             this._root.getElementById('save_ok').addEventListener('mousedown', this.handleSaveOk, true);
-            this._root.getElementById('load').addEventListener('mousedown', this.handleLoad, true);
+            //this._root.getElementById('load').addEventListener('mousedown', this.handleLoad, true);
             this._root.getElementById('load_ok').addEventListener('mousedown', this.handleLoadOk, true);
             this._root.getElementById('load_cancel').addEventListener('mousedown', this.handleLoadCancel, true);
             this._root.getElementById('reset').addEventListener('mousedown', (event) => this._plug.handleReset(event), true);
@@ -750,7 +775,7 @@
 
             notes[rhythmIndex] = (notes[rhythmIndex] + 1) % 3;
 
-            this.drawNote(notes[rhythmIndex], rhythmIndex, instrumentIndex);
+            this._plug.drawNote(notes[rhythmIndex], rhythmIndex, instrumentIndex);
 
             var note = notes[rhythmIndex];
 
@@ -879,41 +904,6 @@
             this._root.getElementById('load_container').classList.toggle('active');
         }
 
-        
-
-
-
-
-
-        updateControls() {
-            for (var i = 0; i < this._plug.params.loopLength; ++i) {
-                for (var j = 0; j < this._plug.params.kNumInstruments; j++) {
-                    switch (j) {
-                        case 0: this._plug.params.notes = this._plug.params.theBeat.rhythm1; break;
-                        case 1: this._plug.params.notes = this._plug.params.theBeat.rhythm2; break;
-                        case 2: this._plug.params.notes = this._plug.params.theBeat.rhythm3; break;
-                        case 3: this._plug.params.notes = this._plug.params.theBeat.rhythm4; break;
-                        case 4: this._plug.params.notes = this._plug.params.theBeat.rhythm5; break;
-                        case 5: this._plug.params.notes = this._plug.params.theBeat.rhythm6; break;
-                    }
-
-                    this.drawNote(this._plug.params.notes[i], i, j);
-                }
-            }
-
-            this._root.getElementById('kitname').innerHTML = this._plug.params.kitNamePretty[this._plug.params.theBeat.kitIndex];
-
-            this._root.getElementById('tempo').innerHTML = this._plug.params.theBeat.tempo;
-        }
-
-        drawNote(draw, xindex, yindex) {
-            var elButton = this._root.getElementById(this._plug.params.instruments[yindex] + '_' + xindex);
-            switch (draw) {
-                case 0: elButton.src = this._plug.URL + '/images/button_off.png'; break;
-                case 1: elButton.src = this._plug.URL + '/images/button_half.png'; break;
-                case 2: elButton.src = this._plug.URL + '/images/button_on.png'; break;
-            }
-        }
 
         setResources(){
             this._root.querySelectorAll(".btn").forEach((btn)=>{
@@ -950,8 +940,8 @@
             
             this._root.querySelector("#play").setAttribute('src', this._plug.URL + '/images/btn_play.png');
             this._root.querySelector("#stop").setAttribute('src', this._plug.URL + '/images/btn_stop.png');
-            this._root.querySelector("#save").setAttribute('src', this._plug.URL + '/images/btn_save.png');
-            this._root.querySelector("#load").setAttribute('src', this._plug.URL + '/images/btn_load.png');
+            //this._root.querySelector("#save").setAttribute('src', this._plug.URL + '/images/btn_save.png');
+            //this._root.querySelector("#load").setAttribute('src', this._plug.URL + '/images/btn_load.png');
             this._root.querySelector("#reset").setAttribute('src', this._plug.URL + '/images/btn_reset.png');
 
             this._root.querySelector("#load_textarea").setAttribute('src', this._plug.URL + '/images/btn_ok.png');
@@ -992,10 +982,6 @@
         let elem = new DrumMachineGUI(plug);
         return elem;
     }
-
-
-
-
 
    //window.onload=PedalWahGUI.InitMidi;
 </script>
