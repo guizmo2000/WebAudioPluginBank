@@ -90,6 +90,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     console.log("setup");
     this.createIO();
     this.normalize = this.context.createGain();
+    this.normalize.gain.setValueAtTime(0.5, this.context.currentTime);
     this.normalize.connect(this._output);
     this.ppdelay = new Delay(parent, this.context);
     this.gainforAnalyse = this.context.createGain();
@@ -171,7 +172,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       this.killNote(key);
       this.noteOn(key);
     }
-    this.normalizeGain();
+    //this.normalizeGain();
 
   }
 
@@ -202,15 +203,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     //this.voices[key] = null;
   }
 
-  normalizeGain() {
-    switch (this.params.mode) {
-      case "poly": this.normalize.gain.setValueAtTime(1 / this.playedvoices.length  , this.context.currentTime);
-      case "duo": this.normalize.gain.setValueAtTime(1 / (4 * this.playedvoices.length), this.context.currentTime);
-      case "unison": this.normalize.gain.setValueAtTime(1 / (8 * this.playedvoices.length), this.context.currentTime);
-      case "mono": this.normalize.gain.setValueAtTime(1 / (8 * this.playedvoices.length), this.context.currentTime);
-    }
-
-  }
+ 
 
   // Voice behavior in poly mode
   noteOnPoly(key) {
@@ -1105,8 +1098,8 @@ class Voice {
      this.basefrequency1 = 440 * Math.pow(2, ((key + 12 * (this.osc1currentOctave - 3)) - 69) / 12);
      this.basefrequency2 = 440 * Math.pow(2, ((key + 12 * (this.osc2currentOctave - 3)) - 69) / 12);
  
-    this.osc1.frequency.setValueAtTime(this.basefrequency1 * this.parent.params.pitch1, this.context.currentTime + 0.01); 
-    this.osc2.frequency.setValueAtTime(this.basefrequency1 * this.parent.params.pitch1, this.context.currentTime + 0.01);
+    this.osc1.frequency.setValueAtTime(this.basefrequency1 * this.parent.params.pitch1, this.context.currentTime + 0.05); 
+    this.osc2.frequency.setValueAtTime(this.basefrequency1 * this.parent.params.pitch2, this.context.currentTime + 0.05);
 
 
     // OSC stages
