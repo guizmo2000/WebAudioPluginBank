@@ -187,7 +187,12 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	getDescriptor() {
 		return this._descriptor;
 	}
+	async getState() {
+    return new Promise((resolve) => {
+      resolve({});
+    });
 
+  }
 
 	setParam(key, value) {
 		console.log(key, value);
