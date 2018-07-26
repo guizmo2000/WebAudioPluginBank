@@ -118,6 +118,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"Kit3",
 				"Kit8",
 				"Techno",
+				"dark",
 				"Stark",
 				"breakbeat8",
 				"breakbeat9",
@@ -135,6 +136,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"Kit 3",
 				"Kit 8",
 				"Techno",
+				"Dark",
 				"Stark",
 				"Breakbeat 8",
 				"Breakbeat 9",
@@ -189,7 +191,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 	async getState() {
     return new Promise((resolve) => {
-      resolve({});
+      resolve(true);
     });
 
   }
