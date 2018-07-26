@@ -168,7 +168,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	// p9 count inputs
 	get numberOfInputs() {
-		return this.inputs.length;
+		return 0;
 	}
 
 	get numberOfOutputs() {
