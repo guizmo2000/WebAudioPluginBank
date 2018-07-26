@@ -15,6 +15,11 @@
 
     <h1>Band Playlist</h1>
 
+    <button id="toggleGuitarIn" onclick="toggleGuitarInput(event)">Guitar input:
+        <span style='color:red;'>NOT ACTIVATED</span>
+        , click to toggle on/off!
+    </button>
+
     <div class="post-content">
         <div id="top-bar" class="playlist-top-bar">
             <div class="playlist-toolbar">
@@ -65,16 +70,14 @@
                 </div>
                 <div class="btn-group btn-select-state-group">
                     <span class="btn-loop btn btn-success disabled" title="loop a selected segment of audio">
-                      <i class="fa fa-repeat"></i>
+                        <i class="fa fa-repeat"></i>
                     </span>
-                    <span title="keep only the selected audio region for a track"
-                          class="btn-trim-audio btn btn-primary disabled">Trim</span>
-                  </div>
-                  <div class="btn-group">
-                    <span title="Prints playlist info to console"
-                          class="btn btn-info">Print</span>
+                    <span title="keep only the selected audio region for a track" class="btn-trim-audio btn btn-primary disabled">Trim</span>
+                </div>
+                <div class="btn-group">
+                    <span title="Prints playlist info to console" class="btn btn-info">Print</span>
                     <span title="Clear the playlist's tracks" class="btn btn-clear btn-danger">Clear</span>
-                  </div>
+                </div>
                 <div class="btn-group btn-select-state-group hidden">
                     <span title="keep only the selected audio region for a track" class="btn-trim-audio btn btn-primary disabled">Trim Audio</span>
                 </div>
@@ -103,19 +106,61 @@
 
             <form class="form-inline">
                 <div class="form-group">
-                  <label for="master-gain">Master Volume</label>
-                  <input type="range" min="0" max="100" value="100" class="master-gain form-control" id="master-gain">
+                    <label for="master-gain">Master Volume</label>
+                    <input type="range" min="0" max="100" value="100" class="master-gain form-control" id="master-gain">
                 </div>
                 <div class="checkbox">
-                  <label>
-                    <input type="checkbox" class="automatic-scroll"> Automatic Scroll
-                  </label>
+                    <label>
+                        <input type="checkbox" class="automatic-scroll"> Automatic Scroll
+                    </label>
                 </div>
-              </form>
+            </form>
             <div class="track-drop"></div>
         </div>
 
     </div>
+
+    <script>
+
+
+        var ctx = new AudioContext();
+        var guitarPluggedIn = false;
+        var userMedia;
+        var splitter;
+        var merger;
+
+
+        var constraints = {
+            audio: {
+                echoCancellation: false,
+                mozNoiseSuppression: false,
+                mozAutoGainControl: false,
+                //deviceId: id ? {exact: id} : undefined
+            }
+        };
+
+        navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+            window.stream = stream;
+            userMedia = ctx.createMediaStreamSource(stream);
+
+        })
+        function toggleGuitarInput(event) {
+            var button = document.querySelector("#toggleGuitarIn");
+            if (!guitarPluggedIn) {
+                userMedia.connect(ctx);
+                ctx.connect(ctx.destination);
+                button.innerHTML = "Guitar input: <span style='color:green;'>ACTIVATED</span>, click to toggle on/off!";
+            } else {
+                userMedia.disconnect(node);
+                node.disconnect(ctx.destination);
+                button.innerHTML = "Guitar input: <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!";
+            }
+
+            guitarPluggedIn = !guitarPluggedIn;
+
+
+        }
+    </script>
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script type="text/javascript" src="./waveform-playlist/dist/waveform-playlist/js/waveform-playlist.var.js"></script>
     <script type="text/javascript" src="./waveform-playlist/dist/waveform-playlist/js/band-playlist.js"></script>
