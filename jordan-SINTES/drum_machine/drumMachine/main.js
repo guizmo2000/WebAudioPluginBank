@@ -191,7 +191,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 	async getState() {
     return new Promise((resolve) => {
-      resolve(true);
+      resolve({"defaut":"dark"});
     });
 
   }
@@ -205,6 +205,10 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			console.warn("this plugin does not implement this param")
 		}
 	}
+	set defaut(val){
+		return true;
+	}
+
 
 
 	/*  #########  DRUMMACHINE METHOD  #########   */
