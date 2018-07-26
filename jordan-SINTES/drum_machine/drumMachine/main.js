@@ -118,6 +118,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"Kit3",
 				"Kit8",
 				"Techno",
+				"dark",
 				"Stark",
 				"breakbeat8",
 				"breakbeat9",
@@ -135,6 +136,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"Kit 3",
 				"Kit 8",
 				"Techno",
+				"Dark",
 				"Stark",
 				"Breakbeat 8",
 				"Breakbeat 9",
@@ -175,7 +177,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		return this.outputs.length;
 	}
 	inputChannelCount() {
-		return 0;
+		return 1;
 	}
 	outputChannelCount() {
 		return 1
@@ -187,21 +189,12 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	getDescriptor() {
 		return this._descriptor;
 	}
+	async getState() {
+    return new Promise((resolve) => {
+      resolve({"defaut":"dark"});
+    });
 
-	getPatch(index) {
-		return null;
-	}
-	setPatch(data, index) {
-		console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
-	}
-
-	getParam(key) {
-		try {
-			return this.params[key];
-		} catch (error) {
-			console.warn("this plugin does not implement this param")
-		}
-	}
+  }
 
 	setParam(key, value) {
 		console.log(key, value);
@@ -212,38 +205,11 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			console.warn("this plugin does not implement this param")
 		}
 	}
-
-	// P7 state
-	getState() {
-		return this.params;
-	}
-
-	setState(data) {
-		try {
-			this.gui.setAttribute('state', JSON.stringify(data));
-		} catch (error) {
-			console.log("Gui not defined", error)
-			try {
-				document.querySelector('wasabi-drummachine').setAttribute('state', JSON.stringify(this.params));
-			} catch (error) {
-				console.log(error);
-			}
-		}
-
-		Object.keys(data).map(
-			(elem, index) => {
-				console.log(elem, data[elem]);
-				this.setParam(elem, data[elem]);
-			}
-		)
-
+	set defaut(val){
+		return true;
 	}
 
 
-	onMidi(msg) {
-		return msg;
-		//web midi api ?
-	}
 
 	/*  #########  DRUMMACHINE METHOD  #########   */
 
