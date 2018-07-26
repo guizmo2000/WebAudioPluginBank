@@ -778,9 +778,9 @@
             this._plug.drawNote(notes[rhythmIndex], rhythmIndex, instrumentIndex);
 
             var note = notes[rhythmIndex];
-            var played = this._root.getElementById('play');
-            if (note && !played.attributes.class) {
-
+            var btn_play = this._root.getElementById('play');
+            var played =  btn_play.getAttribute("class")
+            if (note && played!="playing") {
                 switch (instrumentIndex) {
                     //put to true to have sound position in function to the click position on drumMachine
                     case 0:  // Kick
