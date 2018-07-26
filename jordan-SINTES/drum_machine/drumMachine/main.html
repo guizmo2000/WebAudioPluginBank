@@ -218,17 +218,17 @@
             vertical-align: top;
             padding: 10px 20px;
             text-align: right;
-            font-size: 10px;
+            font-size: 8px;
             color: rgb(76, 76, 76);
         }
 
         #tempo {
             font-weight: bold;
-            font-size: 18px;
+            font-size: 16px;
         }
 
         #bpm {
-            font-size: 14px;
+            font-size: 10px;
         }
 
         #tempoinc,
@@ -577,8 +577,8 @@
             <span class='label' id='beatlabel'>Beat</span>
             <img id='play' width='80' height='33'>
             <img id='stop'>
-            <img id='save'>
-            <img id='load'>
+            <!--<img id='save'>-->
+            <!--<img id='load'>-->
             <img id='reset'>
 
 
@@ -680,9 +680,9 @@
             // tool buttons
             this._root.getElementById('play').addEventListener('mousedown', (event) => this._plug.handlePlay(event), true);
             this._root.getElementById('stop').addEventListener('mousedown', (event) => this._plug.handleStop(event), true);
-            this._root.getElementById('save').addEventListener('mousedown', this.handleSave, true);
+           // this._root.getElementById('save').addEventListener('mousedown', this.handleSave, true);
             this._root.getElementById('save_ok').addEventListener('mousedown', this.handleSaveOk, true);
-            this._root.getElementById('load').addEventListener('mousedown', this.handleLoad, true);
+            //this._root.getElementById('load').addEventListener('mousedown', this.handleLoad, true);
             this._root.getElementById('load_ok').addEventListener('mousedown', this.handleLoadOk, true);
             this._root.getElementById('load_cancel').addEventListener('mousedown', this.handleLoadCancel, true);
             this._root.getElementById('reset').addEventListener('mousedown', (event) => this._plug.handleReset(event), true);
@@ -750,7 +750,7 @@
 
             notes[rhythmIndex] = (notes[rhythmIndex] + 1) % 3;
 
-            this.drawNote(notes[rhythmIndex], rhythmIndex, instrumentIndex);
+            this._plug.drawNote(notes[rhythmIndex], rhythmIndex, instrumentIndex);
 
             var note = notes[rhythmIndex];
 
@@ -879,41 +879,6 @@
             this._root.getElementById('load_container').classList.toggle('active');
         }
 
-        
-
-
-
-
-
-        updateControls() {
-            for (var i = 0; i < this._plug.params.loopLength; ++i) {
-                for (var j = 0; j < this._plug.params.kNumInstruments; j++) {
-                    switch (j) {
-                        case 0: this._plug.params.notes = this._plug.params.theBeat.rhythm1; break;
-                        case 1: this._plug.params.notes = this._plug.params.theBeat.rhythm2; break;
-                        case 2: this._plug.params.notes = this._plug.params.theBeat.rhythm3; break;
-                        case 3: this._plug.params.notes = this._plug.params.theBeat.rhythm4; break;
-                        case 4: this._plug.params.notes = this._plug.params.theBeat.rhythm5; break;
-                        case 5: this._plug.params.notes = this._plug.params.theBeat.rhythm6; break;
-                    }
-
-                    this.drawNote(this._plug.params.notes[i], i, j);
-                }
-            }
-
-            this._root.getElementById('kitname').innerHTML = this._plug.params.kitNamePretty[this._plug.params.theBeat.kitIndex];
-
-            this._root.getElementById('tempo').innerHTML = this._plug.params.theBeat.tempo;
-        }
-
-        drawNote(draw, xindex, yindex) {
-            var elButton = this._root.getElementById(this._plug.params.instruments[yindex] + '_' + xindex);
-            switch (draw) {
-                case 0: elButton.src = this._plug.URL + '/images/button_off.png'; break;
-                case 1: elButton.src = this._plug.URL + '/images/button_half.png'; break;
-                case 2: elButton.src = this._plug.URL + '/images/button_on.png'; break;
-            }
-        }
 
         setResources(){
             this._root.querySelectorAll(".btn").forEach((btn)=>{
@@ -950,8 +915,8 @@
             
             this._root.querySelector("#play").setAttribute('src', this._plug.URL + '/images/btn_play.png');
             this._root.querySelector("#stop").setAttribute('src', this._plug.URL + '/images/btn_stop.png');
-            this._root.querySelector("#save").setAttribute('src', this._plug.URL + '/images/btn_save.png');
-            this._root.querySelector("#load").setAttribute('src', this._plug.URL + '/images/btn_load.png');
+            //this._root.querySelector("#save").setAttribute('src', this._plug.URL + '/images/btn_save.png');
+            //this._root.querySelector("#load").setAttribute('src', this._plug.URL + '/images/btn_load.png');
             this._root.querySelector("#reset").setAttribute('src', this._plug.URL + '/images/btn_reset.png');
 
             this._root.querySelector("#load_textarea").setAttribute('src', this._plug.URL + '/images/btn_ok.png');
@@ -992,10 +957,6 @@
         let elem = new DrumMachineGUI(plug);
         return elem;
     }
-
-
-
-
 
    //window.onload=PedalWahGUI.InitMidi;
 </script>

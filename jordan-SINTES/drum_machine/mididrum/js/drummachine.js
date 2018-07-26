@@ -7,12 +7,12 @@ var kNumInstruments = 6; //Tom 1, Tom2, Tom 3, Hi-Hat...
 var kInitialKitIndex = 10;
 var kMaxSwing = .08;
 
-var beatReset = {"kitIndex":0,"tempo":100,"swingFactor":0,"kickPitchVal":0.5,"snarePitchVal":0.5,"hihatPitchVal":0.5,"tom1PitchVal":0.5,"tom2PitchVal":0.5,"tom3PitchVal":0.5,"rhythm1":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm2":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm3":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm4":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm5":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm6":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]};
-var beatInitial =  {"kitIndex":11,"tempo":100,"swingFactor":0,"kickPitchVal":0.46478873239436624,"snarePitchVal":0.45070422535211263,"hihatPitchVal":0.15492957746478875,"tom1PitchVal":0.7183098591549295,"tom2PitchVal":0.704225352112676,"tom3PitchVal":0.8028169014084507,"rhythm1":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm2":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm3":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm4":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm5":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],"rhythm6":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]};
+var beatReset = { "kitIndex": 0, "tempo": 100, "swingFactor": 0, "kickPitchVal": 0.5, "snarePitchVal": 0.5, "hihatPitchVal": 0.5, "tom1PitchVal": 0.5, "tom2PitchVal": 0.5, "tom3PitchVal": 0.5, "rhythm1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rhythm3": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] };
+var beatInitial = { "kitIndex": 11, "tempo": 100, "swingFactor": 0, "kickPitchVal": 0.46478873239436624, "snarePitchVal": 0.45070422535211263, "hihatPitchVal": 0.15492957746478875, "tom1PitchVal": 0.7183098591549295, "tom2PitchVal": 0.704225352112676, "tom3PitchVal": 0.8028169014084507, "rhythm1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rhythm3": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] };
 
 function cloneBeat(source) {
     var beat = new Object();
-    
+
     beat.kitIndex = source.kitIndex;
     beat.tempo = source.tempo;
     beat.swingFactor = source.swingFactor;
@@ -28,7 +28,7 @@ function cloneBeat(source) {
     beat.rhythm4 = source.rhythm4.slice(0);
     beat.rhythm5 = source.rhythm5.slice(0);
     beat.rhythm6 = source.rhythm6.slice(0);
-    
+
     return beat;
 }
 
@@ -67,7 +67,7 @@ var kitName = [
     "4OP-FM",
     "TheCheebacabra1",
     "TheCheebacabra2"
-    ];
+];
 
 var kitNamePretty = [
     "Roland R-8",
@@ -85,11 +85,11 @@ var kitNamePretty = [
     "4OP-FM",
     "The Cheebacabra 1",
     "The Cheebacabra 2"
-    ];
+];
 
 function Kit(name) {
     this.name = name;
-    this.pathName = function() {
+    this.pathName = function () {
         var pathName = "mididrum/sounds/drum-samples/" + this.name + "/";
         return pathName;
     };
@@ -100,23 +100,23 @@ function Kit(name) {
 
     this.instrumentCount = kNumInstruments;
     this.instrumentLoadCount = 0;
-    
+
     this.startedLoading = false;
     this.isLoaded = false;
-    
+
     this.demoIndex = -1;
 }
 
-Kit.prototype.setDemoIndex = function(index) {
+Kit.prototype.setDemoIndex = function (index) {
     this.demoIndex = index;
 }
 
-Kit.prototype.load = function() {
+Kit.prototype.load = function () {
     if (this.startedLoading)
         return;
-        
+
     this.startedLoading = true;
-        
+
     var pathName = this.pathName();
 
     var kickPath = pathName + "kick.wav";
@@ -129,21 +129,21 @@ Kit.prototype.load = function() {
     //put to true to have sound position in function to the click position on drumMachine
     this.loadSample(0, kickPath, false);
     this.loadSample(1, snarePath, false);
-    this.loadSample(2, hihatPath, false);  
+    this.loadSample(2, hihatPath, false);
     this.loadSample(3, tom1Path, false);
     this.loadSample(4, tom2Path, false);
     this.loadSample(5, tom3Path, false);
 }
 
 var decodedFunctions = [
-function (buffer) { this.kickBuffer = buffer; },
-function (buffer) { this.snareBuffer = buffer; },
-function (buffer) { this.hihatBuffer = buffer; },
-function (buffer) { this.tom1 = buffer; },
-function (buffer) { this.tom2 = buffer; },
-function (buffer) { this.tom3 = buffer; } ];
+    function (buffer) { this.kickBuffer = buffer; },
+    function (buffer) { this.snareBuffer = buffer; },
+    function (buffer) { this.hihatBuffer = buffer; },
+    function (buffer) { this.tom1 = buffer; },
+    function (buffer) { this.tom2 = buffer; },
+    function (buffer) { this.tom3 = buffer; }];
 
-Kit.prototype.loadSample = function(sampleID, url) {
+Kit.prototype.loadSample = function (sampleID, url) {
     // Load asynchronously
 
     var request = new XMLHttpRequest();
@@ -152,7 +152,7 @@ Kit.prototype.loadSample = function(sampleID, url) {
 
     var kit = this;
 
-    request.onload = function() {
+    request.onload = function () {
         context.decodeAudioData(request.response, decodedFunctions[sampleID].bind(kit));
 
         kit.instrumentLoadCount++;
@@ -169,30 +169,30 @@ Kit.prototype.loadSample = function(sampleID, url) {
 }
 
 
-function startLoadingAssets() { 
-    
+function startLoadingAssets() {
+
     // Initialize drum kits
     var numKits = kitName.length;
     kits = new Array(numKits);
-    for (var i  = 0; i < numKits; i++) {
+    for (var i = 0; i < numKits; i++) {
         kits[i] = new Kit(kitName[i]);
-    }  
-    
+    }
+
     // Start loading the assets used by the presets first, in order of the presets.
     for (var demoIndex = 0; demoIndex < 2; ++demoIndex) {
         var kit = kits[beatInitial.kitIndex];
         kit.setDemoIndex(demoIndex);
         kit.load();
     }
-    
+
     // Then load the remaining assets.
     // Note that any assets which have previously started loading will be skipped over.
-    for (var i  = 0; i < numKits; i++) {
+    for (var i = 0; i < numKits; i++) {
         kits[i].load();
-    }  
+    }
 
- 
-    
+
+
     // Setup initial drumkit
     currentKit = kits[kInitialKitIndex];
 }
@@ -201,10 +201,10 @@ function startLoadingAssets() {
 
 // This gets rid of the loading spinner in each of the demo buttons.
 function showDemoAvailable(demoIndex /* zero-based */) {
-    
-        showPlayAvailable();
-        loadBeat(beatInitial);
-    
+
+    showPlayAvailable();
+    loadBeat(beatInitial);
+
 }
 
 // This gets rid of the loading spinner on the play button.
@@ -216,25 +216,25 @@ function showPlayAvailable() {
 function init() {
     // Let the beat demos know when all of their assets have been loaded.
     // Add some new methods to support this.
-        beatInitial.isKitLoaded = false;
+    beatInitial.isKitLoaded = false;
 
-        beatInitial.setKitLoaded = function() {
-            this.isKitLoaded = true;
-            this.checkIsLoaded();
-        };
+    beatInitial.setKitLoaded = function () {
+        this.isKitLoaded = true;
+        this.checkIsLoaded();
+    };
 
-   
 
-        beatInitial.checkIsLoaded = function() {
-            if (this.isLoaded()) {
-                showDemoAvailable(this.index); 
-            }
-        };
 
-        beatInitial.isLoaded = function() {
-            return this.isKitLoaded;
-        };
-        
+    beatInitial.checkIsLoaded = function () {
+        if (this.isLoaded()) {
+            showDemoAvailable(this.index);
+        }
+    };
+
+    beatInitial.isLoaded = function () {
+        return this.isKitLoaded;
+    };
+
     startLoadingAssets();
 
     // NOTE: THIS NOW RELIES ON THE MONKEYPATCH LIBRARY TO LOAD
@@ -258,7 +258,7 @@ function init() {
     filterNode.frequency.value = 0.5 * context.sampleRate;
     filterNode.Q.value = 1;
     filterNode.connect(finalMixNode);
-    
+
     // Create master volume.
     masterGainNode = context.createGain();
     masterGainNode.gain.value = 0.7; // reduce overall volume to avoid clipping
@@ -267,7 +267,7 @@ function init() {
     var elKitCombo = document.getElementById('kitcombo');
     elKitCombo.addEventListener("mousedown", handleKitComboMouseDown, true);
 
-    
+
 
     document.body.addEventListener("mousedown", handleBodyMouseDown, true);
 
@@ -281,8 +281,8 @@ function init() {
     var timerWorkerBlobURL = window.URL.createObjectURL(timerWorkerBlob);
 
     timerWorker = new Worker(timerWorkerBlobURL);
-    timerWorker.onmessage = function(e) {
-      schedule();
+    timerWorker.onmessage = function (e) {
+        schedule();
     };
     timerWorker.postMessage('init'); // Start the worker.
 
@@ -292,10 +292,10 @@ function initControls() {
     // Initialize note buttons
     initButtons();
     makeKitList();
-    
+
 
     // sliders
-   
+
     document.getElementById('tom1_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
     document.getElementById('tom2_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
     document.getElementById('tom3_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
@@ -304,7 +304,7 @@ function initControls() {
     document.getElementById('kick_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
     document.getElementById('swing_thumb').addEventListener('mousedown', handleSliderMouseDown, true);
 
-    
+
 
 
     // tool buttons
@@ -316,7 +316,7 @@ function initControls() {
     document.getElementById('load_ok').addEventListener('mousedown', handleLoadOk, true);
     document.getElementById('load_cancel').addEventListener('mousedown', handleLoadCancel, true);
     document.getElementById('reset').addEventListener('mousedown', handleReset, true);
-    
+
     var elBody = document.getElementById('body');
     elBody.addEventListener('mousemove', handleMouseMove, true);
     elBody.addEventListener('mouseup', handleMouseUp, true);
@@ -325,13 +325,13 @@ function initControls() {
     document.getElementById('tempodec').addEventListener('mousedown', tempoDecrease, true);
 }
 
-function initButtons() {        
+function initButtons() {
     var elButton;
 
     for (i = 0; i < loopLength; ++i) {
         for (j = 0; j < kNumInstruments; j++) {
-                elButton = document.getElementById(instruments[j] + '_' + i);
-                elButton.addEventListener("mousedown", handleButtonMouseDown, true);
+            elButton = document.getElementById(instruments[j] + '_' + i);
+            elButton.addEventListener("mousedown", handleButtonMouseDown, true);
         }
     }
 }
@@ -340,7 +340,7 @@ function initButtons() {
 function makeKitList() {
     var elList = document.getElementById('kitlist');
     var numKits = kitName.length;
-    
+
     for (var i = 0; i < numKits; i++) {
         var elItem = document.createElement('li');
         elItem.innerHTML = kitNamePretty[i];
@@ -358,7 +358,7 @@ function advanceNote() {
         rhythmIndex = 0;
     }
 
-        // apply swing    
+    // apply swing    
     if (rhythmIndex % 2) {
         noteTime += (0.25 + kMaxSwing * theBeat.swingFactor) * secondsPerBeat;
     } else {
@@ -406,37 +406,37 @@ function schedule() {
     while (noteTime < currentTime + 0.120) {
         // Convert noteTime to context time.
         var contextPlayTime = noteTime + startTime;
-        
+
         // Kick
         if (theBeat.rhythm1[rhythmIndex] && instrumentActive[0]) {
-            playNote(currentKit.kickBuffer, false, 0,0,-2, 0.5, volumes[theBeat.rhythm1[rhythmIndex]] * 1.0, kickPitch, contextPlayTime);
+            playNote(currentKit.kickBuffer, false, 0, 0, -2, 0.5, volumes[theBeat.rhythm1[rhythmIndex]] * 1.0, kickPitch, contextPlayTime);
         }
 
         // Snare
         if (theBeat.rhythm2[rhythmIndex] && instrumentActive[1]) {
-            playNote(currentKit.snareBuffer, false, 0,0,-2, 1, volumes[theBeat.rhythm2[rhythmIndex]] * 0.6, snarePitch, contextPlayTime);
+            playNote(currentKit.snareBuffer, false, 0, 0, -2, 1, volumes[theBeat.rhythm2[rhythmIndex]] * 0.6, snarePitch, contextPlayTime);
         }
 
         // Hihat
         if (theBeat.rhythm3[rhythmIndex] && instrumentActive[2]) {
             // Pan the hihat according to sequence position.
-            playNote(currentKit.hihatBuffer, true, 0.5*rhythmIndex - 4, 0, -1.0, 1, volumes[theBeat.rhythm3[rhythmIndex]] * 0.7, hihatPitch, contextPlayTime);
+            playNote(currentKit.hihatBuffer, true, 0.5 * rhythmIndex - 4, 0, -1.0, 1, volumes[theBeat.rhythm3[rhythmIndex]] * 0.7, hihatPitch, contextPlayTime);
         }
 
         // Toms    
         if (theBeat.rhythm4[rhythmIndex] && instrumentActive[3]) {
-            playNote(currentKit.tom1, false, 0,0,-2, 1, volumes[theBeat.rhythm4[rhythmIndex]] * 0.6, tom1Pitch, contextPlayTime);
+            playNote(currentKit.tom1, false, 0, 0, -2, 1, volumes[theBeat.rhythm4[rhythmIndex]] * 0.6, tom1Pitch, contextPlayTime);
         }
 
         if (theBeat.rhythm5[rhythmIndex] && instrumentActive[4]) {
-            playNote(currentKit.tom2, false, 0,0,-2, 1, volumes[theBeat.rhythm5[rhythmIndex]] * 0.6, tom2Pitch, contextPlayTime);
+            playNote(currentKit.tom2, false, 0, 0, -2, 1, volumes[theBeat.rhythm5[rhythmIndex]] * 0.6, tom2Pitch, contextPlayTime);
         }
 
         if (theBeat.rhythm6[rhythmIndex] && instrumentActive[5]) {
-            playNote(currentKit.tom3, false, 0,0,-2, 1, volumes[theBeat.rhythm6[rhythmIndex]] * 0.6, tom3Pitch, contextPlayTime);
+            playNote(currentKit.tom3, false, 0, 0, -2, 1, volumes[theBeat.rhythm6[rhythmIndex]] * 0.6, tom3Pitch, contextPlayTime);
         }
 
-        
+
         // Attempt to synchronize drawing time with sound
         if (noteTime != lastDrawTime) {
             lastDrawTime = noteTime;
@@ -450,36 +450,36 @@ function schedule() {
 function playDrum(noteNumber, velocity) {
     switch (noteNumber) {
         case 0x24:
-            playNote(currentKit.kickBuffer,  false, 0,0,-2,  0.5, (velocity / 127), kickPitch,  0);
+            playNote(currentKit.kickBuffer, false, 0, 0, -2, 0.5, (velocity / 127), kickPitch, 0);
             break;
         case 0x26:
-            playNote(currentKit.snareBuffer, false, 0,0,-2,  1,   (velocity / 127), snarePitch, 0);
+            playNote(currentKit.snareBuffer, false, 0, 0, -2, 1, (velocity / 127), snarePitch, 0);
             break;
         case 0x28:
-            playNote(currentKit.hihatBuffer, true,  0,0,-1.0,1,   (velocity / 127), hihatPitch, 0);
+            playNote(currentKit.hihatBuffer, true, 0, 0, -1.0, 1, (velocity / 127), hihatPitch, 0);
             break;
         case 0x2d:
-            playNote(currentKit.tom1,        false, 0,0,-2,  1,   (velocity / 127), tom1Pitch,  0);
+            playNote(currentKit.tom1, false, 0, 0, -2, 1, (velocity / 127), tom1Pitch, 0);
             break;
         case 0x2f:
-            playNote(currentKit.tom2,        false, 0,0,-2,  1,   (velocity / 127), tom2Pitch,  0);
+            playNote(currentKit.tom2, false, 0, 0, -2, 1, (velocity / 127), tom2Pitch, 0);
             break;
         case 0x32:
-            playNote(currentKit.tom3,        false, 0,0,-2,  1,   (velocity / 127), tom3Pitch,  0);
+            playNote(currentKit.tom3, false, 0, 0, -2, 1, (velocity / 127), tom3Pitch, 0);
             break;
         default:
-            console.log("note:0x" + noteNumber.toString(16) );
+            console.log("note:0x" + noteNumber.toString(16));
     }
 }
 
 
 function tempoIncrease() {
-    theBeat.tempo = Math.min(kMaxTempo, theBeat.tempo+2);
+    theBeat.tempo = Math.min(kMaxTempo, theBeat.tempo + 2);
     document.getElementById('tempo').innerHTML = theBeat.tempo;
 }
 
 function tempoDecrease() {
-    theBeat.tempo = Math.max(kMinTempo, theBeat.tempo-2);
+    theBeat.tempo = Math.max(kMinTempo, theBeat.tempo - 2);
     document.getElementById('tempo').innerHTML = theBeat.tempo;
 }
 
@@ -488,14 +488,14 @@ function handleSliderMouseDown(event) {
     // calculate offset of mousedown on slider
     var el = event.target;
     if (mouseCapture == 'swing_thumb') {
-        var thumbX = 0;    
+        var thumbX = 0;
         do {
             thumbX += el.offsetLeft;
         } while (el = el.offsetParent);
 
         mouseCaptureOffset = event.pageX - thumbX;
     } else {
-        var thumbY = 0;    
+        var thumbY = 0;
         do {
             thumbY += el.offsetTop;
         } while (el = el.offsetParent);
@@ -548,35 +548,35 @@ function handleMouseUp() {
 
 function sliderSetValue(slider, value) {
     var pitchRate = Math.pow(2.0, 2.0 * (value - 0.5));
-    
-    switch(slider) {
-    case 'kick_thumb':
-        theBeat.kickPitchVal = value;
-        kickPitch = pitchRate;
-        break;
-    case 'snare_thumb':
-        theBeat.snarePitchVal = value;
-        snarePitch = pitchRate;
-        break;
-    case 'hihat_thumb':
-        theBeat.hihatPitchVal = value;
-        hihatPitch = pitchRate;
-        break;
-    case 'tom1_thumb':
-        theBeat.tom1PitchVal = value;
-        tom1Pitch = pitchRate;
-        break;
-    case 'tom2_thumb':
-        theBeat.tom2PitchVal = value;
-        tom2Pitch = pitchRate;
-        break;
-    case 'tom3_thumb':
-        theBeat.tom3PitchVal = value;
-        tom3Pitch = pitchRate;
-        break;
-    case 'swing_thumb':
-        theBeat.swingFactor = value;
-        break; 
+
+    switch (slider) {
+        case 'kick_thumb':
+            theBeat.kickPitchVal = value;
+            kickPitch = pitchRate;
+            break;
+        case 'snare_thumb':
+            theBeat.snarePitchVal = value;
+            snarePitch = pitchRate;
+            break;
+        case 'hihat_thumb':
+            theBeat.hihatPitchVal = value;
+            hihatPitch = pitchRate;
+            break;
+        case 'tom1_thumb':
+            theBeat.tom1PitchVal = value;
+            tom1Pitch = pitchRate;
+            break;
+        case 'tom2_thumb':
+            theBeat.tom2PitchVal = value;
+            tom2Pitch = pitchRate;
+            break;
+        case 'tom3_thumb':
+            theBeat.tom3PitchVal = value;
+            tom3Pitch = pitchRate;
+            break;
+        case 'swing_thumb':
+            theBeat.swingFactor = value;
+            break;
     }
 }
 
@@ -584,14 +584,14 @@ function sliderSetValue(slider, value) {
 
 function handleButtonMouseDown(event) {
     var notes = theBeat.rhythm1;
-    
+
     var instrumentIndex;
     var rhythmIndex;
 
     var elId = event.target.id;
     rhythmIndex = elId.substr(elId.indexOf('_') + 1, 2);
     instrumentIndex = instruments.indexOf(elId.substr(0, elId.indexOf('_')));
-        
+
     switch (instrumentIndex) {
         case 0: notes = theBeat.rhythm1; break;
         case 1: notes = theBeat.rhythm2; break;
@@ -604,39 +604,39 @@ function handleButtonMouseDown(event) {
     notes[rhythmIndex] = (notes[rhythmIndex] + 1) % 3;
 
     if (instrumentIndex == currentlyActiveInstrument)
-        showCorrectNote( rhythmIndex, notes[rhythmIndex] );
+        showCorrectNote(rhythmIndex, notes[rhythmIndex]);
 
     drawNote(notes[rhythmIndex], rhythmIndex, instrumentIndex);
 
     var note = notes[rhythmIndex];
-    
+
     if (note) {
-        switch(instrumentIndex) {
-        //put to true to have sound position in function to the click position on drumMachine
-        case 0:  // Kick
-          playNote(currentKit.kickBuffer, false, 0,0,-2, 0.5 * 1, volumes[note] * 1.0, kickPitch, 0);
-          break;
+        switch (instrumentIndex) {
+            //put to true to have sound position in function to the click position on drumMachine
+            case 0:  // Kick
+                playNote(currentKit.kickBuffer, false, 0, 0, -2, 0.5 * 1, volumes[note] * 1.0, kickPitch, 0);
+                break;
 
-        case 1:  // Snare
-          playNote(currentKit.snareBuffer, false, 0,0,-2, 1, volumes[note] * 0.6, snarePitch, 0);
-          break;
+            case 1:  // Snare
+                playNote(currentKit.snareBuffer, false, 0, 0, -2, 1, volumes[note] * 0.6, snarePitch, 0);
+                break;
 
-        case 2:  // Hihat
-          // Pan the hihat according to sequence position.
-          playNote(currentKit.hihatBuffer, false, 0.5*rhythmIndex - 4, 0, -1.0, 1, volumes[note] * 0.7, hihatPitch, 0);
-          break;
+            case 2:  // Hihat
+                // Pan the hihat according to sequence position.
+                playNote(currentKit.hihatBuffer, false, 0.5 * rhythmIndex - 4, 0, -1.0, 1, volumes[note] * 0.7, hihatPitch, 0);
+                break;
 
-        case 3:  // Tom 1   
-          playNote(currentKit.tom1, false, 0,0,-2, 1, volumes[note] * 0.6, tom1Pitch, 0);
-          break;
+            case 3:  // Tom 1   
+                playNote(currentKit.tom1, false, 0, 0, -2, 1, volumes[note] * 0.6, tom1Pitch, 0);
+                break;
 
-        case 4:  // Tom 2   
-          playNote(currentKit.tom2, false, 0,0,-2, 1, volumes[note] * 0.6, tom2Pitch, 0);
-          break;
+            case 4:  // Tom 2   
+                playNote(currentKit.tom2, false, 0, 0, -2, 1, volumes[note] * 0.6, tom2Pitch, 0);
+                break;
 
-        case 5:  // Tom 3   
-          playNote(currentKit.tom3, false, 0,0,-2, 1, volumes[note] * 0.6, tom3Pitch, 0);
-          break;
+            case 5:  // Tom 3   
+                playNote(currentKit.tom3, false, 0, 0, -2, 1, volumes[note] * 0.6, tom3Pitch, 0);
+                break;
         }
     }
 }
@@ -658,8 +658,8 @@ function handleBodyMouseDown(event) {
     if (elKitcombo.classList.contains('active') && !isDescendantOfId(event.target, 'kitcombo_container')) {
         elKitcombo.classList.remove('active');
     }
-    
-     
+
+
 }
 
 function isDescendantOfId(el, id) {
@@ -684,9 +684,9 @@ function handlePlay(event) {
     document.getElementById('stop').classList.add('playing');
     if (midiOut) {
         // turn off the play button
-        midiOut.send( [0x80, 3, 32] );
+        midiOut.send([0x80, 3, 32]);
         // light up the stop button
-        midiOut.send( [0x90, 7, 1] );        
+        midiOut.send([0x90, 7, 1]);
     }
 }
 
@@ -696,7 +696,7 @@ function handleStop(event) {
     var elOld = document.getElementById('LED_' + (rhythmIndex + 14) % 16);
     elOld.src = 'mididrum/images/LED_off.png';
 
-    hideBeat( (rhythmIndex + 14) % 16 );
+    hideBeat((rhythmIndex + 14) % 16);
 
     rhythmIndex = 0;
 
@@ -704,9 +704,9 @@ function handleStop(event) {
     document.getElementById('stop').classList.remove('playing');
     if (midiOut) {
         // light up the play button
-        midiOut.send( [0x90, 3, 32] );
+        midiOut.send([0x90, 3, 32]);
         // turn off the stop button
-        midiOut.send( [0x80, 7, 1] );
+        midiOut.send([0x80, 7, 1]);
     }
 }
 
@@ -732,7 +732,7 @@ function handleLoadOk(event) {
     currentKit = kits[theBeat.kitIndex];
     document.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
 
-    
+
 
     sliderSetValue('kick_thumb', theBeat.kickPitchVal);
     sliderSetValue('snare_thumb', theBeat.snarePitchVal);
@@ -769,7 +769,7 @@ function toggleLoadContainer() {
 
 function handleReset(event) {
     handleStop();
-    loadBeat(beatReset);    
+    loadBeat(beatReset);
 }
 
 function loadBeat(beat) {
@@ -798,28 +798,28 @@ function loadBeat(beat) {
 }
 
 function updateControls() {
-    for (i = 0; i < loopLength; ++i) {
-        for (j = 0; j < kNumInstruments; j++) {
+    for (var i = 0; i < this.params.loopLength; ++i) {
+        for (var j = 0; j < this.params.kNumInstruments; j++) {
             switch (j) {
-                case 0: notes = theBeat.rhythm1; break;
-                case 1: notes = theBeat.rhythm2; break;
-                case 2: notes = theBeat.rhythm3; break;
-                case 3: notes = theBeat.rhythm4; break;
-                case 4: notes = theBeat.rhythm5; break;
-                case 5: notes = theBeat.rhythm6; break;
+                case 0: this.params.notes = this.params.theBeat.rhythm1; break;
+                case 1: this.params.notes = this.params.theBeat.rhythm2; break;
+                case 2: this.params.notes = this.params.theBeat.rhythm3; break;
+                case 3: this.params.notes = this.params.theBeat.rhythm4; break;
+                case 4: this.params.notes = this.params.theBeat.rhythm5; break;
+                case 5: this.params.notes = this.params.theBeat.rhythm6; break;
             }
 
-            drawNote(notes[i], i, j);
+            this.gui._root.drawNote(this.params.notes[i], i, j);
         }
     }
 
-    document.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
-   
-    document.getElementById('tempo').innerHTML = theBeat.tempo;
+    this.gui._root.getElementById('kitname').innerHTML = this.params.kitNamePretty[this.params.theBeat.kitIndex];
+
+    this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
 }
 
 
-function drawNote(draw, xindex, yindex) {    
+function drawNote(draw, xindex, yindex) {
     var elButton = document.getElementById(instruments[yindex] + '_' + xindex);
     switch (draw) {
         case 0: elButton.src = 'mididrum/images/button_off.png'; break;
@@ -833,15 +833,15 @@ function drawPlayhead(xindex) {
 
     var elNew = document.getElementById('LED_' + xindex);
     var elOld = document.getElementById('LED_' + lastIndex);
-    
+
     elNew.src = 'mididrum/images/LED_on.png';
     elOld.src = 'mididrum/images/LED_off.png';
 
-    hideBeat( lastIndex );
-    showBeat( xindex );
+    hideBeat(lastIndex);
+    showBeat(xindex);
 }
 
-function filterFrequencyFromCutoff( cutoff ) {
+function filterFrequencyFromCutoff(cutoff) {
     var nyquist = 0.5 * context.sampleRate;
 
     // spreads over a ~ten-octave range, from 20Hz - 20kHz.
@@ -852,12 +852,12 @@ function filterFrequencyFromCutoff( cutoff ) {
     return filterFrequency;
 }
 
-function setFilterCutoff( cutoff ) {
+function setFilterCutoff(cutoff) {
     if (filterNode)
-        filterNode.frequency.value = filterFrequencyFromCutoff( cutoff );
+        filterNode.frequency.value = filterFrequencyFromCutoff(cutoff);
 }
 
-function setFilterQ( Q ) {
+function setFilterQ(Q) {
     if (filterNode)
         filterNode.Q.value = Q;
 }
