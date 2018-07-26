@@ -23,8 +23,6 @@
             cursor: pointer !important;
         }
 
-
-
         #version {
             font-weight: bold;
             font-size: 6px;
@@ -61,8 +59,6 @@
             width: 18.5px;
             height: 5px;
         }
-
-        
 
         .label {
             display: inline-block;
@@ -606,8 +602,6 @@
             <!--<img id='load'>-->
             <img id='reset'>
 
-
-
         </section>
 
 
@@ -637,8 +631,6 @@
                 <img id='load_cancel'>
             </div>
         </div>
-
-
 
         <div id="MIDIPlugin"> </div>
 
@@ -689,7 +681,6 @@
             this.initButtons();
             this.makeKitList();
 
-
             // sliders
 
             this._root.getElementById('tom1_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true);
@@ -699,8 +690,6 @@
             this._root.getElementById('snare_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true)
             this._root.getElementById('kick_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true)
             this._root.getElementById('swing_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true)
-
-
 
             // tool buttons
             this._root.getElementById('play').addEventListener('mousedown', (event) => this._plug.handlePlay(event), true);
@@ -780,6 +769,7 @@
             var note = notes[rhythmIndex];
             var btn_play = this._root.getElementById('play');
             var played =  btn_play.getAttribute("class")
+
             if (note && played!="playing") {
                 switch (instrumentIndex) {
                     //put to true to have sound position in function to the click position on drumMachine
@@ -842,11 +832,6 @@
             }
         }
 
-
-
-
-       
-
         handleSave(event) {
             toggleSaveContainer();
             var elTextarea = this._root.getElementById('save_textarea');
@@ -868,8 +853,6 @@
             // Set drumkit
             currentKit = kits[theBeat.kitIndex];
             this._root.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
-
-
 
             sliderSetValue('kick_thumb', theBeat.kickPitchVal);
             sliderSetValue('snare_thumb', theBeat.snarePitchVal);

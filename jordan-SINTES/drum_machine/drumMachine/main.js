@@ -16,10 +16,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		super(ctx, options)
 		this.state;
 
-		this.addParam({
-
-		});
-
 		this.params = {
 
 			//drumMachine parameter
@@ -161,10 +157,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 		this.setup();
 	}
-
-
-
-
 	/*    ################     API METHODS    ###############   */
 	// p9 count inputs
 
@@ -190,11 +182,11 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		return this._descriptor;
 	}
 	async getState() {
-    return new Promise((resolve) => {
-      resolve({"defaut":"dark"});
-    });
+		return new Promise((resolve) => {
+			resolve({ "defaut": "dark" });
+		});
 
-  }
+	}
 
 	setParam(key, value) {
 		console.log(key, value);
@@ -205,7 +197,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			console.warn("this plugin does not implement this param")
 		}
 	}
-	set defaut(val){
+	set defaut(val) {
 		return true;
 	}
 
@@ -266,7 +258,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 
 	startLoadingAssets() {
-
 		// Initialize drum kits
 		var numKits = this.params.kitName.length;
 		this.params.kits = new Array(numKits);
@@ -287,8 +278,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			this.params.kits[i].load();
 		}
 
-
-
 		// Setup initial drumkit
 		this.params.currentKit = this.params.kits[this.params.kInitialKitIndex];
 	}
@@ -308,8 +297,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			this.params.beatInitial.checkIsLoaded();
 		};
 
-
-
 		this.params.beatInitial.checkIsLoaded = () => {
 			if (this.params.beatInitial.isLoaded()) {
 				this.showDemoAvailable(this.index);
@@ -324,32 +311,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		// NOTE: THIS NOW RELIES ON THE MONKEYPATCH LIBRARY TO LOAD
 		// IN CHROME AND SAFARI (until they release unprefixed)
-
-		//var finalMixNode;
-		/*if (this.context.createDynamicsCompressor) {
-			// Create a dynamics compressor to sweeten the overall mix.
-			var compressor = this.context.createDynamicsCompressor();
-			compressor.connect(this.context.destination);
-			finalMixNode = compressor;
-		} else {
-			// No compressor available in this implementation.
-			finalMixNode = this._output;
-		}*/
-
-		// create master filter node
-		/*var filterNode = this.context.createBiquadFilter();
-		filterNode.type = "lowpass";
-		filterNode.frequency.value = 0.5 * this.context.sampleRate;
-		filterNode.Q.value = 1;
-		filterNode.connect(finalMixNode);*/
-
-		// Create master volume.
-		/*this.params.masterGainNode = this.context.createGain();
-		this.params.masterGainNode.gain.value = 0.7; // reduce overall volume to avoid clipping
-		this.params.masterGainNode.connect(filterNode);*/
-
-		//this.initControls();
-		//this.updateControls();
 
 		var timerWorkerBlob = new Blob([
 			"var timeoutID=0;function schedule(){timeoutID=setTimeout(function(){postMessage('schedule'); schedule();},100);} onmessage = function(e) { if (e.data == 'start') { if (!timeoutID) schedule();} else if (e.data == 'stop') {if (timeoutID) clearTimeout(timeoutID); timeoutID=0;};}"]);
@@ -463,7 +424,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 
 	tempoIncrease() {
-
 		this.params.theBeat.tempo = Math.min(this.params.kMaxTempo, this.params.theBeat.tempo + 2);
 		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
 	}
@@ -483,14 +443,12 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			do {
 				thumbX += el.offsetLeft;
 			} while (el = el.offsetParent);
-
 			this.params.mouseCaptureOffset = event.pageX - thumbX;
 		} else {
 			var thumbY = 0;
 			do {
 				thumbY += el.offsetTop;
 			} while (el = el.offsetParent);
-
 			this.params.mouseCaptureOffset = event.pageY - thumbY;
 		}
 	}
@@ -576,7 +534,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.params.startTime = this.context.currentTime + 0.005;
 		this.schedule();
 		this.params.timerWorker.postMessage("start");
-
 		this.gui._root.getElementById('play').classList.add('playing');
 		this.gui._root.getElementById('stop').classList.add('playing');
 
@@ -586,11 +543,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.params.timerWorker.postMessage("stop");
 		var elOld = this.gui._root.getElementById('LED_' + (this.params.rhythmIndex + 14) % 16);
 		elOld.src = this.URL + '/images/LED_off.png';
-
-
-
 		this.params.rhythmIndex = 0;
-
 		this.gui._root.getElementById('play').classList.remove('playing');
 		this.gui._root.getElementById('stop').classList.remove('playing');
 
@@ -606,16 +559,13 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	//TODO: see correction with this function
 	loadBeat(beat) {
-		
+
 		// Check that assets are loaded.
 		if (beat != this.params.beatReset && !beat.isLoaded())
 			return false;
 
-
 		this.params.theBeat = this.cloneBeat(this.params.beatReset);
-
 		this.params.currentKit = this.params.kits[this.params.theBeat.kitIndex];
-
 		// apply values from sliders
 		this.sliderSetValue('kick_thumb', this.params.theBeat.kickPitchVal);
 		this.sliderSetValue('snare_thumb', this.params.theBeat.snarePitchVal);
@@ -624,13 +574,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.sliderSetValue('tom2_thumb', this.params.theBeat.tom2PitchVal);
 		this.sliderSetValue('tom3_thumb', this.params.theBeat.tom3PitchVal);
 		this.sliderSetValue('swing_thumb', this.params.theBeat.swingFactor);
-
-
 		//this.handleStop();
 		//this.updateControls();
-
-
-
 		return true;
 	}
 
@@ -661,8 +606,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			case 2: elButton.src = this.URL + '/images/button_on.png'; break;
 		}
 	}
-
-
 
 	cloneBeat(source) {
 		var beat = new Object();
@@ -721,7 +664,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 
 }
-
 
 class Kit {
 	constructor(name, parent) {
@@ -798,10 +740,6 @@ class Kit {
 
 }
 
-
-
-
-
 //////////////////////////////////////////////////////////////////////////////////////////////////
 
 window.WasabiDrumMachine = class WasabiDrumMachine extends WebAudioPluginFactory {
@@ -809,5 +747,3 @@ window.WasabiDrumMachine = class WasabiDrumMachine extends WebAudioPluginFactory
 }
 
 AudioContext.prototype.createWasabiDelayCompositeNode = OfflineAudioCompletionEvent.prototype.createWasabiDelayCompositeNode = function (options) { return new DrumMachine(this, options); };
-
-
