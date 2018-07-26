@@ -40,7 +40,6 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 			}
 		};
 
-        this.patchNames = ["patch1"];
 
 		this.getNumberOfChannels();
 
@@ -67,13 +66,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 		if(this.arrayNodeToConnect != 'no nodes')
 			return this.arrayNodeToConnect.length;
 	}
-	getParam(key) {
-    try {
-      return this.params[key];
-    } catch (error) {
-      console.warn("this plugin does not implement this param")
-    }
-  }
+
 
   setParam(key, value) {
     //console.log(key, value);
@@ -91,33 +84,8 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode
 	setArrayNodeToConnect(arrayMedia)
 	{  this.arrayNodeToConnect = arrayMedia; }
 
-	getPatch(index)
-	{ return this.patchNames[index]; }
 
-	setPatch(data, index)
-	{ this.patchNames[index] = data; }
-
-	getState() { return this.params.status; }
-
-	setState(data)
-	{
-		this.params.status = data;
-
-		if (data == "enable")
-		{
-			this.connectNodes();
-			this._input.disconnect(this._output);
-		}
-		else if (data == "disable")
-		{
-			this._input.disconnect(this.feedbackGainNode);
-			this._input.disconnect(this.dryGainNode);
-			this._input.connect(this._output);
-		}
-	}
-
-	onMidi(msg)
-	{ return msg; }
+	
 
 	setup()
 	{
