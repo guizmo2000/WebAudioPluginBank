@@ -39,40 +39,12 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 	// p9 count inputs
 
 	// p9 count inputs
-	get numberOfInputs() {
-		return this.inputs.length;
-	}
-
-	get numberOfOutputs() {
-		return this.outputs.length;
-	}
-	inputChannelCount() {
-		return 1;
-	}
-	outputChannelCount() {
-		return 1
-	}
-	getMetadata() {
-		return this.metadata;
-	}
-
-	getDescriptor() {
-		return this._descriptor;
-	}
 
 	getPatch(index) {
 		return null;
 	}
 	setPatch(data, index) {
 		console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
-	}
-
-	getParam(key) {
-		try {
-			return this.params[key];
-		} catch (error) {
-			console.warn("this plugin does not implement this param")
-		}
 	}
 
 	setParam(key, value) {
@@ -85,37 +57,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		}
 	}
 
-	// P7 state
-	getState() {
-		return this.params;
-	}
 
-	setState(data) {
-		try {
-			this.gui.setAttribute('state', JSON.stringify(data));
-		} catch (error) {
-			console.log("Gui not defined", error)
-			try {
-				document.querySelector('wasabi-wahvox').setAttribute('state', JSON.stringify(this.params));
-			} catch (error) {
-				console.log(error);
-			}
-		}
-
-		Object.keys(data).map(
-			(elem, index) => {
-				console.log(elem, data[elem]);
-				this.setParam(elem, data[elem]);
-			}
-		)
-
-	}
-
-
-	onMidi(msg) {
-		return msg;
-		//web midi api ?
-	}
 
 	/*  #########  Personnal code for the web audio graph  #########   */
 

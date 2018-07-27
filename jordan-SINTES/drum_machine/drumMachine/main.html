@@ -9,12 +9,15 @@
 <template id="wc-drummachine">
     <style>
         /* Styles for Drum Machine Demo */
+        
 
         #body {
             background-color: rgb(255, 255, 255);
             color: rgb(77, 13, 13);
             font-family: 'Droid Sans', Arial, sans-serif;
             font-size: 8.5px;
+
+            
         }
 
         * {
@@ -22,8 +25,6 @@
             -webkit-user-select: none;
             cursor: pointer !important;
         }
-
-
 
         #version {
             font-weight: bold;
@@ -39,6 +40,12 @@
             padding: 10px 10px 7.5px 10px;
             -webkit-box-shadow: 0px 1px 1.5px rgba(0, 0, 0, 0.2);
             display: none;
+            box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
+			inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+			inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+			1px 0px 1px 0px rgba(116, 33, 33, 0.9),
+			0 2px 1px 0 rgba(0, 0, 0, 0.9),
+			1px 1px 1px 0px rgba(0, 0, 0, 0.9);
         }
 
         #io {
@@ -61,8 +68,6 @@
             width: 18.5px;
             height: 5px;
         }
-
-        
 
         .label {
             display: inline-block;
@@ -191,7 +196,7 @@
         .slider_thumb {
             position: absolute;
             left: 5px;
-            top: 0;
+            top: 18.5px;
             width:15px;
             height: 15px;
         }
@@ -606,8 +611,6 @@
             <!--<img id='load'>-->
             <img id='reset'>
 
-
-
         </section>
 
 
@@ -637,8 +640,6 @@
                 <img id='load_cancel'>
             </div>
         </div>
-
-
 
         <div id="MIDIPlugin"> </div>
 
@@ -689,7 +690,6 @@
             this.initButtons();
             this.makeKitList();
 
-
             // sliders
 
             this._root.getElementById('tom1_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true);
@@ -699,8 +699,6 @@
             this._root.getElementById('snare_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true)
             this._root.getElementById('kick_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true)
             this._root.getElementById('swing_thumb').addEventListener('mousedown', (event) => this._plug.handleSliderMouseDown(event), true)
-
-
 
             // tool buttons
             this._root.getElementById('play').addEventListener('mousedown', (event) => this._plug.handlePlay(event), true);
@@ -778,9 +776,10 @@
             this._plug.drawNote(notes[rhythmIndex], rhythmIndex, instrumentIndex);
 
             var note = notes[rhythmIndex];
-            var played = this._root.getElementById('play');
-            if (note && !played.attributes.class) {
+            var btn_play = this._root.getElementById('play');
+            var played =  btn_play.getAttribute("class")
 
+            if (note && played!="playing") {
                 switch (instrumentIndex) {
                     //put to true to have sound position in function to the click position on drumMachine
                     case 0:  // Kick
@@ -842,11 +841,6 @@
             }
         }
 
-
-
-
-       
-
         handleSave(event) {
             toggleSaveContainer();
             var elTextarea = this._root.getElementById('save_textarea');
@@ -868,8 +862,6 @@
             // Set drumkit
             currentKit = kits[theBeat.kitIndex];
             this._root.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
-
-
 
             sliderSetValue('kick_thumb', theBeat.kickPitchVal);
             sliderSetValue('snare_thumb', theBeat.snarePitchVal);
