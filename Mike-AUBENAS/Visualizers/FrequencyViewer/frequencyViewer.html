@@ -92,6 +92,8 @@
 				this._root = this.attachShadow({ mode: 'open' });
 				this._root.appendChild(freqMeter.content.cloneNode(true));
 				this.isOn = true;
+				this.width = 80;
+				this.height = 35;
 
 				this.canvas = this._root.querySelector("canvas");
 				this.graphicContext = this.canvas.getContext("2d");
@@ -117,8 +119,10 @@
 
 		draw()
 		{
+			var scaling = this.height / 128;
 			this.drawing = requestAnimationFrame( () => this.draw());
 			this.audioAnalyser.getByteTimeDomainData(this.datasArray);
+			this.zeroCross = this.findFirstPositiveZeroCrossing(this.datasArray, this.width)
 
 			this.graphicContext.fillStyle = 'rgb(0, 0, 0)';
 			this.graphicContext.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -132,7 +136,8 @@
 
 			if (this.isOn)
 			{
-				for (let i = 0; i < this.audioAnalyser.fftSize; i++)
+				this.graphicContext.moveTo(coordinateX, (128 - this.datasArray[this.zeroCross])*scaling)
+				for (let i = 0,j=this.zeroCross; (i < this.audioAnalyser.fftSize) &&  (j<this.width);j++, i++)
 				{
 					let value = this.datasArray[i] / 128.0;
 					let coordinateY = value * this.canvas.height / 2;
@@ -162,6 +167,44 @@
 		// 		this.draw();
 		// 	});
 		// }
+
+
+	findFirstPositiveZeroCrossing(buf, buflen) {
+  var i = 0;
+  var last_zero = -1;
+  var t;
+
+  // advance until we're zero or negative
+  while (i<buflen && (buf[i] > 64 ) )
+    i++;
+
+  if (i>=buflen)
+    return 0;
+
+  // advance until we're above MINVAL, keeping track of last zero.
+  while (i<buflen && ((t=buf[i]) < MINVAL )) {
+    if (t >= 64) {
+      if (last_zero == -1)
+        last_zero = i;
+    } else
+      last_zero = -1;
+    i++;
+  }
+
+  // we may have jumped over MINVAL in one sample.
+  if (last_zero == -1)
+    last_zero = i;
+
+  if (i==buflen)  // We didn't find any positive zero crossings
+    return 0;
+
+  // The first sample might be a zero.  If so, return it.
+  if (last_zero == 0)
+    return 0;
+
+  return last_zero;
+}
+
 	}
 
 	try
