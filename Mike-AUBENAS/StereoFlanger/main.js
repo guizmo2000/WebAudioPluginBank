@@ -49,14 +49,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode {
 		console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
 	}
 
-	getParam(key) {
-		try {
-			return this.params[key];
-		} catch (error) {
-			console.warn("this plugin does not implement this param")
-		}
-	}
-
 	setParam(key, value) {
 		console.log(key, value);
 		try {
@@ -67,33 +59,6 @@ window.StereoFlanger = class StereoFlanger extends WebAudioPluginCompositeNode {
 		}
 	}
 
-	getState() {
-    var tmp = {...this.params}
-    return (tmp);
-  }
-
-	setState(data) {
-		try {
-			this.gui.setAttribute('state', JSON.stringify(data));
-		} catch (error) {
-			console.log("Gui not defined", error)
-			try {
-				document.querySelector('wasabi-pingpongdelay').setAttribute('state', JSON.stringify(this.params));
-			} catch (error) {
-				console.log(error);
-			}
-		}
-
-		Object.keys(data).map(
-			(elem, index) => {
-				console.log(elem, data[elem]);
-				this.setParam(elem, data[elem]);
-			}
-		)
-
-	}
-
-	onMidi(msg) { return msg; }
 
 	setup() {
 		this.createNodes();
