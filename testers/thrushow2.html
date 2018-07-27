@@ -27,6 +27,7 @@
   plugin.load().then((node)=>{
     plugin.loadGui().then((elem)=>{
       document.body.appendChild(elem);
+      node.getState().then((data)=>{console.log(data)});
     });
     mediaSource.connect(node);
     node.connect(ctx.destination);

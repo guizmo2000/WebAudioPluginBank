@@ -70,52 +70,12 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
                 || item.type === "checkbox"
                 || item.type === "nentry") {
                 // Keep inputs adresses
-                obj.inputs_items.push(item);
+                obj.inputs_items.push(item.address);
+                obj.descriptor.push(item);
             }
         }
 
-        this.wap_ui = function (ui) {
-            //console.log(ui)
-            for (var i = 0; i < ui.length; i++) {
-                this.wap_group(ui[i]);
-            }
-        }
-        this.wap_group = function (group) {
-            //console.log(group);
-            if (group.items) {
-                for (let j = 0; j < group.items.length; j++) {
-                    this.wapGUI_parse(group.items[j]);
-
-                }
-            }
-        }
-
-        this.wapGUI_parse = function (item) {
-            if (item.type === "vgroup"
-                || item.type === "hgroup"
-                || item.type === "tgroup"
-                /*|| item.type ==="checkbox"*/) {
-                let tmp = {};
-                Object.assign(tmp, item);
-                console.log(tmp);
-                this.clean(tmp);
-            }
-        }
-
-        this.clean = function (tmp) {
-            //console.log(tmp);
-            for (var i = 0; i < tmp.items.length; i++) {
-                if (tmp.items[i].type != "vslider"
-                    || tmp.items[i].type != "hslider"
-                    || tmp.items[i].type != "button"
-                    || tmp.items[i].type != "checkbox"
-                    || tmp.items[i].type != "nentry") {
-                    tmp.items.splice(i, 1);
-                }
-            }
-            Object.assign(this.jsoninfos, tmp);
-            // this.jsoninfos.push(tmp);
-        }
+      
 
 
         this.output_handler = null;
@@ -125,15 +85,10 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
         // input/output items
         this.inputs_items = [];
         this.outputs_items = [];
-        this.jsoninfos = {}
+        this.descriptor = [];
 
         // Parse UI
         this.parse_ui(this.json_object.ui, this);
-
-        // Parse UI for wap GUI generator
-        //console.log(this.json_object.ui)
-        this.wap_ui(this.json_object.ui);
-
 
         // Set message handler
         this.port.onmessage = this.handleMessage.bind(this);
@@ -211,6 +166,14 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
         return this.parameters.get(path).value;
     }
 
+
+    /**
+     * Returns an array of all input paths (to be used with setParamValue/getParamValue)
+     */
+    getParams() {
+        return this.inputs_items;
+    }
+
     /**
      * Setup a control output handler with a function of type (path, value)
      * to be used on each generated output value. This handler will be called
@@ -242,10 +205,10 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
      */
     getDescriptor() {
         var desc = {};
-        for (const item in this.inputs_items) {
-            if (this.inputs_items.hasOwnProperty(item)) {
-                if (this.inputs_items[item].label != "bypass") {
-                    desc = Object.assign({ [this.inputs_items[item].label]: { minValue: this.inputs_items[item].min, maxValue: this.inputs_items[item].max, defaultValue: this.inputs_items[item].init } }, desc);
+        for (const item in this.descriptor) {
+            if (this.descriptor.hasOwnProperty(item)) {
+                if (this.descriptor[item].label != "bypass") {
+                    desc = Object.assign({ [this.descriptor[item].label]: { minValue: this.descriptor[item].min, maxValue: this.descriptor[item].max, defaultValue: this.descriptor[item].init } }, desc);
                 }
             }
         }
@@ -285,8 +248,8 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
      */
     async getState() {
         var params = new Object();
-        for (let i = 0; i < this.getDescriptor().length; i++) {
-            Object.assign(params, { [this.getDescriptor()[i]]: `${this.getParam(this.getDescriptor()[i])}` });
+        for (let i = 0; i < this.getParams().length; i++) {
+            Object.assign(params, { [this.getParams()[i]]: `${this.getParam(this.getParams()[i])}` });
         }
         return new Promise(resolve => {
             resolve(params)

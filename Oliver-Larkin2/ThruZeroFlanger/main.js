@@ -70,6 +70,7 @@ class ThruZeroFlangerNode extends AudioWorkletNode {
                 || item.type === "nentry") {
                 // Keep inputs adresses
                 obj.inputs_items.push(item.address);
+                obj.descriptor.push(item);
                 // Decode MIDI
                 if (item.meta !== undefined) {
                     for (var i = 0; i < item.meta.length; i++) {
@@ -97,6 +98,8 @@ class ThruZeroFlangerNode extends AudioWorkletNode {
         // input/output items
         this.inputs_items = [];
         this.outputs_items = [];
+        this.descriptor = [];
+
 
         // MIDI
         this.fPitchwheelLabel = [];
@@ -273,8 +276,8 @@ class ThruZeroFlangerNode extends AudioWorkletNode {
      */
     async getState() {
         var params = new Object();
-        for (let i = 0; i < this.getDescriptor().length; i++) {
-            Object.assign(params, { [this.getDescriptor()[i]]: `${this.getParam(this.getDescriptor()[i])}` });
+        for (let i = 0; i < this.getParams().length; i++) {
+            Object.assign(params, { [this.getParams()[i]]: `${this.getParam(this.getParams()[i])}` });
         }
         return new Promise(resolve => {
             resolve(params)
