@@ -2,7 +2,7 @@
 
 This bank is a repository of standardised webaudio plugins.
 
-Some of them implement audioworklets, GUI are built on web components. I recommand to test it on Chrome.
+Some of them implement audioworklets, GUI's are built with web components. I recommand to test it on Chrome.
 
 A plugin is defined by its URL and its metadata
 
