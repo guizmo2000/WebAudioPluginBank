@@ -75,6 +75,7 @@ class WeirdPhaserNode extends AudioWorkletNode {
                        || item.type === "nentry") {
                 // Keep inputs adresses
                 obj.inputs_items.push(item.address);
+                obj.descriptor.push(item);
             }
         }
         
@@ -85,6 +86,7 @@ class WeirdPhaserNode extends AudioWorkletNode {
         // input/output items
         this.inputs_items = [];
         this.outputs_items = [];
+        this.descriptor= [];
        
         // Parse UI
         this.parse_ui(this.json_object.ui, this);
@@ -169,9 +171,16 @@ class WeirdPhaserNode extends AudioWorkletNode {
     /**
      * Returns an array of all input paths (to be used with setParamValue/getParamValue)
      */
-    getDescriptor()
-    {
-        return this.inputs_items;
+    getDescriptor() {
+        var desc = {};
+        for (const item in this.descriptor) {
+            if (this.descriptor.hasOwnProperty(item)) {
+                if (this.descriptor[item].label != "bypass") {
+                    desc = Object.assign({ [this.descriptor[item].label]: { minValue: this.descriptor[item].min, maxValue: this.descriptor[item].max, defaultValue: this.descriptor[item].init } }, desc);
+                }
+            }
+        }
+        return desc;
     }
     
     /**
