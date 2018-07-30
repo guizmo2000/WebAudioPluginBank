@@ -118,7 +118,7 @@ You are free to have your own workflow but those method are called by default in
     };
     connectNodes(){
       this._input.connect(this.lpfilter);
-      this.lpfilter.connect(this.output);
+      this.lpfilter.connect(this._output);
     };
 ```
 Now the params are created and the audio nodes too, you just have to bind it. We rcommand something like that : 
