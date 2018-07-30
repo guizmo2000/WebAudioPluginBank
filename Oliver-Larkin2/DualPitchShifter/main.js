@@ -75,6 +75,7 @@ class DualPitchShifterNode extends AudioWorkletNode {
                        || item.type === "nentry") {
                 // Keep inputs adresses
                 obj.inputs_items.push(item.address);
+                obj.descriptor.push(item);
             }
         }
         
@@ -85,6 +86,7 @@ class DualPitchShifterNode extends AudioWorkletNode {
         // input/output items
         this.inputs_items = [];
         this.outputs_items = [];
+        this.descriptor = [];
        
         // Parse UI
         this.parse_ui(this.json_object.ui, this);
@@ -169,9 +171,19 @@ class DualPitchShifterNode extends AudioWorkletNode {
     /**
      * Returns an array of all input paths (to be used with setParamValue/getParamValue)
      */
-    getDescriptor()
-    {
-        return this.inputs_items;
+    getDescriptor() {
+        var desc = {};
+        for (const item in this.descriptor) {
+            if (this.descriptor.hasOwnProperty(item)) {
+                if (this.descriptor[item].label != "bypass") {
+                    desc = Object.assign({ [this.descriptor[item].label]: 
+                        { minValue: this.descriptor[item].min, 
+                            maxValue: this.descriptor[item].max, 
+                            defaultValue: this.descriptor[item].init } }, desc);
+                }
+            }
+        }
+        return desc;
     }
     
     /**
@@ -268,6 +280,38 @@ loadGui() {
 linkExists(url) {
     return document.querySelectorAll(`link[href="${url}"]`).length > 0;
 
+}
+
+getParams() {
+    return this.inputs_items;
+}
+
+async getState() {
+    var params = new Object();
+    for (let i = 0; i < this.getParams().length; i++) {
+        Object.assign(params, { [this.getParams()[i]]: `${this.getParam(this.getParams()[i])}` });
+    }
+    return new Promise(resolve => {
+        resolve(params)
+    });
+}
+
+/**
+ * Sets each params with the value indicated in the state object
+ * @param {Object} state 
+ */
+async setState(state) {
+    return new Promise(resolve => {
+        for (const param in state) {
+            if (state.hasOwnProperty(param)) this.setParam(param, state[param]);
+        }
+        try {
+            this.gui.setAttribute('state', JSON.stringify(state));
+        } catch (error) {
+            console.warn("Plugin without gui or GUI not defined", error);
+        }
+        resolve(state);
+    })
 }
 
 

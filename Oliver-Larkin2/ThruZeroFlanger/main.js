@@ -210,7 +210,15 @@ class ThruZeroFlangerNode extends AudioWorkletNode {
 
     // For WAP
     getDescriptor() {
-        return this.inputs_items;
+        var desc = {};
+        for (const item in this.descriptor) {
+            if (this.descriptor.hasOwnProperty(item)) {
+                if (this.descriptor[item].label != "bypass") {
+                    desc = Object.assign({ [this.descriptor[item].label]: { minValue: this.descriptor[item].min, maxValue: this.descriptor[item].max, defaultValue: this.descriptor[item].init } }, desc);
+                }
+            }
+        }
+        return desc;
     }
 
     /**
