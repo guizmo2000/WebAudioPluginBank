@@ -189,7 +189,7 @@ let myTemp = document.currentScript.ownerDocument.querySelector('template');
 			this._plug.gui = this;
 			// bind shadow to the class and clone the template into it
 			this._root = this.attachShadow({ mode: 'open' });
-			this._root.appendChild(QuadraFuzzTemp.content.cloneNode(true));
+			this._root.appendChild(myTemp.content.cloneNode(true));
 
 			this.setUp();
 		}
