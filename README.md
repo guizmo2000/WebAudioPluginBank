@@ -2,7 +2,7 @@
 
 This bank is a repository of standardised webaudio plugins.
 
-Some of them implement audioworklets, GUI are built on web components. I recommand to test it on Chrome.
+Some of them implement audioworklets, GUI's are built with web components. I recommand to test it on Chrome.
 
 A plugin is defined by its URL and its metadata
 
@@ -110,7 +110,7 @@ Let's jump to the audio graph : you need to implements 2 methods :
 ```
 You are free to have your own workflow but those method are called by default in the super.setup(); It's also quite clear if your code is shared.
 
-###Example
+### Example
 ```js
     createNodes(){
       this.lpfilter = this.context.createBiquadFilter();
@@ -118,7 +118,7 @@ You are free to have your own workflow but those method are called by default in
     };
     connectNodes(){
       this._input.connect(this.lpfilter);
-      this.lpfilter.connect(this.output);
+      this.lpfilter.connect(this._output);
     };
 ```
 Now the params are created and the audio nodes too, you just have to bind it. We rcommand something like that : 
@@ -189,7 +189,7 @@ let myTemp = document.currentScript.ownerDocument.querySelector('template');
 			this._plug.gui = this;
 			// bind shadow to the class and clone the template into it
 			this._root = this.attachShadow({ mode: 'open' });
-			this._root.appendChild(QuadraFuzzTemp.content.cloneNode(true));
+			this._root.appendChild(myTemp.content.cloneNode(true));
 
 			this.setUp();
     }
