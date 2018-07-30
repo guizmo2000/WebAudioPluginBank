@@ -282,5 +282,37 @@ linkExists(url) {
 
 }
 
+getParams() {
+    return this.inputs_items;
+}
+
+async getState() {
+    var params = new Object();
+    for (let i = 0; i < this.getParams().length; i++) {
+        Object.assign(params, { [this.getParams()[i]]: `${this.getParam(this.getParams()[i])}` });
+    }
+    return new Promise(resolve => {
+        resolve(params)
+    });
+}
+
+/**
+ * Sets each params with the value indicated in the state object
+ * @param {Object} state 
+ */
+async setState(state) {
+    return new Promise(resolve => {
+        for (const param in state) {
+            if (state.hasOwnProperty(param)) this.setParam(param, state[param]);
+        }
+        try {
+            this.gui.setAttribute('state', JSON.stringify(state));
+        } catch (error) {
+            console.warn("Plugin without gui or GUI not defined", error);
+        }
+        resolve(state);
+    })
+}
+
 
 }
