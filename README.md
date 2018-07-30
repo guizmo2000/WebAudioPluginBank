@@ -110,7 +110,7 @@ Let's jump to the audio graph : you need to implements 2 methods :
 ```
 You are free to have your own workflow but those method are called by default in the super.setup(); It's also quite clear if your code is shared.
 
-###Example
+### Example
 ```js
     createNodes(){
       this.lpfilter = this.context.createBiquadFilter();
