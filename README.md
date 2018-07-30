@@ -192,7 +192,9 @@ let myTemp = document.currentScript.ownerDocument.querySelector('template');
 			this._root.appendChild(QuadraFuzzTemp.content.cloneNode(true));
 
 			this.setUp();
-		}
+    }
+    ...
+  }
 ```
 **&** bind the GUI with your Audio node setter :
 
@@ -206,14 +208,13 @@ let myTemp = document.currentScript.ownerDocument.querySelector('template');
 
 ```js
 /**
-	 * Gui factory, called from the SDK. 
-	 * The name must be create+MyModule
-	*/
-	createMyPlugin = (plug) => {
-		
-		let elem = new MyPluginGui(plug);
-		return elem;
-	}
+* Gui factory, called from the SDK. 
+* The name must be create+MyModule
+*/
+createMyPlugin = (plug) => {
+	let elem = new MyPluginGui(plug);
+	return elem;
+}
 ```
 
 Now the WAP is ready to be tested. Lets create a HTML file and test this minimal code :
