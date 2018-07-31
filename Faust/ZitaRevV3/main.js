@@ -22,10 +22,10 @@ if (typeof (AudioWorkletNode) === "undefined") {
 
 class zitaRev_bypass2Node extends AudioWorkletNode {
 
-    constructor(context, options) {
+    constructor(context,URL, options) {
 
         var json_object = JSON.parse(getJSONzitaRev_bypass2());
-
+        this.URL = URL;
         // Setting values for the input, the output and the channel count.
         options.numberOfInputs = (parseInt(json_object.inputs) > 0) ? 1 : 0;
         options.numberOfOutputs = (parseInt(json_object.outputs) > 0) ? 1 : 0;
@@ -305,7 +305,7 @@ window.FaustZitaRev2 = class FaustZitaRev2 {
         return new Promise((resolve, reject) => {
             //      console.log("URL : " + (this.baseUrl + "/zitaRev_bypass2-processor.js"));
             this.context.audioWorklet.addModule(this.baseUrl + "/zitaRev_bypass2-processor.js").then(() => {
-                this.plug = new zitaRev_bypass2Node(this.context, {});
+                this.plug = new zitaRev_bypass2Node(this.context,this.baseUrl,{});
                 return (this.plug);
             }).then((faust) => {
                 //console.log(this.plug.getDescriptor());
