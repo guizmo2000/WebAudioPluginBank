@@ -231,8 +231,9 @@ if(window.customElements){
       this.showtip(0);
     }
     contextMenu(e){
-      if(window.webAudioControlsMidiManager && this.midilearn)
+      if(window.webAudioControlsMidiManager && this.midilearn){
         webAudioControlsMidiManager.contextMenuOpen(e,this);
+      }
       e.preventDefault();
       e.stopPropagation();
     }
