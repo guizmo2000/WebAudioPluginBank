@@ -23,7 +23,6 @@
       border-bottom-right-radius: 8px;
     }
     #background-image {
-      position:absolute;
 			width: 580px;
       height: 300px;
 			opacity: 0.6;
@@ -39,7 +38,6 @@
     .modebutton, .wheel{position: absolute;cursor: pointer;
       text-align: -webkit-center; 
 		}
-    #keyboard{position: absolute;cursor: pointer;}
 
     .knob-label {
       color: #ddd;
@@ -56,6 +54,10 @@
 
     }
     #minimalGUI {
+      position: absolute;
+      width:570px;
+      top: 0px;
+      left: 0px;
       background: rgba(97, 57, 5, 0.63);
       padding: 5px;
       margin: 0px;
@@ -71,7 +73,7 @@
     .knob div, .slide div,.modebutton div, .switch div, .wheel div{color: #cccccc;font-family: "Roboto";font-size: 8px;text-shadow: 0px 1px 1px #000;}
     .section{color: #aaaaaa;font-family: "Roboto";font-size: 10px;text-shadow: 0px 1px 1px #000;}
     /* For each control*/
-    #keyboard{left:45px;top:170px;}
+    #keyboard{left:45px;top:190px;position: absolute !important;cursor: pointer;}
     #master{left: 20px;top:55px;}
 
     #osc1octave{left:65px;top:45px;}
@@ -145,7 +147,7 @@
 
     .pedalLabel{color: #cccccc;font-family: "Roboto";font-size: 15px;}
   </style>
-  		<img id="background-image">
+  <img id="background-image">
   <div class="column" id="minimalGUI">
     <div class="row""style:text-align: center;">
       <button id="show">GUI</button>
