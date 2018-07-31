@@ -56,6 +56,7 @@
     #minimalGUI {
       position: absolute;
       width:570px;
+      height: 20px;
       top: 0px;
       left: 0px;
       background: rgba(97, 57, 5, 0.63);
@@ -144,17 +145,15 @@
       border-width: 1px;
       border-color: azure;
     }
-
+    #midiport{position: absolute;left: 30px;}
     .pedalLabel{position: absolute; left:230px;color: #e2e2e2;font-family: "Roboto";font-size: 18px;}
   </style>
   <img id="background-image">
   <div class="column" id="minimalGUI">
-    <div class="row""style:text-align: center;">
       <select id="midiport">
         <option>--</option>
       </select>
       <span class="pedalLabel" id="name">Web-Minilogue</span>
-    </div>
   </div>
   <div class="knob" id="master">
     <webaudio-knob sprites="99" min="0" max="10" value="5" step="0.01" midilearn="true" diameter="24"
