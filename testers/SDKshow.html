@@ -238,6 +238,7 @@
 
     logs.innerHTML += '<p>Descriptor : node.getDescriptor()</p>';
     logs.innerHTML += '<p>' + JSON.stringify(node.getDescriptor()) + '</p>';
+    console.log(node.getDescriptor())
 
     node.getState().then((state) => { logs.innerHTML += '<p>Params at this  time node.getState() (promise)</p><p>' + JSON.stringify(state) + '</p>'; })
     logs.innerHTML += '<p>node input number node.numberOfInputs</p><p>' + JSON.stringify(node.numberOfInputs) + '</p>';
