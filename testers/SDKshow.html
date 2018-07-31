@@ -58,7 +58,7 @@
     #realwap{
       margin-left: auto;
       margin-right: auto;
-      width: 200px;
+      /* width: 200px; */
     }
 
     #onetest {
@@ -119,9 +119,13 @@
       <br><br>
           <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay3/">WasabiPingPongDelay</span> - 
           <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRevV3/">FaustZitaRev</span> - 
-          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/Blipper/">LarkinBlipper</span><br><br>
-          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/ThruZeroFlanger/"> LarkinFlanger</span> - 
-          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Etev/Minilogue">WasabiMinilogue</span>
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/Blipper/">LarkinBlipper</span> - 
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/ThruZeroFlanger/"> LarkinFlanger</span><br><br>
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Etev/Minilogue">WasabiMinilogue</span> - 
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Buffa/CleanMachine">CleanMachine</span> - 
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/QuadraFuzz3">QuadraFuzz</span> 
+
+
         </li>
       </ul>
     </div>
@@ -228,6 +232,7 @@
         plugin.loadGui().then((elem) => {
           console.log("ADDING PLUGIN");
           // show the GUI of the plugn, the audio part is ready to be used
+          document.querySelector("#realwap").setAttribute("style",`margin-left: auto; margin-right: auto;width: ${elem.properties.dataWidth.value}px;`)
           document.querySelector("#realwap").appendChild(elem);
           //mediaSource.connect(node);
           //node.connect(ctx.destination);
