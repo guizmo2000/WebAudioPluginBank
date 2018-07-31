@@ -22,7 +22,7 @@ if (typeof (AudioWorkletNode) === "undefined") {
 
 class WeirdPhaserNode extends AudioWorkletNode {
     
-    constructor(context, options) {
+    constructor(context,URL, options){
         
         var json_object = JSON.parse(getJSONWeirdPhaser());
         
@@ -35,7 +35,8 @@ class WeirdPhaserNode extends AudioWorkletNode {
         options.channelInterpretation = "speakers";
        
         super(context, 'WeirdPhaser', options);
-        
+        this.URL = URL;
+
         // JSON parsing functions
         this.parse_ui = function(ui, obj)
         {
@@ -263,7 +264,7 @@ load() {
     return new Promise((resolve, reject) => {
         console.log("URL : " + (this.baseUrl + "/WeirdPhaser-processor.js"));
         this.context.audioWorklet.addModule(this.baseUrl + "/WeirdPhaser-processor.js").then(() => {
-            this.plug = new WeirdPhaserNode(this.context, {});
+            this.plug = new WeirdPhaserNode(this.context,this.baseUrl,{});
             return (this.plug);
         }).then((faust) => {
             console.log(this.plug.getDescriptor());

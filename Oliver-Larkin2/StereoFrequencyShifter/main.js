@@ -22,7 +22,7 @@ if (typeof (AudioWorkletNode) === "undefined") {
 
 class StereoFreqShifterNode extends AudioWorkletNode {
     
-    constructor(context, options) {
+    constructor(context,URL, options){
         
         var json_object = JSON.parse(getJSONStereoFreqShifter());
         
@@ -35,7 +35,8 @@ class StereoFreqShifterNode extends AudioWorkletNode {
         options.channelInterpretation = "speakers";
        
         super(context, 'StereoFreqShifter', options);
-        
+        this.URL = URL;
+
         // JSON parsing functions
         this.parse_ui = function(ui, obj)
         {
@@ -263,7 +264,7 @@ constructor(context, baseUrl) {
 load() {
     return new Promise((resolve, reject) => {
         this.context.audioWorklet.addModule(this.baseUrl + "/StereoFreqShifter-processor.js").then(() => {
-            this.plug = new StereoFreqShifterNode(this.context, {});
+            this.plug = new StereoFreqShifterNode(this.context,this.baseUrl,{});
             return (this.plug);
         }).then((faust) => {
             console.log(this.plug.getDescriptor());

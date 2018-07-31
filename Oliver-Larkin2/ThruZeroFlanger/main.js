@@ -21,7 +21,7 @@ if (typeof (AudioWorkletNode) === "undefined") {
 
 class ThruZeroFlangerNode extends AudioWorkletNode {
 
-    constructor(context, options) {
+    constructor(context,URL, options){
 
         var json_object = JSON.parse(getJSONThruZeroFlanger());
 
@@ -34,6 +34,7 @@ class ThruZeroFlangerNode extends AudioWorkletNode {
         options.channelInterpretation = "speakers";
 
         super(context, 'ThruZeroFlanger', options);
+        this.URL = URL;
 
         // JSON parsing functions
         this.parse_ui = function (ui, obj) {
@@ -353,7 +354,7 @@ window.LarkinThruZeroFlanger = class LarkinThruZeroFlanger {
     load() {
         return new Promise((resolve, reject) => {
             this.context.audioWorklet.addModule(this.baseUrl + "/ThruZeroFlanger-processor.js").then(() => {
-                this.node = new ThruZeroFlangerNode(this.context, {});
+                this.node = new ThruZeroFlangerNode(this.context,this.baseUrl,{});
                 this.node.onprocessorerror = () => { console.log('An error from ThruZeroFlanger-processor was detected.'); }
                 return (this.node);
             }).then((node) => {

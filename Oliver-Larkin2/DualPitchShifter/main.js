@@ -22,7 +22,7 @@ if (typeof (AudioWorkletNode) === "undefined") {
 
 class DualPitchShifterNode extends AudioWorkletNode {
 
-    constructor(context, options) {
+    constructor(context,URL, options){
 
         var json_object = JSON.parse(getJSONDualPitchShifter());
 
@@ -35,6 +35,7 @@ class DualPitchShifterNode extends AudioWorkletNode {
         options.channelInterpretation = "speakers";
 
         super(context, 'DualPitchShifter', options);
+        this.URL = URL;
 
         // JSON parsing functions
         this.parse_ui = function (ui, obj) {
@@ -266,7 +267,7 @@ window.LarkinDualPitchShifter = class LarkinDualPitchShifter {
     load() {
         return new Promise((resolve, reject) => {
             this.context.audioWorklet.addModule(this.baseUrl + "/DualPitchShifter-processor.js").then(() => {
-                this.plug = new DualPitchShifterNode(this.context, {});
+                this.plug = new DualPitchShifterNode(this.context,this.baseUrl,{});
                 return (this.plug);
             }).then((faust) => {
                 console.log(this.plug.getDescriptor());

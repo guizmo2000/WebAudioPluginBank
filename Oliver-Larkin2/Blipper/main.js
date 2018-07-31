@@ -22,7 +22,7 @@ if (typeof (AudioWorkletNode) === "undefined") {
 
 class BlipperNode extends AudioWorkletNode {
 
-    constructor(context, options) {
+    constructor(context,URL, options){
 
         var json_object = JSON.parse(getJSONBlipper());
 
@@ -35,6 +35,7 @@ class BlipperNode extends AudioWorkletNode {
         options.channelInterpretation = "speakers";
 
         super(context, 'Blipper', options);
+        this.URL = URL;
 
         // JSON parsing functions
         this.parse_ui = function (ui, obj) {
@@ -256,7 +257,7 @@ window.LarkinBlipper = class LarkinBlipper {
         return new Promise((resolve, reject) => {
             console.log("URL : " + (this.baseUrl + "/Blipper-processor.js"));
             this.context.audioWorklet.addModule(this.baseUrl + "/Blipper-processor.js").then(() => {
-                this.plug = new BlipperNode(this.context, {});
+                this.plug = new BlipperNode(this.context,this.baseUrl,{});
                 return (this.plug);
             }).then((faust) => {
                 console.log(this.plug.getDescriptor());
