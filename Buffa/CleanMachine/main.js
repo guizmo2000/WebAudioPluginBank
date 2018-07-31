@@ -973,63 +973,6 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
     presets.push(preset3);
 
     preset4 = {
-      "name": "Funk Blues Clean",
-      "distoName": "standard",
-      "LCF": 242,
-      "HCF": 7000,
-      "K1": "5.0",
-      "K2": "5.0",
-      "K3": "9.9",
-      "K4": "9.9",
-      "F1": 204,
-      "F2": 300,
-      "F3": 2904,
-      "F4": 5848,
-      "Q1": "0.0",
-      "Q2": "29.0",
-      "Q3": "55.0",
-      "Q4": "20.0",
-      "OG": "2.1",
-      "BF": "9.9",
-      "MF": "6.5",
-      "TF": "2.7",
-      "PF": "8.0",
-      "EQ": [9, 11, -19, -22, 11, -15],
-      "MV": "2.6",
-      "RG": "0.0",
-      "CG": "6.3"
-    };
-    presets.push(preset4);
-
-    preset5 = {
-      "name": "Marshall Hi Gain",
-      "LCF": 345,
-      "HCF": 18461,
-      "K1": "10.0",
-      "K2": "10.0",
-      "K3": "10.0",
-      "K4": "10.0",
-      "F1": 186,
-      "F2": 792,
-      "F3": 2402,
-      "F4": 6368,
-      "Q1": 2,
-      "Q2": 1,
-      "Q3": 1,
-      "Q4": 1,
-      "OG": "0.2",
-      "BF": "4.8",
-      "MF": "4.1",
-      "TF": "5.9",
-      "PF": "8.3",
-      "EQ": [14, 7, 28, 3, 22, 18],
-      "MV": "2",
-      "RG": "2",
-      "CG": "7.4"
-    };
-    presets.push(preset5);
-
-    preset6 = {
       "name": "Aerosmith WTW",
       "distoName": "standard",
       "LCF": 345,
@@ -1057,37 +1000,9 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "CG": "0.0"
     };
 
-    presets.push(preset6);
+    presets.push(preset4);
 
-    preset7 = {
-      "name": "MW 1",
-      "LCF": 10,
-      "HCF": 7000,
-      "K1": "5.0",
-      "K2": "8.5",
-      "K3": "10.0",
-      "K4": "2.0",
-      "F1": 186,
-      "F2": 792,
-      "F3": 2402,
-      "F4": 6368,
-      "Q1": 16,
-      "Q2": 1,
-      "Q3": 1,
-      "Q4": 5,
-      "OG": "0.4",
-      "BF": "6.0",
-      "MF": "2.4",
-      "TF": "3.7",
-      "PF": "2.6",
-      "EQ": [14, 18, -5, 3, 13, 25],
-      "MV": "9.9",
-      "RG": "2.9",
-      "CG": "8.9"
-    };
-    presets.push(preset7);
-
-    preset8 = {
+    preset5 = {
       "name": "Hells Bells",
       "distoName": "standard",
       "boost": false,
@@ -1117,9 +1032,9 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "CN": "Vintage Marshall 1",
       "CG": "2.0"
     }
-    presets.push(preset8);
+    presets.push(preset5);
 
-    preset9 = {
+    preset6 = {
       "name": "Smoke on the Water",
       "LCF": 298,
       "HCF": 8703,
@@ -1145,38 +1060,9 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "RG": "1.6",
       "CG": "10.0"
     };
-    presets.push(preset9);
+    presets.push(preset6);
 
-    preset10 = {
-      "name": "Neat Neat Neat/Punk",
-      "distoName": "standard",
-      "LCF": 184,
-      "HCF": 7000,
-      "K1": "4.0",
-      "K2": "4.0",
-      "K3": "8.0",
-      "K4": "8.0",
-      "F1": 71,
-      "F2": 300,
-      "F3": 3303,
-      "F4": 6210,
-      "Q1": "2.5",
-      "Q2": "0.0",
-      "Q3": "17.2",
-      "Q4": "0.4",
-      "OG": "2.0",
-      "BF": "4.0",
-      "MF": "1.6",
-      "TF": "2.0",
-      "PF": "6.4",
-      "EQ": [-12, -12, -10, 3, 1, 2],
-      "MV": "10.0",
-      "RG": "3.4",
-      "CG": "5.4"
-    };
-    presets.push(preset10);
-
-    preset11 = {
+    preset7 = {
       "name": "Crunch 2",
       "distoName": "standard",
       "LCF": 259,
@@ -1203,67 +1089,9 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "RG": "1.2",
       "CG": "8.7"
     }
-    presets.push(preset11);
+    presets.push(preset7);
 
-    preset12 = {
-      "name": "Noisy 1",
-      "distoName": "NoisyHiGain",
-      "LCF": 46,
-      "HCF": 9788,
-      "K1": "0.9",
-      "K2": "0.9",
-      "K3": "1.9",
-      "K4": "1.9",
-      "F1": 242,
-      "F2": 493,
-      "F3": 1200,
-      "F4": 3500,
-      "Q1": "0.3",
-      "Q2": "0.0",
-      "Q3": "0.3",
-      "Q4": "0.0",
-      "OG": "3.2",
-      "BF": "7.4",
-      "MF": "6.7",
-      "TF": "5.2",
-      "PF": "4.8",
-      "EQ": [8, 1, 13, 16, -12, -19],
-      "MV": "6.6",
-      "RG": "0.0",
-      "CG": "7.5"
-    }
-    presets.push(preset12);
-
-    preset13 = {
-      "name": "Marshall Hi-Gain 2",
-      "distoName": "HiGainModern",
-      "LCF": 200,
-      "HCF": 12000,
-      "K1": "0.9",
-      "K2": "0.9",
-      "K3": "1.8",
-      "K4": "1.8",
-      "F1": 147,
-      "F2": 569,
-      "F3": 1915,
-      "F4": 4680,
-      "Q1": "0.0",
-      "Q2": "49.0",
-      "Q3": "42.0",
-      "Q4": "11.0",
-      "OG": "3.0",
-      "BF": "5.0",
-      "MF": "5.0",
-      "TF": "0.1",
-      "PF": "5.0",
-      "EQ": [-2, -1, 0, 3, 1, 3],
-      "MV": "0.3",
-      "RG": "2.0",
-      "CG": "2.0"
-    }
-    presets.push(preset13);
-
-    preset14 = {
+    preset8 = {
       "name": "Clean 3",
       "distoName": "smooth",
       "LCF": 200,
@@ -1290,38 +1118,9 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "RG": "3.7",
       "CG": "4.6"
     }
-    presets.push(preset14);
+    presets.push(preset8);
 
-    preset15 = {
-      "name": "ELectro Acoustic",
-      "distoName": "smooth",
-      "LCF": 200,
-      "HCF": 12000,
-      "K1": "2.5",
-      "K2": "2.5",
-      "K3": "5.0",
-      "K4": "5.0",
-      "F1": 242,
-      "F2": 493,
-      "F3": 1780,
-      "F4": 4382,
-      "Q1": "0.3",
-      "Q2": "12.6",
-      "Q3": "0.3",
-      "Q4": "2.8",
-      "OG": "10.0",
-      "BF": "8.1",
-      "MF": "4.5",
-      "TF": "2.9",
-      "PF": "9.8",
-      "EQ": [6, -5, -21, -3, 3, 0],
-      "MV": "8.2",
-      "RG": "3.7",
-      "CG": "4.6"
-    }
-    presets.push(preset15);
-
-    preset16 = {
+    preset9 = {
       "name": "Heartbreak Riff",
       "distoName": "standard",
       "LCF": 214,
@@ -1348,9 +1147,9 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "RG": "1.2",
       "CG": "7.4"
     }
-    presets.push(preset16);
+    presets.push(preset9);
 
-    preset17 = {
+    preset10 = {
       "name": "Light My Knob",
       "distoName": "superClean",
       "LCF": 256,
@@ -1377,9 +1176,9 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "RG": "2.0",
       "CG": "6.7"
     }
-    presets.push(preset17);
+    presets.push(preset10);
 
-    preset18 = {
+    preset11 = {
       "name": "Gainsbourgh Funk",
       "distoName": "superClean",
       "LCF": 345,
@@ -1406,67 +1205,9 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "RG": "2.0",
       "CG": "4.2"
     }
-    presets.push(preset18);
+    presets.push(preset11);
 
-    preset19 = {
-      "name": "Revolution Beatles",
-      "distoName": "HiGainModern",
-      "LCF": 200,
-      "HCF": 12000,
-      "K1": "2.3",
-      "K2": "2.3",
-      "K3": "4.6",
-      "K4": "4.6",
-      "F1": 147,
-      "F2": 569,
-      "F3": 1915,
-      "F4": 4680,
-      "Q1": "1.9",
-      "Q2": "3.4",
-      "Q3": "4.2",
-      "Q4": "11.0",
-      "OG": "0.5",
-      "BF": "5.0",
-      "MF": "2.2",
-      "TF": "4.7",
-      "PF": "8.0",
-      "EQ": [-2, 9, 29, 29, 1, -3],
-      "MV": "0.2",
-      "RG": "1.7",
-      "CG": "4.9"
-    }
-    presets.push(preset19);
-
-    preset20 = {
-      "name": "Noisy 2",
-      "distoName": "NoisyHiGain",
-      "LCF": 289,
-      "HCF": 8720,
-      "K1": "5.1",
-      "K2": "3.7",
-      "K3": "5.0",
-      "K4": "5.0",
-      "F1": 91,
-      "F2": 548,
-      "F3": 1820,
-      "F4": 4535,
-      "Q1": "4.3",
-      "Q2": "0.5",
-      "Q3": "0.3",
-      "Q4": "2.8",
-      "OG": "6.7",
-      "BF": "8.1",
-      "MF": "7.3",
-      "TF": "3.2",
-      "PF": "6.1",
-      "EQ": [9, -10, 3, 10, 4, -17],
-      "MV": "3.5",
-      "RG": "3.7",
-      "CG": "8.5"
-    }
-    presets.push(preset20);
-
-    preset21 = {
+    preset12 = {
       "name": "Highway to Hell",
       "distoName": "fuzz",
       "boost": true,
@@ -1496,7 +1237,7 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "CN": "Vintage Marshall 1",
       "CG": "6.0"
     };
-    presets.push(preset21);
+    presets.push(preset12);
 
     preset22 = {
       "name": "Love RnRoll",
@@ -1528,7 +1269,7 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "CN": "Vintage Marshall 1",
       "CG": "7.4"
     };
-    presets.push(preset22);
+    presets.push(preset13);
 
     /*
     presets.forEach(function (p, index) {
