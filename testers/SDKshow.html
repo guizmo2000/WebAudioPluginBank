@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html>
 
@@ -20,26 +19,40 @@
         here wcdelay is the plugin object that implements the plugin API
         -->
   <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif
+    }
+
+    #layout {
+      display: flex;
+    }
+
     #WAP {
       float: left;
       width: 25%;
       padding-top: 5%;
       padding-left: 5%;
       overflow: scroll;
-
-
     }
-    #logs {
-      float: left;
-      width: 30%;
-      overflow: scroll;
 
+    #logs {
+      background-color: rgba(245, 245, 238, 0.558);
+      padding: 10px;
+      margin: 10px;
+      float: left;
+      width: 60%;
+      overflow: scroll;
+      border-radius: 10px;
     }
 
     #guilogs {
-      float: left;
-      width: 30%;
-
+      float: right;
+      border-radius: 10px;
+      background-color: rgba(245, 245, 238, 0.558);
+      float: right;
+      padding: 10px;
+      margin-right: 8%;
+      width: 60%;
     }
 
     #onetest {
@@ -47,29 +60,40 @@
 
     }
 
-    #inputs {
-      display: grid;
-    }
-
     #urlPlugin {
-      width: 300px;
+      width: 400px;
     }
 
     #main {
       float: left;
-      width: 50%
+      width: 40%
     }
 
-    #layout {
-      display: flex;
+    .hidden {
+      display: none;
     }
 
     #helper {
+      background-color: rgba(245, 245, 238, 0.558);
       float: left;
-      border: 3px;
-      border-style: solid;
-      padding: 10px;
-      width: 50%
+      padding-left: 10px;
+      padding-right: 10px;
+      padding-top: 10px;
+      border-radius: 10px;
+    }
+
+    #ads {
+      float: left;
+      width: 30%
+    }
+
+    .result {
+      color: blueviolet;
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    .urlWAP {
+      color: blueviolet;
     }
   </style>
 
@@ -83,39 +107,37 @@
   <div id="layout">
     <div class="content" id="main">
       <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
-      <h3>Paste here the link to your webaudio plugin</h3>
-      <div id="inputs">
-
-
-        Plugin URL (repository where your main.json file is)
-        <input type="text" id="urlPlugin" value="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/QuadraFuzz3/"> GUI
-        <input id="checkBox" type="checkbox" checked>
-
-
-
-      </div>
+      <h3>-Paste here the link to your webaudio plugin</h3>
+      <input type="text" id="urlPlugin"> GUI
+      <input id="checkBox" type="checkbox" checked>
       <div id="buttons">
-        <button id="bt_buildIt">build it</button>
+        <button id="bt_buildIt">See Attributes</button>
       </div>
     </div>
     <div id="helper">
-
-      you can try :
-      <p>
-        <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay3/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay3/</a> for wasabi delay</p>
-      <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRevV3/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRevV3/</a> for Faust ZitaRev</p>
-      <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/Blipper/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/Blipper/</a> for Oliver Larkin Blipper</p>
-      <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/ThruZeroFlanger/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/ThruZeroFlanger/</a> for Oliver Larkin Flanger</p>
+      Click to fill with the URL of :
+      <br><br>
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay3/">WasabiPingPongDelay</span> - 
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRevV3/">FaustZitaRev</span><br><br>
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-larkin2/Blipper/">LarkinBlipper</span> - 
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-larkin2/ThruZeroFlanger/"> LarkinFlanger</span><br><br>
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Etev/Minilogue">WasabiMinilogue</span>
+        </li>
+      </ul>
+    </div>
+    <div id="ads">
 
     </div>
-
   </div>
   <div id="onetest">
-    <div id="WAP"></div>
-    <div id="logs"></div>
-    <br><br>
-    <div id="guilogs"></div>
+    <div id="WAP">
+    </div>
+    <div id="logs" class="hidden">
+    </div>
+    <br>
+    <br>
   </div>
+  <div id="guilogs" class="hidden"></div>
 </body>
 <script>
   var checkbox = document.querySelector('#checkBox')
@@ -126,7 +148,13 @@
   var bt_buildIt = document.querySelector('#bt_buildIt');
 
   window.onload = () => {
-
+    document.body.querySelector('#logs').classList.add("hidden");
+    document.body.querySelector('#guilogs').classList.add("hidden");
+    document.querySelectorAll(".urlWAP").forEach(elem => {
+      elem.onclick = () => {
+        document.querySelector("#urlPlugin").value = elem.id;
+      }
+    })
 
     bt_buildIt.addEventListener('click', () => {
 
@@ -206,8 +234,14 @@
           showNodeProperty(node);
           showelementProperty(elem);
 
+
         });
       }
+      if (document.body.querySelector('#logs').classList.contains("hidden")) {
+        document.body.querySelector('#logs').classList.toggle("hidden");
+        document.body.querySelector('#guilogs').classList.toggle("hidden");
+      }
+
       document.body.querySelector("#WAP").insertAdjacentHTML('afterbegin', '<h2>' + `${className}` + '</h2>')
       try {
         mediaSource.connect(node);
@@ -222,7 +256,9 @@
         mediaSource.disconnect();
         node.disconnect();
         document.querySelector("#WAP").innerHTML = "";
-        document.querySelector("#mocha").innerHTML = "";
+        document.querySelector("#logs").innerHTML = "";
+        document.querySelector("#guilogs").innerHTML = "";
+
 
       })
     });
@@ -233,21 +269,25 @@
   function showNodeProperty(node) {
     var logs = document.querySelector("#logs");
 
-    logs.innerHTML += '<p>Node Part</p>'
-    node.getMetadata().then((meta) => { logs.innerHTML += '<p>Metadata node.getMetadata() (promise)</p><p>' + JSON.stringify(meta) + '</p>'; })
+    logs.innerHTML += '<h3>Node Part</h3>'
+    logs.innerHTML += '<p>URL : node.URL</p>';
+    logs.innerHTML += '<p><span class="result">' + JSON.stringify(node.URL) + '</span></p>';
+    node.getMetadata().then((meta) => { logs.innerHTML += '<p>Metadata node.getMetadata() (promise)</p><p> <span class="result">' + JSON.stringify(meta) + '</span></p>'; })
 
     logs.innerHTML += '<p>Descriptor : node.getDescriptor()</p>';
-    logs.innerHTML += '<p>' + JSON.stringify(node.getDescriptor()) + '</p>';
+    logs.innerHTML += '<p><span class="result">' + JSON.stringify(node.getDescriptor()) + '</span></p>';
     console.log(node.getDescriptor())
 
-    node.getState().then((state) => { logs.innerHTML += '<p>Params at this  time node.getState() (promise)</p><p>' + JSON.stringify(state) + '</p>'; })
-    logs.innerHTML += '<p>node input number node.numberOfInputs</p><p>' + JSON.stringify(node.numberOfInputs) + '</p>';
+    node.getState().then((state) => { logs.innerHTML += '<p>Params at this  time node.getState() (promise)</p><p><span class="result">' + JSON.stringify(state) + '</span></p>'; })
+    logs.innerHTML += '<p>Node input number node.numberOfInputs :  <span class="result">' + JSON.stringify(node.numberOfInputs) + '</span></p>';
   }
 
-  function showelementProperty(elem){
+  function showelementProperty(elem) {
     var logs = document.querySelector("#guilogs");
-    logs.innerHTML += '<p>GUI part</p>'
-    logs.innerHTML += '<p>Element width :</p><p>' + JSON.stringify(elem.properties.dataWidth.value) + '</p>';
+    logs.innerHTML += '<h3>GUI part</h3>'
+    logs.innerHTML += '<p>Element width : <span class="result">' + JSON.stringify(elem.properties.dataWidth.value) + '</span></p>';
+    logs.innerHTML += '<p>Element heigth :<span class="result">' + JSON.stringify(elem.properties.dataHeight.value) + '</span></p>';
+
   }
 </script>
 
