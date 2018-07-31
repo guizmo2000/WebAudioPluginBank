@@ -25,7 +25,6 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
     constructor(context,URL, options) {
 
         var json_object = JSON.parse(getJSONzitaRev_bypass2());
-        this.URL = URL;
         // Setting values for the input, the output and the channel count.
         options.numberOfInputs = (parseInt(json_object.inputs) > 0) ? 1 : 0;
         options.numberOfOutputs = (parseInt(json_object.outputs) > 0) ? 1 : 0;
@@ -35,6 +34,7 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
         options.channelInterpretation = "speakers";
 
         super(context, 'zitaRev_bypass2', options);
+        this.URL = URL;
 
         // JSON parsing functions
         this.parse_ui = function (ui, obj) {
