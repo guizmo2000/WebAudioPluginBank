@@ -368,10 +368,10 @@
 				this.isOn = true;
 			}
 			this.knobs = this._root.querySelectorAll(".knob");
-			this.labels = this._root.querySelectorAll(".knob-label");
 			for (var i = 0; i < this.knobs.length; i++) {
 				this.knobs[i].querySelector("webaudio-knob").value = this.state[this.knobs[i].id];
 			}
+
 
 		}
 		setResources() {
