@@ -143,9 +143,15 @@ class zitaRev_bypass2Node extends AudioWorkletNode {
     /**
      *  Returns a full JSON description of the DSP.
      */
-    getMetadata() {
-        return getJSONzitaRev_bypass2();
-    }
+    async getMetadata() {
+        return new Promise(resolve => {
+          fetch(this.URL + "/main.json").then(responseJSON => {
+            return responseJSON.json();
+          }).then(json => {
+            resolve(json);
+          })
+        });
+      }
 
     /**
      *  Set the control value at a given path.

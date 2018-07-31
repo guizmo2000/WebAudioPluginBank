@@ -287,7 +287,6 @@
 			background.style = 'border-radius : 5px;'
 			// Setting up the knobs imgs, those are loaded from the assets
 			this._root.querySelectorAll(".knob").forEach((knob) => {
-				console.log(knob.querySelector("webaudio-knob").src);
 				knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
 			});
 			// Setting up the switches imgs, those are loaded from the assets

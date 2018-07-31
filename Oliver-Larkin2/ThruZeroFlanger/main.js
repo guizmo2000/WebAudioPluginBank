@@ -131,9 +131,15 @@ class ThruZeroFlangerNode extends AudioWorkletNode {
     }
 
     // For WAP
-    getMetadata() {
-        return getJSONThruZeroFlanger();
-    }
+    async getMetadata() {
+        return new Promise(resolve => {
+          fetch(this.URL + "/main.json").then(responseJSON => {
+            return responseJSON.json();
+          }).then(json => {
+            resolve(json);
+          })
+        });
+      }
 
     /**
      *  Set the control value at a given path.
