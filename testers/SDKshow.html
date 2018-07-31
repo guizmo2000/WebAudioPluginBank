@@ -29,9 +29,10 @@
 
     #WAP {
       float: left;
-      width: 25%;
+      width: 30%;
       padding-top: 5%;
-      padding-left: 5%;
+      text-align: center;
+      /* padding-left: 5%; */
       overflow: scroll;
     }
 
@@ -54,19 +55,21 @@
       margin-right: 8%;
       width: 60%;
     }
+    #realwap{
+      margin-left: auto;
+      margin-right: auto;
+      width: 200px;
+    }
 
     #onetest {
       display: flex;
-
     }
-
     #urlPlugin {
       width: 400px;
     }
-
     #main {
       float: left;
-      width: 40%
+      width: 30%
     }
 
     .hidden {
@@ -75,7 +78,6 @@
 
     #helper {
       background-color: rgba(245, 245, 238, 0.558);
-      float: left;
       padding-left: 10px;
       padding-right: 10px;
       padding-top: 10px;
@@ -108,19 +110,17 @@
     <div class="content" id="main">
       <audio src="./../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
       <h3>-Paste here the link to your webaudio plugin</h3>
-      <input type="text" id="urlPlugin"> GUI
+      <input type="text" id="urlPlugin"> <br>GUI
       <input id="checkBox" type="checkbox" checked>
-      <div id="buttons">
-        <button id="bt_buildIt">See Attributes</button>
-      </div>
+      <button id="bt_buildIt">See Attributes</button>
     </div>
     <div id="helper">
       Click to fill with the URL of :
       <br><br>
           <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay3/">WasabiPingPongDelay</span> - 
-          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRevV3/">FaustZitaRev</span><br><br>
-          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-larkin2/Blipper/">LarkinBlipper</span> - 
-          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-larkin2/ThruZeroFlanger/"> LarkinFlanger</span><br><br>
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRevV3/">FaustZitaRev</span> - 
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/Blipper/">LarkinBlipper</span><br><br>
+          <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/ThruZeroFlanger/"> LarkinFlanger</span> - 
           <span class="urlWAP" id="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Etev/Minilogue">WasabiMinilogue</span>
         </li>
       </ul>
@@ -131,6 +131,7 @@
   </div>
   <div id="onetest">
     <div id="WAP">
+      <div id=realwap></div>
     </div>
     <div id="logs" class="hidden">
     </div>
@@ -227,7 +228,7 @@
         plugin.loadGui().then((elem) => {
           console.log("ADDING PLUGIN");
           // show the GUI of the plugn, the audio part is ready to be used
-          document.querySelector("#WAP").appendChild(elem);
+          document.querySelector("#realwap").appendChild(elem);
           //mediaSource.connect(node);
           //node.connect(ctx.destination);
           // Add node to the chain of plugins
@@ -255,7 +256,8 @@
       bt_buildIt.addEventListener('click', () => {
         mediaSource.disconnect();
         node.disconnect();
-        document.querySelector("#WAP").innerHTML = "";
+        document.querySelector("#WAP").querySelector("h2").innerHTML = ""
+        document.querySelector("#realwap").innerHTML = "";
         document.querySelector("#logs").innerHTML = "";
         document.querySelector("#guilogs").innerHTML = "";
 
