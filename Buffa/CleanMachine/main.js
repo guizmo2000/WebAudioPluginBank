@@ -1239,7 +1239,7 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
     };
     presets.push(preset12);
 
-    preset22 = {
+    preset13 = {
       "name": "Love RnRoll",
       "distoName": "smooth",
       "boost": true,
