@@ -70,7 +70,7 @@ Must contain at least name, category, vandor & thumbnail to interract correctly 
     "name": "wapName",
     "thumbnail": "./assets/thumbnail.png",
     "vendor": "you",
-    "category":"Overdrive",
+    "category":"Filter",
     "version": "1.0"
   }
 ```
@@ -91,7 +91,7 @@ window.PluginName = class PluginName extends WebAudioPluginCompositeNode {
     super(ctx, URL, options)
     /*    ################     API PROPERTIES    ###############   */
 
-    this.addParam({ name: 'paramName', defaultValue: 0.6, minValue: 0, maxValue: 1 });
+    this.addParam({ name: 'cutoff', defaultValue: 1500, minValue: 30, maxValue: 22000 });
     super.setup();
   }
 }
@@ -167,14 +167,14 @@ The class **WebAudioPluginFactory** contains methods to fetch and load your WAP.
  ```html
 <template>
 	<style>
-    #myelement{
+    #cutoff{
       /* Absolute position*/
     }
   </style>
-  <div id="myelement">
-     <input type="range" id="cutoff" min="30" max="22000" value="1500"/>
+  <div id="cutoff">
+     <input type="range" min="30" max="22000" value="1500"/>
   </div>
-<template>
+</template>
  ``` 
 We also recommand to use the [g200k webaudio controls](https://github.com/g200kg/webaudio-controls/tree/master/2.0) library in its Web component version to have more custom options. For this you have to add this link on your `main.html` file : 
 ```html
@@ -185,16 +185,16 @@ and enable the midi control :
 ```html
 <script>WebAudioControlsOptions = {useMidi: 1,};</script>
 ```
-After that, go to the [knobgalery](https://www.g200kg.com/en/webknobman/gallery.php), choose your knobs and render it with 100 sprites. Put the png file in the WAP assets and add the webaudio element to your template.
+After that, go to the [knobgalery](https://www.g200kg.com/en/webknobman/gallery.php), choose your knobs and render it with 99 sprites. Put the png file in the WAP assets and add the webaudio element to your template.
 
 ```html
-<webaudio-knob id="knob1" class="knob" sprites="99" value="50" step="1" midilearn="true" diameter="24"></webaudio-knob>
+<webaudio-knob  sprites="99" min="30" max="22000" value="1500" step="1" midilearn="true" diameter="40"></webaudio-knob>
 ```
 
 **When your template is done**, clone it in a webcomponent shadowroot.
 
 ```js
-let myTemp = document.currentScript.ownerDocument.querySelector('template');
+let lowfiltertemp = document.currentScript.ownerDocument.querySelector('template');
 	class PluginNameGui extends HTMLElement {
 		constructor(plug) {
 			super();
@@ -204,7 +204,7 @@ let myTemp = document.currentScript.ownerDocument.querySelector('template');
 			this._plug.gui = this;
 			// bind shadow to the class and clone the template into it
 			this._root = this.attachShadow({ mode: 'open' });
-			this._root.appendChild(myTemp.content.cloneNode(true));
+			this._root.appendChild(lowfiltertemp.content.cloneNode(true));
 
 			this.setUp();
     }
@@ -215,18 +215,26 @@ let myTemp = document.currentScript.ownerDocument.querySelector('template');
 
 ```js
   setUp(){
-    this._root.querySelector("#myelement").querySelector("input").addEvenetListener("input", (e)=>{this._plug.setParam("cutoff", e.target.value)})
+    this._root.querySelector("#cutoff").querySelector("input").addEvenetListener("input", (e)=>{this._plug.setParam("cutoff", e.target.value)})
   }
 ```
 **if you choose to use webaudio-knobs**, set the src :
 
 ```js
-this._root.querySelector("#myelementID").querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/knobFile.png');
+this._root.querySelector("#cutoff").querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/knobFile.png');
 ```
 
-**Last** step is to create a function that build this GUI (out of the class) : 
+**Last** step is to create a function that build this GUIand register it (out of the class) : 
 
 ```js
+try {
+		// Define the custom element to the browser
+		customElements.define('wasabi-myplugin', MyPluginGui);
+		console.log("Element defined");
+	} catch (error) {
+		console.log(error);
+		console.log("Element already defined");
+	}
 /**
 * Gui factory, called from the SDK. 
 * The name must be create+MyModule
@@ -256,6 +264,7 @@ Now the WAP is ready to be tested. Lets create a HTML file and test this minimal
   
   var ctx = new AudioContext();
   var pluginURL = "path/to/MyPlugin";
+  // vendorName must be the same as in the main.json file
   var plugin = new window.VendorNamePluginName(ctx, pluginURL);
 
   var player = document.getElementById("soundSample");
@@ -280,3 +289,7 @@ Now the WAP is ready to be tested. Lets create a HTML file and test this minimal
 ```
 
 You can now affect the audioplayer with your WAP! Congrats!
+
+The final code of this tutorial is on : 
+https://github.com/guizmo2000/WebAudioPluginBank/tree/master/tutorial
+
