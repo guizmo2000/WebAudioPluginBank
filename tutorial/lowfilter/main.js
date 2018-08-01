@@ -37,7 +37,7 @@ window.Lowfilter = class Lowfilter extends WebAudioPluginCompositeNode {
   set resonance(_value){
     // to store the new value
     this.params.resonance = _value;
-    // if your param is linked to the filter frequency you can :
+    // if your param is linked to the filter Q you can :
     this.lpfilter.Q.setValueAtTime(_value,this.context.currentTime);
 
   }
