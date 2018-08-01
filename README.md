@@ -176,7 +176,23 @@ The class **WebAudioPluginFactory** contains methods to fetch and load your WAP.
   </div>
 <template>
  ``` 
- **Then** clone it in a webcomponent shadowroot.
+We also recommand to use the [g200k webaudio controls](https://github.com/g200kg/webaudio-controls/tree/master/2.0)library in its Web component version to have more custom options. For this you have to add this link on your `main.html` file : 
+```html
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+```
+and enable the midi control :
+
+```html
+<script>WebAudioControlsOptions = {useMidi: 1,};</script>
+```
+After that, go to the [knobgalery](https://www.g200kg.com/en/webknobman/gallery.php), choose your knobs and render it with 100 sprites. Put the png file in the WAP assets and add the webaudio element to your template.
+
+```html
+<webaudio-knob id="knob1" class="knob" sprites="99" value="50" step="1" midilearn="true" diameter="24"></webaudio-knob>
+```
+Set the src:
+
+**When your template is done**, clone it in a webcomponent shadowroot.
 
 ```js
 let myTemp = document.currentScript.ownerDocument.querySelector('template');
@@ -203,8 +219,13 @@ let myTemp = document.currentScript.ownerDocument.querySelector('template');
     this._root.querySelector("#myelement").querySelector("input").addEvenetListener("input", (e)=>{this._plug.setParam("cutoff", e.target.value)})
   }
 ```
+**if you choose to use webaudio-knobs**, set the src :
 
-**Last** step is to create a function that build this GUI : 
+```js
+this._root.querySelector("#myelementID").querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/knobFile.png');
+```
+
+**Last** step is to create a function that build this GUI (out of the class) : 
 
 ```js
 /**
