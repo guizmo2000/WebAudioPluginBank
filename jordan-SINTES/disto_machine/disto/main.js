@@ -198,7 +198,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
 
 // ----------- AMP ---------------
 
-function Amp(context) {
+function Amp(context, boost, eq, reverb, cabinetSim ) {
     var presets = [];
     //var menuPresets = document.querySelector("#QFPresetMenu2");
     //var menuDisto1 = document.querySelector("#distorsionMenu1");
@@ -222,8 +222,7 @@ function Amp(context) {
     // ------------
     // PREAM STAGE
     // ------------
-    // Channel booster
-    var boost = new Boost(context); //TODO: see if this var is useful or not
+    // Channel booster 
 
     // Main input and output and bypass
     var input = context.createGain();
@@ -299,7 +298,7 @@ function Amp(context) {
     // generate odd harmonics
     od[0] = context.createWaveShaper();
     od[0].curve = wsFactory.distorsionCurves[distoTypes[0]](0);
-    menuDisto1.value = distoTypes[0];
+    //menuDisto1.value = distoTypes[0];
 
     // HighPass at 7-8 Hz, rectify the signal that got a DC value due
     // to the possible asymetric transfer function
@@ -321,7 +320,7 @@ function Amp(context) {
     // Distorsion 2, symetric function to generate even harmonics
     od[1] = context.createWaveShaper();
     od[1].curve = wsFactory.distorsionCurves[distoTypes[1]](0);
-    menuDisto2.value = distoTypes[1];
+    //menuDisto2.value = distoTypes[1];
 
     changeDistorsionValues(4, 0);
     changeDistorsionValues(4, 1);
@@ -369,8 +368,8 @@ function Amp(context) {
     eqlocut.gain.value = -19;
 
 
-    var eq = new Equalizer(context);
-    changeEQValues([0, 0, 0, 0, 0, 0]);
+    
+    
     var bypassEQg = context.createGain();
     bypassEQg.gain.value = 0; // by defaut EQ is in
     var inputEQ = context.createGain();
@@ -391,9 +390,8 @@ function Amp(context) {
             });
         });
     */
-
-    reverb = new Convolver(context, reverbImpulses, "reverbImpulses");
-    cabinetSim = new Convolver(context, cabinetImpulses, "cabinetImpulses");
+        
+    
 
     doAllConnections();
 
@@ -509,13 +507,13 @@ function Amp(context) {
 
     function updateBoostLedButtonState(activated) {
         // update buttons states
-        var boostSwitch = document.querySelector("#toggleBoost");
+        /*var boostSwitch = document.querySelector("#toggleBoost");
 
         if (boost.isActivated()) {
             boostSwitch.setValue(1, false);
         } else {
             boostSwitch.setValue(0, false);
-        }
+        }*/
     }
 
 
@@ -535,12 +533,12 @@ function Amp(context) {
         lowShelf1.frequency.value = value;
 
         // update output labels
-        var output = document.querySelector("#lowShelf1Freq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
+        //var output = document.querySelector("#lowShelf1Freq");
+        //output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
 
         // refresh slider state
-        var slider = document.querySelector("#lowShelf1FreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        //var slider = document.querySelector("#lowShelf1FreqSlider");
+        //slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
     function changeLowShelf1GainValue(sliderVal) {
@@ -548,12 +546,12 @@ function Amp(context) {
         lowShelf1.gain.value = value;
 
         // update output labels
-        var output = document.querySelector("#lowShelf1Gain");
-        output.value = parseFloat(sliderVal).toFixed(1) + " dB";
+        //var output = document.querySelector("#lowShelf1Gain");
+        //output.value = parseFloat(sliderVal).toFixed(1) + " dB";
 
         // refresh slider state
-        var slider = document.querySelector("#lowShelf1GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        //var slider = document.querySelector("#lowShelf1GainSlider");
+        //slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
     function changeLowShelf2FrequencyValue(sliderVal) {
@@ -561,12 +559,12 @@ function Amp(context) {
         lowShelf2.frequency.value = value;
 
         // update output labels
-        var output = document.querySelector("#lowShelf2Freq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
+        //var output = document.querySelector("#lowShelf2Freq");
+        //output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
 
         // refresh slider state
-        var slider = document.querySelector("#lowShelf2FreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        //var slider = document.querySelector("#lowShelf2FreqSlider");
+        //slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
     function changeLowShelf2GainValue(sliderVal) {
@@ -575,12 +573,12 @@ function Amp(context) {
 
         console.log("lowshelf 2 gain = " + value);
         // update output labels
-        var output = document.querySelector("#lowShelf2Gain");
-        output.value = parseFloat(sliderVal).toFixed(1) + " dB";
+        //var output = document.querySelector("#lowShelf2Gain");
+        //output.value = parseFloat(sliderVal).toFixed(1) + " dB";
 
         // refresh slider state
-        var slider = document.querySelector("#lowShelf2GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        //var slider = document.querySelector("#lowShelf2GainSlider");
+        //slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
     function changePreampStage1GainValue(sliderVal) {
@@ -588,12 +586,12 @@ function Amp(context) {
         preampStage1Gain.gain.value = value;
 
         // update output labels
-        var output = document.querySelector("#preampStage1Gain");
-        output.value = parseFloat(sliderVal).toFixed(2);
+        //var output = document.querySelector("#preampStage1Gain");
+        //output.value = parseFloat(sliderVal).toFixed(2);
 
         // refresh slider state
-        var slider = document.querySelector("#preampStage1GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(2);
+        //var slider = document.querySelector("#preampStage1GainSlider");
+        //slider.value = parseFloat(sliderVal).toFixed(2);
     }
 
     function changeHighPass1FrequencyValue(sliderVal) {
@@ -601,12 +599,12 @@ function Amp(context) {
         highPass1.frequency.value = value;
 
         // update output labels
-        var output = document.querySelector("#highPass1Freq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
+        //var output = document.querySelector("#highPass1Freq");
+        //output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
 
         // refresh slider state
-        var slider = document.querySelector("#highPass1FreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        //var slider = document.querySelector("#highPass1FreqSlider");
+        //slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
     function changeHighPass1QValue(sliderVal) {
@@ -614,12 +612,12 @@ function Amp(context) {
         highPass1.Q.value = value;
 
         // update output labels
-        var output = document.querySelector("#highPass1Q");
-        output.value = parseFloat(sliderVal).toFixed(4);
+        //var output = document.querySelector("#highPass1Q");
+        //output.value = parseFloat(sliderVal).toFixed(4);
 
         // refresh slider state
-        var slider = document.querySelector("#highPass1QSlider");
-        slider.value = parseFloat(sliderVal).toFixed(4);
+        //var slider = document.querySelector("#highPass1QSlider");
+        //slider.value = parseFloat(sliderVal).toFixed(4);
     }
 
     function changeLowShelf3FrequencyValue(sliderVal) {
@@ -627,12 +625,12 @@ function Amp(context) {
         lowShelf3.frequency.value = value;
 
         // update output labels
-        var output = document.querySelector("#lowShelf3Freq");
-        output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
+        //var output = document.querySelector("#lowShelf3Freq");
+        //output.value = parseFloat(sliderVal).toFixed(1) + " Hz";
 
         // refresh slider state
-        var slider = document.querySelector("#lowShelf3FreqSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        //var slider = document.querySelector("#lowShelf3FreqSlider");
+        //slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
     function changeLowShelf3GainValue(sliderVal) {
@@ -640,12 +638,12 @@ function Amp(context) {
         lowShelf3.gain.value = value;
 
         // update output labels
-        var output = document.querySelector("#lowShelf3Gain");
-        output.value = parseFloat(sliderVal).toFixed(1) + " dB";
+        //var output = document.querySelector("#lowShelf3Gain");
+        //output.value = parseFloat(sliderVal).toFixed(1) + " dB";
 
         // refresh slider state
-        var slider = document.querySelector("#lowShelf3GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        //var slider = document.querySelector("#lowShelf3GainSlider");
+        //slider.value = parseFloat(sliderVal).toFixed(1);
     }
 
     function changePreampStage2GainValue(sliderVal) {
@@ -653,12 +651,12 @@ function Amp(context) {
         preampStage2Gain.gain.value = value;
 
         // update output labels
-        var output = document.querySelector("#preampStage2Gain");
-        output.value = parseFloat(sliderVal).toFixed(2);
+        //var output = document.querySelector("#preampStage2Gain");
+        //output.value = parseFloat(sliderVal).toFixed(2);
 
         // refresh slider state
-        var slider = document.querySelector("#preampStage2GainSlider");
-        slider.value = parseFloat(sliderVal).toFixed(2);
+        //var slider = document.querySelector("#preampStage2GainSlider");
+        //slider.value = parseFloat(sliderVal).toFixed(2);
     }
 
     // END OF PREAMP
@@ -693,8 +691,8 @@ function Amp(context) {
 
         // refresh knob state
         //sliderVal = value / 7 + 10;
-        var knob = document.querySelector("#Knob4");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        //var knob = document.querySelector("#Knob4");
+        //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
     function changeMidFilterValue(sliderVal) {
@@ -712,8 +710,8 @@ function Amp(context) {
 
         // refresh knob state
         //sliderVal = value /4 + 5;
-        var knob = document.querySelector("#Knob5");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        //var knob = document.querySelector("#Knob5");
+        //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
     function changeTrebleFilterValue(sliderVal) {
@@ -731,8 +729,8 @@ function Amp(context) {
 
         // refresh knob state
         //sliderVal = value /10 + 10;
-        var knob = document.querySelector("#Knob6");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        //var knob = document.querySelector("#Knob6");
+        //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
     function changePresenceFilterValue(sliderVal) {
@@ -750,8 +748,8 @@ function Amp(context) {
         //slider.value = parseFloat(sliderVal).toFixed(1);
 
         // refresh knob state
-        var knob = document.querySelector("#Knob8");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        //var knob = document.querySelector("#Knob8");
+        //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
     // Build a drop down menu with all distorsion names
@@ -791,14 +789,14 @@ function Amp(context) {
 
     function changeDisto1TypeFromPreset(name) {
         currentDistoName = name;
-        menuDisto1.value = name;
+        //menuDisto1.value = name;
         distoTypes[0] = currentDistoName;
         //changeDrive(currentK);
     }
 
     function changeDisto2TypeFromPreset(name) {
         currentDistoName = name;
-        menuDisto2.value = name;
+        //menuDisto2.value = name;
         distoTypes[1] = currentDistoName;
         //changeDrive(currentK);
     }
@@ -842,12 +840,12 @@ function Amp(context) {
         //od[numDisto].curve = makeDistortionCurve(sliderValue);
         // update output labels
         var output = document.querySelector("#k" + numDisto);
-        output.value = parseFloat(sliderValue).toFixed(1);
+        //output.value = parseFloat(sliderValue).toFixed(1);
 
         // update sliders
         var numSlider = numDisto + 1;
         var slider = document.querySelector("#K" + numSlider + "slider");
-        slider.value = parseFloat(sliderValue).toFixed(1);
+        //slider.value = parseFloat(sliderValue).toFixed(1);
 
         // refresh knob state
         var knob = document.querySelector("#Knob3");
@@ -856,11 +854,11 @@ function Amp(context) {
         var maxPosVal = Math.max(maxPosVal1, maxPosVal2);
         //var maxPosVal = Math.max(logToPos(k[2]), logToPos(k[3]));
         var linearValue = parseFloat(maxPosVal).toFixed(1);
-        knob.setValue(linearValue, false);
+        //knob.setValue(linearValue, false);
         // in [0, 10]
         currentK = linearValue;
         // redraw curves
-        drawCurrentDistos();
+        //drawCurrentDistos();
     }
 
     function logToPos(logValue) {
@@ -903,12 +901,12 @@ function Amp(context) {
         return parseFloat(pos).toFixed(1);
     }
 
-    function drawCurrentDistos() {
+    /*function drawCurrentDistos() {
         // draws both the transfer function and a sinusoidal
         // signal transformed, for each distorsion stage
         drawDistoCurves(distoDrawer1, signalDrawer1, od[0].curve);
         drawDistoCurves(distoDrawer2, signalDrawer2, od[1].curve);
-    }
+    }*/
 
     function drawDistoCurves(distoDrawer, signalDrawer, curve) {
         var c = curve;
@@ -996,8 +994,8 @@ function Amp(context) {
         //slider.value = parseFloat(sliderVal).toFixed(1);
 
         // refresh knob state
-        var knob = document.querySelector("#Knob1");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        //var knob = document.querySelector("#Knob1");
+        //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
     // volume aka preamp output volume
@@ -1035,7 +1033,7 @@ function Amp(context) {
 
         // refresh knob state
         var knob = document.querySelector("#Knob2");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
     function changeReverbGain(sliderVal) {
@@ -1053,8 +1051,8 @@ function Amp(context) {
         //slider.value = parseFloat(sliderVal).toFixed(1);
 
         // refresh knob state
-        var knob = document.querySelector("#Knob7");
-        knob.setValue(parseFloat(sliderVal).toFixed(1), false);
+        //var knob = document.querySelector("#Knob7");
+        //knob.setValue(parseFloat(sliderVal).toFixed(1), false);
     }
 
     function changeReverbImpulse(name) {
@@ -1070,11 +1068,11 @@ function Amp(context) {
 
         // update output labels
         var output = document.querySelector("#cabinetGainOutput");
-        output.value = parseFloat(sliderVal).toFixed(1);
+       // output.value = parseFloat(sliderVal).toFixed(1);
 
         // refresh slider state
         var slider = document.querySelector("#convolverCabinetSlider");
-        slider.value = parseFloat(sliderVal).toFixed(1);
+        //slider.value = parseFloat(sliderVal).toFixed(1);
 
     }
 
@@ -1122,7 +1120,7 @@ function Amp(context) {
 
         var preset8 = { "name": "SuperClean/Jazz", "boost": false, "LS1Freq": 720, "LS1Gain": -6, "LS2Freq": 320, "LS2Gain": -6.300000190734863, "gain1": 1, "distoName1": "crunch", "K1": "5.4", "HP1Freq": 6, "HP1Q": 0.707099974155426, "LS3Freq": 720, "LS3Gain": -6, "gain2": 1, "distoName2": "crunch", "K2": "5.4", "OG": "7.0", "BF": "7.0", "MF": "5.1", "TF": "5.2", "PF": "3.1", "EQ": [10, 7, 0, -10, 5, 12], "MV": "3.8", "RN": "Fender Hot Rod", "RG": "1.5", "CN": "Marshall 1960, axis", "CG": "4.5" };
         presets.push(preset8);
-
+        /*
         presets.forEach(function (p, index) {
             var option = document.createElement("option");
             option.value = index;
@@ -1130,6 +1128,7 @@ function Amp(context) {
             menuPresets.appendChild(option);
         });
         menuPresets.onchange = changePreset;
+        */
     }
 
     function changePreset() {
@@ -1241,7 +1240,7 @@ function Amp(context) {
             inputGain.gain.value = 0;
             byPass.gain.value = 1;
         }
-
+        /*
         // update buttons states
         //var onOffButton = document.querySelector("#myonoffswitch");
         var led = document.querySelector("#led");
@@ -1255,6 +1254,7 @@ function Amp(context) {
             onOffSwitch.setValue(1, false);
             led.setValue(0, false);
         }
+        */
     }
 
     function bypassEQ(cb) {
@@ -1408,6 +1408,8 @@ function Convolver(context, impulses, menuId) {
 
     var menuIRs;
     var IRs = impulses;
+
+    console.log(impulses);
 
     var currentImpulse = IRs[0];
     var defaultImpulseURL = IRs[0].url;
