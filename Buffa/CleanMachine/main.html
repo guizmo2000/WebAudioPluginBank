@@ -241,6 +241,8 @@
 	</select>
 	<div class="label" id="label_713">Clean Machine</div>
 </template>
+
+
 <script>
 	let CleanMachineTemp = document.currentScript.ownerDocument.querySelector('#cleanmachine');
 	class CleanMachineGui extends HTMLElement {
@@ -259,6 +261,7 @@
 			this.setKnobs();
 			this.setSwitchListener();
 			this.setResources();
+			this.avoidDrag();
 		}
 
 		get properties() {
@@ -347,6 +350,10 @@
 				else this.reactivate();
 				this.isOn = !this.isOn;
 			});
+		}
+
+		avoidDrag(){
+			this._root.querySelector("#background-image").draggable=false;
 		}
 
 	}
