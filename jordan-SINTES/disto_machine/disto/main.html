@@ -5,12 +5,22 @@
 	};
 </script>
 
+<style>
+	@font-face {
+		font-family: 'BouWeste';
+		src: url('./assets/BouWeste.ttf') format('truetype');
+		font-weight: normal;
+		font-style: normal;
+
+	}
+</style>
+
 <script src="./../../../bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template id="distomachine">
 	
 	<style>
 		:host {
-			font: 'Arial Black';
+			font: 'BouWeste', 'Arial Black';
 			display: block;
 			width: 450px;
 			height: 150px;
@@ -61,8 +71,8 @@
 
 		#presence div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -74,8 +84,8 @@
 
 		#reverb div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -86,8 +96,8 @@
 
 		#treble div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -98,8 +108,8 @@
 
 		#middle div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -110,8 +120,8 @@
 
 		#bass div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -122,8 +132,8 @@
 
 		#drive div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -134,8 +144,8 @@
 
 		#master div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -146,8 +156,8 @@
 
 		#volume div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -156,22 +166,22 @@
 			left: 150px;
 			top: 95px;
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 30px;
+			font-family: "BouWeste";
+			font-size: 28px;
 		}
 
 		#menuPresets {
 			border-style: solid;
 			border-width: 2px;
 			border-color: #000000;
-			background-color: rgba(255, 102, 0, 0.767);
+			background-color: rgba(236, 236, 236, 0.767);
 			position: absolute;
 			width: 100px;
 			left: 30px;
 			top: 100px;
 			color: #000000;
 			font-family: "Arial Black";
-			font-size: 11px;
+			font-size: 9px;
 		}
 
 		
@@ -290,7 +300,7 @@
 			}
 			// Set up the background img & style
 			var background = this._root.querySelector("img");
-			background.src = this._plug.URL + '/assets/CleanMachine.png';
+			background.src = this._plug.URL + '/assets/DistoMachine.png';
 			background.style = 'border-radius :10px;'
 			// Setting up the knobs imgs, those are loaded from the assets
 			this._root.querySelectorAll(".knob").forEach((knob) => {
