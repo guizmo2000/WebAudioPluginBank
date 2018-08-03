@@ -1089,7 +1089,7 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
             "EQ": [4, 13, -8, -8, 15, 12],
             "MV": "3.7",
             "RN": "Fender Hot Rod",
-            "RG": "0.0",
+            "RG": "1.7",
             "CN": "Marshall 1960, axis",
             "CG": "4.5"
         };
