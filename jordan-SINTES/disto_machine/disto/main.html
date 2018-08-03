@@ -5,12 +5,22 @@
 	};
 </script>
 
-<script src="./../../bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<style>
+	@font-face {
+		font-family: 'BouWeste';
+		src: url('./assets/BouWeste.ttf') format('truetype');
+		font-weight: normal;
+		font-style: normal;
+
+	}
+</style>
+
+<script src="./../../../bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template id="distomachine">
 	
 	<style>
 		:host {
-			font: 'Arial Black';
+			font: 'BouWeste', 'Arial Black';
 			display: block;
 			width: 450px;
 			height: 150px;
@@ -61,8 +71,8 @@
 
 		#presence div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -74,8 +84,8 @@
 
 		#reverb div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -86,8 +96,8 @@
 
 		#treble div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -98,8 +108,8 @@
 
 		#middle div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -110,8 +120,8 @@
 
 		#bass div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -122,8 +132,8 @@
 
 		#drive div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -134,8 +144,8 @@
 
 		#master div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -146,8 +156,8 @@
 
 		#volume div {
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 11px;
+			font-family: "BouWeste";
+			font-size: 9px;
 
 		}
 
@@ -156,22 +166,22 @@
 			left: 150px;
 			top: 95px;
 			color: #000000;
-			font-family: "shady_laneregular";
-			font-size: 30px;
+			font-family: "BouWeste";
+			font-size: 28px;
 		}
 
 		#menuPresets {
 			border-style: solid;
 			border-width: 2px;
 			border-color: #000000;
-			background-color: rgba(255, 102, 0, 0.767);
+			background-color: rgba(236, 236, 236, 0.767);
 			position: absolute;
 			width: 100px;
 			left: 30px;
 			top: 100px;
 			color: #000000;
 			font-family: "Arial Black";
-			font-size: 11px;
+			font-size: 9px;
 		}
 
 		
@@ -183,7 +193,7 @@
 	</div>
 
 	<div class="knob  " id="presence">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="5" midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="6.9" midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Presence</div>
 	</div>
 	<div class="knob  " id="reverb">
@@ -191,15 +201,15 @@
 		<div style="text-align:center">Reverb</div>
 	</div>
 	<div class="knob " id="treble">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3.8"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Treble</div>
 	</div>
 	<div class="knob " id="middle">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="4"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="8.2"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Middle</div>
 	</div>
 	<div class="knob " id="bass">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="5"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="8.2"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Bass</div>
 	</div>
 	<div class="knob " id="drive">
@@ -207,30 +217,25 @@
 		<div style="text-align:center">Drive</div>
 	</div>
 	<div class="knob " id="master">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="6"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="7.2"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Master</div>
 	</div>
 	<div class="knob " id="volume">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="5"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="7"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Volume</div>
 	</div>
 	<select id="menuPresets">
-		<option value=0>Clean 1</option>
-		<option value=1>Crunch 1</option>
-		<option value=2>Clean 2</option>
-		<option value=3>Aerosmith WTW</option>
-		<option value=4>Hells Bells</option>
-		<option value=5>Smoke on the Water</option>
-		<option value=6>Crunch 2</option>
-		<option value=7>Clean 3</option>
-		<option value=8>Heartbreak Riff</option>
-		<option value=9>Light My Knob</option>
-		<option value=10>Gainsbourgh Funk</option>
-		<option value=11>Highway to Hell</option>
-		<option value=12>Love RnRoll</option>
-		<option value=13>Only One</option>
+		<option value=0>Hard Rock classic 1</option>
+		<option value=1>Clean and Warm</option>
+		<option value=2>Strong and Warm</option>
+		<option value=3>Clean no reverb</option>
+		<option value=4>Another Clean Sound</option>
+		<option value=5>Mostly even harmonics</option>
+		<option value=6>Hard Rock classic 2</option>
+		<option value=7>SuperClean/Jazz</option>
+		<option value=8>Slasher</option>
 	</select>
-	<div class="label" id="label_713">Clean Machine</div>
+	<div class="label" id="label_713">Disto Machine</div>
 </template>
 <script>
 	let DistoMachineTemp = document.currentScript.ownerDocument.querySelector('#distomachine');
@@ -243,13 +248,14 @@
 			this._plug = plug;
 			this._plug.gui = this;
 			this._root = this.attachShadow({ mode: 'open' });
-			this._root.appendChild(CleanMachineTemp.content.cloneNode(true));
+			this._root.appendChild(DistoMachineTemp.content.cloneNode(true));
 			this.knobs = this._root.querySelectorAll(".knob");
 			this.isOn;
 			this.state = new Object();
 			this.setKnobs();
 			this.setSwitchListener();
 			this.setResources();
+			this.avoidDrag();
 		}
 
 		get properties() {
@@ -296,7 +302,7 @@
 			}
 			// Set up the background img & style
 			var background = this._root.querySelector("img");
-			background.src = this._plug.URL + '/assets/CleanMachine.png';
+			background.src = this._plug.URL + '/assets/DistoMachine.png';
 			background.style = 'border-radius :10px;'
 			// Setting up the knobs imgs, those are loaded from the assets
 			this._root.querySelectorAll(".knob").forEach((knob) => {
@@ -340,16 +346,20 @@
 			});
 		}
 
+		avoidDrag(){
+			this._root.querySelector("#background-image").draggable=false;
+		}
+
 	}
 	try {
-		customElements.define('wasabi-cleanmachine', CleanMachineGui);
+		customElements.define('wasabi-distomachine', DistoMachineGui);
 		console.log("Element defined");
 	} catch (error) {
 		console.log(error);
 		console.log("Element already defined");
 	}
-	createCleanMachine = (plug) => {
-		let elem = new CleanMachineGui(plug);
+	createDistoMachine = (plug) => {
+		let elem = new DistoMachineGui(plug);
 		return elem;
 	}
 </script>

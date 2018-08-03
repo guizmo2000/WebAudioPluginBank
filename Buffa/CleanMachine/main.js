@@ -19,7 +19,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
     });
     this.addParam({
       name: 'master',
-      defaultValue: 6,
+      defaultValue: 5.8,
       minValue: 0,
       maxValue: 10
     });
@@ -37,13 +37,13 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
     });
     this.addParam({
       name: 'middle',
-      defaultValue: 4,
+      defaultValue: 4.2,
       minValue: 0,
       maxValue: 10
     });
     this.addParam({
       name: 'treble',
-      defaultValue: 3,
+      defaultValue: 3.1,
       minValue: 0,
       maxValue: 10
     });
