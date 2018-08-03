@@ -1311,6 +1311,37 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
             "CG": "4.5"
         };
         presets.push(preset8);
+
+        var preset9 = {
+            "name":"Slasher",
+            "boost":true,
+            "LS1Freq":720,
+            "LS1Gain":-6,
+            "LS2Freq":320,
+            "LS2Gain":-5,
+            "gain1":1,
+            "distoName1":"asymetric",
+            "K1":"8.7",
+            "HP1Freq":6,
+            "HP1Q":0.707099974155426,
+            "LS3Freq":720,
+            "LS3Gain":-6,
+            "gain2":1,
+            "distoName2":"notSoDistorded",
+            "K2":"8.7",
+            "OG":"1.9",
+            "BF":"5.5",
+            "MF":"6.0",
+            "TF":"2.7",
+            "PF":"7.6",
+            "EQ":[5,11,-6,-10,7,2],
+            "MV":"7.2",
+            "RN":"Fender Hot Rod",
+            "RG":"1.2",
+            "CN":"Fender Champ, axis",
+            "CG":"3.9"
+        }
+        presets.push(preset9)
         /*
         presets.forEach(function (p, index) {
             var option = document.createElement("option");
