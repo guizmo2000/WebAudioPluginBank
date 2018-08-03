@@ -1062,34 +1062,6 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
     };
     presets.push(preset6);
 
-    preset7 = {
-      "name": "Crunch 2",
-      "distoName": "standard",
-      "LCF": 259,
-      "HCF": 12000,
-      "K1": "2.0",
-      "K2": "2.0",
-      "K3": "3.9",
-      "K4": "3.9",
-      "F1": 242,
-      "F2": 493,
-      "F3": 1780,
-      "F4": 4382,
-      "Q1": "0.3",
-      "Q2": "12.6",
-      "Q3": "0.3",
-      "Q4": "2.8",
-      "OG": "10.0",
-      "BF": "8.1",
-      "MF": "4.5",
-      "TF": "2.9",
-      "PF": "9.8",
-      "EQ": [6, -5, -21, -3, -18, 0],
-      "MV": "8.2",
-      "RG": "1.2",
-      "CG": "8.7"
-    }
-    presets.push(preset7);
 
     preset8 = {
       "name": "Clean 3",
@@ -1178,35 +1150,6 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
     }
     presets.push(preset10);
 
-    preset11 = {
-      "name": "Gainsbourgh Funk",
-      "distoName": "superClean",
-      "LCF": 345,
-      "HCF": 18461,
-      "K1": "0.4",
-      "K2": "0.4",
-      "K3": "0.7",
-      "K4": "0.7",
-      "F1": 186,
-      "F2": 792,
-      "F3": 2402,
-      "F4": 6368,
-      "Q1": "0.0",
-      "Q2": "23.7",
-      "Q3": "1.0",
-      "Q4": "1.0",
-      "OG": "6.6",
-      "BF": "8.0",
-      "MF": "1.3",
-      "TF": "5.9",
-      "PF": "10.0",
-      "EQ": [12, -2, -10, -20, 2, 11],
-      "MV": "10.0",
-      "RG": "2.0",
-      "CG": "4.2"
-    }
-    presets.push(preset11);
-
     preset12 = {
       "name": "Highway to Hell",
       "distoName": "fuzz",
@@ -1270,38 +1213,6 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "CG": "7.4"
     };
     presets.push(preset13);
-
-    preset14 = {
-      "name":"Only One",
-      "distoName":"standard",
-      "boost":false,
-      "LCF":200,
-      "HCF":12000,
-      "K1":"1.1",
-      "K2":"1.1",
-      "K3":"2.1",
-      "K4":"2.1",
-      "F1":147,
-      "F2":569,
-      "F3":1915,
-      "F4":4680,
-      "Q1":"0.0",
-      "Q2":"49.0",
-      "Q3":"42.0",
-      "Q4":"11.0",
-      "OG":"5.7",
-      "BF":"5.2",
-      "MF":"7.3",
-      "TF":"5.2",
-      "PF":"4.8",
-      "EQ":[-2,-1,0,3,-9,-4],
-      "MV":"3.1",
-      "RN":"Fender Hot Rod",
-      "RG":"5.4",
-      "CN":"Vintage Marshall 1",
-      "CG":"2.0"
-    }
-    presets.push(preset14);
 
     /*
     presets.forEach(function (p, index) {
