@@ -917,34 +917,6 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
     presets.push(preset1);
 
     preset2 = {
-      "name": "Crunch 1",
-      "LCF": 90,
-      "HCF": 7000,
-      "K1": "4.7",
-      "K2": "4.1",
-      "K3": "10.0",
-      "K4": "10.0",
-      "F1": 147,
-      "F2": 569,
-      "F3": 1915,
-      "F4": 4680,
-      "Q1": 0,
-      "Q2": 49,
-      "Q3": 42,
-      "Q4": 11,
-      "OG": 7.9,
-      "BF": 5,
-      "MF": 5,
-      "TF": 5,
-      "PF": 5,
-      "EQ": [-2, -1, 2, 2, -7, -13],
-      "MV": "0.7",
-      "RG": "2.0",
-      "CG": "5.4"
-    }
-    presets.push(preset2);
-
-    preset3 = {
       "name": "Clean 2",
       "LCF": 242,
       "HCF": 17165,
@@ -970,36 +942,63 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "RG": "2.8",
       "CG": "6.3"
     };
+    presets.push(preset2);
+
+    preset3 = {
+      "name": "Clean 3",
+      "distoName": "smooth",
+      "LCF": 200,
+      "HCF": 12000,
+      "K1": "2.5",
+      "K2": "2.5",
+      "K3": "5.0",
+      "K4": "5.0",
+      "F1": 242,
+      "F2": 493,
+      "F3": 1780,
+      "F4": 4382,
+      "Q1": "0.3",
+      "Q2": "12.6",
+      "Q3": "0.3",
+      "Q4": "2.8",
+      "OG": "10.0",
+      "BF": "8.1",
+      "MF": "4.5",
+      "TF": "2.9",
+      "PF": "9.8",
+      "EQ": [6, -5, -21, -3, 3, 0],
+      "MV": "9.8",
+      "RG": "3.7",
+      "CG": "4.6"
+    }
     presets.push(preset3);
 
     preset4 = {
-      "name": "Aerosmith WTW",
-      "distoName": "standard",
-      "LCF": 345,
+      "name": "Crunch",
+      "LCF": 90,
       "HCF": 7000,
-      "K1": "3.3",
-      "K2": "3.3",
-      "K3": "6.6",
-      "K4": "6.6",
-      "F1": 186,
-      "F2": 792,
-      "F3": 2402,
-      "F4": 6368,
-      "Q1": "2.0",
-      "Q2": "1.0",
-      "Q3": "1.0",
-      "Q4": "1.0",
-      "OG": "0.6",
-      "BF": "4.8",
-      "MF": "4.1",
-      "TF": "3.4",
-      "PF": "8.3",
-      "EQ": [12, 2, 22, 13, 16, 18],
-      "MV": "2.2",
-      "RG": "0.0",
-      "CG": "0.0"
-    };
-
+      "K1": "4.7",
+      "K2": "4.1",
+      "K3": "10.0",
+      "K4": "10.0",
+      "F1": 147,
+      "F2": 569,
+      "F3": 1915,
+      "F4": 4680,
+      "Q1": 0,
+      "Q2": 49,
+      "Q3": 42,
+      "Q4": 11,
+      "OG": 7.9,
+      "BF": 5,
+      "MF": 5,
+      "TF": 5,
+      "PF": 5,
+      "EQ": [-2, -1, 2, 2, -7, -13],
+      "MV": "0.7",
+      "RG": "2.0",
+      "CG": "5.4"
+    }
     presets.push(preset4);
 
     preset5 = {
@@ -1035,122 +1034,6 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
     presets.push(preset5);
 
     preset6 = {
-      "name": "Smoke on the Water",
-      "LCF": 298,
-      "HCF": 8703,
-      "K1": "9.6",
-      "K2": "9.6",
-      "K3": "9.6",
-      "K4": "9.6",
-      "F1": 300,
-      "F2": 1058,
-      "F3": 2297,
-      "F4": 7000,
-      "Q1": 2.5,
-      "Q2": 2,
-      "Q3": 0.6000000238418579,
-      "Q4": 0.4000000059604645,
-      "OG": "4.5",
-      "BF": "4.0",
-      "MF": "8.5",
-      "TF": "3.8",
-      "PF": "3.1",
-      "EQ": [14, 19, -7, -12, 19, 16],
-      "MV": "1.8",
-      "RG": "1.6",
-      "CG": "10.0"
-    };
-    presets.push(preset6);
-
-
-    preset8 = {
-      "name": "Clean 3",
-      "distoName": "smooth",
-      "LCF": 200,
-      "HCF": 12000,
-      "K1": "2.5",
-      "K2": "2.5",
-      "K3": "5.0",
-      "K4": "5.0",
-      "F1": 242,
-      "F2": 493,
-      "F3": 1780,
-      "F4": 4382,
-      "Q1": "0.3",
-      "Q2": "12.6",
-      "Q3": "0.3",
-      "Q4": "2.8",
-      "OG": "10.0",
-      "BF": "8.1",
-      "MF": "4.5",
-      "TF": "2.9",
-      "PF": "9.8",
-      "EQ": [6, -5, -21, -3, 3, 0],
-      "MV": "9.8",
-      "RG": "3.7",
-      "CG": "4.6"
-    }
-    presets.push(preset8);
-
-    preset9 = {
-      "name": "Heartbreak Riff",
-      "distoName": "standard",
-      "LCF": 214,
-      "HCF": 15820,
-      "K1": "4.1",
-      "K2": "4.1",
-      "K3": "8.2",
-      "K4": "8.2",
-      "F1": 186,
-      "F2": 792,
-      "F3": 2402,
-      "F4": 4836,
-      "Q1": "2.9",
-      "Q2": "0.7",
-      "Q3": "1.0",
-      "Q4": "1.0",
-      "OG": "0.8",
-      "BF": "4.8",
-      "MF": "6.0",
-      "TF": "5.9",
-      "PF": "8.9",
-      "EQ": [15, 19, 19, -2, 17, -3],
-      "MV": "2.1",
-      "RG": "1.2",
-      "CG": "7.4"
-    }
-    presets.push(preset9);
-
-    preset10 = {
-      "name": "Light My Knob",
-      "distoName": "superClean",
-      "LCF": 256,
-      "HCF": 12000,
-      "K1": "0.0",
-      "K2": "0.0",
-      "K3": "0.0",
-      "K4": "0.0",
-      "F1": 147,
-      "F2": 569,
-      "F3": 2382,
-      "F4": 5696,
-      "Q1": "0.0",
-      "Q2": "0.0",
-      "Q3": "0.0",
-      "Q4": "0.0",
-      "OG": "5.9",
-      "BF": "5.0",
-      "MF": "5.0",
-      "TF": "5.0",
-      "PF": "8.0",
-      "EQ": [-2, 10, -10, -20, 17, 3],
-      "MV": "6.5",
-      "RG": "2.0",
-      "CG": "6.7"
-    }
-    presets.push(preset10);
-
-    preset12 = {
       "name": "Highway to Hell",
       "distoName": "fuzz",
       "boost": true,
@@ -1180,9 +1063,97 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "CN": "Vintage Marshall 1",
       "CG": "6.0"
     };
-    presets.push(preset12);
+    presets.push(preset6);
 
-    preset13 = {
+    preset7 = {
+      "name": "Aerosmith WTW",
+      "distoName": "standard",
+      "LCF": 345,
+      "HCF": 7000,
+      "K1": "3.3",
+      "K2": "3.3",
+      "K3": "6.6",
+      "K4": "6.6",
+      "F1": 186,
+      "F2": 792,
+      "F3": 2402,
+      "F4": 6368,
+      "Q1": "2.0",
+      "Q2": "1.0",
+      "Q3": "1.0",
+      "Q4": "1.0",
+      "OG": "0.6",
+      "BF": "4.8",
+      "MF": "4.1",
+      "TF": "3.4",
+      "PF": "8.3",
+      "EQ": [12, 2, 22, 13, 16, 18],
+      "MV": "2.2",
+      "RG": "0.0",
+      "CG": "0.0"
+    };
+
+    presets.push(preset7);
+
+    preset8 = {
+      "name": "Heartbreak Riff",
+      "distoName": "standard",
+      "LCF": 214,
+      "HCF": 15820,
+      "K1": "4.1",
+      "K2": "4.1",
+      "K3": "8.2",
+      "K4": "8.2",
+      "F1": 186,
+      "F2": 792,
+      "F3": 2402,
+      "F4": 4836,
+      "Q1": "2.9",
+      "Q2": "0.7",
+      "Q3": "1.0",
+      "Q4": "1.0",
+      "OG": "0.8",
+      "BF": "4.8",
+      "MF": "6.0",
+      "TF": "5.9",
+      "PF": "8.9",
+      "EQ": [15, 19, 19, -2, 17, -3],
+      "MV": "2.1",
+      "RG": "1.2",
+      "CG": "7.4"
+    }
+    presets.push(preset8);
+
+    preset9 = {
+      "name": "Light My Knob",
+      "distoName": "superClean",
+      "LCF": 256,
+      "HCF": 12000,
+      "K1": "0.0",
+      "K2": "0.0",
+      "K3": "0.0",
+      "K4": "0.0",
+      "F1": 147,
+      "F2": 569,
+      "F3": 2382,
+      "F4": 5696,
+      "Q1": "0.0",
+      "Q2": "0.0",
+      "Q3": "0.0",
+      "Q4": "0.0",
+      "OG": "5.9",
+      "BF": "5.0",
+      "MF": "5.0",
+      "TF": "5.0",
+      "PF": "8.0",
+      "EQ": [-2, 10, -10, -20, 17, 3],
+      "MV": "6.5",
+      "RG": "2.0",
+      "CG": "6.7"
+    }
+    presets.push(preset9);
+
+    preset10 = {
       "name": "Love RnRoll",
       "distoName": "smooth",
       "boost": true,
@@ -1212,7 +1183,7 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
       "CN": "Vintage Marshall 1",
       "CG": "7.4"
     };
-    presets.push(preset13);
+    presets.push(preset10);
 
     /*
     presets.forEach(function (p, index) {
