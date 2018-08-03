@@ -1158,7 +1158,7 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
         presets.push(preset3);
 
         var preset4 = {
-            "name": "Clean no reverb",
+            "name": "Jimmy HDX",
             "boost": false,
             "LS1Freq": 720,
             "LS1Gain": -6,
@@ -1166,14 +1166,14 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
             "LS2Gain": -6.300000190734863,
             "gain1": 1,
             "distoName1": "asymetric",
-            "K1": "2.1",
+            "K1": "9.0",
             "HP1Freq": 6,
             "HP1Q": 0.707099974155426,
             "LS3Freq": 720,
             "LS3Gain": -6,
             "gain2": 1,
             "distoName2": "crunch",
-            "K2": "2.1",
+            "K2": "9.0",
             "OG": "7.0",
             "BF": "6.7",
             "MF": "5.0",
