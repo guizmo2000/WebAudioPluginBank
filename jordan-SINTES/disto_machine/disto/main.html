@@ -289,8 +289,13 @@
 			this.knobs = this._root.querySelectorAll(".knob");
 			for (var i = 0; i < this.knobs.length; i++) {
 				this.knobs[i].querySelector("webaudio-knob").setValue(this.state[this.knobs[i].id],false);
-
 			}
+			if (this.state.preset){
+				var preset = this._root.querySelector("#menuPresets");
+				preset.value = this.state.preset;
+				console.log(preset.value);
+			}
+			
 
 
 		}

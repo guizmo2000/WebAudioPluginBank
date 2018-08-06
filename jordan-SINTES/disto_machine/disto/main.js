@@ -8,7 +8,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
         /*    ################     API PROPERTIES    ###############   */
         super(ctx, URL, options)
 
-        this.params = { status: "disable" }
+        this.params = { status: "disable", preset:"0" }
 
         this.addParam({
             name: 'volume',
