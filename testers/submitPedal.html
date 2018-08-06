@@ -1,60 +1,58 @@
 <!doctype html>
 <html>
 
-	<head>
+<head>
 
-		<meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
+	<meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
 
-	</head>
+</head>
 
-	<body>
+<body>
+		<div class="title">
+				<h1>Plugin Publication</h1>
+			</div>
 
-		<form>
+	<form>
 
-			<input type="text" placeholder="Your NPM pedal" id="npmModule">
-			<br />
-			<input type="button" value="Submit" id='submit'>
+		<input type="text" placeholder="Your NPM module name" id="npmModule">
+		<br />
+		<input type="button" value="Submit" id='submit'>
 
-		</form>
+	</form>
 
-	</body>
+</body>
 
-	<script>
+<script>
 
-		window.onload = () =>
-		{
-			document.querySelector('#submit').addEventListener( 'click', () =>
-			{
-				let npmPedal = document.querySelector( '#npmModule' ).value;
+	window.onload = () => {
+		document.querySelector('#submit').addEventListener('click', () => {
+			let npmPedal = document.querySelector('#npmModule').value;
 
-				if( !npmPedal )
-					alert('You have to fill the form.')
+			if (!npmPedal)
+				alert('You have to fill the form.')
+			else
+				sendAPIRequestToAddPedal(npmPedal);
+		});
+	}
+
+	function sendAPIRequestToAddPedal(pedalName) {
+		let xhr = new XMLHttpRequest();
+
+		xhr.onreadystatechange = () => {
+			if (xhr.readyState == XMLHttpRequest.DONE) {
+				if (xhr.status == 400)
+					alert(xhr.responseText);
+				else if (xhr.status == 301)
+					window.location = JSON.parse(xhr.responseText).redirect;
 				else
-					sendAPIRequestToAddPedal( npmPedal );
-			});
-		}
+					alert('An unexpected error occured.\nPlease try again later.');
+			}
+		};
 
-		function sendAPIRequestToAddPedal( pedalName )
-		{
-			let xhr = new XMLHttpRequest();
+		xhr.open("POST", `http://localhost:5001/api/pedal/${pedalName}`, true);
+		xhr.send();
+	}
 
-			xhr.onreadystatechange = () =>
-			{
-				if ( xhr.readyState == XMLHttpRequest.DONE )
-				{
-					if ( xhr.status == 400 )
-						alert( xhr.responseText );
-					else if( xhr.status == 301 )
-						window.location = JSON.parse( xhr.responseText ).redirect;
-					else
-						alert( 'An unexpected error occured.\nPlease try again later.' );
-				}
-			};
-
-			xhr.open( "POST", `http://localhost:5001/api/pedal/${pedalName}`, true );
-			xhr.send();
-		}
-
-	</script>
+</script>
 
 </html>
