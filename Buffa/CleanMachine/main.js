@@ -1185,6 +1185,64 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
     };
     presets.push(preset10);
 
+    preset11 = {
+      "name": "Folk Metal String",
+      "distoName": "superClean",
+      "LCF": 345,
+      "HCF": 18461,
+      "K1": "0.4",
+      "K2": "0.4",
+      "K3": "0.7",
+      "K4": "0.7",
+      "F1": 186,
+      "F2": 792,
+      "F3": 2402,
+      "F4": 6368,
+      "Q1": "0.0",
+      "Q2": "23.7",
+      "Q3": "1.0",
+      "Q4": "1.0",
+      "OG": "6.6",
+      "BF": "8.0",
+      "MF": "1.3",
+      "TF": "5.9",
+      "PF": "10.0",
+      "EQ": [12, -2, -10, -20, 2, 11],
+      "MV": "10.0",
+      "RG": "2.0",
+      "CG": "4.2"
+    }
+    presets.push(preset11);
+
+    preset12 = {
+      "name": "Electro Acoustic",
+      "distoName": "smooth",
+      "LCF": 200,
+      "HCF": 12000,
+      "K1": "2.5",
+      "K2": "2.5",
+      "K3": "5.0",
+      "K4": "5.0",
+      "F1": 242,
+      "F2": 493,
+      "F3": 1780,
+      "F4": 4382,
+      "Q1": "0.3",
+      "Q2": "12.6",
+      "Q3": "0.3",
+      "Q4": "2.8",
+      "OG": "10.0",
+      "BF": "8.1",
+      "MF": "4.5",
+      "TF": "2.9",
+      "PF": "9.8",
+      "EQ": [6, -5, -21, -3, 3, 0],
+      "MV": "8.2",
+      "RG": "3.7",
+      "CG": "4.6"
+    }
+    presets.push(preset12);
+
     /*
     presets.forEach(function (p, index) {
         var option = document.createElement("option");
