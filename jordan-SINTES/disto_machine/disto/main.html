@@ -193,46 +193,47 @@
 	</div>
 
 	<div class="knob  " id="presence">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="6.9" midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3" midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Presence</div>
 	</div>
 	<div class="knob  " id="reverb">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="2"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Reverb</div>
 	</div>
 	<div class="knob " id="treble">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3.8"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Treble</div>
 	</div>
 	<div class="knob " id="middle">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="8.2"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Middle</div>
 	</div>
 	<div class="knob " id="bass">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="8.2"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Bass</div>
 	</div>
 	<div class="knob " id="drive">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="0"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Drive</div>
 	</div>
 	<div class="knob " id="master">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="7.2"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Master</div>
 	</div>
 	<div class="knob " id="volume">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="7"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Volume</div>
 	</div>
 	<select id="menuPresets">
-		<option value=0>Jimmy HDX</option>
-		<option value=1>Slasher</option>
-		<option value=2>Metal</option>
-		<option value=3>Hard Rock Classic 1</option>
-		<option value=4>Hard Rock Classic 2</option>
-		<option value=5>Clean and Warm</option>
-		<option value=6>Strong and Warm</option>
-		<option value=7>Another Clean Sound</option>
+		<option value=0>Default</option>
+		<option value=1>Jimmy HDX</option>
+		<option value=2>Slasher</option>
+		<option value=3>Metal</option>
+		<option value=4>Hard Rock Classic 1</option>
+		<option value=5>Hard Rock Classic 2</option>
+		<option value=6>Clean and Warm</option>
+		<option value=7>Strong and Warm</option>
+		<option value=8>Another Clean Sound</option>
 	</select>
 	<div class="label" id="label_713">Disto Machine</div>
 </template>
@@ -290,10 +291,11 @@
 			for (var i = 0; i < this.knobs.length; i++) {
 				this.knobs[i].querySelector("webaudio-knob").setValue(this.state[this.knobs[i].id],false);
 			}
+			console.log(this.state.preset);
 			if (this.state.preset){
 				var preset = this._root.querySelector("#menuPresets");
-				this.state.preset = preset.value;
-				console.log(preset.value);
+				preset.value = this.state.preset;
+				
 			}
 			
 
@@ -303,6 +305,7 @@
 			let menuPresets = this._root.querySelector("#menuPresets");
 			menuPresets.onchange = (e) => {
 				let index = e.target.value;
+				this._plug.setParam("preset", e.target.value);
 				this._plug.setPatch(null, index);
 			}
 			// Set up the background img & style
