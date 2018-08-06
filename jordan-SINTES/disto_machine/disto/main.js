@@ -1220,6 +1220,68 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
             "CG": "9.2" 
         };
         presets.push(preset5);
+
+        var preset6 = {
+            "name": "Clean and Warm",
+            "boost": false,
+            "LS1Freq": 720,
+            "LS1Gain": -6,
+            "LS2Freq": 320,
+            "LS2Gain": 1.600000023841858,
+            "gain1": 1,
+            "distoName1": "asymetric",
+            "K1": "7.8",
+            "HP1Freq": 6,
+            "HP1Q": 0.707099974155426,
+            "LS3Freq": 720,
+            "LS3Gain": -6,
+            "gain2": 1,
+            "distoName2": "standard",
+            "K2": "0.9",
+            "OG": "7.0",
+            "BF": "6.7",
+            "MF": "7.1",
+            "TF": "3.2",
+            "PF": "6.9",
+            "EQ": [10, 5, -7, -7, 16, 0],
+            "MV": "7.2",
+            "RN": "Fender Hot Rod",
+            "RG": "1.4",
+            "CN": "Marshall 1960, axis",
+            "CG": "8.8"
+        };
+        presets.push(preset6);
+
+        var preset7 = {
+            "name": "Strong and Warm",
+            "boost": false,
+            "LS1Freq": 720,
+            "LS1Gain": -6,
+            "LS2Freq": 320,
+            "LS2Gain": -1,
+            "gain1": 1.0299999713897705,
+            "distoName1": "asymetric",
+            "K1": "7.8",
+            "HP1Freq": 6,
+            "HP1Q": 0.707099974155426,
+            "LS3Freq": 720,
+            "LS3Gain": -6,
+            "gain2": 1,
+            "distoName2": "superClean",
+            "K2": "7.8",
+            "OG": "7.0",
+            "BF": "8.2",
+            "MF": "6.7",
+            "TF": "5.0",
+            "PF": "6.9",
+            "EQ": [0, 0, 0, -1, 0, 1],
+            "MV": "5.9", "RN":
+                "Fender Hot Rod",
+            "RG": "1.1",
+            "CN": "Vox Custom Bright 4x12 M930 Axis 1",
+            "CG": "8.0"
+        };
+        presets.push(preset7);
         /*
         presets.forEach(function (p, index) {
             var option = document.createElement("option");
