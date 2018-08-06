@@ -141,7 +141,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
     this.cabinetSim = new Convolver(this.context, this.cabinetImpulses, "cabinetImpulses");
     this.boost = new Boost(this.context);
 
-    this.amp = new Amp(this.context, this.boost, this.eq, this.ampReverb, this.cabinetSim);
+    this.amp = new CleamAmp(this.context, this.boost, this.eq, this.ampReverb, this.cabinetSim);
   }
 
   connectNodes() {
@@ -239,7 +239,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
 
 // ----------- AMP ---------------
 
-function Amp(context, boost, eq, reverb, cabinetSim) {
+function CleamAmp(context, boost, eq, reverb, cabinetSim) {
   var presets = [];
   //var menuPresets = document.querySelector("#QFPresetMenu2");
   //var menuDisto = document.querySelector("#distorsionMenu");
