@@ -169,7 +169,7 @@
 			font-size: 30px;
 		}
 
-		#menuPresets {
+		#presets {
 			border-style: solid;
 			border-width: 2px;
 			border-color: #000000;
@@ -223,7 +223,7 @@
 		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="5"  midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Volume</div>
 	</div>
-	<select id="menuPresets">
+	<select id="presets">
 		<option value=0>Clean 1</option>
 		<option value=1>Clean 2</option>
 		<option value=2>Clean 3</option>
@@ -297,7 +297,7 @@
 
 		}
 		setResources() {
-			let menuPresets = this._root.querySelector("#menuPresets");
+			let menuPresets = this._root.querySelector("#presets");
 			menuPresets.onchange = (e) => {
 				let index = e.target.value;
 				this._plug.setPatch(null, index);
