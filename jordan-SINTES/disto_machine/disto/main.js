@@ -1157,7 +1157,40 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
         }
         presets.push(preset3);
 
-        var preset4 = { 
+        var preset4 = {
+            "name": "Hard Rock classic 1",
+            "boost": false,
+            "LS1Freq": 720,
+            "LS1Gain": -6,
+            "LS2Freq": 320,
+            "LS2Gain": -5,
+            "gain1": 1,
+            "distoName1":
+                "asymetric",
+            "K1": "7.8",
+            "HP1Freq": 6,
+            "HP1Q": 0.707099974155426,
+            "LS3Freq": 720,
+            "LS3Gain": -6,
+            "gain2": 1,
+            "distoName2": "notSoDistorded",
+            "K2": "7.8",
+            "OG": "1.9",
+            "BF": "8.2",
+            "MF": "8.2",
+            "TF": "3.8",
+            "PF": "6.9",
+            "EQ": [5, 11, -6, -10, 7, 2],
+            "MV": "7.2",
+            "RN": "Fender Hot Rod",
+            "RG": "2.0",
+            "CN": "Marshall 1960, axis",
+            "CG": "9.4"
+        };
+        presets.push(preset4);
+
+
+        var preset5 = { 
             "name": "Hard Rock classic 2", 
             "boost": false, 
             "LS1Freq": 720, 
@@ -1174,7 +1207,7 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
             "gain2": 1, 
             "distoName2": "notSoDistorded", 
             "K2": "5.1", 
-            "OG": "7.0", 
+            "OG": "2", 
             "BF": "8.7", 
             "MF": "8.0", 
             "TF": "3.8", 
@@ -1186,7 +1219,7 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
             "CN": "Marshall 1960, axis", 
             "CG": "9.2" 
         };
-        presets.push(preset4);
+        presets.push(preset5);
         /*
         presets.forEach(function (p, index) {
             var option = document.createElement("option");
