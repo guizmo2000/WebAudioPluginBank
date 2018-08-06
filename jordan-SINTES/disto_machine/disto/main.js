@@ -12,49 +12,49 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
 
         this.addParam({
             name: 'volume',
-            defaultValue: 7,
+            defaultValue: 3,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'master',
-            defaultValue: 7.2,
+            defaultValue: 3,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'drive',
-            defaultValue: 0,
+            defaultValue: 3,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'bass',
-            defaultValue: 8.2,
+            defaultValue: 3,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'middle',
-            defaultValue: 8.2,
+            defaultValue: 3,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'treble',
-            defaultValue: 3.8,
+            defaultValue: 3,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'reverb',
-            defaultValue: 2,
+            defaultValue: 3,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'presence',
-            defaultValue: 6.9,
+            defaultValue: 3,
             minValue: 0,
             maxValue: 10
         });
@@ -193,6 +193,10 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
 
         this.amp.bypass(bypassOn);
         // cas reactivation ? 
+    }
+
+    set preset(val){
+        this.params.preset = val;
     }
 }
 
@@ -1064,6 +1068,37 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
     function initPresets() {
         // updated 10/4/2016
 
+        var preset0 = {
+            "name": "Jimmy HDX",
+            "boost": false,
+            "LS1Freq": 720,
+            "LS1Gain": -6,
+            "LS2Freq": 320,
+            "LS2Gain": -6.300000190734863,
+            "gain1": 3,
+            "distoName1": "asymetric",
+            "K1": "3",
+            "HP1Freq": 6,
+            "HP1Q": 0.707099974155426,
+            "LS3Freq": 720,
+            "LS3Gain": -6,
+            "gain2": 1,
+            "distoName2": "crunch",
+            "K2": "3.0",
+            "OG": "3.0",
+            "BF": "3.0",
+            "MF": "3.0",
+            "TF": "3.0",
+            "PF": "3.0",
+            "EQ": [5, 5, 5, 5, 5, 5],
+            "MV": "3.0",
+            "RN": "Fender Hot Rod",
+            "RG": "3.0",
+            "CN": "Marshall 1960, axis",
+            "CG": "3.0"
+        };
+        presets.push(preset0);
+
         var preset1 = {
             "name": "Jimmy HDX",
             "boost": false,
@@ -1375,6 +1410,9 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
 
         //changeReverbGain(p.RG);
         parent.reverb = p.RG;
+
+        parent.drive = p.K1;
+
         changeReverbImpulse(p.RN);
 
         changeRoom(p.CG);
