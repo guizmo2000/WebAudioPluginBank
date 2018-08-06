@@ -1282,6 +1282,37 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
             "CG": "8.0"
         };
         presets.push(preset7);
+
+        var preset8 = {
+            "name": "Another Clean Sound",
+            "boost": false,
+            "LS1Freq": 720,
+            "LS1Gain": -6,
+            "LS2Freq": 320,
+            "LS2Gain": -6.300000190734863,
+            "gain1": 1,
+            "distoName1": "asymetric",
+            "K1": "6.4",
+            "HP1Freq": 6,
+            "HP1Q": 0.707099974155426,
+            "LS3Freq": 720,
+            "LS3Gain": -6,
+            "gain2": 1,
+            "distoName2": "crunch",
+            "K2": "6.4",
+            "OG": "7.0",
+            "BF": "6.7",
+            "MF": "5.0",
+            "TF": "5.0",
+            "PF": "8.9",
+            "EQ": [4, 13, -8, -8, 15, 12],
+            "MV": "3.7",
+            "RN": "Fender Hot Rod",
+            "RG": "2",
+            "CN": "Marshall 1960, axis",
+            "CG": "4.5"
+        };
+        presets.push(preset8);
         /*
         presets.forEach(function (p, index) {
             var option = document.createElement("option");
