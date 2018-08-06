@@ -402,7 +402,7 @@
       }
       this.knobs = this._root.querySelectorAll(".knob");
       for (var i = 0; i < this.knobs.length; i++) {
-        this.knobs[i].querySelector("webaudio-knob").value = this.state[this.knobs[i].querySelector("webaudio-knob").id];
+        this.knobs[i].querySelector("webaudio-knob").setValue(this.state[this.knobs[i].querySelector("webaudio-knob").id],false);
       }
     }
 
