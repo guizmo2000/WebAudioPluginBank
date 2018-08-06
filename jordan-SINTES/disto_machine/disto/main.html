@@ -292,7 +292,7 @@
 			}
 			if (this.state.preset){
 				var preset = this._root.querySelector("#menuPresets");
-				preset.value = this.state.preset;
+				this.state.preset = preset.value;
 				console.log(preset.value);
 			}
 			
