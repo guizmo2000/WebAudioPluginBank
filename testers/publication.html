@@ -84,7 +84,9 @@
   <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/node_modules/chai/chai.js"></script>
   <script>mocha.setup('bdd')</script>
 </body>
+
 <script>
+	
   var checkbox = document.querySelector('#checkBox')
   var AudioContext = window.AudioContext || window.webkitAudioContext;
   var ctx = new AudioContext();
@@ -94,9 +96,19 @@
   var buildpass = false;
 
   // Hi mike, this is what you have to get from the API.
-  var URL = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/QuadraFuzz3/";
+  //let URL = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/QuadraFuzz3/";
 
-  window.onload = () => {
+  window.onload = () =>
+  {
+
+	( function getPedalNameFromURL()
+	{
+		let baseURLPedal = "http://localhost:5001/pedals/node_modules/";
+		let currentURL = new URL( window.location.href );
+		let pedalName = currentURL.searchParams.get( 'pedal' );
+
+		URL = `${baseURLPedal}${pedalName}`;
+	})()
 
     checkMetadata(URL);
 
@@ -124,7 +136,7 @@
   }
 
 
-  // add the script tag and load the plugin 
+  // add the script tag and load the plugin
   function loadPlugin(className, baseURL) {
     let scriptURL = baseURL + "/main.js";
 
@@ -150,7 +162,7 @@
     document.head.appendChild(script);
   }
 
-  // instanciate the plugin 
+  // instanciate the plugin
   function buildPlugin(className, baseURL) {
 
     var plugin = new window[className](ctx, baseURL);
@@ -179,7 +191,7 @@
           console.log("this plugin does not use audioworkletnode or compositenode");
           mediaSource.connect(node.getInput(0));
         }
-        // if (node instanceof AudioWorkletNode) 
+        // if (node instanceof AudioWorkletNode)
         // else mediaSource.connect(node.getInput(0));
         node.connect(ctx.destination);
         buildpass = true;
@@ -201,9 +213,9 @@ function callToRemoveWAP() {
   }
 
   function callTokeepWAP() {
-    //server route
+    //TODO
   }
-  /* 
+  /*
   here we use mocha chai.js to apply unit test on the plugin. The test cases cover the existence and (soon) the type of the API calls.
   */
   function testPlugin(param) {
@@ -291,7 +303,7 @@ function callToRemoveWAP() {
 
 
 
-  
+
 </script>
 
 
