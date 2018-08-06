@@ -223,7 +223,7 @@
 			}
 			// to recover the Knobs states when this Gui is loaded, based on knobs id
 			for (var i = 0; i < this.knobs.length; i++) {
-				this.knobs[i].querySelector("webaudio-knob").value = this.state[this.knobs[i].id];
+				this.knobs[i].querySelector("webaudio-knob").setValue(this.state[this.knobs[i].id],false);
 			}
 
 		}

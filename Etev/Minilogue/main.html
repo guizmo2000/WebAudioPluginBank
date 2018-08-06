@@ -227,7 +227,7 @@
       <div style="text-align:center">Noise</div>
   </div>
   <div id="egint" class="knob">
-    <webaudio-knob  sprites="99" min="0" max="100" value="0" step="0.01" midilearn="true" diameter="24"
+    <webaudio-knob  sprites="99" min="0" max="100" value="50" step="0.01" midilearn="true" diameter="24"
       tooltip="Enveloppe intensity in filter %.2f "></webaudio-knob>
       <div style="text-align:center">EgInt</div>
   </div>
@@ -285,7 +285,7 @@
       <div style="text-align:center">Sustain</div>
   </div>
   <div id="egrelease" class="knob">
-    <webaudio-knob i smin="0.001" max="5" sprites="99" value="1" step="0.1" midilearn="true" diameter="24"
+    <webaudio-knob min="0.001" max="5" sprites="99" value="0.001" step="0.1" midilearn="true" diameter="24"
       tooltip="Time to reach 0 amplitude:  %.1f s"></webaudio-knob>
       <div style="text-align:center">Release</div>
   </div>
@@ -410,10 +410,12 @@
       }
 
      for (var i = 0; i < this.knobs.length; i++) {
-				this.knobs[i].querySelector("webaudio-knob").value = this.state[this.knobs[i].id];
+      this.knobs[i].querySelector("webaudio-knob").setValue(this.state[this.knobs[i].id],false);
+        
       }
       for (var i = 0; i < this.slides.length; i++) {
-				this.slides[i].querySelector("webaudio-slider").value = this.state[this.slides[i].id];
+        this.slides[i].querySelector("webaudio-slider").setValue(this.state[this.slides[i].id],false);
+
 			}
 
     }
