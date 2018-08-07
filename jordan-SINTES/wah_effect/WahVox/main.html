@@ -146,7 +146,7 @@
         <span class="knob-label" id="knob3-label">FREQUENCY</span>
 
         <webaudio-knob id="knob2" class="knob" sprites="99" min="1" max="5" step="1" value="3" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-         width="30" height="30" data-role="frequency" diameter="24" tooltip="Frequency"></webaudio-knob>
+         width="30" height="30" data-role="frequency" diameter="24" tooltip="Q Factor"></webaudio-knob>
         <span class="knob-label" id="knob3-label">Q FACTOR</span>
         
     
@@ -256,48 +256,6 @@
     reactivateBoost() {
       this._plug.setParam("boost", "enable");
     }
-
-   /* SelectMidi(n) {
-	    this._root.querySelector('#midiport').selectedIndex = n + 1;
-	    this.currentPort = n;
-    }
-
-    InitMidi() {
-    	if (navigator.requestMIDIAccess) {
-    		navigator.requestMIDIAccess().then(
-    			(access) => {
-    				console.log("====> MIDI ready.");
-    				setTimeout(() => {
-    					var it = access.inputs.values();
-    					for (var i = it.next(); !i.done; i = it.next()) {
-    						var e = document.createElement("option");
-    						e.innerHTML = i.value.name;
-    						this._root.querySelector('#midiport').appendChild(e);
-    						this.midiPort.push(i.value);
-    					}
-    					if (this.midiPort.length > 0) this.SelectMidi(this.midiPort.length - 1);
-    				}, 10);
-    			}, () => {
-    				console.log("MIDI is not available.");
-    			}
-    		);
-    	}
-	    webAudioControlsMidiManager.addMidiListener(event => {
-	    	var note = event.note;
-	    	var data = event.data;
-	    	var channel = data[0];
-	    	var controlNumber = data[1];
-	    	var value = data[2];
-	    if (channel != 248) {
-	    	console.log("Midi event hook: data:[" + data + "] channel:" + data[0] + " cc:" + controlNumber + " value:" + value);
-      }
-
-     ;
-      if(channel == 176 && controlNumber == 27){
-        this._plug.setParam("effect", value);
-      }
-  })
-}*/
 
   }
   // Register the x-custom element with the browser
