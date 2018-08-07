@@ -128,11 +128,10 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 
 			// normalisation entre freq min et freqmax
 			let freq = this.map(_effect, Math.log(1), Math.log(100), this.params.freqMin, this.params.freqMax);
-			//let freq = this.map(_effect, 1, 100, this.params.freqMin, this.params.freqMax);
 
 			// _effect entre 0 et 1, plus simple à gérer
 			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
-			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMin, this.params.qMax);
+			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMax, this.params.qMin);
 			this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
 
 			console.log("f=" + freq + " q =" + qparam);
@@ -152,7 +151,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 
 			// _effect entre 0 et 1, plus simple à gérer
 			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
-			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMin, this.params.qMax);
+			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMax, this.params.qMin);
 			this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
 
 			console.log("f=" + freq + " q =" + qparam);
@@ -163,7 +162,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 			if (_effect === 0) _effect = 1;
 			let freq = this.map(_effect, 1, 100, this.params.freqMin, this.params.freqMax);
 			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
-			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMin, this.params.qMax);
+			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMax, this.params.qMin);
 			this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
 			console.log("f=" + freq + " q =" + qparam);
 		}

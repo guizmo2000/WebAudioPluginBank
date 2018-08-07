@@ -148,14 +148,8 @@
         <webaudio-knob id="knob2" class="knob" sprites="99" min="1" max="5" step="1" value="3" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
          width="30" height="30" data-role="frequency" diameter="24" tooltip="Q Factor"></webaudio-knob>
         <span class="knob-label" id="knob3-label">Q FACTOR</span>
-        
-    
     </div>
-
-   
   </div>
-
-    
 </template>
 <script>
   let wahtemp = document.currentScript.ownerDocument.querySelector("#wc-wahvox");
@@ -173,7 +167,6 @@
       this.setKnobs();
       this.setSwitchListener();
       this.setBoostListener();
-      //this.InitMidi();
     }
 
     get properties() {
