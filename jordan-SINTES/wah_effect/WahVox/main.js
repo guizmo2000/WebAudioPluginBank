@@ -44,7 +44,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		try {
 			this[key] = (value);
 		} catch (error) {
-
+			console.log(key, error)
 			console.warn("this plugin does not implement this param")
 		}
 	}
@@ -52,9 +52,8 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 	createNodes() {
 		this.dryGainNode = this.context.createGain();
 		this.wetGainNode = this.context.createGain();
-
-
 		this.bandPass = this.context.createBiquadFilter();
+
 		this.bandPass.type = "bandpass";
 		this.bandPass.frequency.value = 750;
 		this.bandPass.Q.value = this.map(this.bandPass.frequency.value, this.freqMin, this.freqMax, this.qMax, this.qMin);
@@ -70,14 +69,6 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 
 	/*  #########  Personnal code for the web audio graph  #########   */
 
-	setGaintoDB(gain) {
-		Math.pow(10, (gain / 20));
-	}
-
-	setInitalGain() {
-		this._input.gain.setValueAtTime(1, this.context.currentTime);
-	}
-
 	//To change the amplitude depends on parameter
 	map(value, istart, istop, ostart, ostop) {
 		return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
@@ -88,13 +79,10 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 	}
 
 	set effect(_effect) {
+		//Using map function until the knob has logarithmic/exponential/linear increase
 		this.params.effect = _effect;
 		if (this.params.mode === 1) {
 			//Logarithmic Mode
-			/* Effect is between 0-100, but kbob  logarothmic (check question git), the middle position isn't the median value
-			*here the logarithmic is applied on frequency but we must change if knob can be logarithmic. Otherwise, using map function
-			*freq = this.map(_effect, 0, 100, this.param.min, this.param.max)
-			*/
 			if (_effect === 0) _effect = 1;
 			// conversion manuelle en log
 			_effect = Math.log(_effect);
@@ -108,13 +96,13 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		}
 
 		else if (this.params.mode === 2) {
-			//Exponential mode (same remark as for the logarithm)
+			//Exponential mode
 			_effect = _effect / 100;
 			// conversion manuelle en log
 			_effect = Math.exp(_effect);
 			// normalisation entre freq min et freqmax
 			let freq = this.map(_effect, Math.exp(0), Math.exp(1), this.params.freqMin, this.params.freqMax);
-			//let freq = this.map(_effect, 1, 100, this.params.freqMin, this.params.freqMax);
+			
 			// _effect entre 0 et 1, plus simple à gérer
 			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
 			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMax, this.params.qMin);
@@ -131,8 +119,6 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 			this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
 			console.log("f=" + freq + " q =" + qparam);
 		}
-
-
 	}
 
 	set status(_sig) {
@@ -141,10 +127,11 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 			this._input.disconnect(this._output);
 			this._input.connect(this.dryGainNode);
 			if (this.params.boost === "enable") {
-				this._input.gain.setValueAtTime(this.params.gainboosted, this.context.currentTime);
+				this._input.gain.setValueAtTime(this.gainboosted, this.context.currentTime);
 			}
 			else if (this.params.boost === "disable") {
-				this._input.gain.setValueAtTime(this.params.gainnotboosted, this.context.currentTime);
+				console.log(this.gainnotboosted);
+				this._input.gain.setValueAtTime(this.gainnotboosted, this.context.currentTime);
 			}
 		}
 		else if (_sig === "disable") {
@@ -159,11 +146,11 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		if (this.params.status === "enable") {
 			if (_sig === "enable") {
 				this.params.boost = "enable";
-				this._input.gain.setValueAtTime(this.params.gainboosted, this.context.currentTime);
+				this._input.gain.setValueAtTime(this.gainboosted, this.context.currentTime);
 			}
 			else if (_sig === "disable") {
 				this.params.boost = "disable";
-				this._input.gain.setValueAtTime(this.params.gainnotboosted, this.context.currentTime);
+				this._input.gain.setValueAtTime(this.gainnotboosted, this.context.currentTime);
 			}
 		}
 

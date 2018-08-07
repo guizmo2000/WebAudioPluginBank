@@ -205,11 +205,7 @@
       this._root.querySelector("#knob2").setValue(this.state["qfactor"], false);
       this._root.querySelector("#masterSlider").setValue(this.state["effect"], false);
 
-      //TODO: select also the slider of mode
-      console.log(this.knobs);
-
     }
-
 
     setKnobs() {
       console.log('setknobs');
@@ -252,8 +248,8 @@
     }
 
   }
+  
   // Register the x-custom element with the browser
-
   try {
     console.log("Element defined");
     customElements.define('wasabi-wahvox', WahVoxGUI);
