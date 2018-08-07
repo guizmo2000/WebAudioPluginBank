@@ -55,6 +55,8 @@
 					alert(xhr.responseText);
 				else if (xhr.status == 301)
 					window.location = JSON.parse(xhr.responseText).redirect;
+				else if(xhr.status == 404)
+					alert('This plugin does not exist on npm.\nPlease check the spelling and try again.');
 				else
 					alert('An unexpected error occured.\nPlease try again later.');
 			}
