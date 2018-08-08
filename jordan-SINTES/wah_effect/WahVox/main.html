@@ -35,7 +35,7 @@
 
     webaudio-switch {
       left: -6px;
-      
+
     }
 
     .pedalLabel {
@@ -74,9 +74,9 @@
       flex-direction: row;
       justify-content: flex-start;
       align-items: center;
-  
+
       padding: 10px;
-      
+
     }
 
     .column {
@@ -107,55 +107,49 @@
       flex-direction: row;
       justify-content: flex-start;
       align-items: stretch;
-       
+
     }
   </style>
   <div class="row">
     <div class="column">
-      <webaudio-slider id="masterKnob" midilearn="true" units="Db" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/wah_effect/WahVox/image/vsliderbody.png"
-			 knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/wah_effect/WahVox/image/vsliderknob.png"
-			 value="50" min="0" max="100" step="1" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;"
-			 defvalue="2" tooltip="Effect" data-role="effect" midicc="1.7">
+      <webaudio-slider id="masterSlider" midilearn="true" units="Db" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/wah_effect/WahVox/image/vsliderbody.png"
+        knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/wah_effect/WahVox/image/vsliderknob.png" value="50"
+        min="0" max="100" step="1" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;"
+        defvalue="2" tooltip="Effect" data-role="effect" midicc="1.7">
 
-				<div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
-					<div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
-					</div>
-				</div>
-				<div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
-				</div>
+        <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
+          <div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
+          </div>
+        </div>
+        <div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
+        </div>
 
-			</webaudio-slider>
+      </webaudio-slider>
       <span class="knob-label" id="knob1-label">EFFECT</span>
-      <webaudio-switch id="switch1" class="switch"  midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-      width="32" height="20"></webaudio-switch>
+      <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+        width="32" height="20"></webaudio-switch>
       <span class="pedalLabel">Vox V847</span>
     </div>
     <div class="column2">
-      <webaudio-switch id="switch2" class="switch"  midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-      width="32" height="20"></webaudio-switch>
+      <webaudio-switch id="switch2" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+        width="32" height="20"></webaudio-switch>
       <span class="knob-label" id="knob1-label">BOOST</span>
       <div class="row">
-          <webaudio-slider class="knob" id="mode" midilearn="1" midicc="2.0" value="1" min="1" max="3" step="1" width="15" height="34"
+        <webaudio-slider class="knob" id="mode" midilearn="1" midicc="2.0" value="1" min="1" max="3" step="1" width="15" height="34"
           tooltip="Mode"></webaudio-slider>
       </div>
-      
+
       <span class="knob-label" id="knob1-label">Mode</span>
-      
-        <webaudio-knob id="knob" class="knob" sprites="99" min="1" max="5" step="1" value="3" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-         width="30" height="30" data-role="frequency" diameter="24" tooltip="Frequency"></webaudio-knob>
-        <span class="knob-label" id="knob3-label">FREQUENCY</span>
 
-        <webaudio-knob id="knob2" class="knob" sprites="99" min="1" max="5" step="1" value="3" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-         width="30" height="30" data-role="frequency" diameter="24" tooltip="Frequency"></webaudio-knob>
-        <span class="knob-label" id="knob3-label">Q FACTOR</span>
-        
-    
+      <webaudio-knob id="knob" class="knob" sprites="99" min="1" max="5" step="1" value="3" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+        width="30" height="30" data-role="frequency" diameter="24" tooltip="Frequency"></webaudio-knob>
+      <span class="knob-label" id="knob3-label">FREQUENCY</span>
+
+      <webaudio-knob id="knob2" class="knob" sprites="99" min="1" max="5" step="1" value="3" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+        width="30" height="30" data-role="frequency" diameter="24" tooltip="Q Factor"></webaudio-knob>
+      <span class="knob-label" id="knob3-label">Q FACTOR</span>
     </div>
-
-   
   </div>
-
-    
 </template>
 <script>
   let wahtemp = document.currentScript.ownerDocument.querySelector("#wc-wahvox");
@@ -167,13 +161,14 @@
       this._plug.gui = this;
       this._root = this.attachShadow({ mode: 'open' });
       this._root.appendChild(wahtemp.content.cloneNode(true));
-      this.isOn = false;
-      this.isOnBoost = false;
+      this.knobs = this._root.querySelectorAll(".knob");
+      this.mode = this._root.querySelectorAll(".mode");
+      this.isOn;
+      this.isOnBoost;
       this.state = new Object();
       this.setKnobs();
       this.setSwitchListener();
       this.setBoostListener();
-      //this.InitMidi();
     }
 
     get properties() {
@@ -193,7 +188,6 @@
     static get observedAttributes() { return ['state']; }
 
     attributeChangedCallback() {
-      console.log(`Custom element ${this.is} attributes changed.`);
       this.state = JSON.parse(this.getAttribute('state'));
       console.log(this.state);
       if (this.state.status == "enable") {
@@ -206,23 +200,19 @@
         this.isOnBoost = true;
       }
       this.knobs = this._root.querySelectorAll(".knob");
-      this.labels = this._root.querySelectorAll(".knob-label");
-
-      for (var i = 0; i < this.knobs.length; i++) {
-        this.knobs[i].value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")] * 100;
-      }
-      console.log(this.knobs);
+      this._root.querySelector("#mode").setValue(this.state["mode"], false);
+      this._root.querySelector("#knob").setValue(this.state["frequency"], false);
+      this._root.querySelector("#knob2").setValue(this.state["qfactor"], false);
+      this._root.querySelector("#masterSlider").setValue(this.state["effect"], false);
 
     }
 
-
-
     setKnobs() {
       console.log('setknobs');
-      this._root.querySelector("#masterKnob").addEventListener('input', (e) => this._plug.setParam("effect", e.target.value));
+      this._root.querySelector("#masterSlider").addEventListener('input', (e) => this._plug.setParam("effect", e.target.value));
       this._root.querySelector("#mode").addEventListener('input', (e) => this._plug.setParam("mode", e.target.value));
-      this._root.querySelector("#knob").addEventListener('input', (e) => this._plug.setParam("freqMinMax", e.target.value));
-      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("qMinMax", e.target.value));
+      this._root.querySelector("#knob").addEventListener('input', (e) => this._plug.setParam("frequency", e.target.value));
+      this._root.querySelector("#knob2").addEventListener('input', (e) => this._plug.setParam("qfactor", e.target.value));
     }
 
     setSwitchListener() {
@@ -241,7 +231,7 @@
       this._plug.setParam("status", "enable");
     }
 
-    setBoostListener(){
+    setBoostListener() {
       console.log("setBoost");
       this._root.querySelector("#switch2").addEventListener('change', (e) => {
         if (this.isOnBoost) this.bypassBoost();
@@ -257,51 +247,9 @@
       this._plug.setParam("boost", "enable");
     }
 
-   /* SelectMidi(n) {
-	    this._root.querySelector('#midiport').selectedIndex = n + 1;
-	    this.currentPort = n;
-    }
-
-    InitMidi() {
-    	if (navigator.requestMIDIAccess) {
-    		navigator.requestMIDIAccess().then(
-    			(access) => {
-    				console.log("====> MIDI ready.");
-    				setTimeout(() => {
-    					var it = access.inputs.values();
-    					for (var i = it.next(); !i.done; i = it.next()) {
-    						var e = document.createElement("option");
-    						e.innerHTML = i.value.name;
-    						this._root.querySelector('#midiport').appendChild(e);
-    						this.midiPort.push(i.value);
-    					}
-    					if (this.midiPort.length > 0) this.SelectMidi(this.midiPort.length - 1);
-    				}, 10);
-    			}, () => {
-    				console.log("MIDI is not available.");
-    			}
-    		);
-    	}
-	    webAudioControlsMidiManager.addMidiListener(event => {
-	    	var note = event.note;
-	    	var data = event.data;
-	    	var channel = data[0];
-	    	var controlNumber = data[1];
-	    	var value = data[2];
-	    if (channel != 248) {
-	    	console.log("Midi event hook: data:[" + data + "] channel:" + data[0] + " cc:" + controlNumber + " value:" + value);
-      }
-
-     ;
-      if(channel == 176 && controlNumber == 27){
-        this._plug.setParam("effect", value);
-      }
-  })
-}*/
-
   }
+  
   // Register the x-custom element with the browser
-
   try {
     console.log("Element defined");
     customElements.define('wasabi-wahvox', WahVoxGUI);
@@ -310,13 +258,8 @@
     console.log("Element already defined");
   }
 
-
   createWahVox = (plug) => {
     let elem = new WahVoxGUI(plug);
     return elem;
   }
-
-    
-
- //window.onload=PedalWahGUI.InitMidi;
 </script>

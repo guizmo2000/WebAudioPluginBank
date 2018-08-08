@@ -9,7 +9,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
     /*    ################     API PROPERTIES    ###############   */
     super(ctx, URL, options)
 
-    this.params = {status:"disable"}
+    this.params = {status:"disable", preset : "0"}
 
     this.addParam({
       name: 'volume',
@@ -233,6 +233,10 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
 
     this.amp.bypass(bypassOn);
     // cas reactivation ? 
+  }
+
+  set preset(val){
+    this.params.preset = val;
   }
 
 }
@@ -884,6 +888,38 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
   // --------
   function initPresets() {
     // updated 10/4/2016
+    var preset0 = {
+      "name": "Default",
+      "distoName": "standard",
+      "boost": false,
+      "LCF": 200,
+      "HCF": 12000,
+      "K1": "1.5",
+      "K2": "1.5",
+      "K3": "3.0",
+      "K4": "3.0",
+      "F1": 147,
+      "F2": 569,
+      "F3": 1915,
+      "F4": 4680,
+      "Q1": "0.0",
+      "Q2": "49.0",
+      "Q3": "42.0",
+      "Q4": "11.0",
+      "OG": "3.0",
+      "BF": "3.0",
+      "MF": "3.0",
+      "TF": "3.0",
+      "PF": "3.0",
+      "EQ": [-2, -1, 0, 3, -9, -4],
+      "MV": "3.0",
+      "RN": "Fender Hot Rod",
+      "RG": "3.0",
+      "CN": "Vintage Marshall 1",
+      "CG": "3.0"
+  };
+    presets.push(preset0);
+    
     preset1 = {
       "name": "Clean 1",
       "distoName": "standard",
@@ -1303,6 +1339,8 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
 
     //changeReverbGain(p.RG);
     parent.reverb = p.RG;
+
+    parent.drive = p.K3;
     changeReverbImpulse(p.RN);
 
     changeRoom(p.CG);

@@ -189,6 +189,7 @@
 			this.setKnobs();
 			this.setSwitchListener();
 			this.setResources();
+			this.avoidDrag();
 
 		}
 
@@ -275,6 +276,10 @@
 				else this.reactivate();
 				this.isOn = !this.isOn;
 			});
+		}
+
+		avoidDrag(){
+			this._root.querySelector("#background-image").draggable=false;
 		}
 
 	}

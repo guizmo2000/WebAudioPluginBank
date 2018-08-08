@@ -365,6 +365,7 @@
 			this.setSwitchListener();
 			this._plug.setPatch("init");
 			this.bypass();
+			this.avoidDrag();
 		}
 
 		get properties() {
@@ -444,6 +445,10 @@
 				this.isOn = !this.isOn;
 			});
 
+		}
+
+		avoidDrag(){
+			this._root.querySelector("#background-image").draggable=false;
 		}
 
 	}
