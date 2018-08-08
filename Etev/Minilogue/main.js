@@ -52,8 +52,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.addParam({ name: 'mix', defaultValue: 0.5, minValue: 0, maxValue: 1 });
     this.addParam({ name: 'pitch1', defaultValue: 1, minValue: 0.5, maxValue: 2 });
     this.addParam({ name: 'pitch2', defaultValue: 1, minValue: 0.5, maxValue: 2 });
-    this.addParam({ name: 'osc1gain', defaultValue: 15, minValue: 0, maxValue: 15 });
-    this.addParam({ name: 'osc2gain', defaultValue: 15, minValue: 0, maxValue: 15 });
+    this.addParam({ name: 'osc1gain', defaultValue: 8, minValue: 0, maxValue: 8 });
+    this.addParam({ name: 'osc2gain', defaultValue: 8, minValue: 0, maxValue: 8 });
     this.addParam({ name: 'osc1shape', defaultValue: 0.5, minValue: 0, maxValue: 100 });
     this.addParam({ name: 'osc2shape', defaultValue: 0.5, minValue: 0, maxValue: 100 });
     this.addParam({ name: 'ampattack', defaultValue: 0.001, minValue: 0.001, maxValue: 5 });
@@ -68,7 +68,9 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.addParam({ name: 'osc2Octave', defaultValue: 3, minValue: 1, maxValue: 5 });
     this.addParam({ name: 'noise', defaultValue: 0.1, minValue: 0.1, maxValue: 3 });
     this.addParam({ name: 'ringmodulation', defaultValue: 0, minValue: 0, maxValue: 1 });
-    this.addParam({ name: 'voicedepth', defaultValue: 0, minValue: 0, maxValue: 100 })
+    this.addParam({ name: 'voicedepth', defaultValue: 0, minValue: 0, maxValue: 100 });
+    this.addParam({ name: 'egint', defaultValue: 3500, minValue: 30, maxValue: 8000 })
+
 
 
 
@@ -140,10 +142,10 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.ampdecay = this.params.ampdecay;
     this.ampsustain = this.params.ampsustain;
     this.amprelease = this.params.amprelease;
-    // this.egattack = this.params.egattack;
-    // this.egdecay = this.params.egdecay;
-    // this.egsustain = this.params.egsustain;
-    // this.egrelease = this.params.egrelease;
+    this.egattack = this.params.egattack;
+    this.egdecay = this.params.egdecay;
+    this.egsustain = this.params.egsustain;
+    this.egrelease = this.params.egrelease;
     this.osc1octave = this.params.osc1Octave;
     this.osc2octave = this.params.osc2Octave;
     this.noise = this.params.noise;
@@ -152,6 +154,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.wave2 = this.params.wave2;
     this.mode = this.params.mode;
     this.voicedepth = this.params.voicedepth;
+    this.egint = this.params.egint;
 
   }
 
@@ -228,6 +231,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.voices[key].amp.connect(this.gainforAnalyse);
     // active the ADSR node
     this.voices[key].ampEnveloppe.gateOn();
+    this.voices[key].enveloppeGenerator.gateOn();
+
     // connect to normalisation 
     if (this.params.status == "disable") this.voices[key].amp.connect(this.normalize);
     else if (this.params.status == "enable") {
@@ -246,6 +251,9 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     // active the ADSR node
     this.voices[key - 12].ampEnveloppe.gateOn();
     this.voices[key - 24].ampEnveloppe.gateOn();
+
+    this.voices[key - 12].enveloppeGenerator.gateOn();
+    this.voices[key - 24].enveloppeGenerator.gateOn();
 
     // connect to normalisation 
     if (this.params.status == "disable") {
@@ -268,6 +276,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     // wire the voices graph with the persistant one
     // active the ADSR node
     this.duovoices[key].ampEnveloppe.gateOn();
+    this.duovoices[key].enveloppeGenerator.gateOn();
+
     // connect to normalisation 
     if (this.params.status == "disable") this.duovoices[key].amp.connect(this.normalize);
     else if (this.params.status == "enable") {
@@ -284,6 +294,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
     this.unisonvoices1[key].ampEnveloppe.gateOn();
     this.unisonvoices2[key].ampEnveloppe.gateOn();
+    this.unisonvoices1[key].enveloppeGenerator.gateOn();
+    this.unisonvoices2[key].enveloppeGenerator.gateOn();
     if (this.params.status == "disable") {
       this.unisonvoices1[key].amp.connect(this.normalize);
       this.unisonvoices2[key].amp.connect(this.normalize);
@@ -325,9 +337,13 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       var contextPlayTime = this.noteTime + this.startTime;
       this.noteTime += (0.25) * this.secondsPerBeat;
       this.rhythmIndex++;
-          // active the ADSR node
+      // active the ADSR node
       this.voices[key].ampEnveloppe.gateOn(this.context.currentTime);
+      this.voices[key].enveloppeGenerator.gateOn(this.context.currentTime);
+
       this.voices[key].ampEnveloppe.gateOff(contextPlayTime);
+      this.voices[key].enveloppeGenerator.gateOff(contextPlayTime);
+
 
 
     }
@@ -400,12 +416,17 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
   noteOffpoly(key) {
     this.voices[key].ampEnveloppe.gateOff();
+    this.voices[key].enveloppeGenerator.gateOff();
+
   }
   noteOffMono(key) {
     this.noteOffpoly(key);
     try {
       this.voices[key - 12].ampEnveloppe.gateOff();
       this.voices[key - 24].ampEnveloppe.gateOff();
+      this.voices[key - 12].enveloppeGenerator.gateOff();
+      this.voices[key - 24].enveloppeGenerator.gateOff();
+
     } catch (error) {
       console.log("movetomono");
     }
@@ -416,6 +437,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.noteOffpoly(key);
     try {
       this.duovoices[key].ampEnveloppe.gateOff();
+      this.duovoices[key].enveloppeGenerator.gateOff();
+
 
     } catch (error) {
       console.log("movetoduo");
@@ -427,6 +450,9 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     try {
       this.unisonvoices1[key].ampEnveloppe.gateOff();
       this.unisonvoices2[key].ampEnveloppe.gateOff();
+
+      this.unisonvoices1[key].enveloppeGenerator.gateOff();
+      this.unisonvoices2[key].enveloppeGenerator.gateOff();
     } catch (error) {
       console.log("movetounison");
     }
@@ -469,6 +495,12 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
       if (this.duovoices[voice]) this.duovoices[voice].lowPassfilter.Q.setValueAtTime(_resonance, this.context.currentTime);
       if (this.unisonvoices1[voice]) this.unisonvoices1[voice].lowPassfilter.Q.setValueAtTime(_resonance, this.context.currentTime);
       if (this.unisonvoices2[voice]) this.unisonvoices2[voice].lowPassfilter.Q.setValueAtTime(_resonance, this.context.currentTime);
+      if (this.voices[voice]) this.voices[voice].enveloppeFilter.Q.setValueAtTime(_resonance, this.context.currentTime);
+      if (this.voices[voice - 12]) this.voices[voice - 12].enveloppeFilter.Q.setValueAtTime(_resonance, this.context.currentTime);
+      if (this.voices[voice - 24]) this.voices[voice - 24].enveloppeFilter.Q.setValueAtTime(_resonance, this.context.currentTime);
+      if (this.duovoices[voice]) this.duovoices[voice].enveloppeFilter.Q.setValueAtTime(_resonance, this.context.currentTime);
+      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].enveloppeFilter.Q.setValueAtTime(_resonance, this.context.currentTime);
+      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].enveloppeFilter.Q.setValueAtTime(_resonance, this.context.currentTime);
     }
   }
   set master(_master) {
@@ -739,12 +771,15 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     }
   }
 
-  // TODO: manage modes
   set egattack(_attack) {
     this.params.egattack = _attack;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].enveloppeGenerator.attackTime = _attack;
-      if (this.voices[voice]) console.log(this.voices[voice].osc2.detune.value);
+      if (this.voices[voice - 12]) this.voices[voice - 12].enveloppeGenerator.attackTime = _attack;
+      if (this.voices[voice - 24]) this.voices[voice - 24].enveloppeGenerator.attackTime = _attack;
+      if (this.duovoices[voice]) this.duovoices[voice].enveloppeGenerator.attackTime = _attack;
+      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].enveloppeGenerator.attackTime = _attack;
+      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].enveloppeGenerator.attackTime = _attack;
 
     }
   }
@@ -752,27 +787,47 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.params.egdecay = _decay;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].enveloppeGenerator.decayTime = _decay;
-      if (this.voices[voice]) console.log(this.voices[voice].osc2.detune.value);
-
+      if (this.voices[voice - 12]) this.voices[voice - 12].enveloppeGenerator.decayTime = _decay;
+      if (this.voices[voice - 24]) this.voices[voice - 24].enveloppeGenerator.decayTime = _decay;
+      if (this.duovoices[voice]) this.duovoices[voice].enveloppeGenerator.decayTime = _decay;
+      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].enveloppeGenerator.decayTime = _decay;
+      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].enveloppeGenerator.decayTime = _decay;
     }
   }
   set egsustain(_sustain) {
     this.params.egsustain = _sustain;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].enveloppeGenerator.sustainLevel = _sustain;
-      if (this.voices[voice]) console.log(this.voices[voice].osc2.detune.value);
-
-
+      if (this.voices[voice - 12]) this.voices[voice - 12].enveloppeGenerator.sustainLevel = _sustain;
+      if (this.voices[voice - 24]) this.voices[voice - 24].enveloppeGenerator.sustainLevel = _sustain;
+      if (this.duovoices[voice]) this.duovoices[voice].enveloppeGenerator.sustainLevel = _sustain;
+      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].enveloppeGenerator.sustainLevel = _sustain;
+      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].enveloppeGenerator.sustainLevel = _sustain;
     }
   }
   set egrelease(_release) {
     this.params.egrelease = _release;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].enveloppeGenerator.releaseTime = _release;
-      if (this.voices[voice]) console.log(this.voices[voice].osc2.detune.value);
-
-
+      if (this.voices[voice - 12]) this.voices[voice - 12].enveloppeGenerator.releaseTime = _release;
+      if (this.voices[voice - 24]) this.voices[voice - 24].enveloppeGenerator.releaseTime = _release;
+      if (this.duovoices[voice]) this.duovoices[voice].enveloppeGenerator.releaseTime = _release;
+      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].enveloppeGenerator.releaseTime = _release;
+      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].enveloppeGenerator.releaseTime = _release;
     }
+  }
+
+  set egint(_freq) {
+    this.params.egint = _freq;
+    for (let voice = 0; voice < this.voices.length; voice++) {
+      if (this.voices[voice]) this.voices[voice].enveloppeGenerator.upperBound= _freq;
+      if (this.voices[voice - 12]) this.voices[voice - 12].enveloppeGenerator.upperBound= _freq;
+      if (this.voices[voice - 24]) this.voices[voice - 24].enveloppeGenerator.upperBound= _freq;
+      if (this.duovoices[voice]) this.duovoices[voice].enveloppeGenerator.upperBound= _freq;
+      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].enveloppeGenerator.upperBound= _freq;
+      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].enveloppeGenerator.upperBound= _freq;
+    }
+
   }
 
 
@@ -1169,6 +1224,8 @@ class Voice {
     this.lowPassfilter.type = "lowpass";
     this.highpassfilter = this.context.createBiquadFilter();
     this.highpassfilter.type = "highpass";
+    this.enveloppeFilter = this.context.createBiquadFilter();
+    this.enveloppeFilter.type = "lowpass";
 
 
     // gain stage 
@@ -1176,26 +1233,27 @@ class Voice {
     this.gainOsc2 = this.context.createGain();
     this.gainLfo = this.context.createGain();
     this.amp = this.context.createGain();
-    this.enveloppeGain = this.context.createGain();
     this.whitenoiseGain = this.context.createGain();
     this.ringGain = this.context.createGain();
 
 
     //Enveloppe stage
 
-    this.ampEnveloppe = new EnvGen(this.context, this.amp.gain, this.parent);
-    this.ampEnveloppe.mode = 'ADSR';
+    this.ampEnveloppe = new EnvGen(this.context, this.amp.gain, 1);
+    //this.ampEnveloppe.mode = 'ADSR';
     this.ampEnveloppe.attackTime = this.parent.params.ampattack;
     this.ampEnveloppe.decayTime = this.parent.params.ampdecay;
     this.ampEnveloppe.sustainLevel = this.parent.params.ampsustain;
     this.ampEnveloppe.releaseTime = this.parent.params.amprelease;
 
-    this.enveloppeGenerator = new EnvGen(this.context, this.enveloppeGain.gain, this.parent);
-    this.enveloppeGenerator.mode = 'ADSR';
+    this.enveloppeGenerator = new EnvGen(this.context, this.enveloppeFilter.frequency,this.parent.params.egint);
+    //this.enveloppeGenerator.mode = 'ADSR';
     this.enveloppeGenerator.attackTime = this.parent.params.egattack;
     this.enveloppeGenerator.decayTime = this.parent.params.egdecay;
     this.enveloppeGenerator.sustainLevel = this.parent.params.egsustain;
     this.enveloppeGenerator.releaseTime = this.parent.params.egrelease;
+
+    
 
 
     // merger
@@ -1203,16 +1261,12 @@ class Voice {
 
     this.osc1.connect(this.wshape1);
     this.osc2.connect(this.wshape2);
-    this.wshape1.connect(this.ringGain);
+    // this.wshape1.connect(this.ringGain);
     this.wshape1.connect(this.gainOsc1);
     this.wshape2.connect(this.gainOsc2);
     this.whitenoise.bufferSource.connect(this.whitenoiseGain);
     this.lfo.connect(this.gainLfo);
 
-    //this.enveloppeGain.connect(this.lowPassfilter.frequency);
-
-    //this.nz.bufferSource.start(this.context.currentTime);
-    /*this.lowPassfilter.frequency*/
 
     switch (this.parent.params.lfodest) {
       case 'cutoff':
@@ -1245,11 +1299,12 @@ class Voice {
     this.whitenoiseGain.connect(this.oscMerger, 0, 0);
     this.whitenoiseGain.connect(this.oscMerger, 0, 1);
 
-
+    this.oscMerger.connect(this.enveloppeFilter);
     this.oscMerger.connect(this.lowPassfilter);
+    this.enveloppeFilter.connect(this.highpassfilter);
     this.lowPassfilter.connect(this.highpassfilter);
+    this.amp.gain.setValueAtTime(this.amp.gain.value / 2, this.context.currentTime + 0.02);
     this.highpassfilter.connect(this.amp);
-    //this.enveloppeGain.connect(this.osc1.frequency);
 
     this.whitenoise.bufferSource.start(this.context.currentTime);
     this.osc1.start();
@@ -1327,190 +1382,38 @@ class Delay {
 }
 
 //------------------------------------------------ Enveloppe generator ------------------------------------ 
-
-// ADSR node from https://github.com/rsimmons/fastidious-envelope-generator
-// Refactored in ES6
-
-
+// inpired from Viktor enveloppe
 
 class EnvGen {
-  constructor(audioContext, targetParam) {
-    this._audioContext = audioContext;
-    this._targetParam = targetParam;
-    this.INITIAL_LEVEL = 0;
-    this.ATTACK_LEVEL = 1;
-    this.MODES = ['AD', 'ASR', 'ADSR'];
-    // Default settings
-    this._mode = 'ADSR';
-    this._attackTime = 1;
-    this._decayTime = 1;
-    this._sustainLevel = 1;
-    this._releaseTime = 1;
-    this._targetParam.value = this.INITIAL_LEVEL;
+  constructor(audioContext, target, upperBound, lowerBound) {
 
-    // In case there was preexisting automation on the target parameter, we reset it here to known state.
-    this._targetParam.cancelScheduledValues(0);
-    this._targetParam.setValueAtTime(this.INITIAL_LEVEL, 0);
-
-    this._scheduledSegments = [{
-      beginTime: 0,
-      beginValue: this.INITIAL_LEVEL,
-      targetValue: this.INITIAL_LEVEL,
-      timeConst: 1, // doesn't matter what this is since beginValue === targetValue
-    }];
-
-    // Track info about last gate we received
-    this._lastGateTime = audioContext.currentTime;
-    this._lastGateState = false;
-  }
-  // Assert tool
-  assert(v) {
-    if (!v) {
-      throw new Error('Assertion error');
-    }
-  }
-
-  // Params
-  get mode() { return this._mode }
-  set mode(value) {
-    if (this.MODES.indexOf(value) >= 0) {
-      this.gate(false, Math.max(this._lastGateTime, this._audioContext.currentTime));
-      this._mode = value;
-    }
-  }
-  get attackTime() { return this._attackTime; }
-  set attackTime(value) { if ((typeof (value) === 'number') && !isNaN(value) && (value > 0)) { this._attackTime = value; } }
-
-  get decayTime() { return this._decayTime; }
-  set decayTime(value) { if ((typeof (value) === 'number') && !isNaN(value) && (value > 0)) { this._decayTime = value; } }
-
-  get sustainLevel() { return this._sustainLevel; }
-  set sustainLevel(value) { if ((typeof (value) === 'number') && !isNaN(value) && (value >= 0) && (value <= 1)) { this._sustainLevel = value; } }
-
-
-  get releaseTime() { return this._releaseTime; }
-  set releaseTime(value) { if ((typeof (value) === 'number') && !isNaN(value) && (value > 0)) { this._releaseTime = value; } }
-
-  _appendSegment(beginTime, beginValue, targetValue, timeConst) {
-    this.assert(beginTime >= this._scheduledSegments[this._scheduledSegments.length - 1].beginTime); // sanity check
-    // Set an anchor point for new segment to start from
-    this._targetParam.setValueAtTime(beginValue, beginTime);
-    // Schedule the new segment
-    this._targetParam.setTargetAtTime(targetValue, beginTime, timeConst);
-    this._scheduledSegments.push({
-      beginTime: beginTime,
-      beginValue: beginValue,
-      targetValue: targetValue,
-      timeConst: timeConst,
-    });
+    this.audioContext = audioContext;
+    this.target = target;
+    this.upperBound = upperBound;
+    this.lowerBound = lowerBound || 0.0000001;
+    this.node = null;
+    this.attackTime = this.decayTime = this.sustainLevel = this.releaseTime = null;
   }
 
 
-  // Schedule a segment that starts at the given time, which may be during or before previously scheduled segments
-  _scheduleSegmentFromTime(time, targetValue, timeConst) {
-    // Find what scheduled segment (if any) would be active at given time
-    var activeIdx;
-    for (var i = 0; i < this._scheduledSegments.length; i++) {
-      if ((time >= this._scheduledSegments[i].beginTime) && ((i === (this._scheduledSegments.length - 1) || (time < this._scheduledSegments[i + 1].beginTime)))) {
-        activeIdx = i;
-        break;
-      }
+    gateOn( time) {
+      console.log(this.attackTime);
+
+      this.time = time ? time : this.audioContext.currentTime;
+      this.upperBound = this.upperBound; // velocity adjustment
+      this.target.cancelScheduledValues(this.time);
+      this.target.setValueAtTime(this.lowerBound, this.audioContext.currentTime);
+      this.target.setTargetAtTime(this.upperBound, this.time + 0.01, this.attackTime / 3);
+      this.target.setTargetAtTime(this.sustainLevel * this.upperBound, this.time + 0.01 + this.attackTime, this.decayTime / 3);
     }
-    this.assert(activeIdx !== undefined); // There must always be some active segment at any (current or future) time
-    var activeSeg = this._scheduledSegments[activeIdx];
-    // Determine the mid-segment value at the given time
-    var interruptValue = activeSeg.targetValue + (activeSeg.beginValue - activeSeg.targetValue) * Math.exp((activeSeg.beginTime - time) / activeSeg.timeConst);
-    // Truncate _scheduledSegments array to end at the active segment
-    this._scheduledSegments.length = activeIdx + 1;
-    // Cancel all segments from the interrupt time onwward
-    this._targetParam.cancelScheduledValues(time);
-    // Append the new segment from the interrupted point
-    this._appendSegment(time, interruptValue, targetValue, timeConst);
-  };
 
+    gateOff(time) {
+      if(this.releaseTime ==null) this.releaseTime = 0.0001;
+      this.time = time ? time : this.audioContext.currentTime;
 
-  // Schedule a segment that starts when the last previously-scheduled segment reaches the given value threshold
-  _scheduleSegmentFromValueThreshold(valueThreshold, targetValue, timeConst) {
-    var lastSeg = this._scheduledSegments[this._scheduledSegments.length - 1];
-    // Determine the time that the last segment will hit the given value threshold
-    var interruptTime = Math.abs(Math.log((lastSeg.targetValue - valueThreshold) / (lastSeg.targetValue - lastSeg.beginValue)) * lastSeg.timeConst) + lastSeg.beginTime;
-    // Append the new segment from the interrupt time
-    this._appendSegment(interruptTime, valueThreshold, targetValue, timeConst);
-  };
-
-  // Cull segments from this._scheduledSegments end before beforeTime 
-  _cullScheduledSegments(beforeTime) {
-    for (var i = 0; i < (this._scheduledSegments.length - 1); i++) {
-      // Because we only track beginTime (not endTime), we need to look one segment ahead
-      if (beforeTime < this._scheduledSegments[i + 1].beginTime) {
-        break;
-      }
+      this.target.cancelScheduledValues(this.time);
+      this.target.setTargetAtTime(this.lowerBound, this.time, this.releaseTime);
     }
-    // When we exit the loop, i will be the index of the segment that should be the first one remaining
-    this._scheduledSegments = this._scheduledSegments.slice(i);
-    this.assert(this._scheduledSegments.length > 0); // sanity check
-    this.assert(this._scheduledSegments[0].beginTime <= beforeTime); // sanity check
-  };
-
-  gate(on, time) {
-    // Note the current AudioContext time
-    var ct = this._audioContext.currentTime;
-    // Default time parameter to current time
-    time = (time === undefined) ? ct : time;
-    // Gates can only have times >= the times of previously supplied gates.
-    // If we receive a bad one, log a warning and ignore
-    if (time < this._lastGateTime) {
-      console.warn('Received gate with time earlier than a previous gate');
-      return;
-    }
-    this._lastGateTime = time;
-    this._lastGateState = on;
-    // Cull scheduled segments that we are tracking that are now in the past
-    this._cullScheduledSegments(ct);
-    if (on) {
-      // Schedule attack
-      // To make an attack that reaches maximum level (1) in a finite amount of time,
-      //  we aim to exponentially approach a value that is greater than 1, and then
-      //  stop the attack when it reaches 1. This is how analog envgens work.
-      var ATTACK_LINEARITY = 100 // Make this nearly-linear. We could expose as a parameter later on
-      var attackTargetLevel = 1 / (1 - Math.exp(-this._attackTime / ATTACK_LINEARITY));
-      this._scheduleSegmentFromTime(time, attackTargetLevel, ATTACK_LINEARITY);
-      // Schedule whatever phase that comes after attack (decay or sustain)
-      if ((this._mode === 'AD') || (this._mode === 'ADSR')) {
-        // Determine target level to which we will decay
-        var decayTargetLevel;
-        if (this._mode === 'AD') {
-          decayTargetLevel = this.INITIAL_LEVEL;
-        } else {
-          decayTargetLevel = this._sustainLevel;
-        }
-        // Schedule decay
-        this._scheduleSegmentFromValueThreshold(this.ATTACK_LEVEL, decayTargetLevel, this._decayTime);
-      } else if (this._mode === 'ASR') {
-        // Schedule sustain
-        this._scheduleSegmentFromValueThreshold(this.ATTACK_LEVEL, this.ATTACK_LEVEL, 1); // timeConst here doesn't really matter
-      } else {
-        this.assert(false); // invalid mode
-      }
-    } else {
-      if (this._mode === 'AD') {
-        // We ignore gate-off when in AD mode
-      } else if ((this._mode === 'ASR') || (this._mode === 'ADSR')) {
-        // Schedule release
-        this._scheduleSegmentFromTime(time, this.INITIAL_LEVEL, this._releaseTime);
-      } else {
-        this.assert(false); // invalid mode
-      }
-    }
-  };
-
-  gateOn(time) {
-    this.gate(true, time);
-  };
-
-  gateOff(time) {
-    this.gate(false, time);
-  };
 
 }
 
