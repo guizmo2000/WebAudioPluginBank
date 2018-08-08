@@ -11,11 +11,8 @@
 <body>
 
     <audio src="./../../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
-
-    <p>
-        Volume :
-        <input type="range" value=5 min=0 max=10 step=0.1 id="volumeSlider">
-    </p>
+    <button id="save">Save current state</button>
+    <button id="load">Load last saved state</button>
 
 </body>
 
@@ -42,6 +39,21 @@
 
                 plugin.loadGui().then((elem) => {
                     document.body.appendChild(elem);
+                    //Save statement
+                    document.querySelector("#save").addEventListener('click', () => {
+                        node.getState()
+                            .then((data) => {
+                                state = data;
+                                console.log("State saved :", data);
+                            })
+                    });
+
+                    //Load statement
+                    document.querySelector("#load").addEventListener('click', () => {
+                        node.setState(state).then((data) => {
+                            console.log("State restored :", data)
+                        })
+                    });
                 });
 
                 mediaSource.connect(node);
