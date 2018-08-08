@@ -9,7 +9,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
     /*    ################     API PROPERTIES    ###############   */
     super(ctx, URL, options)
 
-    this.params = {status:"disable"}
+    this.params = {status:"disable", preset : "0"}
 
     this.addParam({
       name: 'volume',
@@ -233,6 +233,10 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
 
     this.amp.bypass(bypassOn);
     // cas reactivation ? 
+  }
+
+  set preset(val){
+    this.params.preset = val;
   }
 
 }
