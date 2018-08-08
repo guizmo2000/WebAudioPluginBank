@@ -1069,7 +1069,7 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
         // updated 10/4/2016
 
         var preset0 = {
-            "name": "Jimmy HDX",
+            "name": "Default",
             "boost": false,
             "LS1Freq": 720,
             "LS1Gain": -6,
