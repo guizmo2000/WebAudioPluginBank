@@ -27,26 +27,12 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         try {
             this[key] = (value);
         } catch (error) {
-            console.log(key, error)
             console.warn("this plugin does not implement this param")
         }
     }
 
     get numberOfOutputs() {
         return 0;
-    }
-
-    /*  #########  Personnal code for Tuner  #########   */
-    set status(_sig) {
-        if (_sig === "enable") {
-            this.params.status = "enable";
-            console.log("Tuner is on");
-        }
-
-        else if (_sig === "disable") {
-            this.params.status = "disable"
-            console.log("Tuner is off");
-        }
     }
 
     createNodes() {
@@ -59,6 +45,60 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     connectNodes() {
         this._input.connect(this.dryGainNode);
         this.dryGainNode.connect(this.bandPass);
+    }
+
+    /*  #########  Personnal code for Tuner  #########   */
+    set status(_sig) {
+        if (_sig === "enable") {
+            this.params.status = "enable";
+            console.log("Tuner is on");
+            this.toggleLiveInput();
+        }
+
+        else if (_sig === "disable") {
+            this.params.status = "disable"
+            console.log("Tuner is off");
+        }
+    }
+
+    
+
+    toggleLiveInput() {
+        if (isPlaying) {
+            //stop playing and return
+            sourceNode.stop( 0 );
+            sourceNode = null;
+            analyser = null;
+            isPlaying = false;
+            if (!window.cancelAnimationFrame)
+                window.cancelAnimationFrame = window.webkitCancelAnimationFrame;
+            window.cancelAnimationFrame( rafID );
+        }
+        getUserMedia(
+            {
+                "audio": {
+                    "mandatory": {
+                        "googEchoCancellation": "false",
+                        "googAutoGainControl": "false",
+                        "googNoiseSuppression": "false",
+                        "googHighpassFilter": "false"
+                    },
+                    "optional": []
+                },
+            }, gotStream);
+    }
+
+    noteFromPitch( frequency ) {
+        var noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
+        return Math.round( noteNum ) + 69;
+    }
+    
+    frequencyFromNoteNumber( note ) {
+        return 440 * Math.pow(2,(note-69)/12);
+    }
+    
+    centsOffFromPitch( frequency, note ) {
+        return Math.floor( 1200 * Math.log( frequency / frequencyFromNoteNumber( note ))/Math.log(2) );
     }
 
 }
