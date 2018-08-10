@@ -40,12 +40,12 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     set status(_sig) {
         if (_sig === "enable") {
             this.params.status = "enable";
-            
+            console.log("Tuner is on");
         }
 
         else if (_sig === "disable") {
             this.params.status = "disable"
-            
+            console.log("Tuner is off");
         }
     }
 
