@@ -12,8 +12,13 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         this.state;
         this.params = { "status": "disable" }
         super.setup();
+
+        this.analyser = null;
+        this.DEBUGCANVAS = null;
+        this.mediaStreamSource = null;
         
-        this.noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+
+        
     }
 
     /*    ################     API METHODS    ###############   */
@@ -56,7 +61,6 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         if (_sig === "enable") {
             this.params.status = "enable";
             console.log("Tuner is on");
-            this.toggleLiveInput();
         }
 
         else if (_sig === "disable") {
@@ -65,7 +69,21 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         }
     }
 
-    
+    toggleLiveInput() {
+        getUserMedia(
+            {
+                "audio": {
+                    "mandatory": {
+                        "googEchoCancellation": "false",
+                        "googAutoGainControl": "false",
+                        "googNoiseSuppression": "false",
+                        "googHighpassFilter": "false"
+                    },
+                    "optional": []
+                },
+            }, gotStream);
+    }
+
     getUserMedia(dictionary, callback) {
         try {
             navigator.getUserMedia = 
@@ -77,44 +95,16 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
             alert('getUserMedia threw exception :' + e);
         }
     }
-
+    
     gotStream(stream) {
         // Create an AudioNode from the stream.
-        mediaStreamSource = this.context.createMediaStreamSource(stream);
-        
+        mediaStreamSource = audioContext.createMediaStreamSource(stream);
+    
         // Connect it to the destination.
-        var analyser = audioContext.createAnalyser();
+        analyser = audioContext.createAnalyser();
         analyser.fftSize = 2048;
         mediaStreamSource.connect( analyser );
-        this.updatePitch();
-    }
-
-    toggleLiveInput() {
-        this.getUserMedia(
-            {
-                "audio": {
-                    "mandatory": {
-                        "googEchoCancellation": "false",
-                        "googAutoGainControl": "false",
-                        "googNoiseSuppression": "false",
-                        "googHighpassFilter": "false"
-                    },
-                    "optional": []
-                },
-            }, this.gotStream());
-    }
-
-    noteFromPitch( frequency ) {
-        var noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
-        return Math.round( noteNum ) + 69;
-    }
-    
-    frequencyFromNoteNumber( note ) {
-        return 440 * Math.pow(2,(note-69)/12);
-    }
-    
-    centsOffFromPitch( frequency, note ) {
-        return Math.floor( 1200 * Math.log( frequency / this.frequencyFromNoteNumber( note ))/Math.log(2) );
+        updatePitch();
     }
 
     autoCorrelate( buf, sampleRate ) {
@@ -175,7 +165,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     updatePitch( time ) {
         var cycles = new Array;
         analyser.getFloatTimeDomainData( buf );
-        var ac = this.autoCorrelate( buf, audioContext.sampleRate );
+        var ac = autoCorrelate( buf, audioContext.sampleRate );
         // TODO: Paint confidence meter on canvasElem here.
     
         if (DEBUGCANVAS) {  // This draws the current waveform, useful for debugging
@@ -212,7 +202,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
              detectorElem.className = "confident";
              pitch = ac;
              pitchElem.innerText = Math.round( pitch ) ;
-             var note =  this.noteFromPitch( pitch );
+             var note =  noteFromPitch( pitch );
             noteElem.innerHTML = noteStrings[note%12];
             var detune = centsOffFromPitch( pitch, note );
             if (detune == 0 ) {
@@ -226,8 +216,13 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                 detuneAmount.innerHTML = Math.abs( detune );
             }
         }
-
+    
+        if (!window.requestAnimationFrame)
+            window.requestAnimationFrame = window.webkitRequestAnimationFrame;
+        rafID = window.requestAnimationFrame( updatePitch );
     }
+
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

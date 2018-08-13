@@ -181,7 +181,6 @@
             this.state = new Object();
             this.isOn;
             this.setSwitchListener();
-            this.detectElement();
         }
 
         get properties() {
@@ -225,39 +224,6 @@
             this._plug.setParam("status", "enable");
         }
 
-        detectElement(){
-            var detectorElem = document.getElementById("detector");
-            var canvasElem = document.getElementById("output");
-            var DEBUGCANVAS = document.getElementById("waveform");
-            
-            if(DEBUGCANVAS){
-                var waveCanvas = DEBUGCANVAS.getContext("2d")
-                waveCanvas.strokeStyle = "black";
-		        waveCanvas.lineWidth = 1;
-            }
-
-            var pitchElem = document.getElementById( "pitch" );
-	        var noteElem = document.getElementById( "note" );
-	        var detuneElem = document.getElementById( "detune" );
-            var detuneAmount = document.getElementById( "detune_amt" );
-            
-            /*
-            detectorElem.ondragenter = function () { 
-		        this.classList.add("droptarget"); 
-                return false; 
-            };
-	        detectorElem.ondragleave = function () { 
-                this.classList.remove("droptarget"); 
-                return false; 
-            };
-            
-            detectorElem.ondrop = function (e) {
-  		        this.classList.remove("droptarget");
-  		        e.preventDefault();
-		     theBuffer = null;
-            };
-            */
-        }
     }
 
     // Register the x-custom element with the browser
