@@ -9,6 +9,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         super(ctx, URL, options)
         /*    ################     API PROPERTIES    ###############   */
 
+        this.options = options;
         this.state;
         this.params = { "status": "disable" }
         super.setup();
@@ -16,8 +17,13 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         this.analyser = null;
         this.DEBUGCANVAS = null;
         this.mediaStreamSource = null;
-        
-
+        this.rafID = null,
+        this.tracks = null;
+        this.buflen = 1024;
+        this.buf = new Float32Array(this.buflen);
+        this.noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+        this.MIN_SAMPLES = 0;
+        this.GOOD_ENOUGH_CORRELATION = 0.9; 
         
     }
 
@@ -60,6 +66,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     set status(_sig) {
         if (_sig === "enable") {
             this.params.status = "enable";
+            this.toggleLiveInput();
             console.log("Tuner is on");
         }
 
@@ -70,7 +77,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     }
 
     toggleLiveInput() {
-        getUserMedia(
+        this.getUserMedia(
             {
                 "audio": {
                     "mandatory": {
@@ -81,8 +88,21 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                     },
                     "optional": []
                 },
-            }, gotStream);
+            }, gotStream().apply(this));
+            function gotStream(stream) {
+                // Create an AudioNode from the stream.
+                 mediaStreamSource = this.context.createMediaStreamSource(stream);
+            
+                // Connect it to the destination.
+                this.analyser = this.context.createAnalyser();
+                this.analyser.fftSize = 2048;
+                this.mediaStreamSource.connect( this.analyser );
+                this.updatePitch();
+                console.log("ok");
+            }
     }
+
+   
 
     getUserMedia(dictionary, callback) {
         try {
@@ -90,7 +110,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                 navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
                 navigator.mozGetUserMedia;
-            navigator.getUserMedia(dictionary, callback, error);
+            navigator.getUserMedia(dictionary, callback, () => console.log("Stream generation failed"));
         } catch (e) {
             alert('getUserMedia threw exception :' + e);
         }
@@ -98,13 +118,14 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     
     gotStream(stream) {
         // Create an AudioNode from the stream.
-        mediaStreamSource = audioContext.createMediaStreamSource(stream);
+        this.options.mediaStreamSource = this.context.createMediaStreamSource(stream);
     
         // Connect it to the destination.
-        analyser = audioContext.createAnalyser();
-        analyser.fftSize = 2048;
-        mediaStreamSource.connect( analyser );
-        updatePitch();
+        this.analyser = this.context.createAnalyser();
+        this.analyser.fftSize = 2048;
+        this.mediaStreamSource.connect( this.analyser );
+        this.updatePitch();
+        console.log("ok");
     }
 
     autoCorrelate( buf, sampleRate ) {
@@ -163,12 +184,11 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     }
     
     updatePitch( time ) {
-        var cycles = new Array;
-        analyser.getFloatTimeDomainData( buf );
+        this.analyser.getFloatTimeDomainData( buf );
         var ac = autoCorrelate( buf, audioContext.sampleRate );
         // TODO: Paint confidence meter on canvasElem here.
     
-        if (DEBUGCANVAS) {  // This draws the current waveform, useful for debugging
+        if (this.DEBUGCANVAS) {  // This draws the current waveform, useful for debugging
             waveCanvas.clearRect(0,0,512,256);
             waveCanvas.strokeStyle = "red";
             waveCanvas.beginPath();
