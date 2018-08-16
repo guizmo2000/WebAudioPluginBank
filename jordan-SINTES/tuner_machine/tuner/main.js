@@ -88,20 +88,8 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                     },
                     "optional": []
                 },
-            }, gotStream().apply(this));
-            function gotStream(stream) {
-                // Create an AudioNode from the stream.
-                 mediaStreamSource = this.context.createMediaStreamSource(stream);
-            
-                // Connect it to the destination.
-                this.analyser = this.context.createAnalyser();
-                this.analyser.fftSize = 2048;
-                this.mediaStreamSource.connect( this.analyser );
-                this.updatePitch();
-                console.log("ok");
-            }
+            }, this.gotStream.bind(this));
     }
-
    
 
     getUserMedia(dictionary, callback) {
@@ -118,14 +106,15 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     
     gotStream(stream) {
         // Create an AudioNode from the stream.
-        this.options.mediaStreamSource = this.context.createMediaStreamSource(stream);
+        this.mediaStreamSource = this.context.createMediaStreamSource(stream);
     
         // Connect it to the destination.
         this.analyser = this.context.createAnalyser();
         this.analyser.fftSize = 2048;
         this.mediaStreamSource.connect( this.analyser );
-        this.updatePitch();
         console.log("ok");
+        this.updatePitch();
+        
     }
 
     autoCorrelate( buf, sampleRate ) {
@@ -184,8 +173,8 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     }
     
     updatePitch( time ) {
-        this.analyser.getFloatTimeDomainData( buf );
-        var ac = autoCorrelate( buf, audioContext.sampleRate );
+        this.analyser.getFloatTimeDomainData( this.buf );
+        var ac = this.autoCorrelate( this.buf, this.context.sampleRate );
         // TODO: Paint confidence meter on canvasElem here.
     
         if (this.DEBUGCANVAS) {  // This draws the current waveform, useful for debugging
