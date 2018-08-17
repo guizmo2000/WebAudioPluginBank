@@ -18,13 +18,13 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         this.DEBUGCANVAS = null;
         this.mediaStreamSource = null;
         this.rafID = null,
-        this.tracks = null;
+            this.tracks = null;
         this.buflen = 1024;
         this.buf = new Float32Array(this.buflen);
         this.noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
         this.MIN_SAMPLES = 0;
-        this.GOOD_ENOUGH_CORRELATION = 0.9; 
-        
+        this.GOOD_ENOUGH_CORRELATION = 0.9;
+
     }
 
     /*    ################     API METHODS    ###############   */
@@ -90,11 +90,11 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                 },
             }, this.gotStream.bind(this));
     }
-   
+
 
     getUserMedia(dictionary, callback) {
         try {
-            navigator.getUserMedia = 
+            navigator.getUserMedia =
                 navigator.getUserMedia ||
                 navigator.webkitGetUserMedia ||
                 navigator.mozGetUserMedia;
@@ -103,47 +103,124 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
             alert('getUserMedia threw exception :' + e);
         }
     }
-    
+
     gotStream(stream) {
         // Create an AudioNode from the stream.
         this.mediaStreamSource = this.context.createMediaStreamSource(stream);
-    
+
         // Connect it to the destination.
         this.analyser = this.context.createAnalyser();
         this.analyser.fftSize = 2048;
-        this.mediaStreamSource.connect( this.analyser );
-        console.log("ok");
-        this._root.updatePitch();
-        
+        this.mediaStreamSource.connect(this.analyser);
+
+        this.updatePitch();
+
     }
 
-    autoCorrelate( buf, sampleRate ) {
+    noteFromPitch( frequency ) {
+        var noteNum = 12 * (Math.log( frequency / 440 )/Math.log(2) );
+        return Math.round( noteNum ) + 69;
+    }
+
+    updatePitch(time) {
+        var detectorElem = this.gui._root.getElementById("detector");
+        var DEBUGCANVAS = this.gui._root.getElementById("waveform");
+        if (DEBUGCANVAS) {
+            var waveCanvas = DEBUGCANVAS.getContext("2d");
+            waveCanvas.strokeStyle = "black";
+            waveCanvas.lineWidth = 1;
+        }
+        var pitchElem = this.gui._root.getElementById("pitch");
+        var noteElem = this.gui._root.getElementById("note");
+        var detuneElem = this.gui._root.getElementById("detune");
+        var detuneAmount = this.gui._root.getElementById("detune_amt");
+        this.analyser.getFloatTimeDomainData(this.buf);
+        var ac = this.autoCorrelate(this.buf, this.context.sampleRate);
+
+
+        if (this.gui._root.getElementById("waveform")) {  // This draws the current waveform, useful for debugging
+            this.gui._root.waveCanvas.clearRect(0, 0, 512, 256);
+            waveCanvas.strokeStyle = "red";
+            waveCanvas.beginPath();
+            waveCanvas.moveTo(0, 0);
+            waveCanvas.lineTo(0, 256);
+            waveCanvas.moveTo(128, 0);
+            waveCanvas.lineTo(128, 256);
+            waveCanvas.moveTo(256, 0);
+            waveCanvas.lineTo(256, 256);
+            waveCanvas.moveTo(384, 0);
+            waveCanvas.lineTo(384, 256);
+            waveCanvas.moveTo(512, 0);
+            waveCanvas.lineTo(512, 256);
+            waveCanvas.stroke();
+            waveCanvas.strokeStyle = "black";
+            waveCanvas.beginPath();
+            waveCanvas.moveTo(0, buf[0]);
+            for (var i = 1; i < 512; i++) {
+                waveCanvas.lineTo(i, 128 + (buf[i] * 128));
+            }
+            waveCanvas.stroke();
+        }
+
+        if (ac == -1) {
+            detectorElem.className = "vague";
+            pitchElem.innerText = "--";
+            noteElem.innerText = "-";
+            detuneElem.className = "";
+            detuneAmount.innerText = "--";
+        } else {
+            detectorElem.className = "confident";
+            var pitch = ac;
+            pitchElem.innerText = Math.round(pitch);
+            var note = this.noteFromPitch(pitch);
+            noteElem.innerHTML = noteStrings[note % 12];
+            var detune = centsOffFromPitch(pitch, note);
+            if (detune == 0) {
+                detuneElem.className = "";
+                detuneAmount.innerHTML = "--";
+            } else {
+                if (detune < 0)
+                    detuneElem.className = "flat";
+                else
+                    detuneElem.className = "sharp";
+                detuneAmount.innerHTML = Math.abs(detune);
+            }
+        }
+
+        if (!window.requestAnimationFrame)
+            window.requestAnimationFrame = window.webkitRequestAnimationFrame;
+        this.rafID = window.requestAnimationFrame(this.updatePitch.bind(this));
+    }
+
+    autoCorrelate(buf, sampleRate) {
+        var MIN_SAMPLES = 0;  // will be initialized when AudioContext is created.
+        var GOOD_ENOUGH_CORRELATION = 0.9; // this is the "bar" for how close a correlation needs to be
         var SIZE = buf.length;
-        var MAX_SAMPLES = Math.floor(SIZE/2);
+        var MAX_SAMPLES = Math.floor(SIZE / 2);
         var best_offset = -1;
         var best_correlation = 0;
         var rms = 0;
         var foundGoodCorrelation = false;
         var correlations = new Array(MAX_SAMPLES);
-    
-        for (var i=0;i<SIZE;i++) {
+
+        for (var i = 0; i < SIZE; i++) {
             var val = buf[i];
-            rms += val*val;
+            rms += val * val;
         }
-        rms = Math.sqrt(rms/SIZE);
-        if (rms<0.01) // not enough signal
+        rms = Math.sqrt(rms / SIZE);
+        if (rms < 0.01) // not enough signal
             return -1;
-    
-        var lastCorrelation=1;
+
+        var lastCorrelation = 1;
         for (var offset = MIN_SAMPLES; offset < MAX_SAMPLES; offset++) {
             var correlation = 0;
-    
-            for (var i=0; i<MAX_SAMPLES; i++) {
-                correlation += Math.abs((buf[i])-(buf[i+offset]));
+
+            for (var i = 0; i < MAX_SAMPLES; i++) {
+                correlation += Math.abs((buf[i]) - (buf[i + offset]));
             }
-            correlation = 1 - (correlation/MAX_SAMPLES);
+            correlation = 1 - (correlation / MAX_SAMPLES);
             correlations[offset] = correlation; // store it, for the tweaking we need to do below.
-            if ((correlation>GOOD_ENOUGH_CORRELATION) && (correlation > lastCorrelation)) {
+            if ((correlation > GOOD_ENOUGH_CORRELATION) && (correlation > lastCorrelation)) {
                 foundGoodCorrelation = true;
                 if (correlation > best_correlation) {
                     best_correlation = correlation;
@@ -155,21 +232,21 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                 // best offset, and shifting it a bit.  This is complex, and HACKY in this code (happy to take PRs!) -
                 // we need to do a curve fit on correlations[] around best_offset in order to better determine precise
                 // (anti-aliased) offset.
-    
+
                 // we know best_offset >=1, 
                 // since foundGoodCorrelation cannot go to true until the second pass (offset=1), and 
                 // we can't drop into this clause until the following pass (else if).
-                var shift = (correlations[best_offset+1] - correlations[best_offset-1])/correlations[best_offset];  
-                return sampleRate/(best_offset+(8*shift));
+                var shift = (correlations[best_offset + 1] - correlations[best_offset - 1]) / correlations[best_offset];
+                return sampleRate / (best_offset + (8 * shift));
             }
             lastCorrelation = correlation;
         }
         if (best_correlation > 0.01) {
             // console.log("f = " + sampleRate/best_offset + "Hz (rms: " + rms + " confidence: " + best_correlation + ")")
-            return sampleRate/best_offset;
+            return sampleRate / best_offset;
         }
         return -1;
-    //	var best_frequency = sampleRate/best_offset;
+        //	var best_frequency = sampleRate/best_offset;
     }
 
 
