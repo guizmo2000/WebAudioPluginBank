@@ -4,16 +4,25 @@
         useMidi: 1,
     };
 </script>
+<style>
+	@font-face {
+		font-family: 'clock';
+		src: url('./assets/clock.ttf') format('truetype');
+		font-weight: normal;
+		font-style: normal;
+
+	}
+</style>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template id="wc-tuner">
     <style>
         :host {
             background: linear-gradient( rgb(48, 47, 47), rgb(0, 0, 0));
             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+            font: 'clock';
 
-
-            width: 180px;
-            height: 220px;
+            width: 150px;
+            height: 190px;
             display: block;
             user-select: none;
             cursor: move;
@@ -84,7 +93,6 @@
             flex-direction: column;
             justify-content: flex-start;
             align-items: center;
-            background-color: black;
             flex: 1;
             margin: 3px;
             margin-top: 10px;
@@ -112,18 +120,22 @@
 
         #note {
             display: inline-block;
-            height: 60px;
+            height: 30px;
             text-align: left;
         }
 
         #detector {
-            width: 100px;
-            height: 100px;
-            border: 1.5px solid gray;
-            border-radius: 2.5px;
+            width: 110px;
+            height: 90px;
+            border: 1.5px solid rgb(35, 53, 49);
+            border-radius: 10px;
             text-align: center;
-            color: white;
+            color: black;
+            background-color: rgb(124, 158, 146);
             padding-top: 3.3px;
+            margin: auto;
+            font-family: 'clock';
+            margin-top: 10px;
         }
 
         #output {
@@ -147,8 +159,7 @@
             display: inline;
         }
     </style>
-    <div class="row">
-
+    <div class="column">
         <div id="detector" class="vague">
             <div class="pitch">
                 <span id="pitch">--</span>Hz</div>
@@ -158,15 +169,18 @@
             <canvas id="output" width=300 height=42></canvas>
             <div id="detune">
                 <span id="detune_amt">--</span>
-                <span id="flat">cents &#9837;</span>
-                <span id="sharp">cents &#9839;</span>
+                <span id="flat">CENTS &#9837;</span>
+                <span id="sharp">CENTS &#9839;</span>
             </div>
-        </div>
-
+       
+    </div>
+    <div class="column2">
         <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
             width="32" height="20"></webaudio-switch>
         <span class="pedalLabel">Tuner</span>
     </div>
+    </div>
+      
 </template>
 <script>
     let tunertemp = document.currentScript.ownerDocument.querySelector("#wc-tuner");
@@ -187,11 +201,11 @@
             this.boundingRect = {
                 dataWidth: {
                     type: Number,
-                    value: 180
+                    value: 150
                 },
                 dataHeight: {
                     type: Number,
-                    value: 220
+                    value: 190
                 }
             };
             return this.boundingRect;
@@ -224,7 +238,7 @@
             this._plug.setParam("status", "enable");
         }
 
-        
+
 
     }
 
