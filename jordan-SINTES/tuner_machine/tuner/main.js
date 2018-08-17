@@ -122,6 +122,14 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         return Math.round( noteNum ) + 69;
     }
 
+    centsOffFromPitch( frequency, note ) {
+        return Math.floor( 1200 * Math.log( frequency / this.frequencyFromNoteNumber( note ))/Math.log(2) );
+    }
+
+    frequencyFromNoteNumber( note ) {
+        return 440 * Math.pow(2,(note-69)/12);
+    }
+
     updatePitch(time) {
         var detectorElem = this.gui._root.getElementById("detector");
         var DEBUGCANVAS = this.gui._root.getElementById("waveform");
@@ -173,8 +181,8 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
             var pitch = ac;
             pitchElem.innerText = Math.round(pitch);
             var note = this.noteFromPitch(pitch);
-            noteElem.innerHTML = noteStrings[note % 12];
-            var detune = centsOffFromPitch(pitch, note);
+            noteElem.innerHTML = this.noteStrings[note % 12];
+            var detune = this.centsOffFromPitch(pitch, note);
             if (detune == 0) {
                 detuneElem.className = "";
                 detuneAmount.innerHTML = "--";
