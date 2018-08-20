@@ -10,6 +10,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
 
         this.params = { status: "disable", preset:"0" }
 
+        //Param we can modify with buttons
         this.addParam({
             name: 'volume',
             defaultValue: 3,
@@ -58,6 +59,93 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
             minValue: 0,
             maxValue: 10
         });
+
+        //Param we cannot modify with button
+
+        this.addParam({
+            name: 'LS1Freq',
+            defaultValue: 720,
+            minValue: 0,
+            maxValue: 1000
+        });
+        this.addParam({
+            name: 'LS1Gain',
+            defaultValue: 3,
+            minValue: -6,
+            maxValue: 6
+        });
+        this.addParam({
+            name: 'LS2Freq',
+            defaultValue: 320,
+            minValue: 0,
+            maxValue: 1000
+        });
+        this.addParam({
+            name: 'LS2Gain',
+            defaultValue: -6,
+            minValue: -10,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'gain1',
+            defaultValue: 3,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'HP1Freq',
+            defaultValue: 6,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'HP1Q',
+            defaultValue: 0.70,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'LS3Freq',
+            defaultValue: 720,
+            minValue: 0,
+            maxValue: 1000
+        });
+        this.addParam({
+            name: 'LS3Gain',
+            defaultValue: -6,
+            minValue: -10,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'gain2',
+            defaultValue: 1,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'EQ',
+            defaultValue: [5, 5, 5, 5, 5, 5],
+        });
+        this.addParam({
+            name: 'boost',
+            defaultValue: false
+        });
+        this.addParam({
+            name: 'distoName1',
+            defaultValue: "asymetric"
+        });
+        this.addParam({
+            name: 'distoName2',
+            defaultValue: "crunch"
+        });
+        this.addParam({
+            name: 'CG',
+            defaultValue: 3,
+            minValue: 0,
+            maxValue: 10
+        });
+        
+        
 
         this.reverbImpulses = [{
             name: "Fender Hot Rod",
@@ -147,6 +235,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
         this.amp.output.connect(this._output);
     }
 
+    //Params who can be changed by buttons
     set volume(val) {
         this.params.volume = val;
         this.amp.changeOutputGain(val);
@@ -187,8 +276,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
         this.amp.changePresenceFilterValue(val);
     }
 
-    set status(_sig) {
-        console.log(_sig);
+    set status(_sig) { 
         let bypassOn = (_sig !== "disable");
 
         this.amp.bypass(bypassOn);
@@ -198,6 +286,86 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
     set preset(val){
         this.params.preset = val;
     }
+
+    //Params who cannot be changed by buttons
+
+    set LS1Freq(val){
+        this.params.LS1Freq = val;
+        this.amp.changeLowShelf1FrequencyValue(val);
+    }
+
+    set LS1Gain(val){
+        this.params.LS1Gain = val;
+        this.amp.changeLowShelf1GainValue(val);
+    }
+
+    set LS2Freq(val){
+        this.params.LS2Freq = val;
+        this.amp.changeLowShelf2FrequencyValue(val);
+    }
+
+    set LS2Gain(val){
+        this.params.LS2Gain = val;
+        this.amp.changeLowShelf2GainValue(val);
+    }
+
+    set LS3Freq(val){
+        this.params.LS3Freq = val;
+        this.amp.changeLowShelf3FrequencyValue = val;
+    }
+
+    set LS3Gain(val){
+        this.params.LS3Gain = val;
+        this.amp.changeLowShelf3GainValue(val);
+    } 
+    set gain1(val){
+        this.params.gain1 = val;
+        this.amp.changePreampStage1GainValue(val); //TODO: See if it's the good parameter
+    }
+
+    set gain2(val){
+        this.params.gain2 = val;
+        this.amp.changePreampStage2GainValue(val)
+    }
+
+    set HP1Freq(val){
+        this.params.HP1Freq = val;
+        this.amp.changeHighPass1FrequencyValue(val);
+    }
+
+    set HP1Q(val){
+        this.params.HP1Q = val;
+        this.amp.changeHighPass1QValue(val);
+    }
+
+    set EQ(val){
+        this.params.EQ = val;
+        this.amp.changeEQValues(val);
+    }
+
+    
+    set boost(val){
+        this.params.boost= val;
+        this.amp.changeBoost(val);
+    }
+
+    set distoName1(val){
+        this.params.distoName1 = val;
+        this.amp.changeDisto1TypeFromPreset(val);
+    }
+
+    set distoName2(val){
+        this.params.distoName2 = val;
+        this.amp.changeDisto1TypeFromPreset(val);
+    }
+
+
+    set CG(val){
+        this.params.CG= val;
+        this.amp.changeRoom(val);
+    }
+
+
 }
 
 // ----------- AMP ---------------
@@ -1391,27 +1559,33 @@ function Amp(context, boost, eq, reverb, cabinetSim) {
         changeDisto2TypeFromPreset(p.distoName2);
         changeDistorsionValues(p.K2, 1);
 
-        //changeOutputGain(p.OG);
+        //Parameters who can be changed by buttons
         parent.volume = p.OG;
-
-        //changeBassFilterValue(p.BF);
         parent.bass = p.BF;
-        //changeMidFilterValue(p.MF);
         parent.middle = p.MF;
-
-        //changeTrebleFilterValue(p.TF);
         parent.treble = p.TF;
-        //changePresenceFilterValue(p.PF);
         parent.presence = p.PF;
-
-
-        //changeMasterVolume(p.MV);
         parent.master = p.MV;
-
-        //changeReverbGain(p.RG);
         parent.reverb = p.RG;
-
         parent.drive = p.K1;
+
+        //Parameters who cannot be changed by buttons
+        parent.LS1Freq = p.LS1Freq;
+        parent.LS1Gain = p.LS1Gain;
+        parent.LS2Freq = p.LS2Freq;
+        parent.LS2Gain = p.LS2Gain;
+        parent.LS3Freq = p.LS3Freq;
+        parent.LS3Gain = p.LS3Gain;
+        parent.gain1 = p.gain1;
+        parent.gain2 = p.gain2;
+        parent.HP1Freq = p.HP1Freq;
+        parent.HP1Q = p.HP1Q;
+        parent.EQ = p.EQ;
+        parent.boost = p.boost;
+        parent.distoName1 = p.distoName1;
+        parent.distoName2 = p.distoName2;
+        parent.CG = p.CG
+
 
         changeReverbImpulse(p.RN);
 
