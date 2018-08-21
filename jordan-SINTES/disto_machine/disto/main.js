@@ -223,7 +223,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
         this.amp.output.connect(this._output);
     }
 
-    //Params who can be changed by buttons
+    //Params who can be changed by knob
     set volume(val) {
         this.params.volume = val;
         this.amp.changeOutputGain(val);
@@ -275,7 +275,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
         this.params.preset = val;
     }
 
-    //Params who cannot be changed by buttons
+    //Params who cannot be changed by knob
 
     set LS1Freq(val){
         this.params.LS1Freq = val;
@@ -1530,7 +1530,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
         changeDisto2TypeFromPreset(p.distoName2);
         changeDistorsionValues(p.K2, 1);
 
-        //Parameters who can be changed by buttons
+        //Parameters who can be changed by knob
         parent.volume = p.OG;
         parent.bass = p.BF;
         parent.middle = p.MF;
@@ -1540,7 +1540,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
         parent.reverb = p.RG;
         parent.drive = p.K1;
 
-        //Parameters who cannot be changed by buttons
+        //Parameters who cannot be changed by knob
         parent.LS1Freq = p.LS1Freq;
         parent.LS1Gain = p.LS1Gain;
         parent.LS2Freq = p.LS2Freq;

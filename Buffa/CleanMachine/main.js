@@ -11,7 +11,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
 
     this.params = {status:"disable", preset : "0"}
 
-    //Param we can modify with buttons
+    //Param we can modify with knob
     this.addParam({
       name: 'volume',
       defaultValue: 5,
@@ -61,8 +61,77 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
       maxValue: 10
     });
 
-
-
+    //Param we cannot modify with knob
+    this.addParam({
+      name: 'LCF',
+      defaultValue: 200,
+      minValue: 0,
+      maxValue: 1000
+    });
+    this.addParam({
+      name: 'HCF',
+      defaultValue: 12000,
+      minValue: 0,
+      maxValue: 20000
+    });
+    this.addParam({
+      name: 'F1',
+      defaultValue: 147,
+      minValue: 0,
+      maxValue: 5000
+    });
+    this.addParam({
+      name: 'F2',
+      defaultValue: 569,
+      minValue: 0,
+      maxValue: 5000
+    });
+    this.addParam({
+      name: 'F3',
+      defaultValue: 1915,
+      minValue: 0,
+      maxValue: 5000
+    });
+    this.addParam({
+      name: 'F4',
+      defaultValue: 4680,
+      minValue: 0,
+      maxValue: 5000
+    });
+    this.addParam({
+      name: 'Q1',
+      defaultValue: 0,
+      minValue: 0,
+      maxValue: 50
+    });
+    this.addParam({
+      name: 'Q2',
+      defaultValue: 49,
+      minValue: 0,
+      maxValue: 50
+    });
+    this.addParam({
+      name: 'Q3',
+      defaultValue: 42,
+      minValue: 0,
+      maxValue: 50
+    });
+    this.addParam({
+      name: 'Q4',
+      defaultValue: 11,
+      minValue: 0,
+      maxValue: 50
+    });
+    this.addParam({
+      name: 'EQ',
+      defaultValue: [5, 5, 5, 5, 5, 5],
+    });
+    this.addParam({
+      name: 'CG',
+      defaultValue: 3,
+      minValue: 0,
+      maxValue: 10
+    });
 
     this.reverbImpulses = [{
         name: "Fender Hot Rod",
@@ -190,6 +259,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
   //   */
   // }
 
+  //Param we can modify with knob
   set volume(val) {
     this.params.volume = val;
     this.amp.changeOutputGain(val);
@@ -242,7 +312,72 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
     this.params.preset = val;
   }
 
+  set LCF(val){
+    this.params.LCF = val;
+    this.amp.changeLowCutFreqValue(val);
+  }
+
+  set HCF(val){
+    this.params.HCF = val;
+    this.amp.changeHicutFreqValue(val);
+  }
+
+  set F1(val){
+    this.params.F1 = val;
+    this.amp.changeFreqValues(val, 0);
+  }
+
+  set F2(val){
+    this.params.F2 = val;
+    this.amp.changeFreqValues(val, 1);
+  }
+
+  set F3(val){
+    this.params.F3 = val;
+    this.amp.changeFreqValues(val, 2);
+  }
+
+  set F4(val){
+    this.params.F4 = val;
+    this.amp.changeFreqValues(val, 3);
+  }
+
+  set Q1(val){
+    this.params.Q1 = val;
+    this.amp.changeQValues(val, 0);
+  }
+
+  set Q2(val){
+    this.params.Q2 = val;
+    this.amp.changeQValues(val, 1);
+  }
+
+  set Q3(val){
+    this.params.Q3 = val;
+    this.amp.changeQValues(val, 2);
+  }
+
+  set Q4(val){
+    this.params.Q4 = val;
+    this.amp.changeQValues(val, 3);
+  }
+
+  set EQ(val){
+    this.params.EQ = val;
+    this.amp.changeEQValues(val)
+  }
+
+  set CG(val){
+    this.params.CG = val;
+    this.amp.changeRoom(val);
+  }
+
+
 }
+
+//Param we can modify with knob
+
+
 
 // ----------- AMP ---------------
 
@@ -914,7 +1049,7 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
       "MF": "3.0",
       "TF": "3.0",
       "PF": "3.0",
-      "EQ": [-2, -1, 0, 3, -9, -4],
+      "EQ": [5, 5, 5, 5, 5, 5],
       "MV": "3.0",
       "RN": "Fender Hot Rod",
       "RG": "3.0",
@@ -1323,27 +1458,31 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
     changeQValues(p.Q2, 1);
     changeQValues(p.Q3, 2);
     changeQValues(p.Q4, 3);
-    //changeOutputGain(p.OG);
+   
+    //Param we can change with knob
     parent.volume = p.OG;
-
-    //changeBassFilterValue(p.BF);
     parent.bass = p.BF;
-    //changeMidFilterValue(p.MF);
     parent.middle = p.MF;
-
-    //changeTrebleFilterValue(p.TF);
     parent.treble = p.TF;
-    //changePresenceFilterValue(p.PF);
     parent.presence = p.PF;
-
-
-    //changeMasterVolume(p.MV);
     parent.master = p.MV;
-
-    //changeReverbGain(p.RG);
     parent.reverb = p.RG;
-
     parent.drive = p.K3;
+
+    //Param we cannot change with knob
+    parent.LCF= p.LCF;
+    parent.HCF= p.HCF;
+    parent.F1= p.F1;
+    parent.F2= p.F2;
+    parent.F3= p.F3;
+    parent.F4= p.F4;
+    parent.Q1= p.Q1;
+    parent.Q2= p.Q2;
+    parent.Q3= p.Q3;
+    parent.Q4= p.Q4;
+    parent.EQ= p.EQ;
+    parent.CG= p.CG;
+
     changeReverbImpulse(p.RN);
 
     changeRoom(p.CG);
