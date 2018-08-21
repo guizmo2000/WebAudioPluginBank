@@ -257,6 +257,7 @@
 			this.knobs = this._root.querySelectorAll(".knob");
 			this.isOn;
 			this.state = new Object();
+			this.index = null;
 			this.setKnobs();
 			this.setSwitchListener();
 			this.setResources();
@@ -307,9 +308,10 @@
 		setResources() {
 			let menuPresets = this._root.querySelector("#menuPresets");
 			menuPresets.onchange = (e) => {
-				let index = e.target.value;
+				let choice = e.target.value;
+				this.index = choice
 				this._plug.setParam("preset", e.target.value);
-				this._plug.setPatch(null, index);
+				this._plug.setPatch(null, this.index);
 			}
 			// Set up the background img & style
 			var background = this._root.querySelector("img");
@@ -346,6 +348,7 @@
 		reactivate() {
 			// reactivate the plug
 			this._plug.setParam("status", "enable");
+			this._plug.setPatch(null, this.index);
 		}
 
 		setSwitchListener() {

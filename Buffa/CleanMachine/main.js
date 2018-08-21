@@ -11,6 +11,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
 
     this.params = {status:"disable", preset : "0"}
 
+    //Param we can modify with buttons
     this.addParam({
       name: 'volume',
       defaultValue: 5,
@@ -59,6 +60,8 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
       minValue: 0,
       maxValue: 10
     });
+
+
 
 
     this.reverbImpulses = [{
