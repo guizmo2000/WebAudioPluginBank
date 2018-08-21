@@ -127,18 +127,6 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
             defaultValue: [5, 5, 5, 5, 5, 5],
         });
         this.addParam({
-            name: 'boost',
-            defaultValue: false
-        });
-        this.addParam({
-            name: 'distoName1',
-            defaultValue: "asymetric"
-        });
-        this.addParam({
-            name: 'distoName2',
-            defaultValue: "crunch"
-        });
-        this.addParam({
             name: 'CG',
             defaultValue: 3,
             minValue: 0,
@@ -320,7 +308,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
     } 
     set gain1(val){
         this.params.gain1 = val;
-        this.amp.changePreampStage1GainValue(val); //TODO: See if it's the good parameter
+        this.amp.changePreampStage1GainValue(val); 
     }
 
     set gain2(val){
@@ -342,23 +330,6 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
         this.params.EQ = val;
         this.amp.changeEQValues(val);
     }
-
-    
-    set boost(val){
-        this.params.boost= val;
-        this.amp.changeBoost(val);
-    }
-
-    set distoName1(val){
-        this.params.distoName1 = val;
-        this.amp.changeDisto1TypeFromPreset(val);
-    }
-
-    set distoName2(val){
-        this.params.distoName2 = val;
-        this.amp.changeDisto1TypeFromPreset(val);
-    }
-
 
     set CG(val){
         this.params.CG= val;
