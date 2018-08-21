@@ -215,7 +215,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
         this.cabinetSim = new Convolver(this.context, this.cabinetImpulses, "cabinetImpulses");
         this.boost = new Boost(this.context);
 
-        this.amp = new Amp(this.context, this.boost, this.eq, this.ampReverb, this.cabinetSim);
+        this.amp = new AmpDisto(this.context, this.boost, this.eq, this.ampReverb, this.cabinetSim);
     }
 
     connectNodes() {
@@ -341,7 +341,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
 
 // ----------- AMP ---------------
 
-function Amp(context, boost, eq, reverb, cabinetSim) {
+function AmpDisto(context, boost, eq, reverb, cabinetSim) {
     var presets = [];
     //var menuPresets = document.querySelector("#QFPresetMenu2");
     //var menuDisto1 = document.querySelector("#distorsionMenu1");
