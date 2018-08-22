@@ -60,7 +60,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
 
     connectNodes() {
         this._input.connect(this.dryGainNode);
-        this.dryGainNode.connect(this.bandpass);
+        this.dryGainNode.connect(this.bandPass);
         this.bandPass.connect(this.analyser);
     }
 
