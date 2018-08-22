@@ -44,10 +44,6 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         }
     }
 
-    get numberOfInputs() {
-        return 0;
-    }
-
     get numberOfOutputs() {
         return 0;
     }
