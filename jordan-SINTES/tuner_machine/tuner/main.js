@@ -14,7 +14,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         this.params = { "status": "disable" }
         super.setup();
 
-        this.analyser = null;
+        this.analyser;
         this.DEBUGCANVAS = null;
         this.mediaStreamSource = null;
         this.rafID = null,
@@ -49,23 +49,21 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     }
 
     createNodes() {
-        this.dryGainNode = this.context.createGain();
-        this.bandPass = this.context.createBiquadFilter();
         this.analyser = this.context.createAnalyser();
-
-        this.bandPass.gain.value = 1;
+        this.analyser.fftSize = 2048;
     }
 
     connectNodes() {
-        this._input.connect(this.dryGainNode);
-        this.dryGainNode.connect(this.bandPass);
+        //this._input.connect(this.dryGainNode);
+        this._input.connect(this.analyser);
+        this.analyser.connect(this._output);
     }
 
     /*  #########  Personnal code for Tuner  #########   */
     set status(_sig) {
         if (_sig === "enable") {
             this.params.status = "enable";
-            this.toggleLiveInput();
+            this.updatePitch();
             console.log("Tuner is on");
         }
 
