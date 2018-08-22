@@ -50,15 +50,18 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
 
     createNodes() {
         this.dryGainNode = this.context.createGain();
+        this.bandPass = this.context.createBiquadFilter();
         this.analyser = this.context.createAnalyser();
         
-        this.dryGainNode.gain.value=2;
+        this.bandPass.type= "bandpass"
+        this.bandPass.value= 1
         this.analyser.fftSize = 2048;
     }
 
     connectNodes() {
         this._input.connect(this.dryGainNode);
-        this.dryGainNode.connect(this.analyser);
+        this.dryGainNode.connect(this.bandpass);
+        this.bandpass.connect(this.analyser);
     }
 
     /*  #########  Personnal code for Tuner  #########   */
