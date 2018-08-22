@@ -49,13 +49,14 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     }
 
     createNodes() {
+        this.dryGainNode = this.context.createGain();
         this.analyser = this.context.createAnalyser();
         this.analyser.fftSize = 2048;
     }
 
     connectNodes() {
-        //this._input.connect(this.dryGainNode);
-        this._input.connect(this.analyser);
+        this._input.connect(this.dryGainNode);
+        this.dryGainNode.connect(this.analyser);
     }
 
     /*  #########  Personnal code for Tuner  #########   */
