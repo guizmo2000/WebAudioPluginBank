@@ -52,7 +52,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         this.dryGainNode = this.context.createGain();
         this.analyser = this.context.createAnalyser();
         
-        this.dryGainNode.gain.value=10;
+        this.dryGainNode.gain.value=2;
         this.analyser.fftSize = 2048;
     }
 
