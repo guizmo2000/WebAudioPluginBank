@@ -82,49 +82,6 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         }
     }
 
-    toggleLiveInput() {
-        this.getUserMedia(
-            {
-                "audio": {
-                    "mandatory": {
-                        "googEchoCancellation": "false",
-                        "googAutoGainControl": "false",
-                        "googNoiseSuppression": "false",
-                        "googHighpassFilter": "false"
-                    },
-                    "optional": []
-                },
-            }, this.gotStream.bind(this));
-    }
-
-
-
-
-    getUserMedia(dictionary, callback) {
-        try {
-            navigator.getUserMedia =
-                navigator.getUserMedia ||
-                navigator.webkitGetUserMedia ||
-                navigator.mozGetUserMedia;
-            navigator.getUserMedia(dictionary, callback, () => console.log("Stream generation failed"));
-        } catch (e) {
-            alert('getUserMedia threw exception :' + e);
-        }
-    }
-
-    gotStream(stream) {
-        // Create an AudioNode from the stream.
-        this.mediaStreamSource = this.context.createMediaStreamSource(stream);
-
-        // Connect it to the destination.
-        this.analyser = this.context.createAnalyser();
-        this.analyser.fftSize = 2048;
-        this.mediaStreamSource.connect(this.analyser);
-
-        this.updatePitch();
-
-    }
-
     noteFromPitch(frequency) {
         var noteNum = 12 * (Math.log(frequency / 440) / Math.log(2));
         return Math.round(noteNum) + 69;
