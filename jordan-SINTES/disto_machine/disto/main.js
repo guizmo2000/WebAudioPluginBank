@@ -176,7 +176,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
     }
     setPatch(data, index) {
         console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
-        this.amp.setPresetByIndex(this, index);
+        this.ampDisto.setPresetByIndex(this, index);
     }
 
     getParam(key) {
@@ -215,59 +215,59 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
         this.cabinetSim = new Convolver(this.context, this.cabinetImpulses, "cabinetImpulses");
         this.boost = new Boost(this.context);
 
-        this.amp = new AmpDisto(this.context, this.boost, this.eq, this.ampReverb, this.cabinetSim);
+        this.ampDisto = new AmpDisto(this.context, this.boost, this.eq, this.ampReverb, this.cabinetSim);
     }
 
     connectNodes() {
-        this._input.connect(this.amp.input);
-        this.amp.output.connect(this._output);
+        this._input.connect(this.ampDisto.input);
+        this.ampDisto.output.connect(this._output);
     }
 
     //Params who can be changed by knob
     set volume(val) {
         this.params.volume = val;
-        this.amp.changeOutputGain(val);
+        this.ampDisto.changeOutputGain(val);
     }
 
     set master(val) {
         this.params.master = val;
-        this.amp.changeMasterVolume(val);
+        this.ampDisto.changeMasterVolume(val);
     }
 
     set drive(val) {
         this.params.drive = val;
-        this.amp.changeDrive(val);
+        this.ampDisto.changeDrive(val);
     }
 
     set bass(val) {
         this.params.bass = val;
-        this.amp.changeBassFilterValue(val);
+        this.ampDisto.changeBassFilterValue(val);
     }
 
     set middle(val) {
         this.params.middle = val;
-        this.amp.changeMidFilterValue(val);
+        this.ampDisto.changeMidFilterValue(val);
     }
 
     set treble(val) {
         this.params.treble = val;
-        this.amp.changeTrebleFilterValue(val);
+        this.ampDisto.changeTrebleFilterValue(val);
     }
 
     set reverb(val) {
         this.params.reverb = val;
-        this.amp.changeReverbGain(val);
+        this.ampDisto.changeReverbGain(val);
     }
 
     set presence(val) {
         this.params.presence = val;
-        this.amp.changePresenceFilterValue(val);
+        this.ampDisto.changePresenceFilterValue(val);
     }
 
     set status(_sig) { 
         let bypassOn = (_sig !== "disable");
 
-        this.amp.bypass(bypassOn);
+        this.ampDisto.bypass(bypassOn);
         // cas reactivation ? 
     }
 
@@ -279,61 +279,61 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
 
     set LS1Freq(val){
         this.params.LS1Freq = val;
-        this.amp.changeLowShelf1FrequencyValue(val);
+        this.ampDisto.changeLowShelf1FrequencyValue(val);
     }
 
     set LS1Gain(val){
         this.params.LS1Gain = val;
-        this.amp.changeLowShelf1GainValue(val);
+        this.ampDisto.changeLowShelf1GainValue(val);
     }
 
     set LS2Freq(val){
         this.params.LS2Freq = val;
-        this.amp.changeLowShelf2FrequencyValue(val);
+        this.ampDisto.changeLowShelf2FrequencyValue(val);
     }
 
     set LS2Gain(val){
         this.params.LS2Gain = val;
-        this.amp.changeLowShelf2GainValue(val);
+        this.ampDisto.changeLowShelf2GainValue(val);
     }
 
     set LS3Freq(val){
         this.params.LS3Freq = val;
-        this.amp.changeLowShelf3FrequencyValue = val;
+        this.ampDisto.changeLowShelf3FrequencyValue = val;
     }
 
     set LS3Gain(val){
         this.params.LS3Gain = val;
-        this.amp.changeLowShelf3GainValue(val);
+        this.ampDisto.changeLowShelf3GainValue(val);
     } 
     set gain1(val){
         this.params.gain1 = val;
-        this.amp.changePreampStage1GainValue(val); 
+        this.ampDisto.changePreampStage1GainValue(val); 
     }
 
     set gain2(val){
         this.params.gain2 = val;
-        this.amp.changePreampStage2GainValue(val)
+        this.ampDisto.changePreampStage2GainValue(val)
     }
 
     set HP1Freq(val){
         this.params.HP1Freq = val;
-        this.amp.changeHighPass1FrequencyValue(val);
+        this.ampDisto.changeHighPass1FrequencyValue(val);
     }
 
     set HP1Q(val){
         this.params.HP1Q = val;
-        this.amp.changeHighPass1QValue(val);
+        this.ampDisto.changeHighPass1QValue(val);
     }
 
     set EQ(val){
         this.params.EQ = val;
-        this.amp.changeEQValues(val);
+        this.ampDisto.changeEQValues(val);
     }
 
     set CG(val){
         this.params.CG= val;
-        this.amp.changeRoom(val);
+        this.ampDisto.changeRoom(val);
     }
 
 
