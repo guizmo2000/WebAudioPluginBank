@@ -44,24 +44,18 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         }
     }
 
-    get numberOfOutputs() {
-        return 0;
-    }
-
     createNodes() {
         this.dryGainNode = this.context.createGain();
-        this.bandPass = this.context.createBiquadFilter();
         this.analyser = this.context.createAnalyser();
         
-        this.bandPass.type= "bandpass"
-        this.bandPass.value= 1
+        this.dryGainNode.gain.value=2;
         this.analyser.fftSize = 2048;
     }
 
     connectNodes() {
         this._input.connect(this.dryGainNode);
-        this.dryGainNode.connect(this.bandPass);
-        this.bandPass.connect(this.analyser);
+        this.dryGainNode.connect(this.analyser);
+        this.analyser.connect(this._output);
     }
 
     /*  #########  Personnal code for Tuner  #########   */
