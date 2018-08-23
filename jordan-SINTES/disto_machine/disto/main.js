@@ -410,7 +410,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
     // Distorsion 1, here we should use an asymetric function in order to 
     // generate odd harmonics
     od[0] = context.createWaveShaper();
-    od[0].curve = wsFactory.distorsionCurves[distoTypes[0]](0);
+    // od[0].curve = wsFactory.distorsionCurves[distoTypes[0]](0);
     //menuDisto1.value = distoTypes[0];
 
     // HighPass at 7-8 Hz, rectify the signal that got a DC value due
