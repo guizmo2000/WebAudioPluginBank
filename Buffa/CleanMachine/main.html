@@ -257,7 +257,8 @@
 			this.knobs = this._root.querySelectorAll(".knob");
 			this.isOn;
 			this.state = new Object();
-			this.index = null;
+			this.menu= this._root.querySelector("#menuPresets");
+			this.index= this.menu.value;
 			this.setKnobs();
 			this.setSwitchListener();
 			this.setResources();
