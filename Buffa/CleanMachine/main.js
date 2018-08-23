@@ -386,13 +386,13 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
   //var menuPresets = document.querySelector("#QFPresetMenu2");
   //var menuDisto = document.querySelector("#distorsionMenu");
   // for the waveshapers from the preamp
-  var wsFactory = new WaveShapers();
+  var wsFactoryClean = new WaveShapers();
   //buildDistoMenu();
 
   var currentDistoName = "standard";
   var currentK = 2; // we have separates ks, but also a "global" one that
   // is the max of the four (the knob value)
-  var currentWSCurve = wsFactory.distorsionCurves[currentDistoName](currentK);
+  var currentWSCurve = wsFactoryClean.distorsionCurves[currentDistoName](currentK);
   // for Wave Shaper Curves visualization
   var distoDrawer, signalDrawer;
   //var DRAWER_CANVAS_SIZE = 100;
@@ -1017,7 +1017,7 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
 
   function makeDistortionCurve(k) {
     // compute a new ws curve for current disto name and current k
-    currentWSCurve = wsFactory.distorsionCurves[currentDistoName](k);
+    currentWSCurve = wsFactoryClean.distorsionCurves[currentDistoName](k);
     return currentWSCurve;
   }
 
