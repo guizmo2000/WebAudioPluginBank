@@ -28,7 +28,8 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 
 		this.addParam({ name: 'gain', defaultValue: 1, minValue: 0, maxValue: 10 });
 		this.addParam({ name: 'nbcanaux', defaultValue: 2, minValue: 2, maxValue: 6 });
-
+		this.gainMin=0;
+		this.gainMax=10;
 
 
 		this.getNumberOfChannels();
@@ -112,8 +113,8 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 	}
 
 	changeMasterGain(value) {
-		if ((value >= this.params.gain.minValue) && (value <= this.params.gain.maxValue)) {
-			this.params.gain.value = value;
+		if ((value >= this.gainMin) && (value <= this.gainMax)) {
+			this.params.gain = value;
 			this.master.gain.setValueAtTime(parseFloat(value, 10), this.context.currentTime);
 		}
 	}
