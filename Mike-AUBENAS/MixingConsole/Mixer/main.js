@@ -92,7 +92,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 
 
 	addChannel() {
-		if (this.params.nbcanaux <= this.nbcanauxMax) {
+		if (this.params.nbcanaux < this.nbcanauxMax) {
 			this.params.nbcanaux++;
 			let numchannel = "InputForchannel" + this.inputs.length + 1;
 			this[numchannel] = this.context.createGain();
