@@ -27,9 +27,11 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 			}
 
 		this.addParam({ name: 'gain', defaultValue: 1, minValue: 0, maxValue: 10 });
-		this.addParam({ name: 'nbcanaux', defaultValue: 2, minValue: 2, maxValue: 6 });
-		this.gainMin=0;
-		this.gainMax=10;
+		this.addParam({ name: 'nbcanaux', defaultValue: 0, minValue: 2, maxValue: 6 });
+		this.gainMin = 0;
+		this.gainMax = 10;
+		this.nbcanauxMin = 2;
+		this.nbcanauxMax = 5;
 
 
 		this.getNumberOfChannels();
@@ -90,26 +92,32 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 
 
 	addChannel() {
-		let numchannel = "InputForchannel" + this.inputs.length + 1;
-		this[numchannel] = this.context.createGain();
-		this.inputs.push(this[numchannel]);
+		if (this.params.nbcanaux <= this.nbcanauxMax+1) {
+			this.params.nbcanaux++;
+			let numchannel = "InputForchannel" + this.inputs.length + 1;
+			this[numchannel] = this.context.createGain();
+			this.inputs.push(this[numchannel]);
 
-		var plugin = new window.WasabiChannelMixer(this.context, this.urlChannel, { "channelNumber": this.inputs.length });
+			var plugin = new window.WasabiChannelMixer(this.context, this.urlChannel, { "channelNumber": this.inputs.length });
 
-		plugin.load().then((node) => {
-			plugin.loadGui().then((elem) => {
-				this.gui._root.querySelector('#arrayOfChannels').appendChild(elem);
-				this.numberOfInputs++;
-				this.gui.setWidth(this.gui.properties.dataWidth.value + elem.properties.dataWidth.value);
-				var event = new Event('change');
-				// Dispatch it.
-				this.gui.dispatchEvent(event);
+			plugin.load().then((node) => {
+				plugin.loadGui().then((elem) => {
+					this.gui._root.querySelector('#arrayOfChannels').appendChild(elem);
+					this.numberOfInputs++;
+					this.gui.setWidth(this.gui.properties.dataWidth.value + elem.properties.dataWidth.value);
+					var event = new Event('change');
+					// Dispatch it.
+					this.gui.dispatchEvent(event);
+				});
+
+				this[numchannel].connect(node);
+				node.connect(this.master);
+				//this.createOverlayableZoneFor("pedalLabel", position);
 			});
-
-			this[numchannel].connect(node);
-			node.connect(this.master);
-			//this.createOverlayableZoneFor("pedalLabel", position);
-		});
+		}
+		else {
+			console.log("nb atteint")
+		}
 	}
 
 	changeMasterGain(value) {
@@ -127,7 +135,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 	set nbcanaux(nb) {
 		console.log("yes");
 		this.params.nbcanaux = nb;
-	//	let diff = nb - this.numberOfInputs;
+		//	let diff = nb - this.numberOfInputs;
 		//this.addChannel();
 		//this.addChannel();
 		// if (diff != 0) {
