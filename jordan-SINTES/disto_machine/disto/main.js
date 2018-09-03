@@ -347,14 +347,14 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
     //var menuDisto1 = document.querySelector("#distorsionMenu1");
     //var menuDisto2 = document.querySelector("#distorsionMenu2");
     // for the waveshapers from the preamp
-    var wsFactory = new WaveShapers();
+    var wsFactoryDisto = new WaveShapers();
     //buildDistoMenu1();
     //buildDistoMenu2();
 
     var currentDistoName = "standard";
     var currentK = 2; // we have separates ks, but also a "global" one that
     // is the max of the two (the knob value)
-    var currentWSCurve = wsFactory.distorsionCurves[currentDistoName](currentK);
+    var currentWSCurve = wsFactoryDisto.distorsionCurves[currentDistoName](currentK);
     // for Wave Shaper Curves visualization
     //var DRAWER_CANVAS_SIZE = 100;
     //var distoDrawer1 = new CurveDrawer("distoDrawerCanvas1");
@@ -410,7 +410,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
     // Distorsion 1, here we should use an asymetric function in order to 
     // generate odd harmonics
     od[0] = context.createWaveShaper();
-    od[0].curve = wsFactory.distorsionCurves[distoTypes[0]](0);
+    od[0].curve = wsFactoryDisto.distorsionCurves[distoTypes[0]](0);
     //menuDisto1.value = distoTypes[0];
 
     // HighPass at 7-8 Hz, rectify the signal that got a DC value due
@@ -432,7 +432,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
 
     // Distorsion 2, symetric function to generate even harmonics
     od[1] = context.createWaveShaper();
-    od[1].curve = wsFactory.distorsionCurves[distoTypes[1]](0);
+    od[1].curve = wsFactoryDisto.distorsionCurves[distoTypes[1]](0);
     //menuDisto2.value = distoTypes[1];
 
     changeDistorsionValues(4, 0);
@@ -865,7 +865,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
 
     // Build a drop down menu with all distorsion names
     function buildDistoMenu1() {
-        for (var p in wsFactory.distorsionCurves) {
+        for (var p in wsFactoryDisto.distorsionCurves) {
             var option = document.createElement("option");
             option.value = p;
             option.text = p;
@@ -875,7 +875,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
     }
     // Build a drop down menu with all distorsion names
     function buildDistoMenu2() {
-        for (var p in wsFactory.distorsionCurves) {
+        for (var p in wsFactoryDisto.distorsionCurves) {
             var option = document.createElement("option");
             option.value = p;
             option.text = p;
@@ -944,7 +944,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
         k[numDisto] = value;
         //console.log("k = " + value + " pos = " + logToPos(value));
         //console.log("distoTypes = " + distoTypes[numDisto]);
-        od[numDisto].curve = wsFactory.distorsionCurves[distoTypes[numDisto]](k[numDisto]);//makeDistortionCurve(k[numDisto]);
+        od[numDisto].curve = wsFactoryDisto.distorsionCurves[distoTypes[numDisto]](k[numDisto]);//makeDistortionCurve(k[numDisto]);
         currentWSCurve = od[numDisto].curve;
         //od[numDisto].curve = makeDistortionCurve(sliderValue);
         //makeDistortionCurve(k[numDisto]);
@@ -1197,7 +1197,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
 
     function makeDistortionCurve(k) {
         // compute a new ws curve for current disto name and current k
-        currentWSCurve = wsFactory.distorsionCurves[currentDistoName](k);
+        currentWSCurve = wsFactoryDisto.distorsionCurves[currentDistoName](k);
         return currentWSCurve;
     }
 
