@@ -41,9 +41,9 @@
 	}
 
 	var pluginURL = "./MixingConsole/Mixer";
-	let options = { "arrayNodeToConnect": arrayMediaSources };
-	var plugin = new window.WasabiMixer(ctx, pluginURL/*, options*/);
-	var state = { "gain": 1, "nbcanaux": 4 }
+	let options = { "arrayNodeToConnect": arrayMediaSources, "numberOfInputs": 4 };
+	var plugin = new window.WasabiMixer(ctx, pluginURL, options);
+	var state = { "gain": 1}
 
 	plugin.load().then((node) => {
 		console.log("node", node);

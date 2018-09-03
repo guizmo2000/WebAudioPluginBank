@@ -156,7 +156,7 @@
 			this.arrayNodeToConnectChannel = this._plug.getArrayNodeToConnect();
 			this.listOfWasabiChannels = [];
 			that = this;
-			this.firstsChannel(that = this);
+			this.initChannels(that = this);
 			this.setMaster();
 			this.setAddChannel();
 			this.boundingRect = {
@@ -206,13 +206,12 @@
 		}
 
 
-		firstsChannel(parent) {
-			var i =1;
+		initChannels(parent) {
 			let numchannel = "InputForchannel" + this._plug.inputs.length + 1;
-			let plugin = new window.WasabiChannelMixer(this._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", {i});
 
 			(async function loop() {
-				for (i = 1; i < 3; i++) {
+				for (let i = 1; i < parent._plug._numberOfInputs +1; i++) {
+					let plugin = new window.WasabiChannelMixer(parent._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", {"channelNumber":i});
 					await parent.addCh(plugin, i);
 				}
 			})();

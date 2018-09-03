@@ -6,7 +6,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 
 		this.state;
 		this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
-		this._numberOfInputs = 2;
+		this._numberOfInputs = options.numberOfInputs ? options.numberOfInputs : 2;
 		parent = this;
 
 		if (options)
