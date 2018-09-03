@@ -14,7 +14,6 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 			this._numberOfInputs = options.numberOfInputs ? options.numberOfInputs : 2;
 		} else
 			this.arrayNodeToConnect = 'no nodes';
-			console.log(options.numberOfInputs);
 
 		this._metadata =
 			{
