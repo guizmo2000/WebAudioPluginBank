@@ -347,7 +347,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
     //var menuDisto1 = document.querySelector("#distorsionMenu1");
     //var menuDisto2 = document.querySelector("#distorsionMenu2");
     // for the waveshapers from the preamp
-    var wsFactoryDisto = new WaveShapers();
+    var wsFactoryDisto = new WaveShapersDisto();
     //buildDistoMenu1();
     //buildDistoMenu2();
 
@@ -2025,7 +2025,7 @@ var Boost = function (context) {
 
 
 // ---------- DISTORSION FACTORY --------------
-function WaveShapers() {
+function WaveShapersDisto() {
     var distorsionCurves = {};
 
     buildDistorsionFactories();
