@@ -309,10 +309,9 @@
 		setResources() {
 			let menuPresets = this._root.querySelector("#menuPresets");
 			menuPresets.onchange = (e) => {
-				let choice = e.target.value;
-				this.index = choice
-				this._plug.setParam("preset", e.target.value);
-				this._plug.setPatch(null, this.index);
+				this.index = e.target.value;
+				this._plug.setParam("preset", this.index);
+				//this._plug.setPatch(null, this.index);
 			}
 			// Set up the background img & style
 			var background = this._root.querySelector("img");
