@@ -174,10 +174,10 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
     getPatch(index) { // patch = preset
         return null;
     }
-    setPatch(data, index) {
-        console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
-        this.amp.setPresetByIndex(this, index);
-    }
+    // setPatch(data, index) {
+    //     console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
+    //     this.amp.setPresetByIndex(this, index);
+    // }
 
     getParam(key) {
         try {
@@ -273,6 +273,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
 
     set preset(val){
         this.params.preset = val;
+        this.amp.setPresetByIndex(this, val);
     }
 
     //Params who cannot be changed by knob
@@ -370,8 +371,8 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
     // Main input and output and bypass
     var input = context.createGain();
     var output = context.createGain();
-    var byPass = context.createGain();
-    byPass.gain.value = 0;
+    // var byPass = context.createGain();
+    // byPass.gain.value = 0;
 
     // amp input gain towards pream stage
     var inputGain = context.createGain();
@@ -528,7 +529,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
 
     function buildGraph() {
         input.connect(inputGain);
-        input.connect(byPass);
+        //input.connect(byPass);
 
         // boost is not activated, it's just a sort of disto at 
         // the very beginning of the amp route
@@ -580,7 +581,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
         //reverb.output.connect(output);
 
         // byPass route
-        byPass.connect(output);
+        //byPass.connect(output);
     }
 
     function boostOnOff(cb) {
@@ -1499,15 +1500,16 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
     }
 
     function setPresetByIndex(parent, index) {
-        console.log(parent);
         setPreset(parent, presets[index]);
     }
 
     function setPreset(parent, p) {
         if (p.distoName1 === undefined) {
+            console.log("test")
             p.distoName1 = "standard";
         }
         if (p.distoName2 === undefined) {
+            console.log("test2")
             p.distoName2 = "standard";
         }
 
@@ -1556,6 +1558,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
         parent.distoName1 = p.distoName1;
         parent.distoName2 = p.distoName2;
         parent.CG = p.CG
+        console.log(parent);
 
 
         changeReverbImpulse(p.RN);
@@ -1623,14 +1626,14 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
     function bypass(bypassOn) {
         console.log("byPass : " + bypassOn);
 
-        if (bypassOn) {
+        if (!bypassOn) {
             // byPass mode
-            inputGain.gain.value = 1;
-            byPass.gain.value = 0;
+            input.disconnect();
+            input.connect(output)
         } else {
             // normal amp running mode
-            inputGain.gain.value = 0;
-            byPass.gain.value = 1;
+            input.disconnect();
+            input.connect(inputGain)
         }
         /*
         // update buttons states
