@@ -610,6 +610,9 @@
             <!--<img id='save'>-->
             <!--<img id='load'>-->
             <img id='reset'>
+            <button id='demo1'>Demo1</button>
+            <button id='demo2'>Demo2</button>
+            <button id='demo3'>Demo3</button>
 
         </section>
 
@@ -704,12 +707,15 @@
             this._root.getElementById('play').addEventListener('mousedown', (event) => this._plug.handlePlay(event), true);
             this._root.getElementById('stop').addEventListener('mousedown', (event) => this._plug.handleStop(event), true);
            // this._root.getElementById('save').addEventListener('mousedown', this.handleSave, true);
-            this._root.getElementById('save_ok').addEventListener('mousedown', this.handleSaveOk, true);
+            //this._root.getElementById('save_ok').addEventListener('mousedown', this.handleSaveOk, true);
             //this._root.getElementById('load').addEventListener('mousedown', this.handleLoad, true);
-            this._root.getElementById('load_ok').addEventListener('mousedown', this.handleLoadOk, true);
-            this._root.getElementById('load_cancel').addEventListener('mousedown', this.handleLoadCancel, true);
+            //this._root.getElementById('load_ok').addEventListener('mousedown', this.handleLoadOk, true);
+            //this._root.getElementById('load_cancel').addEventListener('mousedown', this.handleLoadCancel, true);
             this._root.getElementById('reset').addEventListener('mousedown', (event) => this._plug.handleReset(event), true);
-
+            
+            this._root.getElementById('demo1').addEventListener('mousedown', (event) => this._plug.demoChoose(1));
+            this._root.getElementById('demo2').addEventListener('mousedown', (event) => this._plug.demoChoose(2));
+            this._root.getElementById('demo3').addEventListener('mousedown', (event) => this._plug.demoChoose(3));
 
             this._root.getElementById('body').addEventListener('mousemove', (event) => this._plug.handleMouseMove(event), true);
             this._root.getElementById('body').addEventListener('mouseup', () => this._plug.handleMouseUp(), true);

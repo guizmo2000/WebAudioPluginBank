@@ -1488,6 +1488,10 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
             "CG": "4.5"
         };
         presets.push(preset8);
+        var preset9=
+        {"name":"Hard Rock Classic 3","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-10.199999809265137,"gain1":1,"distoName1":"standard","K1":"5.2","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"notSoDistorded","K2":"5.1","OG":"2.7","BF":"8.7","MF":"8.0","TF":"3.8","PF":"9.4","EQ":[19,8,-6,-10,7,2],"MV":"5.5","RN":"Fender Hot Rod","RG":"0.7","CN":"Marshall 1960, axis","CG":"9.2"}
+        preset.push(preset9);
+        
         /*
         presets.forEach(function (p, index) {
             var option = document.createElement("option");

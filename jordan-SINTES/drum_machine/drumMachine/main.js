@@ -81,6 +81,60 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
 
+			demo1: {
+				"kitIndex": 12,
+				"tempo": 130,
+				"swingFactor": 0,
+				"kickPitchVal": 0.46478873239436624,
+				"snarePitchVal": 0.45070422535211263,
+				"hihatPitchVal": 0.15492957746478875,
+				"tom1PitchVal": 0.7183098591549295,
+				"tom2PitchVal": 0.704225352112676,
+				"tom3PitchVal": 0.8028169014084507,
+				"rhythm1": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm2": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm3": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm4": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm5": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm6": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			},
+
+			demo2: {
+				"kitIndex": 12,
+				"tempo": 130,
+				"swingFactor": 0,
+				"kickPitchVal": 0.46478873239436624,
+				"snarePitchVal": 0.45070422535211263,
+				"hihatPitchVal": 0.15492957746478875,
+				"tom1PitchVal": 0.7183098591549295,
+				"tom2PitchVal": 0.704225352112676,
+				"tom3PitchVal": 0.8028169014084507,
+				"rhythm1": [1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm2": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm3": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm4": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm5": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm6": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			},
+
+			demo3: {
+				"kitIndex": 12,
+				"tempo": 130,
+				"swingFactor": 0,
+				"kickPitchVal": 0.46478873239436624,
+				"snarePitchVal": 0.45070422535211263,
+				"hihatPitchVal": 0.15492957746478875,
+				"tom1PitchVal": 0.7183098591549295,
+				"tom2PitchVal": 0.704225352112676,
+				"tom3PitchVal": 0.8028169014084507,
+				"rhythm1": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm2": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm3": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm4": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm5": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm6": [1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			},
+
 			kits: null,
 			currentKit: null,
 			instrumentActive: [true, true, true, true, true, true],
@@ -284,7 +338,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	//TODO: see correction with this function
 	showDemoAvailable(demoIndex /* zero-based */) {
-		this.loadBeat(this.params.beatInitial);
+		this.loadBeatReset(this.params.beatInitial);
 	}
 
 	init() {
@@ -433,6 +487,21 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
 	}
 
+	demoChoose(index){
+		this.handleReset();
+		if(index == 1){	
+			this.loadBeat(this.params.demo1);	
+		}
+		else if(index == 2){
+			this.loadBeat(this.params.demo2);
+		}
+		else if(index == 3){
+			this.loadBeat(this.params.demo3);
+		}
+
+		this.updateControls();
+	}
+
 	handleSliderMouseDown(event) {
 		this.params.mouseCapture = event.target.id;
 
@@ -551,14 +620,14 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	handleReset(event) {
 		this.handleStop();
-		this.loadBeat(this.params.beatReset);
+		this.loadBeatReset(this.params.beatReset);
 		this.updateControls();
 	}
 
 
 
 	//TODO: see correction with this function
-	loadBeat(beat) {
+	loadBeatReset(beat) {
 
 		// Check that assets are loaded.
 		if (beat != this.params.beatReset && !beat.isLoaded())
@@ -576,6 +645,22 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.sliderSetValue('swing_thumb', this.params.theBeat.swingFactor);
 		//this.handleStop();
 		//this.updateControls();
+		return true;
+	}
+
+	//TODO: see correction with this function
+	loadBeat(demo) {
+
+		this.params.theBeat = this.cloneBeat(demo);
+		this.params.currentKit = this.params.kits[this.params.theBeat.kitIndex];
+		// apply values from sliders
+		this.sliderSetValue('kick_thumb', this.params.theBeat.kickPitchVal);
+		this.sliderSetValue('snare_thumb', this.params.theBeat.snarePitchVal);
+		this.sliderSetValue('hihat_thumb', this.params.theBeat.hihatPitchVal);
+		this.sliderSetValue('tom1_thumb', this.params.theBeat.tom1PitchVal);
+		this.sliderSetValue('tom2_thumb', this.params.theBeat.tom2PitchVal);
+		this.sliderSetValue('tom3_thumb', this.params.theBeat.tom3PitchVal);
+		this.sliderSetValue('swing_thumb', this.params.theBeat.swingFactor);
 		return true;
 	}
 
