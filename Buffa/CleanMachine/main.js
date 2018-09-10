@@ -304,7 +304,7 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
     console.log(_sig);
     let bypassOn = (_sig !== "disable");
 
-    this.amp.bypass(bypassOn);
+    this.amp.bypass(bypassOn,this);
     // cas reactivation ? 
   }
 
@@ -1546,18 +1546,22 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
 
   // END PRESETS
 
-  function bypass(bypassOn) {
+  function bypass(bypassOn,amp) {
     console.log("byPass : " + bypassOn);
 
     if (!bypassOn) {
       // byPass mode
       input.disconnect();
       input.connect(output);
-    } else {
+      console.log(this.params);
+      amp.params.status = "disable";
+  } else {
       // normal amp running mode
       input.disconnect();
       input.connect(inputGain);
-    }
+      amp.params.status = "enable";
+
+  }
 
     // update buttons states
     //var onOffButton = document.querySelector("#myonoffswitch");

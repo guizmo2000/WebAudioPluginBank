@@ -267,7 +267,7 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
     set status(_sig) { 
         let bypassOn = (_sig !== "disable");
 
-        this.amp.bypass(bypassOn);
+        this.amp.bypass(bypassOn,this);
         // cas reactivation ? 
     }
 
@@ -1627,17 +1627,21 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
 
     // END PRESETS
 
-    function bypass(bypassOn) {
+    function bypass(bypassOn,amp) {
         console.log("byPass : " + bypassOn);
 
         if (!bypassOn) {
             // byPass mode
             input.disconnect();
-            input.connect(output)
+            input.connect(output);
+            console.log(this.params);
+            amp.params.status = "disable";
         } else {
             // normal amp running mode
             input.disconnect();
-            input.connect(inputGain)
+            input.connect(inputGain);
+            amp.params.status = "enable";
+
         }
         /*
         // update buttons states
