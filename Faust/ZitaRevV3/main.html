@@ -401,10 +401,16 @@
         this._root.querySelector("#switch1Cont").querySelector("#switch1").value = 1;
         this.isOn = true;
       }
-      this.knobs = this._root.querySelectorAll(".knob");
-      for (var i = 0; i < this.knobs.length; i++) {
+			this.knobs = this._root.querySelectorAll(".knob");
+			try {
+				for (var i = 0; i < this.knobs.length; i++) {
+				console.log("tst")
         this.knobs[i].querySelector("webaudio-knob").setValue(this.state[this.knobs[i].querySelector("webaudio-knob").id],false);
       }
+			} catch (error) {
+				console.warn("GUI not initiated");
+			}
+      
     }
 
 
@@ -427,7 +433,6 @@
 
 
 		bypass() {
-			console.log("hey");
 			this._plug.setParam("/zitaRev/bypass", 1);
 
 		}
