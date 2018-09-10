@@ -27,10 +27,10 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 				"authorInformation": "Mike AUBENAS, i3s intern in Nice - Sophia-Antipolis, France"
 			}
 
-		this.addParam({ name: 'gain', defaultValue: 1, minValue: 0, maxValue: 10 });
+		this.addParam({ name: 'gain', defaultValue: 0.5, minValue: 0, maxValue: 1 });
 		this.addParam({ name: 'nbcanaux', defaultValue: 2, minValue: 2, maxValue: 6 });
 		this.gainMin = 0;
-		this.gainMax = 10;
+		this.gainMax = 1;
 		this.nbcanauxMin = 2;
 		this.nbcanauxMax = 5;
 
