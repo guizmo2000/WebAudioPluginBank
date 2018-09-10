@@ -404,7 +404,6 @@
 			this.knobs = this._root.querySelectorAll(".knob");
 			try {
 				for (var i = 0; i < this.knobs.length; i++) {
-				console.log("tst")
         this.knobs[i].querySelector("webaudio-knob").setValue(this.state[this.knobs[i].querySelector("webaudio-knob").id],false);
       }
 			} catch (error) {
