@@ -94,7 +94,7 @@
   window.onload = () => {
 
     (function getPedalNameFromURL() {
-      let baseURLPedal = "http://mike-aubenas.fr:5001/pedals/node_modules/";
+      let baseURLPedal = "https://mike-aubenas.fr:5001/pedals/node_modules/";
       let currentURL = new URL(window.location.href);
       pedalName = currentURL.searchParams.get('pedal');
 
@@ -300,7 +300,7 @@
         if (xhr.status !== 200) { alert("Deletion aborted") }
       };
     }
-    xhr.open("DELETE", `http://mike-aubenas.fr:5001/api/pedal/${pedalName}`, true);
+    xhr.open("DELETE", `https://mike-aubenas.fr:5001/api/pedal/${pedalName}`, true);
     xhr.send();
   }
 
