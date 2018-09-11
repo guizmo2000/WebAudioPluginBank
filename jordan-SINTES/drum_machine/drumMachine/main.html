@@ -84,7 +84,7 @@
         }
 
         #params {
-            height: 77.5px;
+            height: 107.5px;
         }
 
         #tools {
@@ -106,6 +106,7 @@
         }
 
         #kitlabel,
+        #patternlabel,
         #effectlabel,
         #swinglabel {
             top: 3px;
@@ -204,7 +205,7 @@
         .slider_track {
            
             width:25px;
-            height: 50px;
+            height: 70px;
         }
 
         .slider_hthumb {
@@ -528,6 +529,16 @@
                     </div>
                 </div>
 
+                <div id='patterncombo_container'>
+                    <span class='label' id='patternlabel'>Pattern</span>
+                    <div class='combo' id='patterncombo'>
+                        <span id='patternname'></span>
+                        <img id = "arrow" >
+                        <ul class='combolist' id='patternlist'>
+                        </ul>
+                    </div>
+                </div>
+
                 <div id='tempo_container'>
                     <span class='label' id='tempolabel'>Tempo</span>
                     <div id='tempodisplay'>
@@ -692,6 +703,7 @@
             // Initialize note buttons
             this.initButtons();
             this.makeKitList();
+            this.makePatternList();
 
             // sliders
 
@@ -724,6 +736,7 @@
             this._root.getElementById('tempodec').addEventListener('mousedown', () => this._plug.tempoDecrease(), true);
 
             this._root.getElementById('kitcombo').addEventListener("mousedown", (event) => this.handleKitComboMouseDown(event), true);
+            this._root.getElementById('patterncombo').addEventListener("mousedown", (event) => this.handlePatternComboMouseDown(event), true);
             this._root.addEventListener("mousedown", (event) => this.handleBodyMouseDown(event), true);
         }
 
@@ -748,15 +761,24 @@
 
         }
 
+        handlePatternComboMouseDown(event) {
+            this._root.getElementById('patterncombo').classList.toggle('active');
+
+        }
+
         handleBodyMouseDown(event) {
             var elKitcombo = this._root.getElementById('kitcombo');
+            var elPatterncombo = this._root.getElementById('patterncombo')
 
             if (elKitcombo.classList.contains('active') && !this.isDescendantOfId(event.target, 'kitcombo_container')) {
                 elKitcombo.classList.remove('active');
             }
 
-
+            if (elPatterncombo.classList.contains('active') && !this.isDescendantOfId(event.target, 'patterncombo_container')) {
+                elPatterncombo.classList.remove('active');
+            }
         }
+
         //TODO: see this function how it works, particularry drawNote
         handleButtonMouseDown(event) {
             var notes = this._plug.params.theBeat.kickPitch;
@@ -826,6 +848,19 @@
                 elList.appendChild(elItem);
                 elItem.addEventListener("mousedown", (event) => this.handleKitMouseDown(event), true);
             }
+        }
+
+        makePatternList() {
+            var elList = this._root.getElementById('patternlist');
+            console.log(this._plug.params.demo);
+            /*var numKits = this._plug.params.kitName.length;
+
+            for (var i = 0; i < numKits; i++) {
+                var elItem = document.createElement('li');
+                elItem.innerHTML = this._plug.params.kitNamePretty[i];
+                elList.appendChild(elItem);
+                elItem.addEventListener("mousedown", (event) => this.handleKitMouseDown(event), true);
+            }*/
         }
 
         handleKitMouseDown(event) {
