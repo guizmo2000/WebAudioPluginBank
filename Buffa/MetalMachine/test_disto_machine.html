@@ -55,7 +55,7 @@
             let menuPresets = document.querySelector("#menuPresets");
 			menuPresets.onchange = (e) => {
 				var index= e.target.value;
-				node.setParam("preset", this.index);
+				node.setParam("preset", index);
 			}
                 /*
                 plugin.loadGui().then((elem) => {
