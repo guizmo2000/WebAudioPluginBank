@@ -9,9 +9,8 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
         super(ctx, URL, options)
 
         this.params = {
-            status: "disable",
-            preset: "9"
-        }
+            status: "disable"
+        };
         //TODO: see the problem of disto1 undefined when we don't change preset and power on the amp
         //Param we can modify with buttons
         this.addParam({
@@ -63,110 +62,39 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
             maxValue: 10
         });
 
-        //Param we cannot modify with button
-
-        this.addParam({
-            name: 'LS1Freq',
-            defaultValue: 720,
-            minValue: 0,
-            maxValue: 1000
-        });
-        this.addParam({
-            name: 'LS1Gain',
-            defaultValue: 3,
-            minValue: -6,
-            maxValue: 6
-        });
-        this.addParam({
-            name: 'LS2Freq',
-            defaultValue: 320,
-            minValue: 0,
-            maxValue: 1000
-        });
-        this.addParam({
-            name: 'LS2Gain',
-            defaultValue: -6,
-            minValue: -10,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'gain1',
-            defaultValue: 3,
-            minValue: 0,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'HP1Freq',
-            defaultValue: 6,
-            minValue: 0,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'HP1Q',
-            defaultValue: 0.70,
-            minValue: 0,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'LS3Freq',
-            defaultValue: 720,
-            minValue: 0,
-            maxValue: 1000
-        });
-        this.addParam({
-            name: 'LS3Gain',
-            defaultValue: -6,
-            minValue: -10,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'gain2',
-            defaultValue: 1,
-            minValue: 0,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'EQ',
-            defaultValue: [5, 5, 5, 5, 5, 5],
-        });
-        this.addParam({
-            name: 'CG',
-            defaultValue: 3,
-            minValue: 0,
-            maxValue: 10
-        });
+        Object.assign({ "preset": 9 }, this.params)
 
 
 
         this.reverbImpulses = [{
-                name: "Fender Hot Rod",
-                url: this.URL + "/assets/impulses/reverb/cardiod-rear-levelled.wav"
-            },
-            {
-                name: "PCM 90 clean plate",
-                url: this.URL + "/assets/impulses/reverb/pcm90cleanplate.wav"
-            },
-            {
-                name: "Scala de Milan",
-                url: this.URL + "/assets/impulses/reverb/ScalaMilanOperaHall.wav"
-            }
+            name: "Fender Hot Rod",
+            url: this.URL + "/assets/impulses/reverb/cardiod-rear-levelled.wav"
+        },
+        {
+            name: "PCM 90 clean plate",
+            url: this.URL + "/assets/impulses/reverb/pcm90cleanplate.wav"
+        },
+        {
+            name: "Scala de Milan",
+            url: this.URL + "/assets/impulses/reverb/ScalaMilanOperaHall.wav"
+        }
         ];
         this.cabinetImpulses = [{
-                name: "Vintage Marshall 1",
-                url: this.URL + "/assets/impulses/cabinet/Block%20Inside.wav"
-            },
-            {
-                name: "Vox Custom Bright 4x12 M930 Axis 1",
-                url: this.URL + "/assets/impulses/cabinet/voxCustomBrightM930OnAxis1.wav"
-            },
-            {
-                name: "Fender Champ, axis",
-                url: this.URL + "/assets/impulses/cabinet/FenderChampAxisStereo.wav"
-            },
-            {
-                name: "Marshall 1960, axis",
-                url: this.URL + "/assets/impulses/cabinet/Marshall1960.wav"
-            }
+            name: "Vintage Marshall 1",
+            url: this.URL + "/assets/impulses/cabinet/Block%20Inside.wav"
+        },
+        {
+            name: "Vox Custom Bright 4x12 M930 Axis 1",
+            url: this.URL + "/assets/impulses/cabinet/voxCustomBrightM930OnAxis1.wav"
+        },
+        {
+            name: "Fender Champ, axis",
+            url: this.URL + "/assets/impulses/cabinet/FenderChampAxisStereo.wav"
+        },
+        {
+            name: "Marshall 1960, axis",
+            url: this.URL + "/assets/impulses/cabinet/Marshall1960.wav"
+        }
         ];
 
         super.setup();
@@ -191,12 +119,12 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
     }
 
     setParam(key, value) {
-        //console.log(key, value);
+       // console.log(key, value);
         try {
             this[key] = (value);
         } catch (error) {
 
-            console.warn("this plugin does not implement this param")
+            console.warn("this plugin does not implement this param :", key)
         }
     }
 
@@ -260,13 +188,15 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
     }
 
     set reverb(val) {
+        console.log("setReverb")
         this.params.reverb = val;
         this.amp.changeReverbGainAmp(val);
     }
 
     set presence(val) {
+        console.log("Presence SET")
         this.params.presence = val;
-        this.amp.tonestack.changePresenceFilterValueTS(val);
+        this.amp.changePresenceFilterGainValue(val);
     }
 
     set status(_sig) {
@@ -278,7 +208,7 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
 
     set preset(val) {
         this.params.preset = val;
-        this.amp.setPresetByIndex(val);
+        this.amp.setPresetByIndex(this, val);
     }
 
     //Params who cannot be changed by knob
@@ -333,6 +263,7 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
     }
 
     set EQ(values) {
+        console.log("changements");
         this.params.EQ = values;
 
         values.forEach((val, index) => {
@@ -588,6 +519,36 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
     // --------
     function initPresets() {
         // Can be converted to JSON
+        var preset0 = {
+            "name": "Default",
+            "boost": false,
+            "LS1Freq": 720,
+            "LS1Gain": -6,
+            "LS2Freq": 320,
+            "LS2Gain": -6.300000190734863,
+            "gain1": 3,
+            "distoName1": "asymetric",
+            "K1": "3",
+            "HP1Freq": 6,
+            "HP1Q": 0.707099974155426,
+            "LS3Freq": 720,
+            "LS3Gain": -6,
+            "gain2": 1,
+            "distoName2": "crunch",
+            "K2": "3.0",
+            "OG": "3.0",
+            "BF": "3.0",
+            "MF": "3.0",
+            "TF": "3.0",
+            "PF": "3.0",
+            "EQ": [5, 5, 5, 5, 5, 5],
+            "MV": "3.0",
+            "RN": "Fender Hot Rod",
+            "RG": "3.0",
+            "CN": "Marshall 1960, axis",
+            "CG": "3.0"
+        };
+        presets.push(preset0);
 
         var preset1 = {
             "name": "Hard Rock classic 1",
@@ -877,40 +838,40 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
             "PA_K": "5.4",
             "PA_NEGATIVE_GAIN": -0.3000000059604645,
             "PA_PRESENCE_FILTERS_PARAMS": [{
-                    "Q": 2.883333444595337,
-                    "frequency": 39.64677810668945,
-                    "gain": 12
-                },
-                {
-                    "Q": 0,
-                    "frequency": 85.93848419189453,
-                    "gain": -3.211111068725586
-                },
-                {
-                    "Q": 1,
-                    "frequency": 247.2218780517578,
-                    "gain": 2.9277777671813965
-                },
-                {
-                    "Q": 1,
-                    "frequency": 2000,
-                    "gain": 1.5199999809265137
-                },
-                {
-                    "Q": 1,
-                    "frequency": 4000,
-                    "gain": 1.5199999809265137
-                },
-                {
-                    "Q": 1,
-                    "frequency": 9433.009765625,
-                    "gain": -3.3888888359069824
-                },
-                {
-                    "Q": 1.9500000476837158,
-                    "frequency": 18606.16796875,
-                    "gain": 12
-                }
+                "Q": 2.883333444595337,
+                "frequency": 39.64677810668945,
+                "gain": 12
+            },
+            {
+                "Q": 0,
+                "frequency": 85.93848419189453,
+                "gain": -3.211111068725586
+            },
+            {
+                "Q": 1,
+                "frequency": 247.2218780517578,
+                "gain": 2.9277777671813965
+            },
+            {
+                "Q": 1,
+                "frequency": 2000,
+                "gain": 1.5199999809265137
+            },
+            {
+                "Q": 1,
+                "frequency": 4000,
+                "gain": 1.5199999809265137
+            },
+            {
+                "Q": 1,
+                "frequency": 9433.009765625,
+                "gain": -3.3888888359069824
+            },
+            {
+                "Q": 1.9500000476837158,
+                "frequency": 18606.16796875,
+                "gain": 12
+            }
             ],
             "PA_PRESENCE_GAIN_RANGE": 7,
             "PA_BOOST_GAIN": 0.8999999761581421
@@ -1059,6 +1020,8 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
             "PA_BOOST_GAIN": 2.799999952316284
         }
 
+        var preset12 = { "name": "current", "boost": false, "LS1Freq": 720, "LS1Gain": -6, "LS2Freq": 320, "LS2Gain": -10.199999809265137, "gain1": 1, "distoName1": "standard", "K1": "6.7", "HP1Freq": 6, "HP1Q": 0.707099974155426, "LS3Freq": 720, "LS3Gain": -6, "gain2": 1, "distoName2": "notSoDistorded", "K2": "6.7", "OG": "5.0", "BF": "9.4", "MF": "5.8", "TF": "1.2", "PF": "5.0", "EQ": [3, 8, -6, -10, 7, 2], "MV": "1.9", "RN": "Fender Hot Rod", "RG": "0.7", "CN": "Vox Custom Bright 4x12 M930 Axis 1", "CG": "8.8", "PREAMP_BEFORE_TONESTACK": false, "PREAMP_EXTRA_STAGES": [{ "type": "asymetric", "k": "3.2" }, { "type": "clean", "k": "8.8" }, { "type": "clean", "k": "8.8" }], "PA_ENABLED": true, "PA_LO_HI_CUT_FILTERS_ENABLED": true, "PA_DISTORSION_CURVE": "clean", "PA_K": "8.0", "PA_NEGATIVE_GAIN": -0.4000000059604645, "PA_PRESENCE_GAIN_RANGE": 4, "PA_PRESENCE_FILTERS_PARAMS": [{ "Q": 0.000009999999747378752, "frequency": 40, "gain": 12 }, { "Q": 0, "frequency": 80, "gain": 0 }, { "Q": 1, "frequency": 230, "gain": 0 }, { "Q": 1, "frequency": 1325.5889892578125, "gain": 1.6799999475479126 }, { "Q": 1, "frequency": 4605.2626953125, "gain": 1.6799999475479126 }, { "Q": 1, "frequency": 10000, "gain": 0 }, { "Q": 0.12777778506278992, "frequency": 15118.7548828125, "gain": 12 }], "PA_BOOST_GAIN": 2.799999952316284 };
+
         presets.push(preset1);
         presets.push(preset2);
         presets.push(preset3);
@@ -1070,17 +1033,18 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
         presets.push(preset9);
         presets.push(preset10);
         presets.push(preset11);
+        presets.push(preset12);
     }
 
     function setDefaultPreset() {
         setValuesFromPreset(presets[0]);
     }
 
-    function setPresetByIndex(i) {
-        setValuesFromPreset(presets[i]);
+    function setPresetByIndex(parent, i) {
+        setValuesFromPreset(parent, presets[i]);
     }
 
-    function setValuesFromPreset(p) {
+    function setValuesFromPreset(parent, p) {
         console.log("LOAD PRESET : " + p.name);
         if (p.distoName1 === undefined) {
             p.distoName1 = "standard";
@@ -1137,7 +1101,37 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
 
         changeEQValues(p.EQ);
 
+        //Parameters who can be changed by knob
+        parent.volume = p.OG;
+        parent.bass = p.BF;
+        parent.middle = p.MF;
+        parent.treble = p.TF;
+        parent.presence = p.PF;
+        parent.master = p.MV;
+        parent.reverb = p.RG;
+        parent.drive = p.K1;
 
+        //Parameters who cannot be changed by knob
+        parent.LS1Freq = p.LS1Freq;
+        parent.LS1Gain = p.LS1Gain;
+        parent.LS2Freq = p.LS2Freq;
+        parent.LS2Gain = p.LS2Gain;
+        parent.LS3Freq = p.LS3Freq;
+        parent.LS3Gain = p.LS3Gain;
+        parent.gain1 = p.gain1;
+        parent.gain2 = p.gain2;
+        parent.HP1Freq = p.HP1Freq;
+        parent.HP1Q = p.HP1Q;
+        parent.EQ = p.EQ;
+        parent.boost = p.boost;
+        parent.distoName1 = p.distoName1;
+        parent.distoName2 = p.distoName2;
+        parent.CG = p.CG
+         try {
+            parent.gui.setAttribute('state', JSON.stringify(parent.params));
+        } catch (error) {
+            console.warn("state not setted to the GUI", error);
+        }
         // default is preamp before tonestack, we need to do this for presets without power amp
         setPATS(true);
 
@@ -1176,19 +1170,21 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
         // set preamp extra stages
         addPreampLampsFromPresetExtraStages(p.PREAMP_EXTRA_STAGES);
 
+       
+
     }
 
     function changePresenceFilterGainValue(sliderVal) {
         if (!powerAmp.isEnabled()) {
-          changeToneStackPresenceFilterValue(sliderVal);
+            tonestack.changePresenceFilterValueTS(sliderVal);
         } else {
-          // use presence in power amp
-          // set tonestack presence to neutral
-          tonestack.changePresenceFilterValueTS(5);
-          powerAmp.changePresenceFilterGainValue(sliderVal);
-        }    
-      }
-    
+            // use presence in power amp
+            // set tonestack presence to neutral
+            tonestack.changePresenceFilterValueTS(5);
+            powerAmp.changePresenceFilterGainValue(sliderVal);
+        }
+    }
+
     function changeEQValues(values) {
         values.forEach((val, index) => {
             eq.changeGainEQ(val, index);
@@ -1326,7 +1322,8 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
 
         outputGain: outputGain,
         changeTonestackAndPreampLocations: changeTonestackAndPreampLocations,
-        isPreampBeforeTonestack: isPreampBeforeTonestack
+        isPreampBeforeTonestack: isPreampBeforeTonestack,
+        changePresenceFilterGainValue: changePresenceFilterGainValue
     };
 }
 // ----------- END OF AMP ---------------
@@ -2114,7 +2111,9 @@ function PowerAmp(ctx) {
             // Let's disconnect boostGain from outputGain
             boostGain.disconnect(outputGain);
             // let's add the filters
-            boostGain.connect(eqhicut).connect(eqlocut).connect(outputGain);
+            boostGain.connect(eqhicut);
+            eqhicut.connect(eqlocut);
+            eqlocut.connect(outputGain);
         }
 
         loAndHiCutFiltersEnabled = !loAndHiCutFiltersEnabled;
@@ -2674,7 +2673,7 @@ function Convolver(context, impulses, menuId) {
 
     function loadImpulseByUrl(url) {
         // Load default impulse
-        const samples = Promise.all([loadSample(context,url)]).then(setImpulse);
+        const samples = Promise.all([loadSample(context, url)]).then(setImpulse);
     }
 
     function loadImpulseFromMenu(val) {
@@ -2701,7 +2700,7 @@ function Convolver(context, impulses, menuId) {
     }
 
     function setImpulse(param) {
-     // we get here only when the impulse is loaded and decoded
+        // we get here only when the impulse is loaded and decoded
         console.log("impulse loaded and decoded");
         convolverNode.buffer = param[0];
         console.log("convolverNode.buffer set with the new impulse (loaded and decoded");
@@ -2741,7 +2740,7 @@ function Convolver(context, impulses, menuId) {
     return {
         input: inputGain,
         output: outputGain,
-        IRs: IRs, 
+        IRs: IRs,
         setGain: setGain,
         getGain: getGain,
         getName: getName,
@@ -3085,7 +3084,7 @@ function WaveShapersMetal() {
     function superFuzz(a) {
         a = Math.pow(a, 3);
         for (var c =
-                new Float32Array(22050), d = 0; 22050 > d; d += 1) {
+            new Float32Array(22050), d = 0; 22050 > d; d += 1) {
             var e = 2 * d / 22050 - 1;
             c[d] = (1 + a) * e / (1 + a * Math.abs(e));
         }
@@ -3217,19 +3216,19 @@ function map(value, istart, istop, ostart, ostop) {
 
 // Loads a sample and decode it using ES6 new syntax
 // returns a promise
-function loadSample(audioContext, url){
+function loadSample(audioContext, url) {
     console.log('done');
-return new Promise(function(resolve, reject){
-  fetch(url)
-  .then((response) => {
-      return response.arrayBuffer();
-  })
-  .then((buffer) =>{
-      audioContext.decodeAudioData(buffer, (decodedAudioData) =>{
-          resolve(decodedAudioData);
-      });
-  });
-});
+    return new Promise(function (resolve, reject) {
+        fetch(url)
+            .then((response) => {
+                return response.arrayBuffer();
+            })
+            .then((buffer) => {
+                audioContext.decodeAudioData(buffer, (decodedAudioData) => {
+                    resolve(decodedAudioData);
+                });
+            });
+    });
 }
 
 // ---------- END OF UTILS -------
