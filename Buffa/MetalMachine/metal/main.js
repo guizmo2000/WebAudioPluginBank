@@ -200,6 +200,7 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
     }
 
     set status(_sig) {
+        this.params.status = _sig;
         let bypassOn = (_sig !== "disable");
 
         this.amp.bypassAmp(bypassOn);
@@ -1270,6 +1271,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
 
     function bypassAmp(cb) {
         console.log("byPass : " + cb);
+
 
         if (cb) {
             // byPass mode
