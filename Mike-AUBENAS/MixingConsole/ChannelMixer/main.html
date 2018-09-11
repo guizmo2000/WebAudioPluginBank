@@ -140,7 +140,7 @@
 
             <webaudio-slider id="gain" midilearn="true" units="Db" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png"
                 knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png"
-                value="1" min="-2" max="6" step="0.01" basewidth="24" height="128" knobwidth="24" knobheight="24"
+                value="1" min="0" max="8" step="0.01" basewidth="24" height="128" knobwidth="24" knobheight="24"
                 ditchlength="100" oncontextmenu="return false;"tooltip="Gain">
 
                 <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px;
@@ -245,7 +245,10 @@
         }
 
         setListener() {
-            this._root.querySelector("#gain").addEventListener('input', (e) => this._plug.setParam("gain", e.target.value));
+            this._root.querySelector("#gain").addEventListener('input', (e) => {
+                
+                this._plug.setParam("gain", e.target.value - 2);
+            });
             this._root.querySelector("#pan").addEventListener('input', (e) => this._plug.setParam("pan", e.target.value));
             this._root.querySelector("#pan").addEventListener('contextmenu', (e) => {
                 this._plug.setParam("pan", 0);
