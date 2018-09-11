@@ -9,7 +9,7 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode {
 		else
 			this.channelNumber = 0;
 
-		this.addParam({ name: 'gain', defaultValue: 0.7, minValue: 0, maxValue: 1 });
+		this.addParam({ name: 'gain', defaultValue: 1, minValue: -2, maxValue: 6 });
 		this.addParam({ name: 'pan', defaultValue: 0, minValue: -10, maxValue: 10 });
 		Object.assign({ "status": "disable" }, this.params)
 

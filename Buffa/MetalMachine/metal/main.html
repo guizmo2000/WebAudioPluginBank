@@ -249,7 +249,7 @@
 	<div class="label" id="label_713">Metal Machine</div>
 </template>
 <script>
-	let DistoMachineTemp = document.currentScript.ownerDocument.querySelector('#distomachine');
+	let MetalMachineTemp = document.currentScript.ownerDocument.querySelector('#distomachine');
 	class MetalMachineGui extends HTMLElement {
 
 
@@ -259,7 +259,7 @@
 			this._plug = plug;
 			this._plug.gui = this;
 			this._root = this.attachShadow({ mode: 'open' });
-			this._root.appendChild(DistoMachineTemp.content.cloneNode(true));
+			this._root.appendChild(MetalMachineTemp.content.cloneNode(true));
 			this.knobs = this._root.querySelectorAll(".knob");
 			this.isOn;
 			this.state = new Object();
