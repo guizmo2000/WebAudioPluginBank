@@ -81,7 +81,11 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
 
-			demo1: {
+
+			demo: [
+
+			
+			demo1= {
 				"kitIndex": 12,
 				"tempo": 130,
 				"swingFactor": 0,
@@ -99,7 +103,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"rhythm6": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
 
-			demo2: {
+			demo2= {
 				"kitIndex": 12,
 				"tempo": 130,
 				"swingFactor": 0,
@@ -117,7 +121,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"rhythm6": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
 
-			demo3: {
+			demo3= {
 				"kitIndex": 12,
 				"tempo": 130,
 				"swingFactor": 0,
@@ -134,6 +138,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"rhythm5": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				"rhythm6": [1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
+
+			],
 
 			kits: null,
 			currentKit: null,
@@ -679,6 +685,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			}
 		}
 		this.gui._root.getElementById('kitname').innerHTML = this.params.kitNamePretty[this.params.theBeat.kitIndex];
+		this.gui._root.getElementById('patternname').innerHTML = this.params.kitNamePretty[this.params.theBeat.kitIndex];
 		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
 
 	}
