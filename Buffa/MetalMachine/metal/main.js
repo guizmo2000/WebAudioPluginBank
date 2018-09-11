@@ -1275,7 +1275,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
     function bypassAmp(cb) {
         console.log("byPass : " + cb);
 
-        if (!cb) {
+        if (cb) {
             // byPass mode
             inputGain.gain.value = 1;
             byPass.gain.value = 0;

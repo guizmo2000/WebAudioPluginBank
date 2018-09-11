@@ -14,7 +14,7 @@
     <button id="save">Save current state</button>
     <button id="load">Load last saved state</button>
 
-    <p>
+    <!-- <p>
     Presets : 
     <select id="menuPresets">
 		<option value=0>Default</option>
@@ -28,7 +28,7 @@
 		<option value=8>Another Clean Sound</option>
 		<option value=9>HR3</option>
 	</select>
-    </p>
+    </p> -->
 </body>
 
 <script>
@@ -51,13 +51,7 @@
     function launchWAP() {
         return new Promise((resolve, reject) => {
             plugin.load().then((node) => {
-
-            let menuPresets = document.querySelector("#menuPresets");
-			menuPresets.onchange = (e) => {
-				var index= e.target.value;
-				node.setParam("preset", index);
-			}
-                /*
+                
                 plugin.loadGui().then((elem) => {
                     document.body.appendChild(elem);
                     //Save statement
@@ -76,7 +70,7 @@
                         })
                     });
                 });
-                */
+                
 
                 mediaSource.connect(node);
                 node.connect(ctx.destination);

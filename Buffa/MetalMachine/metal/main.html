@@ -20,6 +20,7 @@
 	
 	<style>
 		:host {
+			background-color: rgb(255, 255, 255);
 			font: 'BouWeste', 'Arial Black';
 			display: block;
 			width: 450px;
@@ -29,6 +30,12 @@
 			position: relative;
 			z-index: 9;
 			/* bring your own prefixes */
+			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
+			inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+			inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+			1px 0px 1px 0px rgba(0, 0, 0, 0.9),
+			0 2px 1px 0 rgba(0, 0, 0, 0.9),
+			1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 		}
 
 		.webaudioctrl-tooltip {
@@ -186,7 +193,7 @@
 
 		
 	</style>
-	<img id="background-image">
+	<!-- <img id="background-image"> -->
 
 	<div class="switchCont" id="switch1">
 		<webaudio-switch class="switch" id="switch1" height="30" width="60"></webaudio-switch>
@@ -236,11 +243,11 @@
 		<option value=8>Another Clean Sound</option>
 		<option value=9>HR3</option>
 	</select>
-	<div class="label" id="label_713">Disto Machine</div>
+	<div class="label" id="label_713">Metal Machine</div>
 </template>
 <script>
 	let DistoMachineTemp = document.currentScript.ownerDocument.querySelector('#distomachine');
-	class DistoMachineGui extends HTMLElement {
+	class MetalMachineGui extends HTMLElement {
 
 
 		constructor(plug) {
@@ -258,7 +265,7 @@
 			this.setKnobs();
 			this.setSwitchListener();
 			this.setResources();
-			this.avoidDrag();
+		//	this.avoidDrag();
 		}
 
 		get properties() {
@@ -312,9 +319,9 @@
 				//this._plug.setPatch(null, this.index);
 			}
 			// Set up the background img & style
-			var background = this._root.querySelector("img");
-			background.src = this._plug.URL + '/assets/DistoMachine.png';
-			background.style = 'border-radius :10px;'
+			// var background = this._root.querySelector("img");
+			// background.src = this._plug.URL + '/assets/DistoMachine.png';
+			// background.style = 'border-radius :10px;'
 			// Setting up the knobs imgs, those are loaded from the assets
 			this._root.querySelectorAll(".knob").forEach((knob) => {
 				knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/Jambalaya.png');
@@ -357,20 +364,20 @@
 			});
 		}
 
-		avoidDrag(){
-			this._root.querySelector("#background-image").draggable=false;
-		}
+		// avoidDrag(){
+		// 	this._root.querySelector("#background-image").draggable=false;
+		// }
 
 	}
 	try {
-		customElements.define('wasabi-distomachine', DistoMachineGui);
+		customElements.define('wasabi-distomachine', MetalMachineGui);
 		console.log("Element defined");
 	} catch (error) {
 		console.log(error);
 		console.log("Element already defined");
 	}
-	createDistoMachine = (plug) => {
-		let elem = new DistoMachineGui(plug);
+	createMetalMachine = (plug) => {
+		let elem = new MetalMachineGui(plug);
 		return elem;
 	}
 </script>
