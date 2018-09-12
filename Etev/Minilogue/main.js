@@ -16,26 +16,10 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.playedvoices = [];
     this.voices = [];
 
-    // to store the voices of the duo mode
-    this.duovoices = [];
-
-    // to store the voices of the unison mode
-    this.unisonvoices1 = [];
-    this.unisonvoices2 = [];
-
     parent = this;
     // max number of voices, depends to "voice-mode"
     this.maxVoices = 4;
-
-    // for Arp
-
-    let timerWorkerBlob = new Blob([
-      "var timeoutID=0;function schedule(){timeoutID=setTimeout(function(){postMessage('schedule'); schedule();},100);} onmessage = function(e) { if (e.data == 'start') { if (!timeoutID) schedule();} else if (e.data == 'stop') {if (timeoutID) clearTimeout(timeoutID); timeoutID=0;};}"]);
-    let timerWorkerBlobURL = window.URL.createObjectURL(timerWorkerBlob);
-    this.timerWorker = new Worker(timerWorkerBlobURL);
-    this.secondsPerBeat = 60.0 / 120;
-    this.noteTime += (0.25) * this.secondsPerBeat;
-
+    this.countkeypressed = 0;
 
     // assign manually the params which does not fit the defaultvalue/max/min schema
     this.params = { "wave1": "sawtooth", "status": "disable", "wave2": "sawtooth", "lfodest": "cutoff", "mode": "poly" };
@@ -64,16 +48,12 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.addParam({ name: 'egdecay', defaultValue: 1, minValue: 0.001, maxValue: 5 });
     this.addParam({ name: 'egsustain', defaultValue: 0.5, minValue: 0.001, maxValue: 1 });
     this.addParam({ name: 'egrelease', defaultValue: 1, minValue: 0.001, maxValue: 5 });
-    this.addParam({ name: 'osc1Octave', defaultValue: 3, minValue: 1, maxValue: 5 });
-    this.addParam({ name: 'osc2Octave', defaultValue: 3, minValue: 1, maxValue: 5 });
+    this.addParam({ name: 'osc1Octave', defaultValue: 2, minValue: 1, maxValue: 5 });
+    this.addParam({ name: 'osc2Octave', defaultValue: 2, minValue: 1, maxValue: 5 });
     this.addParam({ name: 'noise', defaultValue: 0.1, minValue: 0.1, maxValue: 3 });
     this.addParam({ name: 'ringmodulation', defaultValue: 0, minValue: 0, maxValue: 1 });
     this.addParam({ name: 'voicedepth', defaultValue: 0, minValue: 0, maxValue: 100 });
     this.addParam({ name: 'egint', defaultValue: 3500, minValue: 30, maxValue: 8000 })
-
-
-
-
 
     // SDK behavior overriding (for voices schema)
     this.setup();
@@ -95,7 +75,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     }
   }
 
-
   // Override Setup actions
   setup() {
     console.log("setup");
@@ -110,6 +89,13 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.analyser = this.context.createAnalyser();
     this.gainforAnalyse.connect(this.analyser);
 
+    for (let i = 0; i < this.maxVoices; i++) {
+      this.voices[i] = new Voice(this.context, this);
+      this.voices[i].amp.connect(this.gainforAnalyse);
+      this.voices[i].amp.connect(this.normalize);
+    }
+    this.setInitialParamValues();
+
   }
 
   /*  #########  Personnal code for the web audio graph  #########   */
@@ -123,6 +109,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     /*
      * set default value for parameters and assign it to the web audio nodes
      */
+
+
     this.master = this.params.mastergain;
     this.lowpass = this.params.lowpass;
     this.resonance = this.params.resonance;
@@ -146,16 +134,15 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.egdecay = this.params.egdecay;
     this.egsustain = this.params.egsustain;
     this.egrelease = this.params.egrelease;
-    this.osc1octave = this.params.osc1Octave;
-    this.osc2octave = this.params.osc2Octave;
     this.noise = this.params.noise;
     // this.ringmodulation = this.params.ringmodulation
     this.wave1 = this.params.wave1;
     this.wave2 = this.params.wave2;
+    this.osc1octave = this.params.osc1Octave;
+    this.osc2octave = this.params.osc2Octave;
     this.mode = this.params.mode;
     this.voicedepth = this.params.voicedepth;
     this.egint = this.params.egint;
-
   }
 
 
@@ -164,307 +151,93 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
    * @param {Int} key 
    */
   noteOn(key) {
-    if (this.params.mode == "arp") {
-      this.timerWorker.onmessage = (e) => { this.schedule(key) }
-      this.timerWorker.postMessage('init');
+    // prevent midi bug
+    if (this.countkeypressed < 0) this.countkeypressed = 0;
+
+    switch (this.params.mode) {
+      case "poly": this.noteOnPoly(key); break;
+      case "duo": this.noteOnDuo(key); break;
+      case "unison": this.noteOnUnison(key); break;
+    }
+  }
+
+  noteOnPoly(key) {
+    // usual case
+    if (this.countkeypressed < 4) {
+      this.voices[this.countkeypressed].assignKey(key);
+      this.voices[this.countkeypressed].ampEnveloppe.gateOn();
+      this.voices[this.countkeypressed].enveloppeGenerator.gateOn();
+      this.countkeypressed++;
+    }
+    // limit case : a 5 key is pressed
+    else {
+      this.noteOff(this.voices[0].key);
+      this.countkeypressed--;
+      let tmp = this.voices[0];
+      for (let i = 0; i < this.voices.length - 1; i++) {
+        this.voices[i] = this.voices[i + 1];
+      }
+      this.voices[this.voices.length - 1] = tmp;
+      this.noteOnPoly(key);
+    }
+  }
+
+
+  noteOnDuo(key) {
+    if (this.countkeypressed < 3) {
+      this.voices[this.countkeypressed].assignKey(key);
+      this.voices[this.countkeypressed + 1].assignKey(key);
+      this.voices[this.countkeypressed].ampEnveloppe.gateOn();
+      this.voices[this.countkeypressed].enveloppeGenerator.gateOn();
+      this.voices[this.countkeypressed + 1].ampEnveloppe.gateOn();
+      this.voices[this.countkeypressed + 1].enveloppeGenerator.gateOn();
+      this.countkeypressed += 2;
+    }
+    // limit case : a 5 key is pressed
+    else {
+      this.noteOff(this.voices[0].key);
+      this.countkeypressed--;
+      this.noteOff(this.voices[1].key);
+      this.countkeypressed--;
+      let tmp = this.voices[0];
+      let tmp2 = this.voices[1];
+      for (let i = 0; i < this.voices.length - 2; i++) {
+        this.voices[i] = this.voices[i + 2];
+      }
+      this.voices[this.voices.length - 2] = tmp;
+      this.voices[this.voices.length - 1] = tmp2;
+      this.noteOnDuo(key);
     }
 
-    // The voices table test if the same note is not already played
-    if (this.voices[key] == null) {
-      // we block at 4 voices
-      if (this.playedvoices.length == this.maxVoices) {
-        this.killNote(this.playedvoices[0]);
-        this.playedvoices.shift();
+  }
+
+  noteOnUnison(key) {
+    if (this.countkeypressed < 1) {
+      for (let h = 0; h < this.voices.length; h++) {
+        this.voices[h].assignKey(key);
+        this.voices[h].ampEnveloppe.gateOn();
+        this.voices[h].enveloppeGenerator.gateOn();
       }
-      this.playedvoices.push(key);
-      // The params are initiated to have the latest values
-      switch (this.params.mode) {
-        case "poly": this.noteOnPoly(key); break;
-        case "duo": this.noteOnDuo(key); break;
-        case "unison": this.noteOnUnison(key); break;
-        case "mono": this.noteOnMono(key); break;
-        case "arp": this.noteOnArp(key); break;
-      }
-    } else {
-      this.killNote(key);
-      this.noteOn(key);
+      this.countkeypressed++ ;
     }
-    //this.normalizeGain();
+    // limit case : a second key is pressed
+    else {
+      for (let h = 0; h < this.voices.length; h++) {
+        this.noteOff(this.voices[h].key);
+      }
+      this.countkeypressed--;
+        this.noteOnUnison(key);
+    }
 
   }
 
   noteOff(key) {
-    if (this.voices[key] != null) {
-      this.playedvoices.splice(this.playedvoices.indexOf(key));
-
-      // the voice is pull off the playedvoice array when noteoff
-      switch (this.params.mode) {
-        case "poly": this.noteOffpoly(key); break;
-        case "duo": this.noteOffDuo(key); break;
-        case "unison": this.noteOffUnison(key); break;
-        case "mono": this.noteOffMono(key); break;
-        case "arp": this.noteOffArp(key); break;
+    for (let i = 0; i < this.voices.length; i++) {
+      if (this.voices[i].key == key) {
+        this.voices[i].ampEnveloppe.gateOff();
+        this.voices[i].enveloppeGenerator.gateOff();
       }
     }
-
-  }
-
-  killNote(key) {
-    switch (this.params.mode) {
-      case "poly": this.killNotepoly(key); break;
-      case "duo": this.killNoteDuo(key); break;
-      case "unison": this.killNoteUnison(key); break;
-      case "mono": this.killNoteMono(key); break;
-      case "arp": this.killNoteArp(key); break;
-    }
-    //this.voices[key] = null;
-  }
-
-
-
-  // Voice behavior in poly mode
-  noteOnPoly(key) {
-    this.voices[key] = new Voice(this.context, key, parent);
-    this.setInitialParamValues();
-    // The voice is assigned at it's range in the voice table
-    // wire the voices graph with the persistant one
-    this.voices[key].amp.connect(this.gainforAnalyse);
-    // active the ADSR node
-    this.voices[key].ampEnveloppe.gateOn();
-    this.voices[key].enveloppeGenerator.gateOn();
-
-    // connect to normalisation 
-    if (this.params.status == "disable") this.voices[key].amp.connect(this.normalize);
-    else if (this.params.status == "enable") {
-      this.voices[key].amp.connect(this.ppdelay.feedbackGainNode);
-      this.voices[key].amp.connect(this.ppdelay.dryGainNode);
-    }
-  }
-
-  // Voice behavior in mono mode
-  noteOnMono(key) {
-    this.noteOnPoly(key);
-    this.voices[key - 12] = new Voice(this.context, key - 12, parent);
-    this.voices[key - 24] = new Voice(this.context, key - 24, parent);
-    this.setInitialParamValues();
-
-    // active the ADSR node
-    this.voices[key - 12].ampEnveloppe.gateOn();
-    this.voices[key - 24].ampEnveloppe.gateOn();
-
-    this.voices[key - 12].enveloppeGenerator.gateOn();
-    this.voices[key - 24].enveloppeGenerator.gateOn();
-
-    // connect to normalisation 
-    if (this.params.status == "disable") {
-      this.voices[key - 12].amp.connect(this.normalize);
-      this.voices[key - 24].amp.connect(this.normalize);
-    }
-    else if (this.params.status == "enable") {
-      this.voices[key - 12].amp.connect(this.ppdelay.feedbackGainNode);
-      this.voices[key - 12].amp.connect(this.ppdelay.dryGainNode);
-      this.voices[key - 24].amp.connect(this.ppdelay.feedbackGainNode);
-      this.voices[key - 24].amp.connect(this.ppdelay.dryGainNode);
-    }
-  }
-  noteOnDuo(key) {
-    this.noteOnPoly(key);
-    this.duovoices[key] = new Voice(this.context, key, parent);
-    this.setInitialParamValues();
-
-    // The voice is assigned at it's range in the voice table
-    // wire the voices graph with the persistant one
-    // active the ADSR node
-    this.duovoices[key].ampEnveloppe.gateOn();
-    this.duovoices[key].enveloppeGenerator.gateOn();
-
-    // connect to normalisation 
-    if (this.params.status == "disable") this.duovoices[key].amp.connect(this.normalize);
-    else if (this.params.status == "enable") {
-      this.duovoices[key].amp.connect(this.ppdelay.feedbackGainNode);
-      this.duovoices[key].amp.connect(this.ppdelay.dryGainNode);
-    }
-  }
-  noteOnUnison(key) {
-    this.noteOnDuo(key);
-    this.unisonvoices1[key] = new Voice(this.context, key, parent);
-    this.unisonvoices2[key] = new Voice(this.context, key, parent);
-    this.setInitialParamValues();
-
-
-    this.unisonvoices1[key].ampEnveloppe.gateOn();
-    this.unisonvoices2[key].ampEnveloppe.gateOn();
-    this.unisonvoices1[key].enveloppeGenerator.gateOn();
-    this.unisonvoices2[key].enveloppeGenerator.gateOn();
-    if (this.params.status == "disable") {
-      this.unisonvoices1[key].amp.connect(this.normalize);
-      this.unisonvoices2[key].amp.connect(this.normalize);
-    }
-    else if (this.params.status == "enable") {
-      this.unisonvoices1[key].amp.connect(this.ppdelay.feedbackGainNode);
-      this.unisonvoices1[key].amp.connect(this.ppdelay.dryGainNode);
-      this.unisonvoices2[key].amp.connect(this.ppdelay.feedbackGainNode);
-      this.unisonvoices2[key].amp.connect(this.ppdelay.dryGainNode);
-    }
-
-  }
-  noteOnArp(key) {
-    // not implemented yet 
-    console.log(key);
-    this.voices[key] = new Voice(this.context, key, parent);
-    this.setInitialParamValues();
-    // The voice is assigned at it's range in the voice table
-    // wire the voices graph with the persistant one
-    this.voices[key].amp.connect(this.gainforAnalyse);
-    // connect to normalisation 
-    if (this.params.status == "disable") this.voices[key].amp.connect(this.normalize);
-    else if (this.params.status == "enable") {
-      this.voices[key].amp.connect(this.ppdelay.feedbackGainNode);
-      this.voices[key].amp.connect(this.ppdelay.dryGainNode);
-    }
-    this.noteTime = 0.0;
-    this.startTime = this.context.currentTime + 0.005;
-    this.schedule(key);
-    this.timerWorker.postMessage("start");
-
-  }
-
-  schedule(key) {
-    var currentTime = this.context.currentTime;
-    currentTime -= this.startTime;
-    while (this.noteTime < currentTime + 0.120) {
-      // Convert noteTime to context time.
-      var contextPlayTime = this.noteTime + this.startTime;
-      this.noteTime += (0.25) * this.secondsPerBeat;
-      this.rhythmIndex++;
-      // active the ADSR node
-      this.voices[key].ampEnveloppe.gateOn(this.context.currentTime);
-      this.voices[key].enveloppeGenerator.gateOn(this.context.currentTime);
-
-      this.voices[key].ampEnveloppe.gateOff(contextPlayTime);
-      this.voices[key].enveloppeGenerator.gateOff(contextPlayTime);
-
-
-
-    }
-  }
-
-  killNotepoly(key) {
-    this.voices[key].osc1.stop();
-    this.voices[key].osc2.stop();
-    this.voices[key].lfo.stop();
-    this.voices[key].whitenoise.bufferSource.stop(this.context.currentTime + 0.01);
-    delete this.voices[key];
-  }
-
-  killNoteMono(key) {
-    this.killNotepoly(key);
-    try {
-      this.voices[key - 12].osc1.stop();
-      this.voices[key - 12].osc2.stop();
-      this.voices[key - 12].lfo.stop();
-      this.voices[key - 12].whitenoise.bufferSource.stop(this.context.currentTime + 0.01);
-      this.voices[key - 24].osc1.stop();
-      this.voices[key - 24].osc2.stop();
-      this.voices[key - 24].lfo.stop();
-      this.voices[key - 24].whitenoise.bufferSource.stop(this.context.currentTime + 0.01);
-      delete this.voices[key - 12];
-      delete this.voices[key - 24];
-    } catch (error) {
-      console.log("changetomono?")
-    }
-
-  }
-  killNoteDuo(key) {
-    this.killNotepoly(key);
-    try {
-      this.duovoices[key].osc1.stop();
-      this.duovoices[key].osc2.stop();
-      this.duovoices[key].lfo.stop();
-      this.duovoices[key].whitenoise.bufferSource.stop(this.context.currentTime + 0.01);
-      delete this.duovoices[key];
-    } catch (error) {
-      console.log("changetoduo?")
-    }
-
-  }
-
-  killNoteUnison(key) {
-    this.killNoteDuo(key);
-
-    try {
-      this.unisonvoices1[key].osc1.stop();
-      this.unisonvoices1[key].osc2.stop();
-      this.unisonvoices1[key].lfo.stop();
-      this.unisonvoices1[key].whitenoise.bufferSource.stop(this.context.currentTime + 0.01);
-      delete this.duovoices[key];
-      this.unisonvoices2[key].osc1.stop();
-      this.unisonvoices2[key].osc2.stop();
-      this.unisonvoices2[key].lfo.stop();
-      this.unisonvoices2[key].whitenoise.bufferSource.stop(this.context.currentTime + 0.01);
-      delete this.unisonvoices2[key];
-    } catch (error) {
-      console.log("changetounison?")
-    }
-
-  }
-
-  killNoteArp(key) {
-    // not implemented yet
-    this.killNotepoly(key);
-  }
-
-  noteOffpoly(key) {
-    this.voices[key].ampEnveloppe.gateOff();
-    this.voices[key].enveloppeGenerator.gateOff();
-
-  }
-  noteOffMono(key) {
-    this.noteOffpoly(key);
-    try {
-      this.voices[key - 12].ampEnveloppe.gateOff();
-      this.voices[key - 24].ampEnveloppe.gateOff();
-      this.voices[key - 12].enveloppeGenerator.gateOff();
-      this.voices[key - 24].enveloppeGenerator.gateOff();
-
-    } catch (error) {
-      console.log("movetomono");
-    }
-
-  }
-
-  noteOffDuo(key) {
-    this.noteOffpoly(key);
-    try {
-      this.duovoices[key].ampEnveloppe.gateOff();
-      this.duovoices[key].enveloppeGenerator.gateOff();
-
-
-    } catch (error) {
-      console.log("movetoduo");
-    }
-  }
-
-  noteOffUnison(key) {
-    this.noteOffDuo(key);
-    try {
-      this.unisonvoices1[key].ampEnveloppe.gateOff();
-      this.unisonvoices2[key].ampEnveloppe.gateOff();
-
-      this.unisonvoices1[key].enveloppeGenerator.gateOff();
-      this.unisonvoices2[key].enveloppeGenerator.gateOff();
-    } catch (error) {
-      console.log("movetounison");
-    }
-
-
-  }
-
-  noteOffArp(key) {
-    // not implemented yet
-    this.timerWorker.postMessage("stop");
-    this.rhythmIndex = 0;
-    this.killNoteArp(key);
   }
 
   //------------------------------------------------ Setter Part ----------------------------------------------------
@@ -478,11 +251,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.params.noise = _noise;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].whitenoiseGain.gain.setValueAtTime(_noise / 100, this.context.currentTime);
-      if (this.voices[voice - 12]) this.voices[voice - 12].whitenoiseGain.gain.setValueAtTime(_noise / 100, this.context.currentTime);
-      if (this.voices[voice - 24]) this.voices[voice - 24].whitenoiseGain.gain.setValueAtTime(_noise / 100, this.context.currentTime);
-      if (this.duovoices[voice]) this.duovoices[voice].whitenoiseGain.gain.setValueAtTime(_noise / 100, this.context.currentTime);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].whitenoiseGain.gain.setValueAtTime(_noise / 100, this.context.currentTime);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].whitenoiseGain.gain.setValueAtTime(_noise / 100, this.context.currentTime);
     }
   }
 
@@ -490,17 +258,7 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.params.resonance = _resonance;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].lowPassfilter.Q.setValueAtTime(_resonance, this.context.currentTime);
-      if (this.voices[voice - 12]) this.voices[voice - 12].lowPassfilter.Q.setValueAtTime(_resonance, this.context.currentTime);
-      if (this.voices[voice - 24]) this.voices[voice - 24].lowPassfilter.Q.setValueAtTime(_resonance, this.context.currentTime);
-      if (this.duovoices[voice]) this.duovoices[voice].lowPassfilter.Q.setValueAtTime(_resonance, this.context.currentTime);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].lowPassfilter.Q.setValueAtTime(_resonance, this.context.currentTime);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].lowPassfilter.Q.setValueAtTime(_resonance, this.context.currentTime);
       if (this.voices[voice]) this.voices[voice].enveloppeFilter.Q.setValueAtTime(_resonance, this.context.currentTime);
-      if (this.voices[voice - 12]) this.voices[voice - 12].enveloppeFilter.Q.setValueAtTime(_resonance, this.context.currentTime);
-      if (this.voices[voice - 24]) this.voices[voice - 24].enveloppeFilter.Q.setValueAtTime(_resonance, this.context.currentTime);
-      if (this.duovoices[voice]) this.duovoices[voice].enveloppeFilter.Q.setValueAtTime(_resonance, this.context.currentTime);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].enveloppeFilter.Q.setValueAtTime(_resonance, this.context.currentTime);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].enveloppeFilter.Q.setValueAtTime(_resonance, this.context.currentTime);
     }
   }
   set master(_master) {
@@ -511,45 +269,24 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.params.lowpass = _cutoff;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].lowPassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
-      if (this.voices[voice - 12]) this.voices[voice - 12].lowPassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
-      if (this.voices[voice - 24]) this.voices[voice - 24].lowPassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
-      if (this.duovoices[voice]) this.duovoices[voice].lowPassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].lowPassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].lowPassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
     }
   }
   set highpass(_cutoff) {
     this.params.highpass = _cutoff;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].highpassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
-      if (this.voices[voice - 12]) this.voices[voice - 12].highpassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
-      if (this.voices[voice - 24]) this.voices[voice - 24].highpassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
-      if (this.duovoices[voice]) this.duovoices[voice].highpassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].highpassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].highpassfilter.frequency.setValueAtTime(_cutoff, this.context.currentTime);
     }
   }
   set osc1gain(_gain) {
     this.params.osc1gain = _gain;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
-      if (this.voices[voice - 12]) this.voices[voice - 12].gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
-      if (this.voices[voice - 24]) this.voices[voice - 24].gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
-      if (this.duovoices[voice]) this.duovoices[voice].gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].gainOsc1.gain.setValueAtTime(_gain / 100, this.context.currentTime);
-
     }
   }
   set osc2gain(_gain) {
     this.params.osc2gain = _gain;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
-      if (this.voices[voice - 12]) this.voices[voice - 12].gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
-      if (this.voices[voice - 24]) this.voices[voice - 24].gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
-      if (this.duovoices[voice]) this.duovoices[voice].gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].gainOsc2.gain.setValueAtTime(_gain / 100, this.context.currentTime);
     }
   }
 
@@ -558,35 +295,8 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) {
         this.voices[voice].osc1currentOctave = _octave;
-        this.voices[voice].basefrequency1 = 440 * Math.pow(2, ((this.voices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.voices[voice].osc1.frequency.setValueAtTime(this.voices[voice].basefrequency1, this.context.currentTime);
+        if(this.voices[voice].key) this.voices[voice].assignKey(this.voices[voice].key);
       }
-      if (this.voices[voice] - 12) {
-        this.voices[voice - 12].osc1currentOctave = _octave;
-        this.voices[voice - 12].basefrequency1 = 440 * Math.pow(2, ((this.voices[voice - 12].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.voices[voice - 12].osc1.frequency.setValueAtTime(this.voices[voice - 12].basefrequency1, this.context.currentTime);
-      }
-      if (this.voices[voice - 24]) {
-        this.voices[voice - 24].osc1currentOctave = _octave;
-        this.voices[voice - 24].basefrequency1 = 440 * Math.pow(2, ((this.voices[voice - 24].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.voices[voice - 24].osc1.frequency.setValueAtTime(this.voices[voice - 24].basefrequency1, this.context.currentTime);
-      }
-      if (this.duovoices[voice]) {
-        this.duovoices[voice].osc1currentOctave = _octave;
-        this.duovoices[voice].basefrequency1 = 440 * Math.pow(2, ((this.duovoices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.duovoices[voice].osc1.frequency.setValueAtTime(this.duovoices[voice].basefrequency1, this.context.currentTime);
-      }
-      if (this.unisonvoices1[voice]) {
-        this.unisonvoices1[voice].osc1currentOctave = _octave;
-        this.unisonvoices1[voice].basefrequency1 = 440 * Math.pow(2, ((this.unisonvoices1[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.unisonvoices1[voice].osc1.frequency.setValueAtTime(this.unisonvoices1[voice].basefrequency1, this.context.currentTime);
-      }
-      if (this.unisonvoices2[voice]) {
-        this.unisonvoices2[voice].osc1currentOctave = _octave;
-        this.unisonvoices2[voice].basefrequency1 = 440 * Math.pow(2, ((this.unisonvoices2[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.unisonvoices2[voice].osc1.frequency.setValueAtTime(this.unisonvoices2[voice].basefrequency1, this.context.currentTime);
-      }
-
     }
 
   }
@@ -595,61 +305,21 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) {
         this.voices[voice].osc2currentOctave = _octave;
-        this.voices[voice].basefrequency2 = 440 * Math.pow(2, ((this.voices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.voices[voice].osc2.frequency.setValueAtTime(this.voices[voice].basefrequency2, this.context.currentTime);
-      }
-      if (this.voices[voice] - 12) {
-        this.voices[voice - 12].osc2currentOctave = _octave;
-        this.voices[voice - 12].basefrequency2 = 440 * Math.pow(2, ((this.voices[voice - 12].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.voices[voice - 12].osc2.frequency.setValueAtTime(this.voices[voice - 12].basefrequency2, this.context.currentTime);
-      }
-      if (this.voices[voice - 24]) {
-
-        this.voices[voice - 24].osc2currentOctave = _octave;
-        this.voices[voice - 24].basefrequency2 = 440 * Math.pow(2, ((this.voices[voice - 24].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.voices[voice - 24].osc2.frequency.setValueAtTime(this.voices[voice - 24].basefrequency2, this.context.currentTime);
-      }
-      if (this.duovoices[voice]) {
-
-        this.duovoices[voice].osc2currentOctave = _octave;
-        this.duovoices[voice].basefrequency2 = 440 * Math.pow(2, ((this.duovoices[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.duovoices[voice].osc2.frequency.setValueAtTime(this.duovoices[voice].basefrequency2, this.context.currentTime);
-      }
-      if (this.unisonvoices1[voice]) {
-
-        this.unisonvoices1[voice].osc2currentOctave = _octave;
-        this.unisonvoices1[voice].basefrequency2 = 440 * Math.pow(2, ((this.unisonvoices1[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.unisonvoices1[voice].osc2.frequency.setValueAtTime(this.unisonvoices1[voice].basefrequency2, this.context.currentTime);
-      }
-      if (this.unisonvoices2[voice]) {
-
-        this.unisonvoices2[voice].osc2currentOctave = _octave;
-        this.unisonvoices2[voice].basefrequency2 = 440 * Math.pow(2, ((this.unisonvoices2[voice].getkey() + 12 * (_octave - 3)) - 69) / 12);
-        this.unisonvoices2[voice].osc2.frequency.setValueAtTime(this.unisonvoices2[voice].basefrequency2, this.context.currentTime);
+        if(this.voices[voice].key) this.voices[voice].assignKey(this.voices[voice].key);
       }
     }
-
   }
   set osc1pitch(_pitch) {
     this.params.pitch1 = _pitch;
     for (let voice = 0; voice < this.voices.length; voice++) {
+      console.log(this.voices[voice].basefrequency1);
       if (this.voices[voice]) this.voices[voice].osc1.frequency.setValueAtTime(this.voices[voice].basefrequency1 * (_pitch), this.context.currentTime);
-      if (this.voices[voice - 12]) this.voices[voice - 12].osc1.frequency.setValueAtTime(this.voices[voice - 12].basefrequency1 * (_pitch), this.context.currentTime);
-      if (this.voices[voice - 24]) this.voices[voice - 24].osc1.frequency.setValueAtTime(this.voices[voice - 24].basefrequency1 * (_pitch), this.context.currentTime);
-      if (this.duovoices[voice]) this.duovoices[voice].osc1.frequency.setValueAtTime(this.duovoices[voice].basefrequency1 * (_pitch), this.context.currentTime);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].osc1.frequency.setValueAtTime(this.unisonvoices1[voice].basefrequency1 * (_pitch), this.context.currentTime);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].osc1.frequency.setValueAtTime(this.unisonvoices2[voice].basefrequency1 * (_pitch), this.context.currentTime);
     }
   }
   set osc2pitch(_pitch) {
     this.params.pitch2 = _pitch;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].osc2.frequency.setValueAtTime(this.voices[voice].basefrequency2 * (_pitch), this.context.currentTime);
-      if (this.voices[voice - 12]) this.voices[voice - 12].osc2.frequency.setValueAtTime(this.voices[voice - 12].basefrequency2 * (_pitch), this.context.currentTime);
-      if (this.voices[voice - 24]) this.voices[voice - 24].osc2.frequency.setValueAtTime(this.voices[voice - 24].basefrequency2 * (_pitch), this.context.currentTime);
-      if (this.duovoices[voice]) this.duovoices[voice].osc2.frequency.setValueAtTime(this.duovoices[voice].basefrequency2 * (_pitch), this.context.currentTime);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].osc2.frequency.setValueAtTime(this.unisonvoices1[voice].basefrequency2 * (_pitch), this.context.currentTime);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].osc2.frequency.setValueAtTime(this.unisonvoices2[voice].basefrequency2 * (_pitch), this.context.currentTime);
     }
   }
   set lforate(_rate) {
@@ -657,11 +327,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].lfo.frequency.setValueAtTime(_rate, this.context.currentTime);
-      if (this.voices[voice - 12]) this.voices[voice - 12].lfo.frequency.setValueAtTime(_rate, this.context.currentTime);
-      if (this.voices[voice - 24]) this.voices[voice - 24].lfo.frequency.setValueAtTime(_rate, this.context.currentTime);
-      if (this.duovoices[voice]) this.duovoices[voice].lfo.frequency.setValueAtTime(_rate, this.context.currentTime);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].lfo.frequency.setValueAtTime(_rate, this.context.currentTime);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].lfo.frequency.setValueAtTime(_rate, this.context.currentTime);
     }
   }
   set lfoint(_int) {
@@ -669,11 +334,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
 
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].gainLfo.gain.setValueAtTime(_int, this.context.currentTime);
-      if (this.voices[voice - 12]) this.voices[voice - 12].gainLfo.gain.setValueAtTime(_int, this.context.currentTime);
-      if (this.voices[voice - 24]) this.voices[voice - 24].gainLfo.gain.setValueAtTime(_int, this.context.currentTime);
-      if (this.duovoices[voice]) this.duovoices[voice].gainLfo.gain.setValueAtTime(_int, this.context.currentTime);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].gainLfo.gain.setValueAtTime(_int, this.context.currentTime);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].gainLfo.gain.setValueAtTime(_int, this.context.currentTime);
     }
   }
 
@@ -681,11 +341,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.params.osc1shape = _gain;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].wshape1.curve = this.getDistortionCurve(_gain / 2);
-      if (this.voices[voice - 12]) this.voices[voice - 12].wshape1.curve = this.getDistortionCurve(_gain / 2);
-      if (this.voices[voice - 24]) this.voices[voice - 24].wshape1.curve = this.getDistortionCurve(_gain / 2);
-      if (this.duovoices[voice]) this.duovoices[voice].wshape1.curve = this.getDistortionCurve(_gain / 2);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].wshape1.curve = this.getDistortionCurve(_gain / 2);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].wshape1.curve = this.getDistortionCurve(_gain / 2);
     }
   }
 
@@ -693,11 +348,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.params.osc2shape = _gain;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].wshape2.curve = this.getDistortionCurve(_gain / 2);
-      if (this.voices[voice - 12]) this.voices[voice - 12].wshape2.curve = this.getDistortionCurve(_gain / 2);
-      if (this.voices[voice - 24]) this.voices[voice - 24].wshape2.curve = this.getDistortionCurve(_gain / 2);
-      if (this.duovoices[voice]) this.duovoices[voice].wshape2.curve = this.getDistortionCurve(_gain / 2);
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].wshape2.curve = this.getDistortionCurve(_gain / 2);
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].wshape2.curve = this.getDistortionCurve(_gain / 2);
     }
   }
 
@@ -726,48 +376,24 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.params.ampattack = _attack;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].ampEnveloppe.attackTime = _attack;
-      if (this.voices[voice - 12]) this.voices[voice - 12].ampEnveloppe.attackTime = _attack;
-      if (this.voices[voice - 24]) this.voices[voice - 24].ampEnveloppe.attackTime = _attack;
-      if (this.duovoices[voice]) this.duovoices[voice].ampEnveloppe.attackTime = _attack;
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].ampEnveloppe.attackTime = _attack;
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].ampEnveloppe.attackTime = _attack;
-
     }
   }
   set ampdecay(_decay) {
     this.params.ampdecay = _decay;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].ampEnveloppe.decayTime = _decay;
-      if (this.voices[voice - 12]) this.voices[voice - 12].ampEnveloppe.decayTime = _decay;
-      if (this.voices[voice - 24]) this.voices[voice - 24].ampEnveloppe.decayTime = _decay;
-      if (this.duovoices[voice]) this.duovoices[voice].ampEnveloppe.decayTime = _decay;
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].ampEnveloppe.decayTime = _decay;
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].ampEnveloppe.decayTime = _decay;
     }
   }
   set ampsustain(_sustain) {
     this.params.ampsustain = _sustain;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].ampEnveloppe.sustainLevel = _sustain;
-      if (this.voices[voice - 12]) this.voices[voice - 12].ampEnveloppe.sustainLevel = _sustain;
-      if (this.voices[voice - 24]) this.voices[voice - 24].ampEnveloppe.sustainLevel = _sustain;
-      if (this.duovoices[voice]) this.duovoices[voice].ampEnveloppe.sustainLevel = _sustain;
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].ampEnveloppe.sustainLevel = _sustain;
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].ampEnveloppe.sustainLevel = _sustain;
-      //if (this.voices[voice]) this.voices[voice].ampEnveloppe.attack
-
     }
   }
   set amprelease(_release) {
     this.params.amprelease = _release;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].ampEnveloppe.releaseTime = _release;
-      if (this.voices[voice - 12]) this.voices[voice - 12].ampEnveloppe.releaseTime = _release;
-      if (this.voices[voice - 24]) this.voices[voice - 24].ampEnveloppe.releaseTime = _release;
-      if (this.duovoices[voice]) this.duovoices[voice].ampEnveloppe.releaseTime = _release;
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].ampEnveloppe.releaseTime = _release;
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].ampEnveloppe.releaseTime = _release;
-
     }
   }
 
@@ -775,57 +401,31 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
     this.params.egattack = _attack;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].enveloppeGenerator.attackTime = _attack;
-      if (this.voices[voice - 12]) this.voices[voice - 12].enveloppeGenerator.attackTime = _attack;
-      if (this.voices[voice - 24]) this.voices[voice - 24].enveloppeGenerator.attackTime = _attack;
-      if (this.duovoices[voice]) this.duovoices[voice].enveloppeGenerator.attackTime = _attack;
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].enveloppeGenerator.attackTime = _attack;
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].enveloppeGenerator.attackTime = _attack;
-
     }
   }
   set egdecay(_decay) {
     this.params.egdecay = _decay;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].enveloppeGenerator.decayTime = _decay;
-      if (this.voices[voice - 12]) this.voices[voice - 12].enveloppeGenerator.decayTime = _decay;
-      if (this.voices[voice - 24]) this.voices[voice - 24].enveloppeGenerator.decayTime = _decay;
-      if (this.duovoices[voice]) this.duovoices[voice].enveloppeGenerator.decayTime = _decay;
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].enveloppeGenerator.decayTime = _decay;
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].enveloppeGenerator.decayTime = _decay;
     }
   }
   set egsustain(_sustain) {
     this.params.egsustain = _sustain;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].enveloppeGenerator.sustainLevel = _sustain;
-      if (this.voices[voice - 12]) this.voices[voice - 12].enveloppeGenerator.sustainLevel = _sustain;
-      if (this.voices[voice - 24]) this.voices[voice - 24].enveloppeGenerator.sustainLevel = _sustain;
-      if (this.duovoices[voice]) this.duovoices[voice].enveloppeGenerator.sustainLevel = _sustain;
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].enveloppeGenerator.sustainLevel = _sustain;
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].enveloppeGenerator.sustainLevel = _sustain;
     }
   }
   set egrelease(_release) {
     this.params.egrelease = _release;
     for (let voice = 0; voice < this.voices.length; voice++) {
       if (this.voices[voice]) this.voices[voice].enveloppeGenerator.releaseTime = _release;
-      if (this.voices[voice - 12]) this.voices[voice - 12].enveloppeGenerator.releaseTime = _release;
-      if (this.voices[voice - 24]) this.voices[voice - 24].enveloppeGenerator.releaseTime = _release;
-      if (this.duovoices[voice]) this.duovoices[voice].enveloppeGenerator.releaseTime = _release;
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].enveloppeGenerator.releaseTime = _release;
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].enveloppeGenerator.releaseTime = _release;
     }
   }
 
   set egint(_freq) {
     this.params.egint = _freq;
     for (let voice = 0; voice < this.voices.length; voice++) {
-      if (this.voices[voice]) this.voices[voice].enveloppeGenerator.upperBound= _freq;
-      if (this.voices[voice - 12]) this.voices[voice - 12].enveloppeGenerator.upperBound= _freq;
-      if (this.voices[voice - 24]) this.voices[voice - 24].enveloppeGenerator.upperBound= _freq;
-      if (this.duovoices[voice]) this.duovoices[voice].enveloppeGenerator.upperBound= _freq;
-      if (this.unisonvoices1[voice]) this.unisonvoices1[voice].enveloppeGenerator.upperBound= _freq;
-      if (this.unisonvoices2[voice]) this.unisonvoices2[voice].enveloppeGenerator.upperBound= _freq;
+      if (this.voices[voice]) this.voices[voice].enveloppeGenerator.upperBound = _freq;
     }
 
   }
@@ -837,11 +437,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
         this.params.wave1 = "sawtooth";
         for (let voice = 0; voice < this.voices.length; voice++) {
           if (this.voices[voice]) this.voices[voice].osc1.type = "sawtooth";
-          if (this.voices[voice - 12]) this.voices[voice - 12].osc1.type = "sawtooth";
-          if (this.voices[voice - 24]) this.voices[voice - 24].osc1.type = "sawtooth";
-          if (this.duovoices[voice]) this.duovoices[voice].osc1.type = "sawtooth";
-          if (this.unisonvoices1[voice]) this.unisonvoices1[voice].osc1.type = "sawtooth";
-          if (this.unisonvoices2[voice]) this.unisonvoices2[voice].osc1.type = "sawtooth";
         }
         break;
 
@@ -849,11 +444,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
         this.params.wave1 = "triangle";
         for (let voice = 0; voice < this.voices.length; voice++) {
           if (this.voices[voice]) this.voices[voice].osc1.type = "triangle";
-          if (this.voices[voice - 12]) this.voices[voice - 12].osc1.type = "triangle";
-          if (this.voices[voice - 24]) this.voices[voice - 24].osc1.type = "triangle";
-          if (this.duovoices[voice]) this.duovoices[voice].osc1.type = "triangle";
-          if (this.unisonvoices1[voice]) this.unisonvoices1[voice].osc1.type = "triangle";
-          if (this.unisonvoices2[voice]) this.unisonvoices2[voice].osc1.type = "triangle";
         }
         break;
 
@@ -861,11 +451,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
         this.params.wave1 = "square";
         for (let voice = 0; voice < this.voices.length; voice++) {
           if (this.voices[voice]) this.voices[voice].osc1.type = "square";
-          if (this.voices[voice - 12]) this.voices[voice - 12].osc1.type = "square";
-          if (this.voices[voice - 24]) this.voices[voice - 24].osc1.type = "square";
-          if (this.duovoices[voice]) this.duovoices[voice].osc1.type = "square";
-          if (this.unisonvoices1[voice]) this.unisonvoices1[voice].osc1.type = "square";
-          if (this.unisonvoices2[voice]) this.unisonvoices2[voice].osc1.type = "square";
         }
         break;
     }
@@ -877,11 +462,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
         this.params.wave2 = "sawtooth";
         for (let voice = 0; voice < this.voices.length; voice++) {
           if (this.voices[voice]) this.voices[voice].osc2.type = "sawtooth";
-          if (this.voices[voice - 12]) this.voices[voice - 12].osc2.type = "sawtooth";
-          if (this.voices[voice - 24]) this.voices[voice - 24].osc2.type = "sawtooth";
-          if (this.duovoices[voice]) this.duovoices[voice].osc2.type = "sawtooth";
-          if (this.unisonvoices1[voice]) this.unisonvoices1[voice].osc2.type = "sawtooth";
-          if (this.unisonvoices2[voice]) this.unisonvoices2[voice].osc2.type = "sawtooth";
         }
         break;
 
@@ -889,11 +469,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
         this.params.wave2 = "triangle";
         for (let voice = 0; voice < this.voices.length; voice++) {
           if (this.voices[voice]) this.voices[voice].osc2.type = "triangle";
-          if (this.voices[voice - 12]) this.voices[voice - 12].osc2.type = "triangle";
-          if (this.voices[voice - 24]) this.voices[voice - 24].osc2.type = "triangle";
-          if (this.duovoices[voice]) this.duovoices[voice].osc2.type = "triangle";
-          if (this.unisonvoices1[voice]) this.unisonvoices1[voice].osc2.type = "triangle";
-          if (this.unisonvoices2[voice]) this.unisonvoices2[voice].osc2.type = "triangle";
         }
         break;
 
@@ -901,11 +476,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
         this.params.wave2 = "square";
         for (let voice = 0; voice < this.voices.length; voice++) {
           if (this.voices[voice]) this.voices[voice].osc2.type = "square";
-          if (this.voices[voice - 12]) this.voices[voice - 12].osc2.type = "square";
-          if (this.voices[voice - 24]) this.voices[voice - 24].osc2.type = "square";
-          if (this.duovoices[voice]) this.duovoices[voice].osc2.type = "square";
-          if (this.unisonvoices1[voice]) this.unisonvoices1[voice].osc2.type = "square";
-          if (this.unisonvoices2[voice]) this.unisonvoices2[voice].osc2.type = "square";
         }
         break;
     }
@@ -925,47 +495,6 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
             this.voices[voice].gainLfo.connect(this.voices[voice].lfodestination2);
 
           }
-          if (this.voices[voice - 12]) {
-            this.voices[voice - 12].gainLfo.disconnect();
-            this.voices[voice - 12].lfodestination1 = this.voices[voice - 12].osc1.frequency;
-            this.voices[voice - 12].lfodestination2 = this.voices[voice - 12].osc2.frequency;
-            this.voices[voice - 12].gainLfo.connect(this.voices[voice - 12].lfodestination1);
-            this.voices[voice - 12].gainLfo.connect(this.voices[voice - 12].lfodestination2);
-
-          }
-          if (this.voices[voice - 24]) {
-            this.voices[voice - 24].gainLfo.disconnect();
-            this.voices[voice - 24].lfodestination1 = this.voices[voice - 24].osc1.frequency;
-            this.voices[voice - 24].lfodestination2 = this.voices[voice - 24].osc2.frequency;
-            this.voices[voice - 24].gainLfo.connect(this.voices[voice - 24].lfodestination1);
-            this.voices[voice - 24].gainLfo.connect(this.voices[voice - 24].lfodestination2);
-
-          }
-          if (this.duovoices[voice]) {
-            this.duovoices[voice].gainLfo.disconnect();
-            this.duovoices[voice].lfodestination1 = this.duovoices[voice].osc1.frequency;
-            this.duovoices[voice].lfodestination2 = this.duovoices[voice].osc2.frequency;
-            this.duovoices[voice].gainLfo.connect(this.duovoices[voice].lfodestination1);
-            this.duovoices[voice].gainLfo.connect(this.duovoices[voice].lfodestination2);
-
-          }
-          if (this.unisonvoices1[voice]) {
-            this.unisonvoices1[voice].gainLfo.disconnect();
-            this.unisonvoices1[voice].lfodestination1 = this.unisonvoices1[voice].osc1.frequency;
-            this.unisonvoices1[voice].lfodestination2 = this.unisonvoices1[voice].osc2.frequency;
-            this.unisonvoices1[voice].gainLfo.connect(this.unisonvoices1[voice].lfodestination1);
-            this.unisonvoices1[voice].gainLfo.connect(this.unisonvoices1[voice].lfodestination2);
-
-          }
-          if (this.unisonvoices2[voice]) {
-            this.unisonvoices2[voice].gainLfo.disconnect();
-            this.unisonvoices2[voice].lfodestination1 = this.unisonvoices2[voice].osc1.frequency;
-            this.unisonvoices2[voice].lfodestination2 = this.unisonvoices2[voice].osc2.frequency;
-            this.unisonvoices2[voice].gainLfo.connect(this.unisonvoices2[voice].lfodestination1);
-            this.unisonvoices2[voice].gainLfo.connect(this.unisonvoices2[voice].lfodestination2);
-
-          }
-
         }
         break;
 
@@ -996,44 +525,28 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
             this.voices[voice].gainLfo.connect(this.voices[voice].lfodestination1);
 
           }
-          if (this.voices[voice - 12]) {
-            this.voices[voice - 12].gainLfo.disconnect();
-            this.voices[voice - 12].lfodestination1 = this.voices[voice - 12].lowPassfilter.frequency;
-            this.voices[voice - 12].gainLfo.connect(this.voices[voice - 12].lfodestination1);
-
-          }
-          if (this.voices[voice - 24]) {
-            this.voices[voice - 24].gainLfo.disconnect();
-            this.voices[voice - 24].lfodestination1 = this.voices[voice - 24].lowPassfilter.frequency;
-            this.voices[voice - 24].gainLfo.connect(this.voices[voice - 24].lfodestination1);
-
-          }
-          if (this.duovoices[voice]) {
-            this.duovoices[voice].gainLfo.disconnect();
-            this.duovoices[voice].lfodestination1 = this.duovoices[voice].lowPassfilter.frequency;
-            this.duovoices[voice].gainLfo.connect(this.duovoices[voice].lfodestination1);
-
-          }
-          if (this.unisonvoices1[voice]) {
-            this.unisonvoices1[voice].gainLfo.disconnect();
-            this.unisonvoices1[voice].lfodestination1 = this.unisonvoices1[voice].lowPassfilter.frequency;
-            this.unisonvoices1[voice].gainLfo.connect(this.unisonvoices1[voice].lfodestination1);
-
-          }
-          if (this.unisonvoices2[voice]) {
-            this.unisonvoices2[voice].gainLfo.disconnect();
-            this.unisonvoices2[voice].lfodestination1 = this.unisonvoices2[voice].lowPassfilter.frequency;
-            this.unisonvoices2[voice].gainLfo.connect(this.unisonvoices2[voice].lfodestination1);
-
-          }
-
         }
         break;
     }
   }
   set delay(_sig) {
     this.params.status = _sig
+    for (let voice = 0; voice < this.voices.length; voice++) {
+
+      if (_sig === "enable") {
+        this.voices[voice].amp.disconnect(this.normalize);
+        this.voices[voice].amp.connect(this.ppdelay.feedbackGainNode);
+        this.voices[voice].amp.connect(this.ppdelay.dryGainNode);
+      } else {
+        this.voices[voice].amp.connect(this.normalize);
+        this.voices[voice].amp.disconnect(this.ppdelay.feedbackGainNode);
+        this.voices[voice].amp.disconnect(this.ppdelay.dryGainNode);
+
+      }
+    }
+
   }
+
   set ringmodulation(_sig) {
     this.params.ringmodulation = _sig;
     switch (_sig) {
@@ -1091,29 +604,22 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
         break;
       case "duo":
         for (let voice = 0; voice < this.voices.length; voice++) {
-          if (this.duovoices[voice]) this.duovoices[voice].osc1.detune.setValueAtTime(_val, this.context.currentTime);
-          if (this.duovoices[voice]) this.duovoices[voice].osc2.detune.setValueAtTime(-_val, this.context.currentTime);
-
+          this.voices[voice].osc2.detune.setValueAtTime(_val/5, this.context.currentTime);
         }
         break;
-      case "mono":
-        for (let voice = 0; voice < this.voices.length; voice++) {
-          if (this.voices[voice]) this.voices[voice];
-          if (this.voices[voice - 12]) this.voices[voice - 12].amp.gain.setValueAtTime(_val / 100, this.context.currentTime);
-          if (this.voices[voice - 24]) this.voices[voice - 24].amp.gain.setValueAtTime(_val / 100, this.context.currentTime)
-        }
-        break;
+     
       case "unison":
         for (let voice = 0; voice < this.voices.length; voice++) {
-          if (this.duovoices[voice]) this.duovoices[voice].osc1.detune.setValueAtTime(_val, this.context.currentTime);
-          if (this.duovoices[voice]) this.duovoices[voice].osc2.detune.setValueAtTime(-_val, this.context.currentTime);
-          if (this.unisonvoices1[voice]) this.unisonvoices1[voice].osc1.detune.setValueAtTime(_val, this.context.currentTime);
-          if (this.unisonvoices1[voice]) this.unisonvoices1[voice].osc2.detune.setValueAtTime(_val, this.context.currentTime);
-          if (this.unisonvoices2[voice]) this.unisonvoices2[voice].osc1.detune.setValueAtTime(-_val, this.context.currentTime);
-          if (this.unisonvoices2[voice]) this.unisonvoices2[voice].osc2.detune.setValueAtTime(-_val, this.context.currentTime);
-
+          this.voices[voice].osc2.detune.setValueAtTime(_val/5, this.context.currentTime);
         }
         break;
+         // case "mono":
+      //   for (let voice = 0; voice < this.voices.length; voice++) {
+      //     if (this.voices[voice]) this.voices[voice];
+      //     if (this.voices[voice - 12]) this.voices[voice - 12].amp.gain.setValueAtTime(_val / 100, this.context.currentTime);
+      //     if (this.voices[voice - 24]) this.voices[voice - 24].amp.gain.setValueAtTime(_val / 100, this.context.currentTime)
+      //   }
+      //   break;
       case "arp":
         break;
     }
@@ -1174,59 +680,34 @@ window.Minilogue = class Minilogue extends WebAudioPluginCompositeNode {
  * - One white noise
  */
 class Voice {
-  constructor(ctx, key, parent) {
+  constructor(ctx, parent) {
     this.context = ctx;
     this.parent = parent
-    this.key = key;
-
+    this.key;
     this.lfodestination1;
     this.lfodestination2;
-
-
-    this.buildNode(this.key)
-  }
-
-  getkey() {
-    return this.key;
+    this.buildNode();
   }
 
 
-  buildNode(key) {
+  buildNode() {
 
+    //creations
     this.osc1 = this.context.createOscillator();
     this.osc2 = this.context.createOscillator();
 
     this.osc1.type = this.parent.params.wave1;
     this.osc2.type = this.parent.params.wave2;
-    this.osc1currentOctave = this.parent.params.osc1Octave;
-    this.osc2currentOctave = this.parent.params.osc2Octave;
 
-    this.basefrequency1 = 440 * Math.pow(2, ((key + 12 * (this.osc1currentOctave - 3)) - 69) / 12);
-    this.basefrequency2 = 440 * Math.pow(2, ((key + 12 * (this.osc2currentOctave - 3)) - 69) / 12);
-
-    this.osc1.frequency.setValueAtTime(this.basefrequency1 * this.parent.params.pitch1, this.context.currentTime + 0.05);
-    this.osc2.frequency.setValueAtTime(this.basefrequency1 * this.parent.params.pitch2, this.context.currentTime + 0.05);
-
-
-    // OSC stages
     this.whitenoise = new Noise(this.parent, this.context);
     this.lfo = this.context.createOscillator();
 
-    this.lfo.type = "triangle";
-
-    // Waveshapers stage
     this.wshape1 = this.context.createWaveShaper();
     this.wshape2 = this.context.createWaveShaper();
 
-
-    // Filter stage
     this.lowPassfilter = this.context.createBiquadFilter();
-    this.lowPassfilter.type = "lowpass";
-    this.highpassfilter = this.context.createBiquadFilter();
-    this.highpassfilter.type = "highpass";
     this.enveloppeFilter = this.context.createBiquadFilter();
-    this.enveloppeFilter.type = "lowpass";
-
+    this.highpassfilter = this.context.createBiquadFilter();
 
     // gain stage 
     this.gainOsc1 = this.context.createGain();
@@ -1236,28 +717,36 @@ class Voice {
     this.whitenoiseGain = this.context.createGain();
     this.ringGain = this.context.createGain();
 
+    this.ampEnveloppe = new EnvGen(this.context, this.amp.gain, 1);
+    this.enveloppeGenerator = new EnvGen(this.context, this.enveloppeFilter.frequency, this.parent.params.egint);
+    this.oscMerger = this.context.createChannelMerger(3);
+
+    this.lfo.type = "triangle";
+    this.lowPassfilter.type = "lowpass";
+    this.highpassfilter.type = "highpass";
+    this.enveloppeFilter.type = "lowpass";
 
     //Enveloppe stage
 
-    this.ampEnveloppe = new EnvGen(this.context, this.amp.gain, 1);
     //this.ampEnveloppe.mode = 'ADSR';
     this.ampEnveloppe.attackTime = this.parent.params.ampattack;
     this.ampEnveloppe.decayTime = this.parent.params.ampdecay;
     this.ampEnveloppe.sustainLevel = this.parent.params.ampsustain;
     this.ampEnveloppe.releaseTime = this.parent.params.amprelease;
 
-    this.enveloppeGenerator = new EnvGen(this.context, this.enveloppeFilter.frequency,this.parent.params.egint);
     //this.enveloppeGenerator.mode = 'ADSR';
     this.enveloppeGenerator.attackTime = this.parent.params.egattack;
     this.enveloppeGenerator.decayTime = this.parent.params.egdecay;
     this.enveloppeGenerator.sustainLevel = this.parent.params.egsustain;
     this.enveloppeGenerator.releaseTime = this.parent.params.egrelease;
+    this.osc1currentOctave = this.parent.params.osc1Octave;
+    this.osc2currentOctave = this.parent.params.osc2Octave;
 
-    
+    this.basefrequency1 = 440 * Math.pow(2, ((0 + 12 * (this.osc1currentOctave - 3)) - 69) / 12);
+    this.basefrequency2 = 440 * Math.pow(2, ((0 + 12 * (this.osc2currentOctave - 3)) - 69) / 12);
 
 
-    // merger
-    this.oscMerger = this.context.createChannelMerger(3);
+    // connections
 
     this.osc1.connect(this.wshape1);
     this.osc2.connect(this.wshape2);
@@ -1266,7 +755,6 @@ class Voice {
     this.wshape2.connect(this.gainOsc2);
     this.whitenoise.bufferSource.connect(this.whitenoiseGain);
     this.lfo.connect(this.gainLfo);
-
 
     switch (this.parent.params.lfodest) {
       case 'cutoff':
@@ -1310,10 +798,23 @@ class Voice {
     this.osc1.start();
     this.osc2.start();
     this.lfo.start();
+    this.ampEnveloppe.gateOff();
+    this.enveloppeGenerator.gateOff();
 
   }
 
+  assignKey(key) {
+
+    this.key = key
+    this.basefrequency1 = 440 * Math.pow(2, ((key + 12 * (this.osc1currentOctave - 3)) - 69) / 12);
+    this.basefrequency2 = 440 * Math.pow(2, ((key + 12 * (this.osc2currentOctave - 3)) - 69) / 12);
+
+    this.osc1.frequency.setValueAtTime(this.basefrequency1 * this.parent.params.pitch1, this.context.currentTime + 0.02);
+    this.osc2.frequency.setValueAtTime(this.basefrequency2 * this.parent.params.pitch2, this.context.currentTime + 0.02);
+  }
 }
+
+
 
 //------------------------------------------------ White noise Generator ------------------------------------ 
 
@@ -1390,30 +891,29 @@ class EnvGen {
     this.audioContext = audioContext;
     this.target = target;
     this.upperBound = upperBound;
-    this.lowerBound = lowerBound || 0.0000001;
+    this.lowerBound = lowerBound || 0.01;
     this.node = null;
     this.attackTime = this.decayTime = this.sustainLevel = this.releaseTime = null;
   }
 
 
-    gateOn( time) {
-      console.log(this.attackTime);
+  gateOn(time) {
 
-      this.time = time ? time : this.audioContext.currentTime;
-      this.upperBound = this.upperBound; // velocity adjustment
-      this.target.cancelScheduledValues(this.time);
-      this.target.setValueAtTime(this.lowerBound, this.audioContext.currentTime);
-      this.target.setTargetAtTime(this.upperBound, this.time + 0.01, this.attackTime / 3);
-      this.target.setTargetAtTime(this.sustainLevel * this.upperBound, this.time + 0.01 + this.attackTime, this.decayTime / 3);
-    }
+    this.time = time ? time : this.audioContext.currentTime;
+    this.upperBound = this.upperBound; // velocity adjustment
+    this.target.cancelScheduledValues(this.time);
+    this.target.setValueAtTime(this.lowerBound, this.audioContext.currentTime);
+    this.target.setTargetAtTime(this.upperBound, this.time, this.attackTime / 3);
+    this.target.setTargetAtTime(this.sustainLevel * this.upperBound, this.time + 0.01 + this.attackTime, this.decayTime / 3);
+  }
 
-    gateOff(time) {
-      if(this.releaseTime ==null) this.releaseTime = 0.0001;
-      this.time = time ? time : this.audioContext.currentTime;
+  gateOff(time) {
+    if (this.releaseTime == null) this.releaseTime = 0.0001;
+    this.time = time ? time : this.audioContext.currentTime;
 
-      this.target.cancelScheduledValues(this.time);
-      this.target.setTargetAtTime(this.lowerBound, this.time, this.releaseTime);
-    }
+    this.target.cancelScheduledValues(this.time);
+    this.target.setTargetAtTime(this.lowerBound, this.time, this.releaseTime);
+  }
 
 }
 
