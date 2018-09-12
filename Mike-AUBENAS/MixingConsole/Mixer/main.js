@@ -15,29 +15,17 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 		} else
 			this.arrayNodeToConnect = 'no nodes';
 
-		this._metadata =
-			{
-				"name": "wasabi-Mixer",
-				"version": 1,
-				"category": "Mixer",
-				"type": "Audio",
-				"description": "A channel part of a mixer",
-				"thumbnailImage": "https://...",
-				"URLs": "https://.../doc",
-				"authorInformation": "Mike AUBENAS, i3s intern in Nice - Sophia-Antipolis, France"
-			}
-
 		this.addParam({ name: 'gain', defaultValue: 0.5, minValue: 0, maxValue: 1 });
 		this.addParam({ name: 'nbcanaux', defaultValue: 2, minValue: 2, maxValue: 6 });
-		this.gainMin = 0;
-		this.gainMax = 1;
+
 		this.nbcanauxMin = 2;
 		this.nbcanauxMax = 5;
 
 
 		this.getNumberOfChannels();
 
-		this.setup();
+
+		super.setup();
 	}
 
 	get numberOfInputs() {
@@ -62,7 +50,6 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 
 
 	setParam(key, value) {
-		console.log(key, value);
 		try {
 			this[key] = (value);
 		} catch (error) {
@@ -80,7 +67,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 		this.createNode();
 	}
 
-	createNode() {
+	createNodes() {
 		this.master = this.context.createGain();
 		this.master.connect(this._output);
 		for (let i = 1; i < this.numberOfInputs; i++) {
@@ -122,13 +109,6 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 		}
 		else {
 			console.log("nb atteint")
-		}
-	}
-
-	changeMasterGain(value) {
-		if ((value >= this.gainMin) && (value <= this.gainMax)) {
-			this.params.gain = value;
-			this.master.gain.setValueAtTime(parseFloat(value, 10), this.context.currentTime);
 		}
 	}
 
