@@ -891,7 +891,7 @@ class EnvGen {
     this.audioContext = audioContext;
     this.target = target;
     this.upperBound = upperBound;
-    this.lowerBound = lowerBound || 0.01;
+    this.lowerBound = lowerBound || 0.001;
     this.node = null;
     this.attackTime = this.decayTime = this.sustainLevel = this.releaseTime = null;
   }
@@ -903,7 +903,7 @@ class EnvGen {
     this.upperBound = this.upperBound; // velocity adjustment
     this.target.cancelScheduledValues(this.time);
     this.target.setValueAtTime(this.lowerBound, this.audioContext.currentTime);
-    this.target.setTargetAtTime(this.upperBound, this.time, this.attackTime / 3);
+    this.target.setTargetAtTime(this.upperBound, this.time , this.attackTime / 6);
     this.target.setTargetAtTime(this.sustainLevel * this.upperBound, this.time + 0.01 + this.attackTime, this.decayTime / 3);
   }
 
