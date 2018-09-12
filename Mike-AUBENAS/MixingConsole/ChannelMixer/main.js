@@ -55,7 +55,7 @@ window.ChannelMixer = class ChannelMixer extends WebAudioPluginCompositeNode {
 
 	set gain(value) {
 			this.params.gain = value;
-			this._input.gain.setValueAtTime(parseFloat(value, 10), this.context.currentTime);
+			this._input.gain.setValueAtTime(value, this.context.currentTime);
 	}
 
 }

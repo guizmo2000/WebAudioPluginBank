@@ -247,7 +247,7 @@
         setListener() {
             this._root.querySelector("#gain").addEventListener('input', (e) => {
                 
-                this._plug.setParam("gain", e.target.value - 2);
+                this._plug.setParam("gain", e.target.value);
             });
             this._root.querySelector("#pan").addEventListener('input', (e) => this._plug.setParam("pan", e.target.value));
             this._root.querySelector("#pan").addEventListener('contextmenu', (e) => {
