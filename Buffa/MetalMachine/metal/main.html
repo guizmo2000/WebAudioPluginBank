@@ -7,8 +7,8 @@
 
 <style>
 	@font-face {
-		font-family: 'BouWeste';
-		src: url('./assets/BouWeste.ttf') format('truetype');
+		font-family: 'metalfont';
+		src: url('./assets/metalfont.ttf') format('truetype');
 		font-weight: normal;
 		font-style: normal;
 
@@ -21,7 +21,7 @@
 	<style>
 		:host {
 			background-color: rgb(255, 255, 255);
-			font: 'BouWeste', 'Arial Black';
+			font: 'metalfont', 'Arial Black';
 			display: block;
 			width: 450px;
 			height: 150px;
@@ -77,9 +77,9 @@
 		}
 
 		#presence div {
-			color: #000000;
-			font-family: "BouWeste";
-			font-size: 9px;
+			color: #ffffff;
+			font-family: "metalfont";
+			font-size: 15px;
 
 		}
 
@@ -90,9 +90,9 @@
 		}
 
 		#reverb div {
-			color: #000000;
-			font-family: "BouWeste";
-			font-size: 9px;
+			color: #ffffff;
+			font-family: "metalfont";
+			font-size: 15px;
 
 		}
 
@@ -102,9 +102,9 @@
 		}
 
 		#treble div {
-			color: #000000;
-			font-family: "BouWeste";
-			font-size: 9px;
+			color: #ffffff;
+			font-family: "metalfont";
+			font-size: 15px;
 
 		}
 
@@ -114,9 +114,9 @@
 		}
 
 		#middle div {
-			color: #000000;
-			font-family: "BouWeste";
-			font-size: 9px;
+			color: #ffffff;
+			font-family: "metalfont";
+			font-size: 15px;
 
 		}
 
@@ -126,9 +126,9 @@
 		}
 
 		#bass div {
-			color: #000000;
-			font-family: "BouWeste";
-			font-size: 9px;
+			color: #ffffff;
+			font-family: "metalfont";
+			font-size: 15px;
 
 		}
 
@@ -138,9 +138,9 @@
 		}
 
 		#drive div {
-			color: #000000;
-			font-family: "BouWeste";
-			font-size: 9px;
+			color: #ffffff;
+			font-family: "metalfont";
+			font-size: 15px;
 
 		}
 
@@ -150,9 +150,9 @@
 		}
 
 		#master div {
-			color: #000000;
-			font-family: "BouWeste";
-			font-size: 9px;
+			color: #ffffff;
+			font-family: "metalfont";
+			font-size: 15px;
 
 		}
 
@@ -162,38 +162,38 @@
 		}
 
 		#volume div {
-			color: #000000;
-			font-family: "BouWeste";
-			font-size: 9px;
+			color: #ffffff;
+			font-family: "metalfont";
+			font-size: 15px;
 
 		}
 
 		#label_713 {
 
-			left: 150px;
+			left: 170px;
 			top: 95px;
-			color: #000000;
-			font-family: "BouWeste";
-			font-size: 28px;
+			color: #f8f8f8;
+			font-family: "metalfont";
+			font-size: 40px;
 		}
 
 		#menuPresets {
 			border-style: solid;
 			border-width: 2px;
 			border-color: #000000;
-			background-color: rgba(236, 236, 236, 0.767);
+			background-color: rgb(255, 254, 254);
 			position: absolute;
 			width: 100px;
 			left: 30px;
 			top: 100px;
 			color: #000000;
 			font-family: "Arial Black";
-			font-size: 9px;
+			font-size: 12px;
 		}
 
 		
 	</style>
-	<!-- <img id="background-image"> -->
+	<img id="background-image">
 
 	<div class="switchCont" id="switch1">
 		<webaudio-switch class="switch" id="switch1" height="30" width="60"></webaudio-switch>
@@ -268,7 +268,7 @@
 			this.setKnobs();
 			this.setSwitchListener();
 			this.setResources();
-		//	this.avoidDrag();
+			this.avoidDrag();
 		}
 
 		get properties() {
@@ -322,9 +322,9 @@
 				//this._plug.setPatch(null, this.index);
 			}
 			// Set up the background img & style
-			// var background = this._root.querySelector("img");
-			// background.src = this._plug.URL + '/assets/DistoMachine.png';
-			// background.style = 'border-radius :10px;'
+			var background = this._root.querySelector("img");
+			background.src = this._plug.URL + '/assets/MetalMachine.png';
+			background.style = 'border-radius :10px;'
 			// Setting up the knobs imgs, those are loaded from the assets
 			this._root.querySelectorAll(".knob").forEach((knob) => {
 				knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/Jambalaya.png');
@@ -367,9 +367,9 @@
 			});
 		}
 
-		// avoidDrag(){
-		// 	this._root.querySelector("#background-image").draggable=false;
-		// }
+		avoidDrag(){
+			this._root.querySelector("#background-image").draggable=false;
+		}
 
 	}
 	try {
