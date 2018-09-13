@@ -420,7 +420,7 @@ window.FaustDeadGate = class FaustDeadGate {
      */
     load() {
         return new Promise((resolve, reject) => {
-            this.context.audioWorklet.addModule(this.baseUrl + "/untitled-processor.js").then(() => {
+            this.context.audioWorklet.addModule(this.baseUrl + "untitled-processor.js").then(() => {
                 this.node = new DeadGateNode(this.context, this.baseUrl, {});
                 this.node.onprocessorerror = () => { console.log('An error from deadgate-processor was detected.'); }
                 return (this.node);
@@ -428,6 +428,7 @@ window.FaustDeadGate = class FaustDeadGate {
                 console.log(this.node.getDescriptor());
                 resolve(node);
             }).catch((e) => {
+                console.log(e);
                 reject(e);
             });
         });
