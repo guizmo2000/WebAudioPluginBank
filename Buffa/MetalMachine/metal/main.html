@@ -340,7 +340,7 @@
 			if(this.state.preampPos == "after"){
 				this._root.querySelector("#switchpreamp").querySelector("webaudio-switch").value = 1;
 
-			}
+			}else{this._root.querySelector("#switchpreamp").querySelector("webaudio-switch").value = 0;}
 			if(this.state.filterstate == "on"){
 				this._root.querySelector("#switchfilter").querySelector("webaudio-switch").value = 1;
 			}
@@ -348,7 +348,6 @@
 			for (var i = 0; i < this.knobs.length; i++) {
 				this.knobs[i].querySelector("webaudio-knob").setValue(this.state[this.knobs[i].id],false);
 			}
-			console.log(this.state.preset);
 			if (this.state.preset){
 				console.log("changepresetgui");
 				var preset = this._root.querySelector("#menuPresets");

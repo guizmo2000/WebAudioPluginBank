@@ -1153,10 +1153,13 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
         parent.distoName1 = p.distoName1;
         parent.distoName2 = p.distoName2;
         parent.CG = p.CG
-        setPATS(false);
-        if(p.PREAMP_BEFORE_TONESTACK) {
+
+
+        if(p.PREAMP_BEFORE_TONESTACK !== undefined) {
             if(p.PREAMP_BEFORE_TONESTACK ==="true")parent.preampPos = 0;
             else parent.preampPos = 1;
+        }else{
+            parent.preampPos = 0;
         }
 
          try {
@@ -1164,6 +1167,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
         } catch (error) {
             console.warn("state not setted to the GUI", error);
         }
+
         // default is preamp before tonestack, we need to do this for presets without power amp
 
 
@@ -1274,7 +1278,6 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
     }
 
     function setPATS(preampBefore) {
-        console.log("setpats",this);
         // we switch only if previous state was not the one we want
         if (isPreampBeforeTonestack() !== preampBefore) {
             changeTonestackAndPreampLocations(preampBefore);
