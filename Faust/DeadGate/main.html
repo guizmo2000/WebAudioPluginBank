@@ -146,12 +146,12 @@
 
     <div class="knob  " id="noisegate">
       <webaudio-knob src="./img/knobs/Vintage_Knob.png" height="40" width="40" sprites="100" min="-120" max="0" step="1"
-        value="-120" style="height: 40px;"></webaudio-knob>
+        value="-120"  id="/kpp_distruction/Noise_Gate" style="height: 40px;"></webaudio-knob>
       <div style="text-align:center">Noise Gate</div>
     </div>
     <div class="knob   " id="deadzone">
       <webaudio-knob src="./img/knobs/Vintage_Knob.png" height="40" width="40" sprites="100" min="-120" max="0" step="1"
-        value="-120" style="height: 40px;"></webaudio-knob>
+        value="-120" id="/kpp_distruction/Dead_Zone" style="height: 40px;"></webaudio-knob>
       <div style="text-align:center">Dead Zone</div>
     </div>
     <div class="label      " id="label_817">Dead Gate</div>
@@ -188,7 +188,7 @@
       //this.labels = this._root.querySelectorAll(".knob-label");
       for (var i = 0; i < this.knobs.length; i++) {
         //this.knobs[i].querySelector("webaudio-konb").value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")] * 100;
-        this.knobs[i].querySelector("webaudio-knob").value = this.state[this.knobs[i].id];
+        this.knobs[i].querySelector("webaudio-knob").value = this.state[this.knobs[i].querySelector("webaudio-knob").id];
       }
 
     }
