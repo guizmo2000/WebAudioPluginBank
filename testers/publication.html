@@ -94,7 +94,7 @@
   window.onload = () => {
 
     (function getPedalNameFromURL() {
-      let baseURLPedal = "http://mike-aubenas.fr:5001/pedals/node_modules/";
+      let baseURLPedal = "https://mike-aubenas.fr:5001/pedals/node_modules/";
       let currentURL = new URL(window.location.href);
       pedalName = currentURL.searchParams.get('pedal');
 
