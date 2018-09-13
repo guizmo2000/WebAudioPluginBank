@@ -375,6 +375,11 @@
     <img class="preload" id="preload5">
     <img class="preload" id="preload6">
     <img class="preload" id="preload7">
+    <img class="preload" id="preload8">
+    <img class="preload" id="preload9">
+    <img class="preload" id="preload10">
+    <img class="preload" id="preload11">
+    <img class="preload" id="preload12">
 
     <!--  The markup below keeps all images in a row on a single long line to avoid 
             a bizarre bug where otherwise the browser inserts an extra pixel between 
@@ -529,7 +534,7 @@
                     </div>
                 </div>
 
-                <div id='patterncombo_container'>
+              <!--  <div id='patterncombo_container'>
                     <span class='label' id='patternlabel'>Pattern</span>
                     <div class='combo' id='patterncombo'>
                         <span id='patternname'></span>
@@ -537,7 +542,7 @@
                         <ul class='combolist' id='patternlist'>
                         </ul>
                     </div>
-                </div>
+                </div> -->
 
                 <div id='tempo_container'>
                     <span class='label' id='tempolabel'>Tempo</span>
@@ -621,10 +626,14 @@
             <!--<img id='save'>-->
             <!--<img id='load'>-->
             <img id='reset'>
-            <button id='demo1'>Demo1</button>
-            <button id='demo2'>Demo2</button>
-            <button id='demo3'>Demo3</button>
 
+            <span id='demos_container'>            
+                <img id='demo1'  width='30' height='22'>
+                <img id='demo2'  width='30' height='22'>
+                <img id='demo3'  width='30' height='22'>
+                <img id='demo4'  width='30' height='22'>
+                <img id='demo5'  width='30' height='22'>
+            </span>
         </section>
 
 
@@ -728,6 +737,8 @@
             this._root.getElementById('demo1').addEventListener('mousedown', (event) => this._plug.demoChoose(1));
             this._root.getElementById('demo2').addEventListener('mousedown', (event) => this._plug.demoChoose(2));
             this._root.getElementById('demo3').addEventListener('mousedown', (event) => this._plug.demoChoose(3));
+            this._root.getElementById('demo4').addEventListener('mousedown', (event) => this._plug.demoChoose(4));
+            this._root.getElementById('demo5').addEventListener('mousedown', (event) => this._plug.demoChoose(5));
 
             this._root.getElementById('body').addEventListener('mousemove', (event) => this._plug.handleMouseMove(event), true);
             this._root.getElementById('body').addEventListener('mouseup', () => this._plug.handleMouseUp(), true);
@@ -736,7 +747,8 @@
             this._root.getElementById('tempodec').addEventListener('mousedown', () => this._plug.tempoDecrease(), true);
 
             this._root.getElementById('kitcombo').addEventListener("mousedown", (event) => this.handleKitComboMouseDown(event), true);
-            this._root.getElementById('patterncombo').addEventListener("mousedown", (event) => this.handlePatternComboMouseDown(event), true);
+            //Correct this part when we include the list of pattern instead of button
+            //this._root.getElementById('patterncombo').addEventListener("mousedown", (event) => this.handlePatternComboMouseDown(event), true);
             this._root.addEventListener("mousedown", (event) => this.handleBodyMouseDown(event), true);
         }
 
@@ -773,10 +785,11 @@
             if (elKitcombo.classList.contains('active') && !this.isDescendantOfId(event.target, 'kitcombo_container')) {
                 elKitcombo.classList.remove('active');
             }
-
-            if (elPatterncombo.classList.contains('active') && !this.isDescendantOfId(event.target, 'patterncombo_container')) {
+            
+            //to add if we include pattern list
+            /*if (elPatterncombo.classList.contains('active') && !this.isDescendantOfId(event.target, 'patterncombo_container')) {
                 elPatterncombo.classList.remove('active');
-            }
+            }*/
         }
 
         //TODO: see this function how it works, particularry drawNote
@@ -852,7 +865,6 @@
 
         makePatternList() {
             var elList = this._root.getElementById('patternlist');
-            console.log(this._plug.params.demo);
             /*var numKits = this._plug.params.kitName.length;
 
             for (var i = 0; i < numKits; i++) {
@@ -963,6 +975,12 @@
             this._root.querySelector("#preload6").setAttribute('src', this._plug.URL + '/images/button_on.png');
             this._root.querySelector("#preload7").setAttribute('src', this._plug.URL + '/images/LED_ON.png');
 
+            this._root.querySelector("#preload8").setAttribute('src', this._plug.URL + '/images/btn_demo1.png');
+            this._root.querySelector("#preload9").setAttribute('src', this._plug.URL + '/images/btn_demo2.png');
+            this._root.querySelector("#preload10").setAttribute('src', this._plug.URL + '/images/btn_demo3.png');
+            this._root.querySelector("#preload11").setAttribute('src', this._plug.URL + '/images/btn_demo4.png');
+            this._root.querySelector("#preload12").setAttribute('src', this._plug.URL + '/images/btn_demo5.png');
+
             this._root.querySelector("#arrow").setAttribute('src', this._plug.URL + '/images/drop_arrow.png');
 
             this._root.querySelector("#tempodec").setAttribute('src', this._plug.URL + '/images/tempo_dec.png');
@@ -976,6 +994,12 @@
             //this._root.querySelector("#save").setAttribute('src', this._plug.URL + '/images/btn_save.png');
             //this._root.querySelector("#load").setAttribute('src', this._plug.URL + '/images/btn_load.png');
             this._root.querySelector("#reset").setAttribute('src', this._plug.URL + '/images/btn_reset.png');
+            
+            this._root.querySelector("#demo1").setAttribute('src', this._plug.URL + '/images/btn_demo1.png');
+            this._root.querySelector("#demo2").setAttribute('src', this._plug.URL + '/images/btn_demo2.png');
+            this._root.querySelector("#demo3").setAttribute('src', this._plug.URL + '/images/btn_demo3.png');
+            this._root.querySelector("#demo4").setAttribute('src', this._plug.URL + '/images/btn_demo4.png');
+            this._root.querySelector("#demo5").setAttribute('src', this._plug.URL + '/images/btn_demo5.png');
 
             this._root.querySelector("#load_textarea").setAttribute('src', this._plug.URL + '/images/btn_ok.png');
             this._root.querySelector("#load_ok").setAttribute('src', this._plug.URL + '/images/btn_ok.png');
