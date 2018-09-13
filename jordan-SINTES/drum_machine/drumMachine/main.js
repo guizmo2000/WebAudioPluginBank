@@ -81,65 +81,97 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
 
+			demo1: {
+				"kitIndex": 12,
+				"tempo": 86,
+				"swingFactor": 0,
+				"kickPitchVal": 0.46478873239436624,
+				"snarePitchVal": 0.45070422535211263,
+				"hihatPitchVal": 0.15492957746478875,
+				"tom1PitchVal": 0.7183098591549295,
+				"tom2PitchVal": 0.704225352112676,
+				"tom3PitchVal": 0.8028169014084507,
+				"rhythm1": [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+				"rhythm2": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0],
+				"rhythm3": [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			},
 
-			demo: [
+			demo2: {
+				"kitIndex": 3,
+				"tempo": 98,
+				"swingFactor": 0,
+				"kickPitchVal": 0.46478873239436624,
+				"snarePitchVal": 0.45070422535211263,
+				"hihatPitchVal": 0.15492957746478875,
+				"tom1PitchVal": 0.7183098591549295,
+				"tom2PitchVal": 0.704225352112676,
+				"tom3PitchVal": 0.8028169014084507,
+				"rhythm1": [0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0],
+				"rhythm2": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+				"rhythm3": [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			},
+
+			demo3: {
+				"kitIndex": 9,
+				"tempo": 124,
+				"swingFactor": 0,
+				"kickPitchVal": 0.46478873239436624,
+				"snarePitchVal": 0.45070422535211263,
+				"hihatPitchVal": 0.15492957746478875,
+				"tom1PitchVal": 0.7183098591549295,
+				"tom2PitchVal": 0.704225352112676,
+				"tom3PitchVal": 0.8028169014084507,
+				"rhythm1": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+				"rhythm2": [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
+				"rhythm3": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm5": [0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0],
+				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			},
+
+			demo4: {
+				"kitIndex": 0,
+				"tempo": 108,
+				"swingFactor": 0,
+				"kickPitchVal": 0.46478873239436624,
+				"snarePitchVal": 0.45070422535211263,
+				"hihatPitchVal": 0.15492957746478875,
+				"tom1PitchVal": 0.7183098591549295,
+				"tom2PitchVal": 0.704225352112676,
+				"tom3PitchVal": 0.8028169014084507,
+				"rhythm1": [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm3": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			},
+
+			demo5: {
+				"kitIndex": 9,
+				"tempo": 124,
+				"swingFactor": 0,
+				"kickPitchVal": 0.46478873239436624,
+				"snarePitchVal": 0.45070422535211263,
+				"hihatPitchVal": 0.15492957746478875,
+				"tom1PitchVal": 0.7183098591549295,
+				"tom2PitchVal": 0.704225352112676,
+				"tom3PitchVal": 0.8028169014084507,
+				"rhythm1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm3": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			},
 
 			
-			demo1= {
-				"kitIndex": 12,
-				"tempo": 130,
-				"swingFactor": 0,
-				"kickPitchVal": 0.46478873239436624,
-				"snarePitchVal": 0.45070422535211263,
-				"hihatPitchVal": 0.15492957746478875,
-				"tom1PitchVal": 0.7183098591549295,
-				"tom2PitchVal": 0.704225352112676,
-				"tom3PitchVal": 0.8028169014084507,
-				"rhythm1": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm2": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm3": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm4": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm5": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm6": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			},
-
-			demo2= {
-				"kitIndex": 12,
-				"tempo": 130,
-				"swingFactor": 0,
-				"kickPitchVal": 0.46478873239436624,
-				"snarePitchVal": 0.45070422535211263,
-				"hihatPitchVal": 0.15492957746478875,
-				"tom1PitchVal": 0.7183098591549295,
-				"tom2PitchVal": 0.704225352112676,
-				"tom3PitchVal": 0.8028169014084507,
-				"rhythm1": [1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm2": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm3": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm4": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm5": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm6": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			},
-
-			demo3= {
-				"kitIndex": 12,
-				"tempo": 130,
-				"swingFactor": 0,
-				"kickPitchVal": 0.46478873239436624,
-				"snarePitchVal": 0.45070422535211263,
-				"hihatPitchVal": 0.15492957746478875,
-				"tom1PitchVal": 0.7183098591549295,
-				"tom2PitchVal": 0.704225352112676,
-				"tom3PitchVal": 0.8028169014084507,
-				"rhythm1": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm2": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm3": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm4": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm5": [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm6": [1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			},
-
-			],
 
 			kits: null,
 			currentKit: null,
@@ -504,6 +536,12 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		else if(index == 3){
 			this.loadBeat(this.params.demo3);
 		}
+		else if(index == 4){
+			this.loadBeat(this.params.demo4);
+		}
+		else if(index == 5){
+			this.loadBeat(this.params.demo5);
+		}
 
 		this.updateControls();
 	}
@@ -685,7 +723,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			}
 		}
 		this.gui._root.getElementById('kitname').innerHTML = this.params.kitNamePretty[this.params.theBeat.kitIndex];
-		this.gui._root.getElementById('patternname').innerHTML = this.params.kitNamePretty[this.params.theBeat.kitIndex];
+		//to include if we inlcude pattern list
+		//this.gui._root.getElementById('patternname').innerHTML = this.params.kitNamePretty[this.params.theBeat.kitIndex];
 		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
 
 	}
