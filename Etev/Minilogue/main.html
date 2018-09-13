@@ -118,7 +118,7 @@
     #poly{left:400px;top:145px;}
     #duo{left:422px;top:145px;}
     #unison{left:442px;top:145px;}
-    #mono{left:469px;top:145px;}
+    #mono{left:469px;top:145px; display : none}
     #arp{left:490px;top:145px; display: none}
 
     #voicedepth{left:515px;top:95px;}
@@ -162,7 +162,7 @@
   </div>
   <div class="section" id="vco1">VCO1</div>
   <div class="slide" id="osc1octave" >
-    <webaudio-slider  midilearn="1" value="3" min="1" max="5" step="1" width="15" height="24" tooltip="Osc1 octave %d"></webaudio-slider>
+    <webaudio-slider  midilearn="1" value="2" min="1" max="5" step="1" width="15" height="24" tooltip="Osc1 octave %d"></webaudio-slider>
     <div style="text-align:center">Octave</div>
   </div>
   <div class="slide" id="wave1">
@@ -197,7 +197,7 @@
   </div>
   <div class="section" id="vco2">VCO2</div>
   <div class="slide" id="osc2octave">
-    <webaudio-slider  midilearn="1"  value="3" min="1" max="5" step="1" width="15" height="24"
+    <webaudio-slider  midilearn="1"  value="2" min="1" max="5" step="1" width="15" height="24"
       tooltip="Osc2 octave %d"></webaudio-slider>
       <div style="text-align:center">Octave</div>
     </div>
@@ -566,7 +566,7 @@
         var controlNumber = data[1];
         var value = data[2];
         if (channel != 248 && channel != 254) {
-          console.log("Midi event hook: data:[" + data + "] channel:" + data[0] + " cc:" + controlNumber + " value:" + value);
+          //console.log("Midi event hook: data:[" + data + "] channel:" + data[0] + " cc:" + controlNumber + " value:" + value);
         }
         switch (channel & 0xf0) {
           case 0x90:

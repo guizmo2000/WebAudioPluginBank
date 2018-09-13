@@ -116,8 +116,8 @@
 
 			<webaudio-slider id="masterKnob" midilearn="true" units="Db" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png"
 			 knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png"
-			 value="0.5" min="0" max="1" step="0.01" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;"
-			 defvalue="0.5" tooltip="Master">
+			  min="0" max="1" step="0.01" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;"
+			 value = "0.5" defvalue="0.5" tooltip="Master">
 
 				<div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
 					<div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
@@ -298,7 +298,7 @@
 
 		setMaster() {
 			this._root.querySelector("#masterKnob").addEventListener("input", (event) => {
-				this._plug.changeMasterGain(event.target.value);
+				this._plug.setParam("gain",event.target.value);
 			});
 		}
 
