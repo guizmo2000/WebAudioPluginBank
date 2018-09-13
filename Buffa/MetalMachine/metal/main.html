@@ -23,7 +23,7 @@
 			background-color: rgb(255, 255, 255);
 			font: 'metalfont', 'Arial Black';
 			display: block;
-			width: 450px;
+			width: 550px;
 			height: 150px;
 			user-select: none;
 			border-radius: 10px;
@@ -46,7 +46,7 @@
 
 
 		#background-image {
-			width: 450px;
+			width: 550px;
 			height: 150px;
 			opacity: 1;
 
@@ -70,6 +70,32 @@
 			bottom: 20px;
 			right: 10px;
 		}
+
+		#switchpreamp {
+			top: 25px;
+			left: 425px;
+		}
+
+		#preampswitchlabel {
+			color: #ffffff;
+			font-family: "metalfont";
+			font-size: 15px;
+			top: 60px;
+			left: 435px;
+		}
+		#switchfilter {
+			top: 25px;
+			left: 470px;
+		}
+
+		#filterswitchlabel {
+			color: #ffffff;
+			font-family: "metalfont";
+			font-size: 15px;
+			top: 60px;
+			left: 480px;
+		}
+
 
 		#presence {
 			left: 375px;
@@ -170,7 +196,7 @@
 
 		#label_713 {
 
-			left: 170px;
+			left: 220px;
 			top: 95px;
 			color: #f8f8f8;
 			font-family: "metalfont";
@@ -198,8 +224,18 @@
 	<div class="switchCont" id="switch1">
 		<webaudio-switch class="switch" id="switch1" height="30" width="60"></webaudio-switch>
 	</div>
+	<div class="switch" id="switchpreamp">
+		<webaudio-switch class="switch"  height="30" width="60"></webaudio-switch>
+	</div>
+	<div id="preampswitchlabel" class="label">Preamp</div>
 
-	<div class="knob  " id="presence">
+	<div class="switch" id="switchfilter">
+		<webaudio-switch class="switch"  height="30" width="60"></webaudio-switch>
+	</div>
+	<div id="filterswitchlabel"  class="label" >Filter</div>
+
+
+	<div class="knob " id="presence">
 		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3" midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Presence</div>
 	</div>
@@ -300,6 +336,14 @@
 				this._root.querySelector("#switch1").querySelector("webaudio-switch").value = 1;
 				this.isOn = true;
 			}
+			console.log(this.state.preampPos);
+			if(this.state.preampPos == "after"){
+				this._root.querySelector("#switchpreamp").querySelector("webaudio-switch").value = 1;
+
+			}
+			if(this.state.filterstate == "on"){
+				this._root.querySelector("#switchfilter").querySelector("webaudio-switch").value = 1;
+			}
 			this.knobs = this._root.querySelectorAll(".knob");
 			for (var i = 0; i < this.knobs.length; i++) {
 				this.knobs[i].querySelector("webaudio-knob").setValue(this.state[this.knobs[i].id],false);
@@ -331,6 +375,9 @@
 			});
 			// Setting up the switches imgs, those are loaded from the assets
 			this._root.querySelector("#switch1").querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_2.png');
+			this._root.querySelector("#switchpreamp").querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_2.png');
+			this._root.querySelector("#switchfilter").querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_2.png');
+
 		}
 
 		eventToKnob(rank) {
@@ -344,6 +391,9 @@
 			for (var i = 0; i < this.knobs.length; i++) {
 				this.eventToKnob(i);
 			}
+			console.log(this._root.querySelector("#switchpreamp").querySelector("webaudio-switch"));
+			this._root.querySelector("#switchpreamp").querySelector("webaudio-switch").addEventListener('change', (e) => this._plug.setParam("preampPos", e.target.value));
+			this._root.querySelector("#switchfilter").querySelector("webaudio-switch").addEventListener('change', (e) =>this._plug.setParam("filterstate", e.target.value));
 		}
 
 

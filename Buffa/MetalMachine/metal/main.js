@@ -9,7 +9,9 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
         super(ctx, URL, options)
 
         this.params = {
-            status: "disable"
+            status: "disable",
+            preampPos:"before",
+            filterstate:"off"
         };
         //TODO: see the problem of disto1 undefined when we don't change preset and power on the amp
         //Param we can modify with buttons
@@ -119,7 +121,7 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
     }
 
     setParam(key, value) {
-       // console.log(key, value);
+        console.log(key, value);
         try {
             this[key] = (value);
         } catch (error) {
@@ -275,6 +277,28 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
     set CG(val) {
         this.params.CG = val;
         this.amp.changeRoomAmp(val);
+    }
+    set preampPos(val){
+        if(val===1) {
+            this.params.preampPos = "after";
+            this.amp.setPATS(false);
+        }
+        else {
+            this.params.preampPos = "before";
+            this.amp.setPATS(true);
+        }
+
+    }
+    set filterstate(val){
+        if(val===1) {
+            this.params.filterstate = "on";
+            
+        }
+        else {
+            this.params.filterstate = "off";
+        }
+        this.amp.powerAmp.toggleHiAndLoCutFilters();
+
     }
 
 
@@ -1047,6 +1071,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
 
     function setValuesFromPreset(parent, p) {
         console.log("LOAD PRESET : " + p.name);
+        console.log("preset: ",p);
         if (p.distoName1 === undefined) {
             p.distoName1 = "standard";
         }
@@ -1128,13 +1153,19 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
         parent.distoName1 = p.distoName1;
         parent.distoName2 = p.distoName2;
         parent.CG = p.CG
+        setPATS(false);
+        if(p.PREAMP_BEFORE_TONESTACK) {
+            if(p.PREAMP_BEFORE_TONESTACK ==="true")parent.preampPos = 0;
+            else parent.preampPos = 1;
+        }
+
          try {
             parent.gui.setAttribute('state', JSON.stringify(parent.params));
         } catch (error) {
             console.warn("state not setted to the GUI", error);
         }
         // default is preamp before tonestack, we need to do this for presets without power amp
-        setPATS(true);
+
 
 
         // Power amp
@@ -1153,7 +1184,8 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
 
         if (p.PA_ENABLED === undefined) return; // old preset without Power Amp
 
-        setPATS(p.PREAMP_BEFORE_TONESTACK); // Preamp before tonestack ?
+       // setPATS(p.PREAMP_BEFORE_TONESTACK); // Preamp before tonestack ?
+
 
         powerAmp.setHiAndLoCutFilters(p.PA_LO_HI_CUT_FILTERS_ENABLED);
         powerAmp.changeDistoType(p.PA_DISTORSION_CURVE);
@@ -1242,6 +1274,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
     }
 
     function setPATS(preampBefore) {
+        console.log("setpats",this);
         // we switch only if previous state was not the one we want
         if (isPreampBeforeTonestack() !== preampBefore) {
             changeTonestackAndPreampLocations(preampBefore);
@@ -1325,7 +1358,8 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
         outputGain: outputGain,
         changeTonestackAndPreampLocations: changeTonestackAndPreampLocations,
         isPreampBeforeTonestack: isPreampBeforeTonestack,
-        changePresenceFilterGainValue: changePresenceFilterGainValue
+        changePresenceFilterGainValue: changePresenceFilterGainValue,
+        setPATS: setPATS 
     };
 }
 // ----------- END OF AMP ---------------
