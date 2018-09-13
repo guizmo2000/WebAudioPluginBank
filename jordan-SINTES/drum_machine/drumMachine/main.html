@@ -375,11 +375,11 @@
     <img class="preload" id="preload5">
     <img class="preload" id="preload6">
     <img class="preload" id="preload7">
-    <img class="preload" src='./drumMachine/images/btn_demo1.png'>
-    <img class="preload" src='./drumMachine/images/btn_demo2.png'>
-    <img class="preload" src='./drumMachine/images/btn_demo3.png'>
-    <img class="preload" src='./drumMachine/images/btn_demo4.png'>
-    <img class="preload" src='./drumMachine/images/btn_demo5.png'>
+    <img class="preload" id="preload8">
+    <img class="preload" id="preload9">
+    <img class="preload" id="preload10">
+    <img class="preload" id="preload11">
+    <img class="preload" id="preload12">
 
     <!--  The markup below keeps all images in a row on a single long line to avoid 
             a bizarre bug where otherwise the browser inserts an extra pixel between 
@@ -628,11 +628,11 @@
             <img id='reset'>
 
             <span id='demos_container'>            
-                <img id='demo1' src='./drumMachine/images/btn_demo1.png' width='36' height='24'>
-                <img id='demo2' src='./drumMachine/images/btn_demo2.png' width='36' height='24'>
-                <img id='demo3' src='./drumMachine/images/btn_demo3.png' width='36' height='24'>
-                <img id='demo4' src='./drumMachine/images/btn_demo4.png' width='36' height='24'>
-                <img id='demo5' src='./drumMachine/images/btn_demo5.png' width='36' height='24'>
+                <img id='demo1'  width='30' height='22'>
+                <img id='demo2'  width='30' height='22'>
+                <img id='demo3'  width='30' height='22'>
+                <img id='demo4'  width='30' height='22'>
+                <img id='demo5'  width='30' height='22'>
             </span>
         </section>
 
@@ -865,7 +865,6 @@
 
         makePatternList() {
             var elList = this._root.getElementById('patternlist');
-            console.log(this._plug.params.demo);
             /*var numKits = this._plug.params.kitName.length;
 
             for (var i = 0; i < numKits; i++) {
@@ -976,6 +975,12 @@
             this._root.querySelector("#preload6").setAttribute('src', this._plug.URL + '/images/button_on.png');
             this._root.querySelector("#preload7").setAttribute('src', this._plug.URL + '/images/LED_ON.png');
 
+            this._root.querySelector("#preload8").setAttribute('src', this._plug.URL + '/images/btn_demo1.png');
+            this._root.querySelector("#preload9").setAttribute('src', this._plug.URL + '/images/btn_demo2.png');
+            this._root.querySelector("#preload10").setAttribute('src', this._plug.URL + '/images/btn_demo3.png');
+            this._root.querySelector("#preload11").setAttribute('src', this._plug.URL + '/images/btn_demo4.png');
+            this._root.querySelector("#preload12").setAttribute('src', this._plug.URL + '/images/btn_demo5.png');
+
             this._root.querySelector("#arrow").setAttribute('src', this._plug.URL + '/images/drop_arrow.png');
 
             this._root.querySelector("#tempodec").setAttribute('src', this._plug.URL + '/images/tempo_dec.png');
@@ -989,6 +994,12 @@
             //this._root.querySelector("#save").setAttribute('src', this._plug.URL + '/images/btn_save.png');
             //this._root.querySelector("#load").setAttribute('src', this._plug.URL + '/images/btn_load.png');
             this._root.querySelector("#reset").setAttribute('src', this._plug.URL + '/images/btn_reset.png');
+            
+            this._root.querySelector("#demo1").setAttribute('src', this._plug.URL + '/images/btn_demo1.png');
+            this._root.querySelector("#demo2").setAttribute('src', this._plug.URL + '/images/btn_demo2.png');
+            this._root.querySelector("#demo3").setAttribute('src', this._plug.URL + '/images/btn_demo3.png');
+            this._root.querySelector("#demo4").setAttribute('src', this._plug.URL + '/images/btn_demo4.png');
+            this._root.querySelector("#demo5").setAttribute('src', this._plug.URL + '/images/btn_demo5.png');
 
             this._root.querySelector("#load_textarea").setAttribute('src', this._plug.URL + '/images/btn_ok.png');
             this._root.querySelector("#load_ok").setAttribute('src', this._plug.URL + '/images/btn_ok.png');
