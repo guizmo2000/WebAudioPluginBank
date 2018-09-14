@@ -142,12 +142,12 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
 
     createNodes() {
         // Create WebAudio nodes
-        //this.eq = new Equalizer(this.context);
+        //this.equalizer = new Equalizer(this.context);
         //this.ampReverb = new Convolver(this.context, this.reverbImpulses, "reverbImpulses");
         //this.cabinetSim = new Convolver(this.context, this.cabinetImpulses, "cabinetImpulses");
         //this.boost = new Boost(this.context);
 
-        //this.amp = new AmpMetal(this.context, this.boost, this.eq, this.ampReverb, this.cabinetSim);
+        //this.amp = new AmpMetal(this.context, this.boost, this.equalizer, this.ampReverb, this.cabinetSim);
         this.amp = new AmpMetal(this.context, this.cabinetImpulses, this.reverbImpulses);
     }
 
@@ -269,7 +269,7 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
         this.params.EQ = values;
 
         values.forEach((val, index) => {
-            this.amp.eq.changeGainEQ(val, index);
+            this.amp.equalizer.changeGainEQ(val, index);
         });
     }
 
@@ -312,7 +312,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
     var preamp = new PreAmp(ampName, context);
     var tonestack = new ToneStack(ampName, context);
     var powerAmp = new PowerAmp(context);
-    var eq = new Equalizer(context);
+    var equalizer = new Equalizer(context);
     var cabinetSim = new Convolver(context, cabinetImpulses);
     var reverb = new Convolver(context, reverbImpulses);
 
@@ -433,20 +433,20 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
         // post process
         eqhicut.connect(inputEQ);
 
-        // bypass eq route
+        // bypass equalizer route
         eqhicut.connect(bypassEQg);
         bypassEQg.connect(masterVolume);
 
         // normal route
-        inputEQ.connect(eq.input);
-        eq.output.connect(masterVolume);
+        inputEQ.connect(equalizer.input);
+        equalizer.output.connect(masterVolume);
 
         masterVolume.connect(powerAmp.input);
         powerAmp.output.connect(reverb.input);
         //masterVolume.connect(reverb.input);
         reverb.output.connect(cabinetSim.input);
         cabinetSim.output.connect(output);
-        //eq.output.connect(output);
+        //equalizer.output.connect(output);
         //reverb.output.connect(output);
 
         // byPass route
@@ -1223,7 +1223,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
 
     function changeEQValues(values) {
         values.forEach((val, index) => {
-            eq.changeGainEQ(val, index);
+            equalizer.changeGainEQ(val, index);
         });
     }
 
@@ -1337,7 +1337,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
     return {
         input: input,
         output: output,
-        eq: eq,
+        equalizer: equalizer,
         reverb: reverb,
         cabinet: cabinetSim,
         tonestack: tonestack,
@@ -2642,11 +2642,11 @@ function Equalizer(ctx) {
     // Set filters
     // Fred: 80 for the low end. 10000 useless, use shelf instead...
     [60, 170, 350, 1000, 3500, 10000].forEach(function (freq, i) {
-        var eq = ctx.createBiquadFilter();
-        eq.frequency.value = freq;
-        eq.type = "peaking";
-        eq.gain.value = 0;
-        filters.push(eq);
+        var equalizer = ctx.createBiquadFilter();
+        equalizer.frequency.value = freq;
+        equalizer.type = "peaking";
+        equalizer.gain.value = 0;
+        filters.push(equalizer);
     });
 
     // Connect filters in serie
