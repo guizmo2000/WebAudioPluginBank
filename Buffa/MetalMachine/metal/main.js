@@ -1234,7 +1234,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
                 "loadImpulseByName: name undefined, loading default impulse " + name
             );
         }
-
+        console.log(reverb);
         let result = reverb.getImpulseUrlAndIndex(name);
 
         if (result[0] === "none") {
