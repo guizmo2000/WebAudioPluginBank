@@ -83,7 +83,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 			demo1: {
 				"kitIndex": 12,
-				"tempo": 86,
+				"tempo": 105,
 				"swingFactor": 0,
 				"kickPitchVal": 0.46478873239436624,
 				"snarePitchVal": 0.45070422535211263,
@@ -91,9 +91,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"tom1PitchVal": 0.7183098591549295,
 				"tom2PitchVal": 0.704225352112676,
 				"tom3PitchVal": 0.8028169014084507,
-				"rhythm1": [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
-				"rhythm2": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 0, 0],
-				"rhythm3": [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+				"rhythm1": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+				"rhythm2": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+				"rhythm3": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
