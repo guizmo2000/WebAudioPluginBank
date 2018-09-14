@@ -155,6 +155,7 @@ class DeadGateNode extends AudioWorkletNode {
     // For WAP
     setParam(path, val) {
         // Needed for sample accurate control
+        
         this.parameters.get(path).setValueAtTime(val, 0);
     }
 

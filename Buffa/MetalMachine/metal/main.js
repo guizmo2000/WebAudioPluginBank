@@ -11,7 +11,8 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
         this.params = {
             status: "disable",
             preampPos:"before",
-            filterstate:"off"
+            filterstate:"off",
+            "preset": 9 
         };
         //TODO: see the problem of disto1 undefined when we don't change preset and power on the amp
         //Param we can modify with buttons
@@ -63,8 +64,6 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
             minValue: 0,
             maxValue: 10
         });
-
-        Object.assign({ "preset": 9 }, this.params)
 
 
 

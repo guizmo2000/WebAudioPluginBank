@@ -1013,6 +1013,7 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
   }
 
   function changeEQValues(eqValues) {
+    console.log(eq);
     eq.setValues(eqValues);
   }
 
