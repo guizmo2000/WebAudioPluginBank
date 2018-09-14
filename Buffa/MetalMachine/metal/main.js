@@ -1345,7 +1345,7 @@ var preset8 = {"name":"Heavy Blues","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS
         presets.push(preset1);
         presets.push(preset2);
         presets.push(preset3);
-        presets.psh(preset4);
+        presets.push(preset4);
         presets.push(preset5);
         presets.push(preset6);
         presets.push(preset7);
