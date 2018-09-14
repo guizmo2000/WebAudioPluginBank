@@ -1,8 +1,9 @@
 {
-"name": "untitled",
-"vendor": "GRAME",
+"name": "BlueDream",
+"vendor": "Faust",
 "version": "1.0",
-"url": "untitled.js",
+"url": "BlueDream.js",
 "homepage": "https://faust.grame.fr",
-"thumbnail": ""
+"thumbnail": "",
+"category": "distortion"
 }
