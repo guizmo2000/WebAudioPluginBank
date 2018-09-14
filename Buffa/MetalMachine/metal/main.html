@@ -17,7 +17,7 @@
 
 <script src="./../../../bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template id="metalmachine">
-	
+
 	<style>
 		:host {
 			background-color: rgb(255, 255, 255);
@@ -31,11 +31,11 @@
 			z-index: 9;
 			/* bring your own prefixes */
 			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
-			inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
-			inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
-			1px 0px 1px 0px rgba(0, 0, 0, 0.9),
-			0 2px 1px 0 rgba(0, 0, 0, 0.9),
-			1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+				inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+				inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+				1px 0px 1px 0px rgba(0, 0, 0, 0.9),
+				0 2px 1px 0 rgba(0, 0, 0, 0.9),
+				1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 		}
 
 		.webaudioctrl-tooltip {
@@ -51,11 +51,11 @@
 			opacity: 1;
 
 			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
-			inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
-			inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
-			1px 0px 1px 0px rgba(0, 0, 0, 0.9),
-			0 2px 1px 0 rgba(0, 0, 0, 0.9),
-			1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+				inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+				inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+				1px 0px 1px 0px rgba(0, 0, 0, 0.9),
+				0 2px 1px 0 rgba(0, 0, 0, 0.9),
+				1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 		}
 
 		.knob,
@@ -83,6 +83,7 @@
 			top: 60px;
 			left: 435px;
 		}
+
 		#switchfilter {
 			top: 25px;
 			left: 470px;
@@ -216,8 +217,6 @@
 			font-family: "Arial Black";
 			font-size: 12px;
 		}
-
-		
 	</style>
 	<img id="background-image">
 
@@ -225,14 +224,14 @@
 		<webaudio-switch class="switch" id="switch1" height="30" width="60"></webaudio-switch>
 	</div>
 	<div class="switch" id="switchpreamp">
-		<webaudio-switch class="switch"  height="30" width="60"></webaudio-switch>
+		<webaudio-switch class="switch" height="30" width="60"></webaudio-switch>
 	</div>
-	<div id="preampswitchlabel" class="label">Preamp</div>
+	<div id="preampswitchlabel" class="label">Bleedy</div>
 
 	<div class="switch" id="switchfilter">
-		<webaudio-switch class="switch"  height="30" width="60"></webaudio-switch>
+		<webaudio-switch class="switch" height="30" width="60"></webaudio-switch>
 	</div>
-	<div id="filterswitchlabel"  class="label" >Filter</div>
+	<div id="filterswitchlabel" class="label">Smooth</div>
 
 
 	<div class="knob " id="presence">
@@ -240,47 +239,42 @@
 		<div style="text-align:center">Presence</div>
 	</div>
 	<div class="knob  " id="reverb">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3" midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Reverb</div>
 	</div>
 	<div class="knob " id="treble">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3" midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Treble</div>
 	</div>
 	<div class="knob " id="middle">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3" midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Middle</div>
 	</div>
 	<div class="knob " id="bass">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3" midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Bass</div>
 	</div>
 	<div class="knob " id="drive">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3" midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Drive</div>
 	</div>
 	<div class="knob " id="master">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3" midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Master</div>
 	</div>
 	<div class="knob " id="volume">
-		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3"  midilearn="1"></webaudio-knob>
+		<webaudio-knob height="40" width="40" sprites="100" min="0" max="10" step="0.1" value="3" midilearn="1"></webaudio-knob>
 		<div style="text-align:center">Volume</div>
 	</div>
 	<select id="menuPresets">
 		<option value=0>Default</option>
-		<option value=1>Hard Rock Classic1</option>
-		<option value=2>Clean and Warm</option>
-		<option value=3>Strong and Warm</option>
-		<option value=4>Clean no reverb</option>
-		<option value=5>Another Clean Sound</option>
-		<option value=6>Mostly Even Harmonics</option>
-		<option value=7>Hard Rock Classic 2</option>
-		<option value=8>Super clean jazz</option>
-		<option value=9>Test</option>
-		<option value=10>Metal 1</option>
-		<option value=11>Metal 2</option>
-		<option value=12>Metal 3</option>
+		<option value=1>Metal 1</option>
+		<option value=2>Metal 5</option>
+		<option value=3>Iron Maiden</option>
+		<option value=4>Black Sabbath</option>
+		<option value=5>Clean</option>
+		<option value=6>Clean with little crunch</option>
+		<option value=7>Heavy Blues</option>
 	</select>
 	<div class="label" id="label_713">Metal Machine</div>
 </template>
@@ -294,13 +288,15 @@
 			super();
 			this._plug = plug;
 			this._plug.gui = this;
-			this._root = this.attachShadow({ mode: 'open' });
+			this._root = this.attachShadow({
+				mode: 'open'
+			});
 			this._root.appendChild(MetalMachineTemp.content.cloneNode(true));
 			this.knobs = this._root.querySelectorAll(".knob");
 			this.isOn;
 			this.state = new Object();
-			this.menu= this._root.querySelector("#menuPresets");
-			this.index= this.menu.value;
+			this.menu = this._root.querySelector("#menuPresets");
+			this.index = this.menu.value;
 			this.setKnobs();
 			this.setSwitchListener();
 			this.setResources();
@@ -337,30 +333,34 @@
 				this.isOn = true;
 			}
 			console.log(this.state.preampPos);
-			if(this.state.preampPos == "after"){
+			if (this.state.preampPos == "after") {
 				this._root.querySelector("#switchpreamp").querySelector("webaudio-switch").value = 1;
 
-			}else{this._root.querySelector("#switchpreamp").querySelector("webaudio-switch").value = 0;}
-			if(this.state.filterstate == "on"){
+			} else {
+				this._root.querySelector("#switchpreamp").querySelector("webaudio-switch").value = 0;
+			}
+			if (this.state.filterstate === true) {
 				this._root.querySelector("#switchfilter").querySelector("webaudio-switch").value = 1;
+			} else {
+				this._root.querySelector("#switchfilter").querySelector("webaudio-switch").value = 0;
 			}
 			this.knobs = this._root.querySelectorAll(".knob");
 			for (var i = 0; i < this.knobs.length; i++) {
-				this.knobs[i].querySelector("webaudio-knob").setValue(this.state[this.knobs[i].id],false);
+				this.knobs[i].querySelector("webaudio-knob").setValue(this.state[this.knobs[i].id], false);
 			}
-			if (this.state.preset){
+			if (this.state.preset) {
 				console.log("changepresetgui");
 				var preset = this._root.querySelector("#menuPresets");
-				preset.value = this.state.preset;	
+				preset.value = this.state.preset;
 			}
-			
+
 
 
 		}
 		setResources() {
 			let menuPresets = this._root.querySelector("#menuPresets");
 			menuPresets.onchange = (e) => {
-				this.index= e.target.value;
+				this.index = e.target.value;
 				this._plug.setParam("preset", this.index);
 				//this._plug.setPatch(null, this.index);
 			}
@@ -373,9 +373,12 @@
 				knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/Jambalaya.png');
 			});
 			// Setting up the switches imgs, those are loaded from the assets
-			this._root.querySelector("#switch1").querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_2.png');
-			this._root.querySelector("#switchpreamp").querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_2.png');
-			this._root.querySelector("#switchfilter").querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_2.png');
+			this._root.querySelector("#switch1").querySelector("webaudio-switch").setAttribute('src', this._plug.URL +
+				'/assets/switch_2.png');
+			this._root.querySelector("#switchpreamp").querySelector("webaudio-switch").setAttribute('src', this._plug.URL +
+				'/assets/switch_2.png');
+			this._root.querySelector("#switchfilter").querySelector("webaudio-switch").setAttribute('src', this._plug.URL +
+				'/assets/switch_2.png');
 
 		}
 
@@ -391,8 +394,10 @@
 				this.eventToKnob(i);
 			}
 			console.log(this._root.querySelector("#switchpreamp").querySelector("webaudio-switch"));
-			this._root.querySelector("#switchpreamp").querySelector("webaudio-switch").addEventListener('change', (e) => this._plug.setParam("preampPos", e.target.value));
-			this._root.querySelector("#switchfilter").querySelector("webaudio-switch").addEventListener('change', (e) =>this._plug.setParam("filterstate", e.target.value));
+			this._root.querySelector("#switchpreamp").querySelector("webaudio-switch").addEventListener('change', (e) => this._plug
+				.setParam("preampPos", e.target.value));
+			this._root.querySelector("#switchfilter").querySelector("webaudio-switch").addEventListener('change', (e) => this._plug
+				.setParam("filterstate", e.target.value));
 		}
 
 
@@ -416,8 +421,8 @@
 			});
 		}
 
-		avoidDrag(){
-			this._root.querySelector("#background-image").draggable=false;
+		avoidDrag() {
+			this._root.querySelector("#background-image").draggable = false;
 		}
 
 	}

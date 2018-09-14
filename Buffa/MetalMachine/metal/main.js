@@ -11,8 +11,8 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
         this.params = {
             status: "disable",
             preampPos:"before",
-            filterstate:"off",
-            "preset": 9 
+            filterstate:false,
+            "preset": 0 
         };
         //TODO: see the problem of disto1 undefined when we don't change preset and power on the amp
         //Param we can modify with buttons
@@ -289,14 +289,11 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
 
     }
     set filterstate(val){
-        if(val===1) {
-            this.params.filterstate = "on";
+        // val is boolean
+        console.log(val);
+        this.params.filterstate = val;
             
-        }
-        else {
-            this.params.filterstate = "off";
-        }
-        this.amp.powerAmp.toggleHiAndLoCutFilters();
+        this.amp.powerAmp.setHiAndLoCutFilters(this.params.filterstate);
 
     }
 
@@ -542,6 +539,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
     // PRESETS
     // --------
     function initPresets() {
+        /*
         // Can be converted to JSON
         var preset0 = {
             "name": "Default",
@@ -1045,6 +1043,375 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
         }
 
         var preset12 = { "name": "current", "boost": false, "LS1Freq": 720, "LS1Gain": -6, "LS2Freq": 320, "LS2Gain": -10.199999809265137, "gain1": 1, "distoName1": "standard", "K1": "6.7", "HP1Freq": 6, "HP1Q": 0.707099974155426, "LS3Freq": 720, "LS3Gain": -6, "gain2": 1, "distoName2": "notSoDistorded", "K2": "6.7", "OG": "5.0", "BF": "9.4", "MF": "5.8", "TF": "1.2", "PF": "5.0", "EQ": [3, 8, -6, -10, 7, 2], "MV": "1.9", "RN": "Fender Hot Rod", "RG": "0.7", "CN": "Vox Custom Bright 4x12 M930 Axis 1", "CG": "8.8", "PREAMP_BEFORE_TONESTACK": false, "PREAMP_EXTRA_STAGES": [{ "type": "asymetric", "k": "3.2" }, { "type": "clean", "k": "8.8" }, { "type": "clean", "k": "8.8" }], "PA_ENABLED": true, "PA_LO_HI_CUT_FILTERS_ENABLED": true, "PA_DISTORSION_CURVE": "clean", "PA_K": "8.0", "PA_NEGATIVE_GAIN": -0.4000000059604645, "PA_PRESENCE_GAIN_RANGE": 4, "PA_PRESENCE_FILTERS_PARAMS": [{ "Q": 0.000009999999747378752, "frequency": 40, "gain": 12 }, { "Q": 0, "frequency": 80, "gain": 0 }, { "Q": 1, "frequency": 230, "gain": 0 }, { "Q": 1, "frequency": 1325.5889892578125, "gain": 1.6799999475479126 }, { "Q": 1, "frequency": 4605.2626953125, "gain": 1.6799999475479126 }, { "Q": 1, "frequency": 10000, "gain": 0 }, { "Q": 0.12777778506278992, "frequency": 15118.7548828125, "gain": 12 }], "PA_BOOST_GAIN": 2.799999952316284 };
+*/
+
+var preset1 = {
+    "name": "Hard Rock ",
+    "boost": false,
+    "LS1Freq": 720,
+    "LS1Gain": -6,
+    "LS2Freq": 320,
+    "LS2Gain": -10.199999809265137,
+    "gain1": 1,
+    "distoName1": "standard",
+    "K1": "5.2",
+    "HP1Freq": 6,
+    "HP1Q": 0.707099974155426,
+    "LS3Freq": 720,
+    "LS3Gain": -6,
+    "gain2": 1,
+    "distoName2": "notSoDistorded",
+    "K2": "5.1",
+    "OG": "6.5",
+    "BF": "8.4",
+    "MF": "8.0",
+    "TF": "3.8",
+    "PF": "5.0",
+    "EQ": [12, 8, -6, -10, 7, 2],
+    "MV": "7",
+    "RN": "Fender Hot Rod",
+    "RG": "0.7",
+    "CN": "Marshall 1960, axis",
+    "CG": "9.2",
+    "PREAMP_BEFORE_TONESTACK": true,
+    "PREAMP_EXTRA_STAGES": [],
+    "PA_ENABLED": true,
+    "PA_LO_HI_CUT_FILTERS_ENABLED": true,
+    "PA_DISTORSION_CURVE": "clean",
+    "PA_K": "8.0",
+    "PA_NEGATIVE_GAIN": -0.4000000059604645,
+    "PA_PRESENCE_GAIN_RANGE": 4,
+    "PA_PRESENCE_FILTERS_PARAMS": [{
+        "Q": 0.000009999999747378752,
+        "frequency": 40,
+        "gain": 12
+    }, {
+        "Q": 0,
+        "frequency": 80,
+        "gain": 0
+    }, {
+        "Q": 1,
+        "frequency": 230,
+        "gain": 0
+    }, {
+        "Q": 1,
+        "frequency": 2000,
+        "gain": 2.0799999237060547
+    }, {
+        "Q": 1,
+        "frequency": 4000,
+        "gain": 2.0799999237060547
+    }, {
+        "Q": 1,
+        "frequency": 10000,
+        "gain": 0
+    }, {
+        "Q": 0.000009999999747378752,
+        "frequency": 18000,
+        "gain": 12
+    }],
+    "PA_BOOST_GAIN": 3.2
+}
+
+var preset2 = {
+    "name": "Metal 1",
+    "boost": false,
+    "LS1Freq": 720,
+    "LS1Gain": -6,
+    "LS2Freq": 320,
+    "LS2Gain": -10.199999809265137,
+    "gain1": 1,
+    "distoName1": "standard",
+    "K1": "5.9",
+    "HP1Freq": 6,
+    "HP1Q": 0.707099974155426,
+    "LS3Freq": 720,
+    "LS3Gain": -6,
+    "gain2": 1,
+    "distoName2": "notSoDistorded",
+    "K2": "5.9",
+    "OG": "3.9",
+    "BF": "8.7",
+    "MF": "8.0",
+    "TF": "3.8",
+    "PF": "6.0",
+    "EQ": [12, 8, -6, -10, 7, 2],
+    "MV": "6.0",
+    "RN": "Fender Hot Rod",
+    "RG": "0.7",
+    "CN": "Marshall 1960, axis",
+    "CG": "9.2",
+    "PREAMP_BEFORE_TONESTACK": false,
+    "PREAMP_EXTRA_STAGES": [],
+    "PA_ENABLED": true,
+    "PA_LO_HI_CUT_FILTERS_ENABLED": false,
+    "PA_DISTORSION_CURVE": "clean",
+    "PA_K": "8.0",
+    "PA_NEGATIVE_GAIN": -0.4000000059604645,
+    "PA_PRESENCE_GAIN_RANGE": 4,
+    "PA_PRESENCE_FILTERS_PARAMS": [{
+        "Q": 0.000009999999747378752,
+        "frequency": 40,
+        "gain": 12
+    }, {
+        "Q": 0,
+        "frequency": 80,
+        "gain": 0
+    }, {
+        "Q": 1,
+        "frequency": 230,
+        "gain": 0
+    }, {
+        "Q": 1,
+        "frequency": 2000,
+        "gain": 2.4000000953674316
+    }, {
+        "Q": 1,
+        "frequency": 4000,
+        "gain": 2.4000000953674316
+    }, {
+        "Q": 1,
+        "frequency": 10000,
+        "gain": 0
+    }, {
+        "Q": 0.000009999999747378752,
+        "frequency": 18000,
+        "gain": 12
+    }],
+    "PA_BOOST_GAIN": 2.5999999046325684
+};
+
+var preset3 = {
+    "name": "Metal 5",
+    "boost": false,
+    "LS1Freq": 720,
+    "LS1Gain": -6,
+    "LS2Freq": 320,
+    "LS2Gain": -10.199999809265137,
+    "gain1": 1,
+    "distoName1": "standard",
+    "K1": "5.9",
+    "HP1Freq": 6,
+    "HP1Q": 0.707099974155426,
+    "LS3Freq": 720,
+    "LS3Gain": -6,
+    "gain2": 1,
+    "distoName2": "notSoDistorded",
+    "K2": "5.9",
+    "OG": "4.6",
+    "BF": "8.7",
+    "MF": "6.9",
+    "TF": "2.5",
+    "PF": "5.0",
+    "EQ": [12, 8, -6, -10, 7, 2],
+    "MV": "6.3",
+    "RN": "Fender Hot Rod",
+    "RG": "0.7",
+    "CN": "Marshall 1960, axis",
+    "CG": "8.2",
+    "PREAMP_BEFORE_TONESTACK": false,
+    "PREAMP_EXTRA_STAGES": [{
+        "type": "asymetric",
+        "k": "3.2"
+    }, {
+        "type": "clean",
+        "k": "8.8"
+    }, {
+        "type": "clean",
+        "k": "8.8"
+    }],
+    "PA_ENABLED": true,
+    "PA_LO_HI_CUT_FILTERS_ENABLED": false,
+    "PA_DISTORSION_CURVE": "clean",
+    "PA_K": "8.0",
+    "PA_NEGATIVE_GAIN": -0.4000000059604645,
+    "PA_PRESENCE_GAIN_RANGE": 4,
+    "PA_PRESENCE_FILTERS_PARAMS": [{
+        "Q": 0.000009999999747378752,
+        "frequency": 40,
+        "gain": 12
+    }, {
+        "Q": 0,
+        "frequency": 80,
+        "gain": 0
+    }, {
+        "Q": 1,
+        "frequency": 230,
+        "gain": 0
+    }, {
+        "Q": 1,
+        "frequency": 752.6100463867188,
+        "gain": -3.5199999809265137
+    }, {
+        "Q": 1,
+        "frequency": 1429.5106201171875,
+        "gain": -3.5199999809265137
+    }, {
+        "Q": 1,
+        "frequency": 10000,
+        "gain": 0
+    }, {
+        "Q": 0.000009999999747378752,
+        "frequency": 18000,
+        "gain": 12
+    }],
+    "PA_BOOST_GAIN": 2.3
+};
+
+
+var preset4 = {
+    "name": "Iron Maiden",
+    "boost": false,
+    "LS1Freq": 720,
+    "LS1Gain": -6,
+    "LS2Freq": 320,
+    "LS2Gain": -10.199999809265137,
+    "gain1": 1,
+    "distoName1": "standard",
+    "K1": "6.9",
+    "HP1Freq": 6,
+    "HP1Q": 0.707099974155426,
+    "LS3Freq": 720,
+    "LS3Gain": -6,
+    "gain2": 1,
+    "distoName2": "notSoDistorded",
+    "K2": "6.9",
+    "OG": "6.5",
+    "BF": "4.9",
+    "MF": "6.5",
+    "TF": "3.8",
+    "PF": "5.0",
+    "EQ": [12, 8, -6, -10, 7, 2],
+    "MV": "6.3",
+    "RN": "Fender Hot Rod",
+    "RG": "1.1",
+    "CN": "Marshall 1960, axis",
+    "CG": "9.2",
+    "PREAMP_BEFORE_TONESTACK": false,
+    "PREAMP_EXTRA_STAGES": [{
+        "type": "clean",
+        "k": "-3.2"
+    }, {
+        "type": "clean",
+        "k": "7.8"
+    }, {
+        "type": "clean",
+        "k": "7.8"
+    }],
+    "PA_ENABLED": true,
+    "PA_LO_HI_CUT_FILTERS_ENABLED": true,
+    "PA_DISTORSION_CURVE": "clean",
+    "PA_K": "8.0",
+    "PA_NEGATIVE_GAIN": -0.4000000059604645,
+    "PA_PRESENCE_GAIN_RANGE": 4,
+    "PA_PRESENCE_FILTERS_PARAMS": [{
+        "Q": 0.000009999999747378752,
+        "frequency": 40,
+        "gain": 12
+    }, {
+        "Q": 0,
+        "frequency": 80,
+        "gain": 0
+    }, {
+        "Q": 1,
+        "frequency": 230,
+        "gain": 0
+    }, {
+        "Q": 1,
+        "frequency": 2000,
+        "gain": 0.23999999463558197
+    }, {
+        "Q": 1,
+        "frequency": 4000,
+        "gain": 0.23999999463558197
+    }, {
+        "Q": 1,
+        "frequency": 10000,
+        "gain": 0
+    }, {
+        "Q": 0.000009999999747378752,
+        "frequency": 18000,
+        "gain": 12
+    }],
+    "PA_BOOST_GAIN": 3.9
+}
+var preset5 = {
+    "name": "Black Sabbath",
+    "boost": false,
+    "LS1Freq": 720,
+    "LS1Gain": -6,
+    "LS2Freq": 320,
+    "LS2Gain": -6.300000190734863,
+    "gain1": 1,
+    "distoName1": "standard",
+    "K1": "5.3",
+    "HP1Freq": 6,
+    "HP1Q": 0.707099974155426,
+    "LS3Freq": 720,
+    "LS3Gain": -6,
+    "gain2": 1,
+    "distoName2": "standard",
+    "K2": "5.3",
+    "OG": "5.0",
+    "BF": "8.0",
+    "MF": "6.1",
+    "TF": "4.0",
+    "PF": "5.0",
+    "EQ": [4, 7, 6, 2, 4, 12],
+    "MV": "7",
+    "RN": "Fender Hot Rod",
+    "RG": "1.2",
+    "CN": "Fender Champ, axis",
+    "CG": "9.3",
+    "PREAMP_BEFORE_TONESTACK": true,
+    "PREAMP_EXTRA_STAGES": [{
+        "type": "clean",
+        "k": "7.7"
+    }, {
+        "type": "clean",
+        "k": "7.8"
+    }],
+    "PA_ENABLED": true,
+    "PA_LO_HI_CUT_FILTERS_ENABLED": true,
+    "PA_DISTORSION_CURVE": "clean",
+    "PA_K": "8.0",
+    "PA_NEGATIVE_GAIN": -0.4000000059604645,
+    "PA_PRESENCE_GAIN_RANGE": 4,
+    "PA_PRESENCE_FILTERS_PARAMS": [{
+        "Q": -0.18333333730697632,
+        "frequency": 17.948720932006836,
+        "gain": 12
+    }, {
+        "Q": 0,
+        "frequency": 23.82061195373535,
+        "gain": 0.699999988079071
+    }, {
+        "Q": 1,
+        "frequency": 496.9219665527344,
+        "gain": -2.9833333492279053
+    }, {
+        "Q": 1,
+        "frequency": 242.600830078125,
+        "gain": 0
+    }, {
+        "Q": 1,
+        "frequency": 4000,
+        "gain": 0
+    }, {
+        "Q": 1,
+        "frequency": 8423.3046875,
+        "gain": 0.7888888716697693
+    }, {
+        "Q": -0.1388888955116272,
+        "frequency": 8265.857421875,
+        "gain": 12
+    }],
+    "PA_BOOST_GAIN": 3.5
+}
+var preset6 = {"name":"Clean","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-6.300000190734863,"gain1":1,"distoName1":"asymetric","K1":"4.0","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"crunch","K2":"4.0","OG":"5.0","BF":"8.0","MF":"6.1","TF":"4.0","PF":"5.0","EQ":[4,12,-8,-8,12,12],"MV":7.000000000000001,"RN":"Fender Hot Rod","RG":"1.8","CN":"Vox Custom Bright 4x12 M930 Axis 1","CG":"3.3","PREAMP_BEFORE_TONESTACK":false,"PREAMP_EXTRA_STAGES":[{"type":"clean","k":"7.8"},{"type":"clean","k":"7.8"},{"type":"clean","k":"7.8"}],"PA_ENABLED":true,"PA_LO_HI_CUT_FILTERS_ENABLED":true,"PA_DISTORSION_CURVE":"clean","PA_K":"8.0","PA_NEGATIVE_GAIN":-0.4000000059604645,"PA_PRESENCE_GAIN_RANGE":4,"PA_PRESENCE_FILTERS_PARAMS":[{"Q":0.000009999999747378752,"frequency":40,"gain":12},{"Q":0,"frequency":80,"gain":0},{"Q":1,"frequency":230,"gain":0},{"Q":1,"frequency":2000,"gain":0},{"Q":1,"frequency":4000,"gain":0},{"Q":1,"frequency":10000,"gain":0},{"Q":0.000009999999747378752,"frequency":18000,"gain":12}],"PA_BOOST_GAIN":4}
+var preset7 = {"name":"Clean with litlle crunch","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-6.300000190734863,"gain1":1,"distoName1":"smooth","K1":"7.1","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"asymetric","K2":"7.1","OG":"5.0","BF":"8.0","MF":"6.1","TF":"4.0","PF":"5.0","EQ":[4,7,6,2,4,12],"MV":7.999999999999999,"RN":"Fender Hot Rod","RG":"1.2","CN":"Fender Champ, axis","CG":"7.0","PREAMP_BEFORE_TONESTACK":true,"PREAMP_EXTRA_STAGES":[{"type":"clean","k":"7.8"},{"type":"clean","k":"7.8"}],"PA_ENABLED":true,"PA_LO_HI_CUT_FILTERS_ENABLED":true,"PA_DISTORSION_CURVE":"clean","PA_K":"8.0","PA_NEGATIVE_GAIN":-0.4000000059604645,"PA_PRESENCE_GAIN_RANGE":4,"PA_PRESENCE_FILTERS_PARAMS":[{"Q":0.000009999999747378752,"frequency":40,"gain":12},{"Q":0,"frequency":80,"gain":0},{"Q":1,"frequency":230,"gain":0},{"Q":1,"frequency":2000,"gain":0},{"Q":1,"frequency":4000,"gain":0},{"Q":1,"frequency":10000,"gain":0},{"Q":0.000009999999747378752,"frequency":18000,"gain":12}],"PA_BOOST_GAIN":3.5999999046325684}
+var preset8 = {"name":"Heavy Blues","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-10.199999809265137,"gain1":1,"distoName1":"asymetric","K1":"5.8","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"notSoDistorded","K2":"5.8","OG":"5.0","BF":"8.4","MF":"6.5","TF":"3.8","PF":"5.0","EQ":[12,8,-6,-10,7,2],"MV":8.333333333333334,"RN":"Fender Hot Rod","RG":"1.2","CN":"Marshall 1960, axis","CG":"9.2","PREAMP_BEFORE_TONESTACK":true,"PREAMP_EXTRA_STAGES":[{"type":"clean","k":"7.7"},{"type":"clean","k":"7.8"}],"PA_ENABLED":true,"PA_LO_HI_CUT_FILTERS_ENABLED":true,"PA_DISTORSION_CURVE":"clean","PA_K":"8.0","PA_NEGATIVE_GAIN":-0.4000000059604645,"PA_PRESENCE_GAIN_RANGE":4,"PA_PRESENCE_FILTERS_PARAMS":[{"Q":0.000009999999747378752,"frequency":40,"gain":12},{"Q":0,"frequency":80,"gain":0},{"Q":1,"frequency":230,"gain":0},{"Q":1,"frequency":2000,"gain":0},{"Q":1,"frequency":4000,"gain":0},{"Q":1,"frequency":10000,"gain":0},{"Q":0.000009999999747378752,"frequency":18000,"gain":12}],"PA_BOOST_GAIN":4}
+
 
         presets.push(preset1);
         presets.push(preset2);
@@ -1054,10 +1421,6 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
         presets.push(preset6);
         presets.push(preset7);
         presets.push(preset8);
-        presets.push(preset9);
-        presets.push(preset10);
-        presets.push(preset11);
-        presets.push(preset12);
     }
 
     function setDefaultPreset() {
@@ -1151,11 +1514,13 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
         parent.boost = p.boost;
         parent.distoName1 = p.distoName1;
         parent.distoName2 = p.distoName2;
-        parent.CG = p.CG
+        parent.CG = p.CG;
+
+        parent.filterstate = p.PA_LO_HI_CUT_FILTERS_ENABLED;
 
 
         if(p.PREAMP_BEFORE_TONESTACK !== undefined) {
-            if(p.PREAMP_BEFORE_TONESTACK ==="true")parent.preampPos = 0;
+            if(p.PREAMP_BEFORE_TONESTACK) parent.preampPos = 0;
             else parent.preampPos = 1;
         }else{
             parent.preampPos = 0;
