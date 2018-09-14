@@ -18,49 +18,49 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
         //Param we can modify with buttons
         this.addParam({
             name: 'volume',
-            defaultValue: 3,
+            defaultValue: 6.5,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'master',
-            defaultValue: 3,
+            defaultValue: 7,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'drive',
-            defaultValue: 3,
+            defaultValue: 5.3,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'bass',
-            defaultValue: 3,
+            defaultValue: 8.7,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'middle',
-            defaultValue: 3,
+            defaultValue: 8.2,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'treble',
-            defaultValue: 3,
+            defaultValue: 3.9,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'reverb',
-            defaultValue: 3,
+            defaultValue: 0.3,
             minValue: 0,
             maxValue: 10
         });
         this.addParam({
             name: 'presence',
-            defaultValue: 3,
+            defaultValue: 5,
             minValue: 0,
             maxValue: 10
         });
