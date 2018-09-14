@@ -246,6 +246,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				function (buffer) { this.tom3 = buffer; }
 			],
 
+			preset:2
+
 		}
 		this.setup();
 	}
@@ -291,6 +293,11 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 	set defaut(val) {
 		return true;
+	}
+
+	set preset(val){
+		this.params.preset = val;
+		this.demoChoose(val);
 	}
 
 
