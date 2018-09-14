@@ -142,12 +142,12 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
 
     createNodes() {
         // Create WebAudio nodes
-        //this.equalizer = new Equalizer(this.context);
-        //this.ampReverb = new Convolver(this.context, this.reverbImpulses, "reverbImpulses");
-        //this.cabinetSim = new Convolver(this.context, this.cabinetImpulses, "cabinetImpulses");
-        //this.boost = new Boost(this.context);
+        //this.eq = new EqualizerMetal(this.context);
+        //this.ampReverb = new ConvolverMetal(this.context, this.reverbImpulses, "reverbImpulses");
+        //this.cabinetSim = new ConvolverMetal(this.context, this.cabinetImpulses, "cabinetImpulses");
+        //this.boost = new BoostMetal(this.context);
 
-        //this.amp = new AmpMetal(this.context, this.boost, this.equalizer, this.ampReverb, this.cabinetSim);
+        //this.amp = new AmpMetal(this.context, this.boost, this.eq, this.ampReverb, this.cabinetSim);
         this.amp = new AmpMetal(this.context, this.cabinetImpulses, this.reverbImpulses);
     }
 
@@ -269,7 +269,7 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
         this.params.EQ = values;
 
         values.forEach((val, index) => {
-            this.amp.equalizer.changeGainEQ(val, index);
+            this.amp.eq.changeGainEQ(val, index);
         });
     }
 
@@ -312,9 +312,9 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
     var preamp = new PreAmp(ampName, context);
     var tonestack = new ToneStack(ampName, context);
     var powerAmp = new PowerAmp(context);
-    var equalizer = new Equalizer(context);
-    var cabinetSim = new Convolver(context, cabinetImpulses);
-    var reverb = new Convolver(context, reverbImpulses);
+    var eq = new EqualizerMetal(context);
+    var cabinetSim = new ConvolverMetal(context, cabinetImpulses);
+    var reverb = new ConvolverMetal(context, reverbImpulses);
 
     // Main input and output and bypass
     var input = context.createGain();
@@ -335,7 +335,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
     var preampBeforeTonestack = true;
 
 
-    // Creates Boost channel for distortion 
+    // Creates BoostMetal channel for distortion 
     // before preamp, disabled by default
     preamp.createBoost();
 
@@ -433,20 +433,20 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
         // post process
         eqhicut.connect(inputEQ);
 
-        // bypass equalizer route
+        // bypass eq route
         eqhicut.connect(bypassEQg);
         bypassEQg.connect(masterVolume);
 
         // normal route
-        inputEQ.connect(equalizer.input);
-        equalizer.output.connect(masterVolume);
+        inputEQ.connect(eq.input);
+        eq.output.connect(masterVolume);
 
         masterVolume.connect(powerAmp.input);
         powerAmp.output.connect(reverb.input);
         //masterVolume.connect(reverb.input);
         reverb.output.connect(cabinetSim.input);
         cabinetSim.output.connect(output);
-        //equalizer.output.connect(output);
+        //eq.output.connect(output);
         //reverb.output.connect(output);
 
         // byPass route
@@ -1223,7 +1223,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
 
     function changeEQValues(values) {
         values.forEach((val, index) => {
-            equalizer.changeGainEQ(val, index);
+            eq.changeGainEQ(val, index);
         });
     }
 
@@ -1337,7 +1337,7 @@ function AmpMetal(context, cabinetImpulses, reverbImpulses) {
     return {
         input: input,
         output: output,
-        equalizer: equalizer,
+        eq: eq,
         reverb: reverb,
         cabinet: cabinetSim,
         tonestack: tonestack,
@@ -1496,7 +1496,7 @@ class PreAmp {
     }
 
     createBoost() {
-        this.boost = new Boost(this.context);
+        this.boost = new BoostMetal(this.context);
     }
 
     createDisto(type) {
@@ -1900,7 +1900,7 @@ class PreAmp {
     }
 
     //
-    // Boost-related functions
+    // BoostMetal-related functions
     //
 
     adjustOutputGainIfBoostActivated() {
@@ -2636,17 +2636,17 @@ class FilterBank {
 
 //----------------- CLASS FOR EQ -------------------
 //----------- EQUALIZER ----------- 
-function Equalizer(ctx) {
+function EqualizerMetal(ctx) {
     var filters = [];
 
     // Set filters
     // Fred: 80 for the low end. 10000 useless, use shelf instead...
     [60, 170, 350, 1000, 3500, 10000].forEach(function (freq, i) {
-        var equalizer = ctx.createBiquadFilter();
-        equalizer.frequency.value = freq;
-        equalizer.type = "peaking";
-        equalizer.gain.value = 0;
-        filters.push(equalizer);
+        var eq = ctx.createBiquadFilter();
+        eq.frequency.value = freq;
+        eq.type = "peaking";
+        eq.gain.value = 0;
+        filters.push(eq);
     });
 
     // Connect filters in serie
@@ -2683,7 +2683,7 @@ function Equalizer(ctx) {
 //----------------- END OF EQ --------------------------
 
 // ------- CONVOLVER, used for both reverb and cabinet simulation -------------------
-function Convolver(context, impulses, menuId) {
+function ConvolverMetal(context, impulses, menuId) {
     var convolverNode, convolverGain, directGain;
     // create source and gain node
     var inputGain = context.createGain();
@@ -2792,8 +2792,8 @@ function Convolver(context, impulses, menuId) {
 
 // ---------------- BOOST ----------------
 
-// Booster, useful to add a "Boost channel"
-var Boost = function (context) {
+// Booster, useful to add a "BoostMetal channel"
+var BoostMetal = function (context) {
     // Booster not activated by default
     var activated = false;
 

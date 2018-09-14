@@ -208,10 +208,10 @@ window.CleanMachine = class CleanMachine extends WebAudioPluginCompositeNode {
 
   createNodes() {
     // Create WebAudio nodes
-    this.eq = new Equalizer(this.context);
-    this.ampReverb = new Convolver(this.context, this.reverbImpulses, "reverbImpulses");
-    this.cabinetSim = new Convolver(this.context, this.cabinetImpulses, "cabinetImpulses");
-    this.boost = new Boost(this.context);
+    this.eq = new EqualizerClean(this.context);
+    this.ampReverb = new ConvolverClean(this.context, this.reverbImpulses, "reverbImpulses");
+    this.cabinetSim = new ConvolverClean(this.context, this.cabinetImpulses, "cabinetImpulses");
+    this.boost = new BoostClean(this.context);
 
     this.amp = new CleamAmp(this.context, this.boost, this.eq, this.ampReverb, this.cabinetSim);
   }
@@ -405,7 +405,7 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
   // PREAM STAGE
   // ------------
   // Channel booster
-  //var boost = new Boost(context);
+  //var boost = new BoostClean(context);
 
   // Main input and output and bypass
   var input = context.createGain();
@@ -1646,7 +1646,7 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
 }
 
 //----------------- CLASS FOR EQ -------------------
-function Equalizer(ctx) {
+function EqualizerClean(ctx) {
   var filters = [];
 
   // Set filters
@@ -1715,7 +1715,7 @@ function Equalizer(ctx) {
 //----------------- Class for CONVOLVER (Reverb, Cabinet Simulation) --------------
 // ---------------- used for both reverb and cabinet simulation -------------------
 
-function Convolver(context, impulses, menuId) {
+function ConvolverClean(context, impulses, menuId) {
   var convolverNode, convolverGain, directGain;
   // create source and gain node
   var inputGain = context.createGain();
@@ -1867,8 +1867,8 @@ function Convolver(context, impulses, menuId) {
 // ---------------- END OF CONVOLVER -----------------------------------
 
 // ---------------- BOOST ----------------
-// Booster, useful to add a "Boost channel"
-var Boost = function (context) {
+// Booster, useful to add a "BoostClean channel"
+var BoostClean = function (context) {
   // Booster not activated by default
   var activated = false;
 

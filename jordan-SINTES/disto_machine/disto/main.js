@@ -210,10 +210,10 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
 
     createNodes() {
         // Create WebAudio nodes
-        this.equalizer = new Equalizer(this.context);
-        this.ampReverb = new Convolver(this.context, this.reverbImpulses, "reverbImpulses");
-        this.cabinetSim = new Convolver(this.context, this.cabinetImpulses, "cabinetImpulses");
-        this.boost = new Boost(this.context);
+        this.equalizer = new EqualizerDisto(this.context);
+        this.ampReverb = new ConvolverDisto(this.context, this.reverbImpulses, "reverbImpulses");
+        this.cabinetSim = new ConvolverDisto(this.context, this.cabinetImpulses, "cabinetImpulses");
+        this.boost = new BoostDisto(this.context);
 
         this.amp = new AmpDisto(this.context, this.boost, this.equalizer, this.ampReverb, this.cabinetSim);
     }
@@ -1736,7 +1736,7 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
 // ----------- END OF AMP ---------------
 
 //----------------- CLASS FOR EQ -------------------
-function Equalizer(ctx) {
+function EqualizerDisto(ctx) {
     var filters = [];
 
     // Set filters
@@ -1804,7 +1804,7 @@ function Equalizer(ctx) {
 //----------------- END OF EQ --------------------------
 
 // ------- CONVOLVER, used for both reverb and cabinet simulation -------------------
-function Convolver(context, impulses, menuId) {
+function ConvolverDisto(context, impulses, menuId) {
     var convolverNode, convolverGain, directGain;
     // create source and gain node
     var inputGain = context.createGain();
@@ -1950,8 +1950,8 @@ function Convolver(context, impulses, menuId) {
 
 // ---------------- BOOST ----------------
 
-// Booster, useful to add a "Boost channel"
-var Boost = function (context) {
+// Booster, useful to add a "BoostDisto channel"
+var BoostDisto = function (context) {
     // Booster not activated by default
     var activated = false;
 
