@@ -36,6 +36,9 @@
 
 
     }
+    .urlRepo {
+    color: blue;
+  }
 
     #mocha {
       float: right;
@@ -91,7 +94,8 @@
 
 
         Plugin URL (repository where your main.json file is)
-        <input type="text" id="urlPlugin" value="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/QuadraFuzz3/"> GUI
+        <input type="text" id="urlPlugin" value="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/QuadraFuzz3/">
+        GUI
         <input id="checkBox" type="checkbox" checked>
 
 
@@ -105,21 +109,18 @@
 
       you can try :
       <p>
-        <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay3/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay3/</a> for wasabi delay</p>
-      <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRevV3/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRevV3/</a> for Faust ZitaRev</p>
-      <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/Blipper/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/Blipper/</a> for Oliver Larkin Blipper</p>
-      <a href="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/ThruZeroFlanger/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/ThruZeroFlanger/</a> for Oliver Larkin Flanger</p>
-
+        <label class="urlRepo" value="https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay3/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/WASABI/PingPongDelay3/</label>for wasabi delay</p>
+        <label class="urlRepo" value="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRevV3/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/ZitaRevV3/</label>for Faust ZitaRev</p>
+      <label class="urlRepo" value="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/Blipper/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/Blipper/</label>for Oliver Larkin Blipper</p>
+      <label class="urlRepo" value="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/ThruZeroFlanger/">https://wasabi.i3s.unice.fr/WebAudioPluginBank/Oliver-Larkin2/ThruZeroFlanger/</label>      for Oliver Larkin Flanger</p>
+    </div> </div> 
+      <div id="onetest">
+        <div id="WAP"></div>
+        <div id="mocha"></div>
     </div>
-
-  </div>
-  <div id="onetest">
-    <div id="WAP"></div>
-    <div id="mocha"></div>
-  </div>
-  <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/mocha/mocha.js"></script>
-  <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/node_modules/chai/chai.js"></script>
-  <script>mocha.setup('bdd')</script>
+    <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/mocha/mocha.js"></script>
+    <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/node_modules/chai/chai.js"></script>
+    <script>mocha.setup('bdd')</script>
 </body>
 <script>
   var checkbox = document.querySelector('#checkBox')
@@ -136,6 +137,12 @@
 
       checkMetadata(document.querySelector("#urlPlugin").value);
     });
+
+    document.querySelectorAll(".urlRepo").forEach(elem => {
+      elem.onclick = () => {
+        document.querySelector("#urlPlugin").value = elem.innerHTML;
+      }
+    })
 
 
     player.onplay = () => {
@@ -248,7 +255,7 @@
         expect(plugin.getMetadata()).to.exist;
       });
       it('the getMetadata() function should return a json object', function () {
-        expect(plugin.getMetadata()).to.not.be.empty;
+        plugin.getMetadata().then((res) => { expect(res).to.not.be.empty });
       });
     });
 
@@ -278,13 +285,13 @@
 
     describe('State getter', function () {
       it('plugin should have a getState() method', function () {
-        expect(plugin).to.have.property("setState");
+        expect(plugin).to.have.property("setPatch");
       });
     });
 
 
     describe('State setter', function () {
-      it('plugin should have a setState(data) method', function () {
+      it('plugin should have a setState(value) method', function () {
         expect(plugin).to.have.property("setState");
       });
     });
@@ -295,32 +302,21 @@
       });
     });
 
-    describe('Patch getter', function () {
-      it('plugin should have a getPatch(key) method', function () {
-        expect(plugin).to.have.property("getPatch");
-
-      });
-    });
-
-
-    describe('Patch setter', function () {
-      it('plugin should have a setPatch(key,value) method', function () {
-        expect(plugin).to.have.property("setPatch");
-      });
-    });
-
-    describe('Patches array', function () {
-      it('plugin should have a patchNames field', function () {
-        expect(plugin.patchNames).to.exist;
-      });
-      it('patchNames should be instanceOf String []', function () {
-        expect(plugin.patchNames).to.be.an.instanceof(Array);
-      });
-    });
-
     describe('Input Channel Number', function () {
       it('plugin should have an inputChannelCount() method', function () {
         expect(plugin.inputChannelCount()).to.exist;
+      });
+    });
+
+    describe('Number of inputs', function () {
+      it('plugin should have an numberOfInputs() method', function () {
+        expect(plugin.numberOfInputs).to.exist;
+
+      });
+    });
+    describe('Number of outputs', function () {
+      it('plugin should have an numberOfOutputs() method', function () {
+        expect(plugin.numberOfOutputs).to.exist;
       });
     });
     mocha.run()
