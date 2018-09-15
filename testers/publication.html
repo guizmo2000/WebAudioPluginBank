@@ -208,9 +208,12 @@
     let passes = false;
     var testcontainer = document.querySelector("#WAP");
 
-    describe('Metadata', () => {
-      it('plugin should have a JSON getMetadata() method', () => {
+    describe('Metadata', function () {
+      it('plugin should have a JSON getMetadata() method', function () {
         expect(plugin.getMetadata()).to.exist;
+      });
+      it('the getMetadata() function should return a json object', function () {
+        plugin.getMetadata().then((res) => { expect(res).to.not.be.empty });
       });
     });
 
@@ -240,13 +243,13 @@
 
     describe('State getter', function () {
       it('plugin should have a getState() method', function () {
-        expect(plugin).to.have.property("setState");
+        expect(plugin).to.have.property("setPatch");
       });
     });
 
 
     describe('State setter', function () {
-      it('plugin should have a setState(data) method', function () {
+      it('plugin should have a setState(value) method', function () {
         expect(plugin).to.have.property("setState");
       });
     });
@@ -257,18 +260,21 @@
       });
     });
 
-
-
-    describe('Patch setter', function () {
-      it('plugin should have a setPatch(key,value) method', function () {
-        expect(plugin).to.have.property("setPatch");
-      });
-    });
-
-
     describe('Input Channel Number', function () {
       it('plugin should have an inputChannelCount() method', function () {
         expect(plugin.inputChannelCount()).to.exist;
+      });
+    });
+
+    describe('Number of inputs', function () {
+      it('plugin should have an numberOfInputs() method', function () {
+        expect(plugin.numberOfInputs).to.exist;
+
+      });
+    });
+    describe('Number of outputs', function () {
+      it('plugin should have an numberOfOutputs() method', function () {
+        expect(plugin.numberOfOutputs).to.exist;
       });
     });
 
