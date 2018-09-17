@@ -10,8 +10,10 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 
 
 		if (options) {
+			console.log(options);
 			this.arrayNodeToConnect = options.arrayNodeToConnect ? options.arrayNodeToConnect : 'no nodes';
 			this._numberOfInputs = options.numberOfInputs ? options.numberOfInputs : 2;
+
 		} else
 			this.arrayNodeToConnect = 'no nodes';
 			this._numberOfInputs = 2
