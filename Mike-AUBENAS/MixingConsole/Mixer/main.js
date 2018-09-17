@@ -14,6 +14,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 			this._numberOfInputs = options.numberOfInputs ? options.numberOfInputs : 2;
 		} else
 			this.arrayNodeToConnect = 'no nodes';
+			this._numberOfInputs = 2
 
 		this.addParam({ name: 'gain', defaultValue: 0.5, minValue: 0, maxValue: 1 });
 		this.addParam({ name: 'nbcanaux', defaultValue: 2, minValue: 2, maxValue: 6 });
@@ -68,6 +69,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 	}
 
 	createNodes() {
+		console.log(this._numberOfInputs)
 		this.master = this.context.createGain();
 		this.master.connect(this._output);
 		for (let i = 1; i < this.numberOfInputs; i++) {
@@ -97,6 +99,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 					this.gui._root.querySelector('#arrayOfChannels').appendChild(elem);
 					this.numberOfInputs++;
 					this.gui.setWidth(this.gui.properties.dataWidth.value + elem.properties.dataWidth.value);
+					console.log(this.gui.properties.dataWidth.value)
 					var event = new Event('change');
 					// Dispatch it.
 					this.gui.dispatchEvent(event);
