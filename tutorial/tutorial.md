@@ -246,7 +246,7 @@ Now the WAP is ready to be tested. Lets create a HTML file and test this minimal
 
 You can now affect the audioplayer with your WAP! Congrats!
 
-If you want to submit your WAP, publish it on npm and let us know its name :
+###If you want to submit your WAP, publish it on npm and let us know its name :
 
 * Create an account on [npmjs](https://www.npmjs.com/signup)
 * open a terminal at your WAP root, bind the session by typing `npm login https://www.npmjs.com/~usrname`
