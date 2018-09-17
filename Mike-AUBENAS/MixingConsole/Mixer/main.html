@@ -219,7 +219,8 @@
 				plugin.load().then((node) => {
 					plugin.loadGui().then((elem) => {
 						if(i>2) parent.setWidth(parent.boundingRect.dataWidth.value + 100);
-						console.log(parent.boundingRect.dataWidth.value);
+						var event = new Event('change');
+						parent.dispatchEvent(event);
 						this._root.querySelector('#arrayOfChannels').appendChild(elem);
 						this._plug.inputs[i - 1].connect(node);
 						node.connect(this._plug.master);
