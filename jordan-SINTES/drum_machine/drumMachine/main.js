@@ -136,7 +136,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			},
 
 			demo4: {
-				"kitIndex": 8,
+				"kitIndex": 6,
 				"tempo": 96,
 				"swingFactor": 1,
 				"kickPitchVal": 0.46478873239436624,
