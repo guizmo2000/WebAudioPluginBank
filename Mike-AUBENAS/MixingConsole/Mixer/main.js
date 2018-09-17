@@ -96,6 +96,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 				plugin.loadGui().then((elem) => {
 					this.gui._root.querySelector('#arrayOfChannels').appendChild(elem);
 					this.numberOfInputs++;
+					this.gui.setWidth(this.gui.properties.dataWidth.value + elem.properties.dataWidth.value);
 					var event = new Event('change');
 					// Dispatch it.
 					this.gui.dispatchEvent(event);
