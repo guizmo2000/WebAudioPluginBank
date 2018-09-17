@@ -139,8 +139,8 @@ window.PingPongDelay = class PingPongDelay extends WebAudioPluginCompositeNode {
 
 window.WasabiPingPongDelay = class WasabiPingPongDelay extends WebAudioPluginFactory {
 
-  constructor(context, baseUrl) {
-    super(context, baseUrl);
+  constructor(context, baseUrl, options) {
+    super(context, baseUrl,options);
   }
 
 }
