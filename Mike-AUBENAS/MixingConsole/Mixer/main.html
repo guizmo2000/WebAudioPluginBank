@@ -155,7 +155,7 @@
 			this.boundingRect = {
 				dataWidth: {
 					type: Number,
-					value: 66
+					value: 266
 				},
 				dataHeight: {
 					type: Number,
@@ -218,7 +218,7 @@
 			return new Promise((resolve, reject) => {
 				plugin.load().then((node) => {
 					plugin.loadGui().then((elem) => {
-						parent.setWidth(parent.boundingRect.dataWidth.value + 100);
+						if(i>2) parent.setWidth(parent.boundingRect.dataWidth.value + 100);
 						this._root.querySelector('#arrayOfChannels').appendChild(elem);
 						this._plug.inputs[i - 1].connect(node);
 						node.connect(this._plug.master);
