@@ -77,9 +77,9 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 			this[numchannel] = this.context.createGain();
 			this.inputs.push(this[numchannel]);
 		}
-		this.inputs.forEach(input => {
-			input.gain.setValueAtTime(Math.pow(1 / Math.sqrt(this.numberOfInputs), this.context.currentTime),2);
-		});
+		// this.inputs.forEach(input => {
+		// 	input.gain.setValueAtTime(Math.pow(1 / Math.sqrt(this.numberOfInputs), this.context.currentTime),2);
+		// });
 
 		console.log(this.inputs);
 	}
