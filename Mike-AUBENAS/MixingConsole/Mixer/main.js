@@ -14,9 +14,10 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 			this.arrayNodeToConnect = options.arrayNodeToConnect ? options.arrayNodeToConnect : 'no nodes';
 			this._numberOfInputs = options.numberOfInputs ? options.numberOfInputs : 2;
 
-		} else
+		} else {
 			this.arrayNodeToConnect = 'no nodes';
 			this._numberOfInputs = 2
+		}
 
 		this.addParam({ name: 'gain', defaultValue: 0.5, minValue: 0, maxValue: 1 });
 		this.addParam({ name: 'nbcanaux', defaultValue: 2, minValue: 2, maxValue: 6 });
