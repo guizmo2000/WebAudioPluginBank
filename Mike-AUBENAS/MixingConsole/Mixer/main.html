@@ -19,11 +19,11 @@
 			background-color: rgb(30, 30, 30);
 
 			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
-			inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
-			inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
-			1px 0px 1px 0px rgba(0, 0, 0, 0.9),
-			0 2px 1px 0 rgba(0, 0, 0, 0.9),
-			1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+				inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+				inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+				1px 0px 1px 0px rgba(0, 0, 0, 0.9),
+				0 2px 1px 0 rgba(0, 0, 0, 0.9),
+				1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 			margin-top: 20px;
 			display: none;
@@ -74,14 +74,14 @@
 
 		#master {
 			padding: 15px;
-			background: linear-gradient( rgb(77, 74, 78), rgb(251, 166, 75));
+			background: linear-gradient(rgb(77, 74, 78), rgb(251, 166, 75));
 
 			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
-			inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
-			inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
-			1px 0px 1px 0px rgba(0, 0, 0, 0.9),
-			0 2px 1px 0 rgba(0, 0, 0, 0.9),
-			1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+				inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
+				inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
+				1px 0px 1px 0px rgba(0, 0, 0, 0.9),
+				0 2px 1px 0 rgba(0, 0, 0, 0.9),
+				1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 			border-radius: 8px;
 		}
@@ -116,17 +116,10 @@
 
 			<webaudio-slider id="masterKnob" midilearn="true" units="Db" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png"
 			 knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png"
-			  min="0" max="1" step="0.01" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;"
-			 value = "0.5" defvalue="0.5" tooltip="Master">
-
-				<div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
-					<div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
-					</div>
-				</div>
-				<div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
-				</div>
-
+			 min="0" max="1" step="0.01" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100"
+			  value="0.5" defvalue="0.5" tooltip="Master">
 			</webaudio-slider>
+			
 
 			<div class="column">
 				<img src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/Mixer/Image/plus.png" alt="Add a channel"
@@ -153,7 +146,7 @@
 			this._root = this.attachShadow({ mode: 'open' });
 			this._root.appendChild(leMixer.content.cloneNode(true));
 			this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
-			this.arrayNodeToConnectChannel = this._plug.getArrayNodeToConnect();
+			//this.arrayNodeToConnectChannel = this._plug.getArrayNodeToConnect();
 			this.listOfWasabiChannels = [];
 			that = this;
 			this.initChannels(that = this);
@@ -162,14 +155,14 @@
 			this.boundingRect = {
 				dataWidth: {
 					type: Number,
-					value: 266
+					value: 66
 				},
 				dataHeight: {
 					type: Number,
 					value: 260
 				}
 			};
-		
+
 		}
 
 		get properties() {
@@ -184,13 +177,14 @@
 		attributeChangedCallback() {
 			// To recover the switch state when this GUI is loaded
 			this.state = JSON.parse(this.getAttribute('state'));
-			if(this.state.nbcanaux > this._plug.numberOfInputs){
-				let plugin = new window.WasabiChannelMixer(this._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", this._plug.numberOfInputs +1);
+			console.log(this._plug.numberOfInputs);
+			if (this.state.nbcanaux > this._plug.numberOfInputs) {
+				let plugin = new window.WasabiChannelMixer(this._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", this._plug.numberOfInputs + 1);
 				(async function loop() {
-				for (let i = 1; i < (that.state.nbcanaux - that._plug.numberOfInputs); i++) {
-					await that.addCh(plugin,i);
-				}
-			})();
+					for (let i = 1; i < (that.state.nbcanaux - that._plug.numberOfInputs); i++) {
+						await that.addCh(plugin, i);
+					}
+				})();
 			}
 			// to recover the Knobs states when this Gui is loaded, based on knobs id
 			this._root.querySelector("#masterKnob").value = this.state.gain;
@@ -201,7 +195,7 @@
 
 		}
 
-		setWidth(value){
+		setWidth(value) {
 			this.boundingRect.dataWidth.value = value;
 		}
 
@@ -210,24 +204,28 @@
 			let numchannel = "InputForchannel" + this._plug.inputs.length + 1;
 
 			(async function loop() {
-				for (let i = 1; i < parent._plug._numberOfInputs +1; i++) {
-					let plugin = new window.WasabiChannelMixer(parent._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", {"channelNumber":i});
-					await parent.addCh(plugin, i);
+				for (let i = 1; i < parent._plug._numberOfInputs + 1; i++) {
+					let plugin = new window.WasabiChannelMixer(parent._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", { "channelNumber": i });
+					await parent.addCh(plugin, i, parent);
+					
+
 				}
 			})();
 		}
 
-		addCh(plugin, i) {
+		addCh(plugin, i, parent) {
 
 			return new Promise((resolve, reject) => {
 				plugin.load().then((node) => {
 					plugin.loadGui().then((elem) => {
+						parent.setWidth(parent.boundingRect.dataWidth.value + 100);
 						this._root.querySelector('#arrayOfChannels').appendChild(elem);
+						this._plug.inputs[i - 1].connect(node);
+						node.connect(this._plug.master);
 						resolve(true);
 					});
 
-					this._plug.inputs[i-1].connect(node);
-					node.connect(this._plug.master);
+
 				});
 			});
 		}
@@ -297,8 +295,9 @@
 		}
 
 		setMaster() {
+			console.log(this._root.querySelector("#masterKnob").min);
 			this._root.querySelector("#masterKnob").addEventListener("input", (event) => {
-				this._plug.setParam("gain",event.target.value);
+				this._plug.setParam("gain", event.target.value);
 			});
 		}
 

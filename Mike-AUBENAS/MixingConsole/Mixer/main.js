@@ -22,7 +22,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 		this.nbcanauxMax = 5;
 
 
-		this.getNumberOfChannels();
+		//this.getNumberOfChannels();
 
 
 		super.setup();
@@ -58,9 +58,9 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 		}
 	}
 
-	getArrayNodeToConnect() { return this.arrayNodeToConnect; }
+	// getArrayNodeToConnect() { return this.arrayNodeToConnect; }
 
-	setArrayNodeToConnect(arrayMedia) { this.arrayNodeToConnect = arrayMedia; }
+	// setArrayNodeToConnect(arrayMedia) { this.arrayNodeToConnect = arrayMedia; }
 
 
 	setup() {
@@ -76,7 +76,7 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 			this.inputs.push(this[numchannel]);
 		}
 		this.inputs.forEach(input => {
-			input.gain.setValueAtTime(1 / Math.sqrt(this.numberOfInputs), this.context.currentTime);
+			input.gain.setValueAtTime(Math.pow(1 / Math.sqrt(this.numberOfInputs), this.context.currentTime),2);
 		});
 
 		console.log(this.inputs);
@@ -96,7 +96,6 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 				plugin.loadGui().then((elem) => {
 					this.gui._root.querySelector('#arrayOfChannels').appendChild(elem);
 					this.numberOfInputs++;
-					this.gui.setWidth(this.gui.properties.dataWidth.value + elem.properties.dataWidth.value);
 					var event = new Event('change');
 					// Dispatch it.
 					this.gui.dispatchEvent(event);
@@ -118,7 +117,6 @@ window.Mixer = class Mixer extends WebAudioPluginCompositeNode {
 	}
 
 	set nbcanaux(nb) {
-		console.log("yes");
 		this.params.nbcanaux = nb;
 		//	let diff = nb - this.numberOfInputs;
 		//this.addChannel();
