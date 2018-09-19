@@ -27,22 +27,22 @@
   var plugin = new window.FaustBlueDream(ctx, pluginURL);
 
   plugin.load().then((node) => {
-    // plugin.loadGui().then((elem) => {
-    //   document.body.appendChild(elem);
-    //   document.querySelector("#save").addEventListener('click', () => {
-    //     node.getState()
-    //       .then((data) => {
-    //         state = data;
-    //         console.log("State saved :", data);
-    //       })
-    //   });
+    plugin.loadGui().then((elem) => {
+      document.body.appendChild(elem);
+      document.querySelector("#save").addEventListener('click', () => {
+        node.getState()
+          .then((data) => {
+            state = data;
+            console.log("State saved :", data);
+          })
+      });
 
-    //     document.querySelector("#load").addEventListener('click', () => {
-    //       node.setState(state).then((data) => {
-    //         console.log("State restored :", data)
-    //       })
-    //     });
-    // });
+        document.querySelector("#load").addEventListener('click', () => {
+          node.setState(state).then((data) => {
+            console.log("State restored :", data)
+          })
+        });
+    });
     console.log(node.getDescriptor());
     mediaSource.connect(node);
     node.connect(ctx.destination);

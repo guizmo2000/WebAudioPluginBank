@@ -1,4 +1,4 @@
-
+ 
 /*
 Code generated with Faust version 2.8.0
 Compilation options: wasm-ib, -scal -ftz 2
@@ -154,6 +154,7 @@ class BlueDreamNode extends AudioWorkletNode {
 
     // For WAP
     setParam(path, val) {
+        console.log(path, val)
         // Needed for sample accurate control
         this.parameters.get(path).setValueAtTime(val, 0);
     }
