@@ -8,19 +8,37 @@
 <script src="./tuner/main.js"></script>
 
 <body>
-    <audio src="./../../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
+    <button id="play">Play</button>
+    <input type="range" min="440" max="880" value="440" id="freq">
 </body>
 
 <script>
     var ctx = new AudioContext();
-    var player = document.getElementById("soundSample");
+    var osc = ctx.createOscillator();
+    var gainNode = ctx.createGain();
+    gainNode.gain.value=0;
 
-    player.onplay = () => {
-        ctx.resume().then(() => {
-            console.log('Playback resumed successfully');
-        });
-    }
-    var mediaSource = ctx.createMediaElementSource(player);
+    var slider= document.querySelector("#freq");
+    var player= document.querySelector("#play");
+    var isPlaying= false;
+
+    slider.addEventListener("input", function(e){
+        osc.frequency.value=e.target.value;
+    })
+
+    player.addEventListener("click", function(e){
+        if(isPlaying == false){
+            player.innerHTML= "Stop";
+            gainNode.gain.value=1;
+            isPlaying=true;
+        }
+        else if(isPlaying == true){
+            player.innerHTML= "Play";
+            gainNode.gain.value=0;
+            isPlaying=false;
+        }
+    });
+
     var state = {};
     var pluginURL = "./tuner";
     var plugin = new WasabiTunerMachine(ctx, pluginURL);
@@ -31,7 +49,9 @@
             console.log("elem", elem);
             document.body.appendChild(elem);
         });
-        mediaSource.connect(node);
+        osc.start();
+        osc.connect(gainNode);
+        gainNode.connect(node);
         node.connect(ctx.destination);
     });
 </script>
