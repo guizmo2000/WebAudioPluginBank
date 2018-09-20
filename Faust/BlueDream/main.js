@@ -417,7 +417,7 @@ window.FaustBlueDream = class FaustBlueDream {
      */
     load() {
         return new Promise((resolve, reject) => {
-            this.context.audioWorklet.addModule(this.baseUrl + "BlueDream-processor.js").then(() => {
+            this.context.audioWorklet.addModule(this.baseUrl + "/BlueDream-processor.js").then(() => {
                 this.node = new BlueDreamNode(this.context, this.baseUrl, {});
                 this.node.onprocessorerror = () => { console.log('An error from BlueDream-processor was detected.'); }
                 return (this.node);
