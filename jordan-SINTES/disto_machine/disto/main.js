@@ -9,6 +9,134 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
         super(ctx, URL, options)
 
         this.params = { status: "disable", preset:"0" }
+<<<<<<< HEAD
+=======
+        //TODO: see the problem of disto1 undefined when we don't change preset and power on the amp
+        //Param we can modify with buttons
+        this.addParam({
+            name: 'volume',
+            defaultValue: 3,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'master',
+            defaultValue: 3,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'drive',
+            defaultValue: 3,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'bass',
+            defaultValue: 3,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'middle',
+            defaultValue: 3,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'treble',
+            defaultValue: 3,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'reverb',
+            defaultValue: 3,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'presence',
+            defaultValue: 3,
+            minValue: 0,
+            maxValue: 10
+        });
+
+        //Param we cannot modify with button
+
+        this.addParam({
+            name: 'LS1Freq',
+            defaultValue: 720,
+            minValue: 0,
+            maxValue: 1000
+        });
+        this.addParam({
+            name: 'LS1Gain',
+            defaultValue: 3,
+            minValue: -6,
+            maxValue: 6
+        });
+        this.addParam({
+            name: 'LS2Freq',
+            defaultValue: 320,
+            minValue: 0,
+            maxValue: 1000
+        });
+        this.addParam({
+            name: 'LS2Gain',
+            defaultValue: -6,
+            minValue: -10,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'gain1',
+            defaultValue: 3,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'HP1Freq',
+            defaultValue: 6,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'HP1Q',
+            defaultValue: 0.70,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'LS3Freq',
+            defaultValue: 720,
+            minValue: 0,
+            maxValue: 1000
+        });
+        this.addParam({
+            name: 'LS3Gain',
+            defaultValue: -6,
+            minValue: -10,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'gain2',
+            defaultValue: 1,
+            minValue: 0,
+            maxValue: 10
+        });
+        this.addParam({
+            name: 'EQ',
+            defaultValue: [5, 5, 5, 5, 5, 5],
+        });
+        this.addParam({
+            name: 'CG',
+            defaultValue: 3,
+            minValue: 0,
+            maxValue: 10
+        });
+        
+        
+>>>>>>> parent of 752699a... Correction about disto amp parameter (to test)
 
         this.reverbImpulses = [{
             name: "Fender Hot Rod",
