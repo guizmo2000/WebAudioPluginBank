@@ -9,9 +9,6 @@ window.DistoMachine = class DistoMachine extends WebAudioPluginCompositeNode {
         super(ctx, URL, options)
 
         this.params = { status: "disable", preset:"0" }
-        //TODO: see the problem of disto1 undefined when we don't change preset and power on the amp
-        //Param we can modify with buttons
-        
 
         this.reverbImpulses = [{
             name: "Fender Hot Rod",
