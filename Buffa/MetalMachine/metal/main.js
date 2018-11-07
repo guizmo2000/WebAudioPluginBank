@@ -14,56 +14,6 @@ window.MetalMachine = class MetalMachine extends WebAudioPluginCompositeNode {
             filterstate:false,
             "preset": 0 
         };
-        //TODO: see the problem of disto1 undefined when we don't change preset and power on the amp
-        //Param we can modify with buttons
-        this.addParam({
-            name: 'volume',
-            defaultValue: 6.5,
-            minValue: 0,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'master',
-            defaultValue: 7,
-            minValue: 0,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'drive',
-            defaultValue: 5.3,
-            minValue: 0,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'bass',
-            defaultValue: 8.7,
-            minValue: 0,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'middle',
-            defaultValue: 8.2,
-            minValue: 0,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'treble',
-            defaultValue: 3.9,
-            minValue: 0,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'reverb',
-            defaultValue: 0.3,
-            minValue: 0,
-            maxValue: 10
-        });
-        this.addParam({
-            name: 'presence',
-            defaultValue: 5,
-            minValue: 0,
-            maxValue: 10
-        });
 
 
 
