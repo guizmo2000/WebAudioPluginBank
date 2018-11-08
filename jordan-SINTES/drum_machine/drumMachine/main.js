@@ -17,13 +17,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.state;
 
 		this.params = {
-
-			//drumMachine parameter
-			lastDrawTime: -1,
 			//Kick, Snare, Hi-Hat...
 			kNumInstruments: 6,
-			kInitialKitIndex: 10,
-			kMaxSwing: .08,
 
 			beatReset: {
 				"kitIndex": 0,
@@ -60,9 +55,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
-
-
-
+			
 			theBeat: {
 				"kitIndex": 11,
 				"tempo": 100,
@@ -81,101 +74,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			},
 
-			demo1: {
-				"kitIndex": 12,
-				"tempo": 105,
-				"swingFactor": 0,
-				"kickPitchVal": 0.46478873239436624,
-				"snarePitchVal": 0.45070422535211263,
-				"hihatPitchVal": 0.15492957746478875,
-				"tom1PitchVal": 0.7183098591549295,
-				"tom2PitchVal": 0.704225352112676,
-				"tom3PitchVal": 0.8028169014084507,
-				"rhythm1": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-				"rhythm2": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-				"rhythm3": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			},
-
-			demo2: {
-				"kitIndex": 3,
-				"tempo": 98,
-				"swingFactor": 0,
-				"kickPitchVal": 0.46478873239436624,
-				"snarePitchVal": 0.45070422535211263,
-				"hihatPitchVal": 0.15492957746478875,
-				"tom1PitchVal": 0.7183098591549295,
-				"tom2PitchVal": 0.704225352112676,
-				"tom3PitchVal": 0.8028169014084507,
-				"rhythm1": [0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0],
-				"rhythm2": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-				"rhythm3": [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
-				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			},
-
-			demo3: {
-				"kitIndex": 9,
-				"tempo": 124,
-				"swingFactor": 0,
-				"kickPitchVal": 0.46478873239436624,
-				"snarePitchVal": 0.45070422535211263,
-				"hihatPitchVal": 0.15492957746478875,
-				"tom1PitchVal": 0.7183098591549295,
-				"tom2PitchVal": 0.704225352112676,
-				"tom3PitchVal": 0.8028169014084507,
-				"rhythm1": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-				"rhythm2": [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
-				"rhythm3": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm5": [0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0],
-				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			},
-
-			demo4: {
-				"kitIndex": 6,
-				"tempo": 96,
-				"swingFactor": 1,
-				"kickPitchVal": 0.46478873239436624,
-				"snarePitchVal": 0.45070422535211263,
-				"hihatPitchVal": 0.15492957746478875,
-				"tom1PitchVal": 0.7183098591549295,
-				"tom2PitchVal": 0.704225352112676,
-				"tom3PitchVal": 0.8028169014084507,
-				"rhythm1": [1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0],
-				"rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm3": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
-				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm5": [0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0],
-				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			},
-
-			demo5: {
-				"kitIndex": 10,
-				"tempo": 84,
-				"swingFactor": 0,
-				"kickPitchVal": 0.46478873239436624,
-				"snarePitchVal": 0.45070422535211263,
-				"hihatPitchVal": 0.15492957746478875,
-				"tom1PitchVal": 0.7183098591549295,
-				"tom2PitchVal": 0.704225352112676,
-				"tom3PitchVal": 0.8028169014084507,
-				"rhythm1": [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-				"rhythm2": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
-				"rhythm3": [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
-				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			},
-
-			
-
 			kits: null,
 			currentKit: null,
-			instrumentActive: [true, true, true, true, true, true],
+			//instrumentActive: [true, true, true, true, true, true], to define the spatialization of the sound
 
 			kickPitch: 0,
 			snarePitch: 0,
@@ -189,8 +90,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 			loopLength: 16,
 			rhythmIndex: 0,
-			kMinTempo: 52,
-			kMaxTempo: 180,
 			noteTime: 0.0,
 			startTime: 0.0,
 
@@ -273,12 +172,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	getDescriptor() {
 		return this._descriptor;
 	}
-	async getState() {
-		return new Promise((resolve) => {
-			resolve({ "defaut": "dark" });
-		});
-
-	}
 
 	setParam(key, value) {
 		console.log(key, value);
@@ -291,6 +184,11 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 	set defaut(val) {
 		return true;
+	}
+
+	set kitIndex(val) {
+		this.params.currentKit = val;
+		console.log("ok");
 	}
 
 
@@ -369,9 +267,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		for (var i = 0; i < numKits; i++) {
 			this.params.kits[i].load();
 		}
-
+		let kInitialKitIndex= 10;
 		// Setup initial drumkit
-		this.params.currentKit = this.params.kits[this.params.kInitialKitIndex];
+		this.params.currentKit = this.params.kits[kInitialKitIndex];
 	}
 
 	//TODO: see correction with this function
@@ -426,12 +324,12 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		if (this.params.rhythmIndex == this.params.loopLength) {
 			this.params.rhythmIndex = 0;
 		}
-
+		let kMaxSwing = .08
 		// apply swing    
 		if (this.params.rhythmIndex % 2) {
-			this.params.noteTime += (0.25 + this.params.kMaxSwing * this.params.theBeat.swingFactor) * secondsPerBeat;
+			this.params.noteTime += (0.25 + kMaxSwing * this.params.theBeat.swingFactor) * secondsPerBeat;
 		} else {
-			this.params.noteTime += (0.25 - this.params.kMaxSwing * this.params.theBeat.swingFactor) * secondsPerBeat;
+			this.params.noteTime += (0.25 - kMaxSwing * this.params.theBeat.swingFactor) * secondsPerBeat;
 		}
 	}
 
@@ -506,8 +404,10 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 
 			// Attempt to synchronize drawing time with sound
-			if (this.params.noteTime != this.params.lastDrawTime) {
-				this.params.lastDrawTime = this.params.noteTime;
+			//drumMachine parameter
+			let lastDrawTime= -1;
+			if (this.params.noteTime != lastDrawTime) {
+				lastDrawTime = this.params.noteTime;
 				this.drawPlayhead((this.params.rhythmIndex + 15) % 16);
 			}
 
@@ -516,31 +416,123 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 
 	tempoIncrease() {
-		this.params.theBeat.tempo = Math.min(this.params.kMaxTempo, this.params.theBeat.tempo + 2);
+		let kMaxTempo = 180;
+		this.params.theBeat.tempo = Math.min(kMaxTempo, this.params.theBeat.tempo + 2);
 		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
 	}
 
 	tempoDecrease() {
-		this.params.theBeat.tempo = Math.max(this.params.kMinTempo, this.params.theBeat.tempo - 2);
+		let kMinTempo = 52
+		this.params.theBeat.tempo = Math.max(kMinTempo, this.params.theBeat.tempo - 2);
 		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
 	}
 
 	demoChoose(index){
 		this.handleReset();
+		let demo1= {
+			"kitIndex": 12,
+			"tempo": 105,
+			"swingFactor": 0,
+			"kickPitchVal": 0.46478873239436624,
+			"snarePitchVal": 0.45070422535211263,
+			"hihatPitchVal": 0.15492957746478875,
+			"tom1PitchVal": 0.7183098591549295,
+			"tom2PitchVal": 0.704225352112676,
+			"tom3PitchVal": 0.8028169014084507,
+			"rhythm1": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+			"rhythm2": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+			"rhythm3": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+			"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		};
+
+		let demo2= {
+			"kitIndex": 3,
+			"tempo": 98,
+			"swingFactor": 0,
+			"kickPitchVal": 0.46478873239436624,
+			"snarePitchVal": 0.45070422535211263,
+			"hihatPitchVal": 0.15492957746478875,
+			"tom1PitchVal": 0.7183098591549295,
+			"tom2PitchVal": 0.704225352112676,
+			"tom3PitchVal": 0.8028169014084507,
+			"rhythm1": [0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0],
+			"rhythm2": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+			"rhythm3": [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+			"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		};
+
+		let demo3= {
+			"kitIndex": 9,
+			"tempo": 124,
+			"swingFactor": 0,
+			"kickPitchVal": 0.46478873239436624,
+			"snarePitchVal": 0.45070422535211263,
+			"hihatPitchVal": 0.15492957746478875,
+			"tom1PitchVal": 0.7183098591549295,
+			"tom2PitchVal": 0.704225352112676,
+			"tom3PitchVal": 0.8028169014084507,
+			"rhythm1": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+			"rhythm2": [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0],
+			"rhythm3": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+			"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm5": [0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0],
+			"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		};
+
+		let demo4= {
+			"kitIndex": 6,
+			"tempo": 96,
+			"swingFactor": 1,
+			"kickPitchVal": 0.46478873239436624,
+			"snarePitchVal": 0.45070422535211263,
+			"hihatPitchVal": 0.15492957746478875,
+			"tom1PitchVal": 0.7183098591549295,
+			"tom2PitchVal": 0.704225352112676,
+			"tom3PitchVal": 0.8028169014084507,
+			"rhythm1": [1, 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 0, 0],
+			"rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm3": [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0],
+			"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm5": [0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0],
+			"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		};
+
+		let demo5= {
+			"kitIndex": 10,
+			"tempo": 84,
+			"swingFactor": 0,
+			"kickPitchVal": 0.46478873239436624,
+			"snarePitchVal": 0.45070422535211263,
+			"hihatPitchVal": 0.15492957746478875,
+			"tom1PitchVal": 0.7183098591549295,
+			"tom2PitchVal": 0.704225352112676,
+			"tom3PitchVal": 0.8028169014084507,
+			"rhythm1": [1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+			"rhythm2": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+			"rhythm3": [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0],
+			"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		};
+
 		if(index == 1){	
-			this.loadBeat(this.params.demo1);	
+			this.loadBeat(demo1);	
 		}
 		else if(index == 2){
-			this.loadBeat(this.params.demo2);
+			this.loadBeat(demo2);
 		}
 		else if(index == 3){
-			this.loadBeat(this.params.demo3);
+			this.loadBeat(demo3);
 		}
 		else if(index == 4){
-			this.loadBeat(this.params.demo4);
+			this.loadBeat(demo4);
 		}
 		else if(index == 5){
-			this.loadBeat(this.params.demo5);
+			this.loadBeat(demo5);
 		}
 
 		this.updateControls();
