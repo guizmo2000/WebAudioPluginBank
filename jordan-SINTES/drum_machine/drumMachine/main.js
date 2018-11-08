@@ -868,14 +868,14 @@ class Kit {
 
 		request.onload = () => {
 
-			this.parent.context.decodeAudioData(request.response, this.parent.params2.decodedFunctions[sampleID].bind(kit));
+			this.parent.context.decodeAudioData(request.response, this.parent.addParams.decodedFunctions[sampleID].bind(kit));
 
 			kit.instrumentLoadCount++;
 			if (kit.instrumentLoadCount == kit.instrumentCount) {
 				kit.isLoaded = true;
 
 				if (kit.demoIndex != -1) {
-					this.parent.params2.beatInitial.setKitLoaded();
+					this.parent.addParams.beatInitial.setKitLoaded();
 				}
 			}
 		}
