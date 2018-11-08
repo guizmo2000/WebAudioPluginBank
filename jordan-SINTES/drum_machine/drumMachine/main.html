@@ -755,13 +755,13 @@
 
         initButtons() {
             var elButton;
-            this._root.getElementById('kitname').innerHTML = this._plug.params.kitNamePretty[this._plug.params.theBeat.kitIndex];
+            this._root.getElementById('kitname').innerHTML = this._plug.addParams.kitNamePretty[this._plug.addParams.theBeat.kitIndex];
 
-            this._root.getElementById('tempo').innerHTML = this._plug.params.theBeat.tempo;
+            this._root.getElementById('tempo').innerHTML = this._plug.addParams.theBeat.tempo;
 
-            for (var i = 0; i < this._plug.params.loopLength; ++i) {
-                for (var j = 0; j < this._plug.params.kNumInstruments; j++) {
-                    elButton = this._root.getElementById(this._plug.params.instruments[j] + '_' + i);
+            for (var i = 0; i < this._plug.addParams.loopLength; ++i) {
+                for (var j = 0; j < this._plug.addParams.kNumInstruments; j++) {
+                    elButton = this._root.getElementById(this._plug.addParams.instruments[j] + '_' + i);
                     elButton.addEventListener("mousedown", (event) => this.handleButtonMouseDown(event), true);
                 }
             }
@@ -794,22 +794,22 @@
 
         //TODO: see this function how it works, particularry drawNote
         handleButtonMouseDown(event) {
-            var notes = this._plug.params.theBeat.kickPitch;
+            var notes = this._plug.addParams.theBeat.kickPitch;
 
             var instrumentIndex;
             var rhythmIndex;
 
             var elId = event.target.id;
             rhythmIndex = elId.substr(elId.indexOf('_') + 1, 2);
-            instrumentIndex = this._plug.params.instruments.indexOf(elId.substr(0, elId.indexOf('_')));
+            instrumentIndex = this._plug.addParams.instruments.indexOf(elId.substr(0, elId.indexOf('_')));
 
             switch (instrumentIndex) {
-                case 0: notes = this._plug.params.theBeat.rhythm1; break;
-                case 1: notes = this._plug.params.theBeat.rhythm2; break;
-                case 2: notes = this._plug.params.theBeat.rhythm3; break;
-                case 3: notes = this._plug.params.theBeat.rhythm4; break;
-                case 4: notes = this._plug.params.theBeat.rhythm5; break;
-                case 5: notes = this._plug.params.theBeat.rhythm6; break;
+                case 0: notes = this._plug.addParams.theBeat.rhythm1; break;
+                case 1: notes = this._plug.addParams.theBeat.rhythm2; break;
+                case 2: notes = this._plug.addParams.theBeat.rhythm3; break;
+                case 3: notes = this._plug.addParams.theBeat.rhythm4; break;
+                case 4: notes = this._plug.addParams.theBeat.rhythm5; break;
+                case 5: notes = this._plug.addParams.theBeat.rhythm6; break;
             }
 
             notes[rhythmIndex] = (notes[rhythmIndex] + 1) % 3;
@@ -824,28 +824,28 @@
                 switch (instrumentIndex) {
                     //put to true to have sound position in function to the click position on drumMachine
                     case 0:  // Kick
-                        this._plug.playNote(this._plug.params.currentKit.kickBuffer, false, 0, 0, -2, 0.5 * 1, this._plug.params.volumes[note] * 1.0, this._plug.params.kickPitch, 0);
+                        this._plug.playNote(this._plug.addParams.currentKit.kickBuffer, false, 0, 0, -2, 0.5 * 1, this._plug.addParams.volumes[note] * 1.0, this._plug.addParams.kickPitch, 0);
                         break;
 
                     case 1:  // Snare
-                        this._plug.playNote(this._plug.params.currentKit.snareBuffer, false, 0, 0, -2, 1, this._plug.params.volumes[note] * 0.6, this._plug.params.snarePitch, 0);
+                        this._plug.playNote(this._plug.addParams.currentKit.snareBuffer, false, 0, 0, -2, 1, this._plug.addParams.volumes[note] * 0.6, this._plug.addParams.snarePitch, 0);
                         break;
 
                     case 2:  // Hihat
                         // Pan the hihat according to sequence position.
-                        this._plug.playNote(this._plug.params.currentKit.hihatBuffer, false, 0.5 * this._plug.params.rhythmIndex - 4, 0, -1.0, 1, this._plug.params.volumes[note] * 0.7, this._plug.params.hihatPitch, 0);
+                        this._plug.playNote(this._plug.addParams.currentKit.hihatBuffer, false, 0.5 * this._plug.addParams.rhythmIndex - 4, 0, -1.0, 1, this._plug.addParams.volumes[note] * 0.7, this._plug.addParams.hihatPitch, 0);
                         break;
 
                     case 3:  // Tom 1   
-                        this._plug.playNote(this._plug.params.currentKit.tom1, false, 0, 0, -2, 1, this._plug.params.volumes[note] * 0.6, this._plug.params.tom1Pitch, 0);
+                        this._plug.playNote(this._plug.addParams.currentKit.tom1, false, 0, 0, -2, 1, this._plug.addParams.volumes[note] * 0.6, this._plug.addParams.tom1Pitch, 0);
                         break;
 
                     case 4:  // Tom 2   
-                        this._plug.playNote(this._plug.params.currentKit.tom2, false, 0, 0, -2, 1, this._plug.params.volumes[note] * 0.6, this._plug.params.tom2Pitch, 0);
+                        this._plug.playNote(this._plug.addParams.currentKit.tom2, false, 0, 0, -2, 1, this._plug.addParams.volumes[note] * 0.6, this._plug.addParams.tom2Pitch, 0);
                         break;
 
                     case 5:  // Tom 3   
-                        this._plug.playNote(this._plug.params.currentKit.tom3, false, 0, 0, -2, 1, this._plug.params.volumes[note] * 0.6, this._plug.params.tom3Pitch, 0);
+                        this._plug.playNote(this._plug.addParams.currentKit.tom3, false, 0, 0, -2, 1, this._plug.addParams.volumes[note] * 0.6, this._plug.addParams.tom3Pitch, 0);
                         break;
                 }
             }
@@ -853,11 +853,11 @@
 
         makeKitList() {
             var elList = this._root.getElementById('kitlist');
-            var numKits = this._plug.params.kitName.length;
+            var numKits = this._plug.addParams.kitName.length;
 
             for (var i = 0; i < numKits; i++) {
                 var elItem = document.createElement('li');
-                elItem.innerHTML = this._plug.params.kitNamePretty[i];
+                elItem.innerHTML = this._plug.addParams.kitNamePretty[i];
                 elList.appendChild(elItem);
                 elItem.addEventListener("mousedown", (event) => this.handleKitMouseDown(event), true);
             }
@@ -865,21 +865,21 @@
 
         makePatternList() {
             var elList = this._root.getElementById('patternlist');
-            /*var numKits = this._plug.params.kitName.length;
+            /*var numKits = this._plug.addParams.kitName.length;
 
             for (var i = 0; i < numKits; i++) {
                 var elItem = document.createElement('li');
-                elItem.innerHTML = this._plug.params.kitNamePretty[i];
+                elItem.innerHTML = this._plug.addParams.kitNamePretty[i];
                 elList.appendChild(elItem);
                 elItem.addEventListener("mousedown", (event) => this.handleKitMouseDown(event), true);
             }*/
         }
 
         handleKitMouseDown(event) {
-            var index = this._plug.params.kitNamePretty.indexOf(event.target.innerHTML);
-            this._plug.params.theBeat.kitIndex = index;
-            this._plug.params.currentKit = this._plug.params.kits[index];
-            this._root.getElementById('kitname').innerHTML = this._plug.params.kitNamePretty[index];
+            var index = this._plug.addParams.kitNamePretty.indexOf(event.target.innerHTML);
+            this._plug.addParams.theBeat.kitIndex = index;
+            this._plug.addParams.currentKit = this._plug.addParams.kits[index];
+            this._root.getElementById('kitname').innerHTML = this._plug.addParams.kitNamePretty[index];
         }
 
         isDescendantOfId(el, id) {

@@ -16,10 +16,29 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		super(ctx, options)
 		this.state;
 
-		this.params = {
+		this.params={
+			thisBeat: {
+				"kitIndex": 0,
+				"tempo": 100,
+				"swingFactor": 0,
+				"kickPitchVal": 0.5,
+				"snarePitchVal": 0.5,
+				"hihatPitchVal": 0.5,
+				"tom1PitchVal": 0.5,
+				"tom2PitchVal": 0.5,
+				"tom3PitchVal": 0.5,
+				"rhythm1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm3": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			}
+		}
+		
+		this.addParams = {
 			//Kick, Snare, Hi-Hat...
 			kNumInstruments: 6,
-
 			beatReset: {
 				"kitIndex": 0,
 				"tempo": 100,
@@ -186,8 +205,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		return true;
 	}
 
-	set kitIndex(val) {
-		this.params.currentKit = val;
+	set kit(val) {
+		val= this.addParams.theBeat
+		this.params = val;
 		console.log("ok");
 	}
 
@@ -249,15 +269,15 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	startLoadingAssets() {
 		// Initialize drum kits
-		var numKits = this.params.kitName.length;
-		this.params.kits = new Array(numKits);
+		var numKits = this.addParams.kitName.length;
+		this.addParams.kits = new Array(numKits);
 		for (var i = 0; i < numKits; i++) {
-			this.params.kits[i] = new Kit(this.params.kitName[i], this);
+			this.addParams.kits[i] = new Kit(this.addParams.kitName[i], this);
 		}
 
 		// Start loading the assets used by the presets first, in order of the presets.
 		for (var demoIndex = 0; demoIndex < 2; ++demoIndex) {
-			var kit = this.params.kits[this.params.beatInitial.kitIndex];
+			var kit = this.addParams.kits[this.addParams.beatInitial.kitIndex];
 			kit.setDemoIndex(demoIndex);
 			kit.load();
 		}
@@ -265,35 +285,35 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		// Then load the remaining assets.
 		// Note that any assets which have previously started loading will be skipped over.
 		for (var i = 0; i < numKits; i++) {
-			this.params.kits[i].load();
+			this.addParams.kits[i].load();
 		}
 		let kInitialKitIndex= 10;
 		// Setup initial drumkit
-		this.params.currentKit = this.params.kits[kInitialKitIndex];
+		this.addParams.currentKit = this.addParams.kits[kInitialKitIndex];
 	}
 
 	//TODO: see correction with this function
 	showDemoAvailable(demoIndex /* zero-based */) {
-		this.loadBeatReset(this.params.beatInitial);
+		this.loadBeatReset(this.addParams.beatInitial);
 	}
 
 	init() {
 		// Let the beat demos know when all of their assets have been loaded.
 		// Add some new methods to support this.
-		this.params.beatInitial.isKitLoaded = false;
+		this.addParams.beatInitial.isKitLoaded = false;
 
-		this.params.beatInitial.setKitLoaded = () => {
+		this.addParams.beatInitial.setKitLoaded = () => {
 			this.isKitLoaded = true;
-			this.params.beatInitial.checkIsLoaded();
+			this.addParams.beatInitial.checkIsLoaded();
 		};
 
-		this.params.beatInitial.checkIsLoaded = () => {
-			if (this.params.beatInitial.isLoaded()) {
+		this.addParams.beatInitial.checkIsLoaded = () => {
+			if (this.addParams.beatInitial.isLoaded()) {
 				this.showDemoAvailable(this.index);
 			}
 		};
 
-		this.params.beatInitial.isLoaded = () => {
+		this.addParams.beatInitial.isLoaded = () => {
 			return this.isKitLoaded;
 		};
 
@@ -308,28 +328,28 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		// Obtain a blob URL reference to our worker 'file'.
 		var timerWorkerBlobURL = window.URL.createObjectURL(timerWorkerBlob);
 
-		this.params.timerWorker = new Worker(timerWorkerBlobURL);
-		this.params.timerWorker.onmessage = (e) => {
+		this.addParams.timerWorker = new Worker(timerWorkerBlobURL);
+		this.addParams.timerWorker.onmessage = (e) => {
 			this.schedule();
 		};
-		this.params.timerWorker.postMessage('init'); // Start the worker.
+		this.addParams.timerWorker.postMessage('init'); // Start the worker.
 
 	}
 
 	advanceNote() {
 		// Advance time by a 16th note...
-		var secondsPerBeat = 60.0 / this.params.theBeat.tempo;
+		var secondsPerBeat = 60.0 / this.addParams.theBeat.tempo;
 
-		this.params.rhythmIndex++;
-		if (this.params.rhythmIndex == this.params.loopLength) {
-			this.params.rhythmIndex = 0;
+		this.addParams.rhythmIndex++;
+		if (this.addParams.rhythmIndex == this.addParams.loopLength) {
+			this.addParams.rhythmIndex = 0;
 		}
 		let kMaxSwing = .08
 		// apply swing    
-		if (this.params.rhythmIndex % 2) {
-			this.params.noteTime += (0.25 + kMaxSwing * this.params.theBeat.swingFactor) * secondsPerBeat;
+		if (this.addParams.rhythmIndex % 2) {
+			this.addParams.noteTime += (0.25 + kMaxSwing * this.addParams.theBeat.swingFactor) * secondsPerBeat;
 		} else {
-			this.params.noteTime += (0.25 - kMaxSwing * this.params.theBeat.swingFactor) * secondsPerBeat;
+			this.addParams.noteTime += (0.25 - kMaxSwing * this.addParams.theBeat.swingFactor) * secondsPerBeat;
 		}
 	}
 
@@ -361,54 +381,54 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	schedule() {
 
-		//this.params.noteTime = 0.0;
-		//this.params.startTime = this.context.currentTime + 0.005;
+		//this.addParams.noteTime = 0.0;
+		//this.addParams.startTime = this.context.currentTime + 0.005;
 		var currentTime = this.context.currentTime;
 
 		// The sequence starts at startTime, so normalize currentTime so that it's 0 at the start of the sequence.
-		currentTime -= this.params.startTime;
+		currentTime -= this.addParams.startTime;
 
-		while (this.params.noteTime < currentTime + 0.120) {
+		while (this.addParams.noteTime < currentTime + 0.120) {
 			// Convert noteTime to context time.
-			var contextPlayTime = this.params.noteTime + this.params.startTime;
+			var contextPlayTime = this.addParams.noteTime + this.addParams.startTime;
 
 			// Kick
-			if (this.params.theBeat.rhythm1[this.params.rhythmIndex] /*&& this.params.instrumentActive[0]*/) {
+			if (this.addParams.theBeat.rhythm1[this.addParams.rhythmIndex] /*&& this.addParams.instrumentActive[0]*/) {
 
-				this.playNote(this.params.currentKit.kickBuffer, false, 0, 0, -2, 0.5, this.params.volumes[this.params.theBeat.rhythm1[this.params.rhythmIndex]] * 1.0, this.params.kickPitch, contextPlayTime);
+				this.playNote(this.addParams.currentKit.kickBuffer, false, 0, 0, -2, 0.5, this.addParams.volumes[this.addParams.theBeat.rhythm1[this.addParams.rhythmIndex]] * 1.0, this.addParams.kickPitch, contextPlayTime);
 			}
 
 			// Snare
-			if (this.params.theBeat.rhythm2[this.params.rhythmIndex]/* && this.params.instrumentActive[1]*/) {
-				this.playNote(this.params.currentKit.snareBuffer, false, 0, 0, -2, 1, this.params.volumes[this.params.theBeat.rhythm2[this.params.rhythmIndex]] * 0.6, this.params.snarePitch, contextPlayTime);
+			if (this.addParams.theBeat.rhythm2[this.addParams.rhythmIndex]/* && this.addParams.instrumentActive[1]*/) {
+				this.playNote(this.addParams.currentKit.snareBuffer, false, 0, 0, -2, 1, this.addParams.volumes[this.addParams.theBeat.rhythm2[this.addParams.rhythmIndex]] * 0.6, this.addParams.snarePitch, contextPlayTime);
 			}
 
 			// Hihat
-			if (this.params.theBeat.rhythm3[this.params.rhythmIndex]/* && this.params.instrumentActive[2]*/) {
+			if (this.addParams.theBeat.rhythm3[this.addParams.rhythmIndex]/* && this.addParams.instrumentActive[2]*/) {
 				// Pan the hihat according to sequence position.
-				this.playNote(this.params.currentKit.hihatBuffer, true, 0.5 * this.params.rhythmIndex - 4, 0, -1.0, 1, this.params.volumes[this.params.theBeat.rhythm3[this.params.rhythmIndex]] * 0.7, this.params.hihatPitch, contextPlayTime);
+				this.playNote(this.addParams.currentKit.hihatBuffer, true, 0.5 * this.addParams.rhythmIndex - 4, 0, -1.0, 1, this.addParams.volumes[this.addParams.theBeat.rhythm3[this.addParams.rhythmIndex]] * 0.7, this.addParams.hihatPitch, contextPlayTime);
 			}
 
 			// Toms    
-			if (this.params.theBeat.rhythm4[this.params.rhythmIndex] /*&& this.params.instrumentActive[3]*/) {
-				this.playNote(this.params.currentKit.tom1, false, 0, 0, -2, 1, this.params.volumes[this.params.theBeat.rhythm4[this.params.rhythmIndex]] * 0.6, this.params.tom1Pitch, contextPlayTime);
+			if (this.addParams.theBeat.rhythm4[this.addParams.rhythmIndex] /*&& this.addParams.instrumentActive[3]*/) {
+				this.playNote(this.addParams.currentKit.tom1, false, 0, 0, -2, 1, this.addParams.volumes[this.addParams.theBeat.rhythm4[this.addParams.rhythmIndex]] * 0.6, this.addParams.tom1Pitch, contextPlayTime);
 			}
 
-			if (this.params.theBeat.rhythm5[this.params.rhythmIndex] /*&& this.params.instrumentActive[4]*/) {
-				this.playNote(this.params.currentKit.tom2, false, 0, 0, -2, 1, this.params.volumes[this.params.theBeat.rhythm5[this.params.rhythmIndex]] * 0.6, this.params.tom2Pitch, contextPlayTime);
+			if (this.addParams.theBeat.rhythm5[this.addParams.rhythmIndex] /*&& this.addParams.instrumentActive[4]*/) {
+				this.playNote(this.addParams.currentKit.tom2, false, 0, 0, -2, 1, this.addParams.volumes[this.addParams.theBeat.rhythm5[this.addParams.rhythmIndex]] * 0.6, this.addParams.tom2Pitch, contextPlayTime);
 			}
 
-			if (this.params.theBeat.rhythm6[this.params.rhythmIndex] /*&& this.params.instrumentActive[5]*/) {
-				this.playNote(this.params.currentKit.tom3, false, 0, 0, -2, 1, this.params.volumes[this.params.theBeat.rhythm6[this.params.rhythmIndex]] * 0.6, this.params.tom3Pitch, contextPlayTime);
+			if (this.addParams.theBeat.rhythm6[this.addParams.rhythmIndex] /*&& this.addParams.instrumentActive[5]*/) {
+				this.playNote(this.addParams.currentKit.tom3, false, 0, 0, -2, 1, this.addParams.volumes[this.addParams.theBeat.rhythm6[this.addParams.rhythmIndex]] * 0.6, this.addParams.tom3Pitch, contextPlayTime);
 			}
 
 
 			// Attempt to synchronize drawing time with sound
 			//drumMachine parameter
 			let lastDrawTime= -1;
-			if (this.params.noteTime != lastDrawTime) {
-				lastDrawTime = this.params.noteTime;
-				this.drawPlayhead((this.params.rhythmIndex + 15) % 16);
+			if (this.addParams.noteTime != lastDrawTime) {
+				lastDrawTime = this.addParams.noteTime;
+				this.drawPlayhead((this.addParams.rhythmIndex + 15) % 16);
 			}
 
 			this.advanceNote();
@@ -417,14 +437,16 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	tempoIncrease() {
 		let kMaxTempo = 180;
-		this.params.theBeat.tempo = Math.min(kMaxTempo, this.params.theBeat.tempo + 2);
-		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
+		this.addParams.theBeat.tempo = Math.min(kMaxTempo, this.addParams.theBeat.tempo + 2);
+		this.params.thisBeat.tempo= this.addParams.theBeat.tempo;
+		this.gui._root.getElementById('tempo').innerHTML = this.params.thisBeat.tempo;
 	}
 
 	tempoDecrease() {
 		let kMinTempo = 52
-		this.params.theBeat.tempo = Math.max(kMinTempo, this.params.theBeat.tempo - 2);
-		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
+		this.addParams.theBeat.tempo = Math.max(kMinTempo, this.addParams.theBeat.tempo - 2);
+		this.params.thisBeat.tempo = this.addParams.theBeat.tempo;
+		this.gui._root.getElementById('tempo').innerHTML = this.params.thisBeat.tempo;
 	}
 
 	demoChoose(index){
@@ -539,31 +561,31 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 
 	handleSliderMouseDown(event) {
-		this.params.mouseCapture = event.target.id;
+		this.addParams.mouseCapture = event.target.id;
 
 		// calculate offset of mousedown on slider
 		var el = event.target;
-		if (this.params.mouseCapture == 'swing_thumb') {
+		if (this.addParams.mouseCapture == 'swing_thumb') {
 			var thumbX = 0;
 			do {
 				thumbX += el.offsetLeft;
 			} while (el = el.offsetParent);
-			this.params.mouseCaptureOffset = event.pageX - thumbX;
+			this.addParams.mouseCaptureOffset = event.pageX - thumbX;
 		} else {
 			var thumbY = 0;
 			do {
 				thumbY += el.offsetTop;
 			} while (el = el.offsetParent);
-			this.params.mouseCaptureOffset = event.pageY - thumbY;
+			this.addParams.mouseCaptureOffset = event.pageY - thumbY;
 		}
 	}
 
 	handleMouseMove(event) {
-		if (!this.params.mouseCapture) return;
-		var elThumb = this.gui._root.getElementById(this.params.mouseCapture);
+		if (!this.addParams.mouseCapture) return;
+		var elThumb = this.gui._root.getElementById(this.addParams.mouseCapture);
 		var elTrack = elThumb.parentNode;
 
-		if (this.params.mouseCapture != 'swing_thumb') {
+		if (this.addParams.mouseCapture != 'swing_thumb') {
 			var thumbH = elThumb.clientHeight;
 			var trackH = elTrack.clientHeight;
 			var travelH = trackH - thumbH;
@@ -574,7 +596,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				trackY += el.offsetTop;
 			} while (el = el.offsetParent);
 
-			var offsetY = Math.max(0, Math.min(travelH, event.pageY - this.params.mouseCaptureOffset - trackY));
+			var offsetY = Math.max(0, Math.min(travelH, event.pageY - this.addParams.mouseCaptureOffset - trackY));
 			var value = 1.0 - offsetY / travelH;
 			elThumb.style.top = travelH * (1.0 - value) + 'px';
 		} else {
@@ -588,16 +610,16 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				trackX += el.offsetLeft;
 			} while (el = el.offsetParent);
 
-			var offsetX = Math.max(0, Math.min(travelW, event.pageX - this.params.mouseCaptureOffset - trackX));
+			var offsetX = Math.max(0, Math.min(travelW, event.pageX - this.addParams.mouseCaptureOffset - trackX));
 			var value = offsetX / travelW;
 			elThumb.style.left = travelW * value + 'px';
 		}
 
-		this.sliderSetValue(this.params.mouseCapture, value);
+		this.sliderSetValue(this.addParams.mouseCapture, value);
 	}
 
 	handleMouseUp() {
-		this.params.mouseCapture = null;
+		this.addParams.mouseCapture = null;
 	}
 
 	sliderSetValue(slider, value) {
@@ -605,50 +627,50 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		switch (slider) {
 			case 'kick_thumb':
-				this.params.theBeat.kickPitchVal = value;
-				this.params.kickPitch = pitchRate;
+				this.addParams.theBeat.kickPitchVal = value;
+				this.addParams.kickPitch = pitchRate;
 				break;
 			case 'snare_thumb':
-				this.params.theBeat.snarePitchVal = value;
-				this.params.snarePitch = pitchRate;
+				this.addParams.theBeat.snarePitchVal = value;
+				this.addParams.snarePitch = pitchRate;
 				break;
 			case 'hihat_thumb':
-				this.params.theBeat.hihatPitchVal = value;
-				this.params.hihatPitch = pitchRate;
+				this.addParams.theBeat.hihatPitchVal = value;
+				this.addParams.hihatPitch = pitchRate;
 				break;
 			case 'tom1_thumb':
-				this.params.theBeat.tom1PitchVal = value;
-				this.params.tom1Pitch = pitchRate;
+				this.addParams.theBeat.tom1PitchVal = value;
+				this.addParams.tom1Pitch = pitchRate;
 				break;
 			case 'tom2_thumb':
-				this.params.theBeat.tom2PitchVal = value;
-				this.params.tom2Pitch = pitchRate;
+				this.addParams.theBeat.tom2PitchVal = value;
+				this.addParams.tom2Pitch = pitchRate;
 				break;
 			case 'tom3_thumb':
-				this.params.theBeat.tom3PitchVal = value;
-				this.params.tom3Pitch = pitchRate;
+				this.addParams.theBeat.tom3PitchVal = value;
+				this.addParams.tom3Pitch = pitchRate;
 				break;
 			case 'swing_thumb':
-				this.params.theBeat.swingFactor = value;
+				this.addParams.theBeat.swingFactor = value;
 				break;
 		}
 	}
 
 	handlePlay(event) {
-		this.params.noteTime = 0.0;
-		this.params.startTime = this.context.currentTime + 0.005;
+		this.addParams.noteTime = 0.0;
+		this.addParams.startTime = this.context.currentTime + 0.005;
 		this.schedule();
-		this.params.timerWorker.postMessage("start");
+		this.addParams.timerWorker.postMessage("start");
 		this.gui._root.getElementById('play').classList.add('playing');
 		this.gui._root.getElementById('stop').classList.add('playing');
 
 	}
 
 	handleStop(event) {
-		this.params.timerWorker.postMessage("stop");
-		var elOld = this.gui._root.getElementById('LED_' + (this.params.rhythmIndex + 14) % 16);
+		this.addParams.timerWorker.postMessage("stop");
+		var elOld = this.gui._root.getElementById('LED_' + (this.addParams.rhythmIndex + 14) % 16);
 		elOld.src = this.URL + '/images/LED_off.png';
-		this.params.rhythmIndex = 0;
+		this.addParams.rhythmIndex = 0;
 		this.gui._root.getElementById('play').classList.remove('playing');
 		this.gui._root.getElementById('stop').classList.remove('playing');
 
@@ -656,7 +678,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	handleReset(event) {
 		this.handleStop();
-		this.loadBeatReset(this.params.beatReset);
+		this.loadBeatReset(this.addParams.beatReset);
 		this.updateControls();
 	}
 
@@ -666,19 +688,19 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	loadBeatReset(beat) {
 
 		// Check that assets are loaded.
-		if (beat != this.params.beatReset && !beat.isLoaded())
+		if (beat != this.addParams.beatReset && !beat.isLoaded())
 			return false;
 
-		this.params.theBeat = this.cloneBeat(this.params.beatReset);
-		this.params.currentKit = this.params.kits[this.params.theBeat.kitIndex];
+		this.addParams.theBeat = this.cloneBeat(this.addParams.beatReset);
+		this.addParams.currentKit = this.addParams.kits[this.addParams.theBeat.kitIndex];
 		// apply values from sliders
-		this.sliderSetValue('kick_thumb', this.params.theBeat.kickPitchVal);
-		this.sliderSetValue('snare_thumb', this.params.theBeat.snarePitchVal);
-		this.sliderSetValue('hihat_thumb', this.params.theBeat.hihatPitchVal);
-		this.sliderSetValue('tom1_thumb', this.params.theBeat.tom1PitchVal);
-		this.sliderSetValue('tom2_thumb', this.params.theBeat.tom2PitchVal);
-		this.sliderSetValue('tom3_thumb', this.params.theBeat.tom3PitchVal);
-		this.sliderSetValue('swing_thumb', this.params.theBeat.swingFactor);
+		this.sliderSetValue('kick_thumb', this.addParams.theBeat.kickPitchVal);
+		this.sliderSetValue('snare_thumb', this.addParams.theBeat.snarePitchVal);
+		this.sliderSetValue('hihat_thumb', this.addParams.theBeat.hihatPitchVal);
+		this.sliderSetValue('tom1_thumb', this.addParams.theBeat.tom1PitchVal);
+		this.sliderSetValue('tom2_thumb', this.addParams.theBeat.tom2PitchVal);
+		this.sliderSetValue('tom3_thumb', this.addParams.theBeat.tom3PitchVal);
+		this.sliderSetValue('swing_thumb', this.addParams.theBeat.swingFactor);
 		//this.handleStop();
 		//this.updateControls();
 		return true;
@@ -687,42 +709,42 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	//TODO: see correction with this function
 	loadBeat(demo) {
 
-		this.params.theBeat = this.cloneBeat(demo);
-		this.params.currentKit = this.params.kits[this.params.theBeat.kitIndex];
+		this.addParams.theBeat = this.cloneBeat(demo);
+		this.addParams.currentKit = this.addParams.kits[this.addParams.theBeat.kitIndex];
 		// apply values from sliders
-		this.sliderSetValue('kick_thumb', this.params.theBeat.kickPitchVal);
-		this.sliderSetValue('snare_thumb', this.params.theBeat.snarePitchVal);
-		this.sliderSetValue('hihat_thumb', this.params.theBeat.hihatPitchVal);
-		this.sliderSetValue('tom1_thumb', this.params.theBeat.tom1PitchVal);
-		this.sliderSetValue('tom2_thumb', this.params.theBeat.tom2PitchVal);
-		this.sliderSetValue('tom3_thumb', this.params.theBeat.tom3PitchVal);
-		this.sliderSetValue('swing_thumb', this.params.theBeat.swingFactor);
+		this.sliderSetValue('kick_thumb', this.addParams.theBeat.kickPitchVal);
+		this.sliderSetValue('snare_thumb', this.addParams.theBeat.snarePitchVal);
+		this.sliderSetValue('hihat_thumb', this.addParams.theBeat.hihatPitchVal);
+		this.sliderSetValue('tom1_thumb', this.addParams.theBeat.tom1PitchVal);
+		this.sliderSetValue('tom2_thumb', this.addParams.theBeat.tom2PitchVal);
+		this.sliderSetValue('tom3_thumb', this.addParams.theBeat.tom3PitchVal);
+		this.sliderSetValue('swing_thumb', this.addParams.theBeat.swingFactor);
 		return true;
 	}
 
 	updateControls() {
-		for (var i = 0; i < this.params.loopLength; ++i) {
-			for (var j = 0; j < this.params.kNumInstruments; j++) {
+		for (var i = 0; i < this.addParams.loopLength; ++i) {
+			for (var j = 0; j < this.addParams.kNumInstruments; j++) {
 				switch (j) {
-					case 0: this.params.notes = this.params.theBeat.rhythm1; break;
-					case 1: this.params.notes = this.params.theBeat.rhythm2; break;
-					case 2: this.params.notes = this.params.theBeat.rhythm3; break;
-					case 3: this.params.notes = this.params.theBeat.rhythm4; break;
-					case 4: this.params.notes = this.params.theBeat.rhythm5; break;
-					case 5: this.params.notes = this.params.theBeat.rhythm6; break;
+					case 0: this.addParams.notes = this.addParams.theBeat.rhythm1; break;
+					case 1: this.addParams.notes = this.addParams.theBeat.rhythm2; break;
+					case 2: this.addParams.notes = this.addParams.theBeat.rhythm3; break;
+					case 3: this.addParams.notes = this.addParams.theBeat.rhythm4; break;
+					case 4: this.addParams.notes = this.addParams.theBeat.rhythm5; break;
+					case 5: this.addParams.notes = this.addParams.theBeat.rhythm6; break;
 				}
-				this.drawNote(this.params.notes[i], i, j);
+				this.drawNote(this.addParams.notes[i], i, j);
 			}
 		}
-		this.gui._root.getElementById('kitname').innerHTML = this.params.kitNamePretty[this.params.theBeat.kitIndex];
+		this.gui._root.getElementById('kitname').innerHTML = this.addParams.kitNamePretty[this.addParams.theBeat.kitIndex];
 		//to include if we inlcude pattern list
-		//this.gui._root.getElementById('patternname').innerHTML = this.params.kitNamePretty[this.params.theBeat.kitIndex];
-		this.gui._root.getElementById('tempo').innerHTML = this.params.theBeat.tempo;
+		//this.gui._root.getElementById('patternname').innerHTML = this.addParams.kitNamePretty[this.addParams.theBeat.kitIndex];
+		this.gui._root.getElementById('tempo').innerHTML = this.addParams.theBeat.tempo;
 
 	}
 
 	drawNote(draw, xindex, yindex) {
-		var elButton = this.gui._root.getElementById(this.params.instruments[yindex] + '_' + xindex);
+		var elButton = this.gui._root.getElementById(this.addParams.instruments[yindex] + '_' + xindex);
 		switch (draw) {
 			case 0: elButton.src = this.URL + '/images/button_off.png'; break;
 			case 1: elButton.src = this.URL + '/images/button_half.png'; break;
@@ -846,14 +868,14 @@ class Kit {
 
 		request.onload = () => {
 
-			this.parent.context.decodeAudioData(request.response, this.parent.params.decodedFunctions[sampleID].bind(kit));
+			this.parent.context.decodeAudioData(request.response, this.parent.params2.decodedFunctions[sampleID].bind(kit));
 
 			kit.instrumentLoadCount++;
 			if (kit.instrumentLoadCount == kit.instrumentCount) {
 				kit.isLoaded = true;
 
 				if (kit.demoIndex != -1) {
-					this.parent.params.beatInitial.setKitLoaded();
+					this.parent.params2.beatInitial.setKitLoaded();
 				}
 			}
 		}
