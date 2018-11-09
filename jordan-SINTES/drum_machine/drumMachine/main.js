@@ -18,21 +18,21 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		this.params={
 			savedBeat:{
-				"kitIndex": 0,
-				"tempo": 100,
-				"swingFactor": 0,
-				"kickPitchVal": 0.5,
-				"snarePitchVal": 0.5,
-				"hihatPitchVal": 0.5,
-				"tom1PitchVal": 0.5,
-				"tom2PitchVal": 0.5,
-				"tom3PitchVal": 0.5,
-				"rhythm1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm3": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+				kitIndex: 0,
+				tempo: 100,
+				swingFactor: 0,
+				kickPitchVal: 0.5,
+				snarePitchVal: 0.5,
+				hihatPitchVal: 0.5,
+				tom1PitchVal: 0.5,
+				tom2PitchVal: 0.5,
+				tom3PitchVal: 0.5,
+				rhythm1: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				rhythm2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				rhythm3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				rhythm4: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				rhythm5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				rhythm6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 			}	
 		}
 		
@@ -158,7 +158,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 
 	setParam(key, value) {
-		console.log(key, value);
+		//console.log(key, value);
 		try {
 			this[key] = (value);
 		} catch (error) {
@@ -166,11 +166,17 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			console.warn("this plugin does not implement this param")
 		}
 	}
-	set defaut(val) {
-		return true;
+	
+	set kitIndex(val){
+		this.params.savedBeat.kitIndex = val;
 	}
-	set tempo(val){
-		this.params.savedBeat.tempo = val;
+
+	set tempo(_tempo){
+		this.params.savedBeat.tempo = _tempo;
+	}
+
+	set swingfactor(_swing){
+		this.params.savedBeat.swingFactor = _swing;
 	}
 	
 	/*  #########  DRUMMACHINE METHOD  #########   */
@@ -604,7 +610,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				this.addParams.tom3Pitch = pitchRate;
 				break;
 			case 'swing_thumb':
+			
 				this.addParams.theBeat.swingFactor = value;
+				this.params.swingFactor = this.addParams.theBeat.swingFactor;
 				break;
 		}
 	}
