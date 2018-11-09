@@ -380,6 +380,7 @@
     <img class="preload" id="preload10">
     <img class="preload" id="preload11">
     <img class="preload" id="preload12">
+    <img class="preload" id="preload13">
 
     <!--  The markup below keeps all images in a row on a single long line to avoid 
             a bizarre bug where otherwise the browser inserts an extra pixel between 
@@ -633,6 +634,7 @@
                 <img id='demo3' width='30' height='22'>
                 <img id='demo4' width='30' height='22'>
                 <img id='demo5' width='30' height='22'>
+                <img id='load' width="40" height='22'>
             </span>
         </section>
 
@@ -739,6 +741,7 @@
             this._root.getElementById('demo3').addEventListener('mousedown', (event) => this._plug.demoChoose(3));
             this._root.getElementById('demo4').addEventListener('mousedown', (event) => this._plug.demoChoose(4));
             this._root.getElementById('demo5').addEventListener('mousedown', (event) => this._plug.demoChoose(5));
+            this._root.getElementById('load').addEventListener('mousedown', (event) => this._plug.demoChoose(0));
 
             this._root.getElementById('body').addEventListener('mousemove', (event) => this._plug.handleMouseMove(event), true);
             this._root.getElementById('body').addEventListener('mouseup', () => this._plug.handleMouseUp(), true);
@@ -980,6 +983,7 @@
             this._root.querySelector("#preload10").setAttribute('src', this._plug.URL + '/images/btn_demo3.png');
             this._root.querySelector("#preload11").setAttribute('src', this._plug.URL + '/images/btn_demo4.png');
             this._root.querySelector("#preload12").setAttribute('src', this._plug.URL + '/images/btn_demo5.png');
+            this._root.querySelector("#preload13").setAttribute('src', this._plug.URL + '/images/btn_load.png');
 
             this._root.querySelector("#arrow").setAttribute('src', this._plug.URL + '/images/drop_arrow.png');
 
@@ -1000,6 +1004,7 @@
             this._root.querySelector("#demo3").setAttribute('src', this._plug.URL + '/images/btn_demo3.png');
             this._root.querySelector("#demo4").setAttribute('src', this._plug.URL + '/images/btn_demo4.png');
             this._root.querySelector("#demo5").setAttribute('src', this._plug.URL + '/images/btn_demo5.png');
+            this._root.querySelector("#load").setAttribute('src', this._plug.URL + '/images/btn_load.png');
 
             this._root.querySelector("#load_textarea").setAttribute('src', this._plug.URL + '/images/btn_ok.png');
             this._root.querySelector("#load_ok").setAttribute('src', this._plug.URL + '/images/btn_ok.png');

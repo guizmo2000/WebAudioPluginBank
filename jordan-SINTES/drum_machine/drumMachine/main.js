@@ -17,21 +17,23 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.state;
 
 		this.params={
-			kitIndex: 0,
-			tempo: 100,
-			swingFactor: 0,
-			kickPitchVal: 0.5,
-			snarePitchVal: 0.5,
-			hihatPitchVal: 0.5,
-			tom1PitchVal: 0.5,
-			tom2PitchVal: 0.5,
-			tom3PitchVal: 0.5,
-			rhythm1: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			rhythm2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			rhythm3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			rhythm4: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			rhythm5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-			rhythm6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			savedBeat:{
+				"kitIndex": 0,
+				"tempo": 100,
+				"swingFactor": 0,
+				"kickPitchVal": 0.5,
+				"snarePitchVal": 0.5,
+				"hihatPitchVal": 0.5,
+				"tom1PitchVal": 0.5,
+				"tom2PitchVal": 0.5,
+				"tom3PitchVal": 0.5,
+				"rhythm1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm3": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			}	
 		}
 		
 		this.addParams = {
@@ -167,6 +169,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	set defaut(val) {
 		return true;
 	}
+	set tempo(val){
+		this.params.savedBeat.tempo = val;
+	}
 	
 	/*  #########  DRUMMACHINE METHOD  #########   */
 
@@ -246,7 +251,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	//TODO: see correction with this function
 	showDemoAvailable(demoIndex /* zero-based */) {
-		this.loadBeatReset(this.addParams.theBeat);
+		this.loadBeatReset(this.index);
 	}
 
 	init() {
@@ -382,12 +387,14 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	tempoIncrease() {
 		let kMaxTempo = 180;
 		this.addParams.theBeat.tempo = Math.min(kMaxTempo, this.addParams.theBeat.tempo + 2);
+		this.params.tempo= this.addParams.theBeat.tempo;
 		this.gui._root.getElementById('tempo').innerHTML = this.addParams.theBeat.tempo;
 	}
 
 	tempoDecrease() {
 		let kMinTempo = 52
 		this.addParams.theBeat.tempo = Math.max(kMinTempo, this.addParams.theBeat.tempo - 2);
+		this.params.tempo= this.addParams.theBeat.tempo;
 		this.gui._root.getElementById('tempo').innerHTML = this.addParams.theBeat.tempo;
 	}
 
@@ -497,6 +504,10 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 		else if(index == 5){
 			this.loadBeat(demo5);
+		}
+		else if (index == 0){
+			this.addParams.theBeat=this.params.savedBeat;
+			this.loadBeat(this.addParams.theBeat);
 		}
 
 		this.updateControls();
