@@ -171,12 +171,60 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.params.savedBeat.kitIndex = val;
 	}
 
-	set tempo(_tempo){
-		this.params.savedBeat.tempo = _tempo;
+	set tempo(val){
+		this.params.savedBeat.tempo = val;
 	}
 
-	set swingfactor(_swing){
-		this.params.savedBeat.swingFactor = _swing;
+	set swingfactor(val){
+		this.params.savedBeat.swingFactor = val;
+	}
+
+	set kickPitchVal(val){
+		this.params.savedBeat.kickPitchVal = val;
+	}
+
+	set snarePitchVal(val){
+		this.params.savedBeat.snarePitchVal = val;
+	}
+
+	set hihatPitchVal(val){
+		this.params.savedBeat.hihatPitchVal = val;
+	}
+
+	set tom1PitchVal(val){
+		this.params.savedBeat.tom1PitchVal = val;
+	}
+
+	set tom2PitchVal(val){
+		this.params.savedBeat.tom2PitchVal = val;
+	}
+
+	set tom3PitchVal(val){
+		this.params.savedBeat.tom3PitchVal = val;
+	}
+
+	set rhythm1(val){
+		this.params.savedBeat.rhythm1 = val;
+	}
+
+	set rhythm2(val){
+		this.params.savedBeat.rhythm2 = val;
+	}
+
+	set rhythm3(val){
+		this.params.savedBeat.rhythm3 = val;
+	}
+
+	set rhythm4(val){
+		this.params.savedBeat.rhythm4 = val;
+	}
+
+	set rhythm5(val){
+		this.params.savedBeat.rhythm5 = val;
+	}
+
+	set rhythm6(val){
+		this.params.savedBeat.rhythm6 = val;
 	}
 	
 	/*  #########  DRUMMACHINE METHOD  #########   */
