@@ -824,28 +824,28 @@
                 switch (instrumentIndex) {
                     //put to true to have sound position in function to the click position on drumMachine
                     case 0:  // Kick
-                        this._plug.playNote(this._plug.addParams.currentKit.kickBuffer, false, 0, 0, -2, 0.5 * 1, this._plug.addParams.volumes[note] * 1.0, this._plug.addParams.kickPitch, 0);
+                        this._plug.playNote(this._plug.addParams.currentKit.kickBuffer, this._plug.addParams.volumes[note] * 1.0, this._plug.addParams.kickPitch, 0);
                         break;
 
                     case 1:  // Snare
-                        this._plug.playNote(this._plug.addParams.currentKit.snareBuffer, false, 0, 0, -2, 1, this._plug.addParams.volumes[note] * 0.6, this._plug.addParams.snarePitch, 0);
+                        this._plug.playNote(this._plug.addParams.currentKit.snareBuffer,  this._plug.addParams.volumes[note] * 0.6, this._plug.addParams.snarePitch, 0);
                         break;
 
                     case 2:  // Hihat
                         // Pan the hihat according to sequence position.
-                        this._plug.playNote(this._plug.addParams.currentKit.hihatBuffer, false, 0.5 * this._plug.addParams.rhythmIndex - 4, 0, -1.0, 1, this._plug.addParams.volumes[note] * 0.7, this._plug.addParams.hihatPitch, 0);
+                        this._plug.playNote(this._plug.addParams.currentKit.hihatBuffer,  this._plug.addParams.volumes[note] * 0.7, this._plug.addParams.hihatPitch, 0);
                         break;
 
                     case 3:  // Tom 1   
-                        this._plug.playNote(this._plug.addParams.currentKit.tom1, false, 0, 0, -2, 1, this._plug.addParams.volumes[note] * 0.6, this._plug.addParams.tom1Pitch, 0);
+                        this._plug.playNote(this._plug.addParams.currentKit.tom1,  this._plug.addParams.volumes[note] * 0.6, this._plug.addParams.tom1Pitch, 0);
                         break;
 
                     case 4:  // Tom 2   
-                        this._plug.playNote(this._plug.addParams.currentKit.tom2, false, 0, 0, -2, 1, this._plug.addParams.volumes[note] * 0.6, this._plug.addParams.tom2Pitch, 0);
+                        this._plug.playNote(this._plug.addParams.currentKit.tom2, this._plug.addParams.volumes[note] * 0.6, this._plug.addParams.tom2Pitch, 0);
                         break;
 
                     case 5:  // Tom 3   
-                        this._plug.playNote(this._plug.addParams.currentKit.tom3, false, 0, 0, -2, 1, this._plug.addParams.volumes[note] * 0.6, this._plug.addParams.tom3Pitch, 0);
+                        this._plug.playNote(this._plug.addParams.currentKit.tom3,  this._plug.addParams.volumes[note] * 0.6, this._plug.addParams.tom3Pitch, 0);
                         break;
                 }
             }

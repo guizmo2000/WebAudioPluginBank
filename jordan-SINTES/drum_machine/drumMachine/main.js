@@ -17,63 +17,26 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.state;
 
 		this.params={
-			thisBeat: {
-				"kitIndex": 0,
-				"tempo": 100,
-				"swingFactor": 0,
-				"kickPitchVal": 0.5,
-				"snarePitchVal": 0.5,
-				"hihatPitchVal": 0.5,
-				"tom1PitchVal": 0.5,
-				"tom2PitchVal": 0.5,
-				"tom3PitchVal": 0.5,
-				"rhythm1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm3": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			}
+			kitIndex: 0,
+			tempo: 100,
+			swingFactor: 0,
+			kickPitchVal: 0.5,
+			snarePitchVal: 0.5,
+			hihatPitchVal: 0.5,
+			tom1PitchVal: 0.5,
+			tom2PitchVal: 0.5,
+			tom3PitchVal: 0.5,
+			rhythm1: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			rhythm2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			rhythm3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			rhythm4: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			rhythm5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			rhythm6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 		}
 		
 		this.addParams = {
 			//Kick, Snare, Hi-Hat...
 			kNumInstruments: 6,
-			beatReset: {
-				"kitIndex": 0,
-				"tempo": 100,
-				"swingFactor": 0,
-				"kickPitchVal": 0.5,
-				"snarePitchVal": 0.5,
-				"hihatPitchVal": 0.5,
-				"tom1PitchVal": 0.5,
-				"tom2PitchVal": 0.5,
-				"tom3PitchVal": 0.5,
-				"rhythm1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm3": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			},
-
-			beatInitial: {
-				"kitIndex": 11,
-				"tempo": 100,
-				"swingFactor": 0,
-				"kickPitchVal": 0.46478873239436624,
-				"snarePitchVal": 0.45070422535211263,
-				"hihatPitchVal": 0.15492957746478875,
-				"tom1PitchVal": 0.7183098591549295,
-				"tom2PitchVal": 0.704225352112676,
-				"tom3PitchVal": 0.8028169014084507,
-				"rhythm1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm3": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			},
 			
 			theBeat: {
 				"kitIndex": 11,
@@ -204,15 +167,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	set defaut(val) {
 		return true;
 	}
-
-	set kit(val) {
-		val= this.addParams.theBeat
-		this.params = val;
-		console.log("ok");
-	}
-
-
-
+	
 	/*  #########  DRUMMACHINE METHOD  #########   */
 
 	// override setup 
@@ -238,7 +193,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.filterNode.Q.value = 1;
 
 		this.voice = this.context.createBufferSource();
-
 
 	}
 
@@ -277,7 +231,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		// Start loading the assets used by the presets first, in order of the presets.
 		for (var demoIndex = 0; demoIndex < 2; ++demoIndex) {
-			var kit = this.addParams.kits[this.addParams.beatInitial.kitIndex];
+			var kit = this.addParams.kits[this.addParams.theBeat.kitIndex];
 			kit.setDemoIndex(demoIndex);
 			kit.load();
 		}
@@ -287,33 +241,31 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		for (var i = 0; i < numKits; i++) {
 			this.addParams.kits[i].load();
 		}
-		let kInitialKitIndex= 10;
-		// Setup initial drumkit
-		this.addParams.currentKit = this.addParams.kits[kInitialKitIndex];
+		
 	}
 
 	//TODO: see correction with this function
 	showDemoAvailable(demoIndex /* zero-based */) {
-		this.loadBeatReset(this.addParams.beatInitial);
+		this.loadBeatReset(this.addParams.theBeat);
 	}
 
 	init() {
 		// Let the beat demos know when all of their assets have been loaded.
 		// Add some new methods to support this.
-		this.addParams.beatInitial.isKitLoaded = false;
+	
 
-		this.addParams.beatInitial.setKitLoaded = () => {
+		this.addParams.theBeat.setKitLoaded = () => {
 			this.isKitLoaded = true;
-			this.addParams.beatInitial.checkIsLoaded();
+			this.addParams.theBeat.checkIsLoaded();
 		};
 
-		this.addParams.beatInitial.checkIsLoaded = () => {
-			if (this.addParams.beatInitial.isLoaded()) {
+		this.addParams.theBeat.checkIsLoaded = () => {
+			if (this.addParams.theBeat.isLoaded()) {
 				this.showDemoAvailable(this.index);
 			}
 		};
 
-		this.addParams.beatInitial.isLoaded = () => {
+		this.addParams.theBeat.isLoaded = () => {
 			return this.isKitLoaded;
 		};
 
@@ -353,28 +305,20 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		}
 	}
 
-	playNote(buffer, pan, x, y, z, sendGain, mainGain, playbackRate, noteTime) {
+	playNote(buffer, mainGain, playbackRate, noteTime) {
 		// Create the note
 		this.voice = this.context.createBufferSource();
 		this.voice.buffer = buffer;
 		this.voice.playbackRate.value = playbackRate;
 
-		// Optionally, connect to a panner
-		var finalNode;
-		if (pan) {
-			var panner = this.context.createPanner();
-			panner.panningModel = "HRTF";
-			this.voice.connect(panner);
-			finalNode = panner;
-		} else {
-			finalNode = this.voice;
-		}
+		
 
 		// Connect to dry mix
 		//dryGainNode = this.context.createGain();
+	
 		this.dryGainNode.gain.value = mainGain;
-		finalNode.connect(this.dryGainNode);
-		//this.dryGainNode.connect(this.masterGainNode);
+		this.voice.connect(this.dryGainNode);
+		this.dryGainNode.connect(this.masterGainNode);
 
 		this.voice.start(noteTime);
 	}
@@ -395,31 +339,31 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			// Kick
 			if (this.addParams.theBeat.rhythm1[this.addParams.rhythmIndex] /*&& this.addParams.instrumentActive[0]*/) {
 
-				this.playNote(this.addParams.currentKit.kickBuffer, false, 0, 0, -2, 0.5, this.addParams.volumes[this.addParams.theBeat.rhythm1[this.addParams.rhythmIndex]] * 1.0, this.addParams.kickPitch, contextPlayTime);
+				this.playNote(this.addParams.currentKit.kickBuffer, this.addParams.volumes[this.addParams.theBeat.rhythm1[this.addParams.rhythmIndex]] * 1.0, this.addParams.kickPitch, contextPlayTime);
 			}
 
 			// Snare
 			if (this.addParams.theBeat.rhythm2[this.addParams.rhythmIndex]/* && this.addParams.instrumentActive[1]*/) {
-				this.playNote(this.addParams.currentKit.snareBuffer, false, 0, 0, -2, 1, this.addParams.volumes[this.addParams.theBeat.rhythm2[this.addParams.rhythmIndex]] * 0.6, this.addParams.snarePitch, contextPlayTime);
+				this.playNote(this.addParams.currentKit.snareBuffer, this.addParams.volumes[this.addParams.theBeat.rhythm2[this.addParams.rhythmIndex]] * 0.6, this.addParams.snarePitch, contextPlayTime);
 			}
 
 			// Hihat
 			if (this.addParams.theBeat.rhythm3[this.addParams.rhythmIndex]/* && this.addParams.instrumentActive[2]*/) {
 				// Pan the hihat according to sequence position.
-				this.playNote(this.addParams.currentKit.hihatBuffer, true, 0.5 * this.addParams.rhythmIndex - 4, 0, -1.0, 1, this.addParams.volumes[this.addParams.theBeat.rhythm3[this.addParams.rhythmIndex]] * 0.7, this.addParams.hihatPitch, contextPlayTime);
+				this.playNote(this.addParams.currentKit.hihatBuffer, this.addParams.volumes[this.addParams.theBeat.rhythm3[this.addParams.rhythmIndex]] * 0.7, this.addParams.hihatPitch, contextPlayTime);
 			}
 
 			// Toms    
 			if (this.addParams.theBeat.rhythm4[this.addParams.rhythmIndex] /*&& this.addParams.instrumentActive[3]*/) {
-				this.playNote(this.addParams.currentKit.tom1, false, 0, 0, -2, 1, this.addParams.volumes[this.addParams.theBeat.rhythm4[this.addParams.rhythmIndex]] * 0.6, this.addParams.tom1Pitch, contextPlayTime);
+				this.playNote(this.addParams.currentKit.tom1, this.addParams.volumes[this.addParams.theBeat.rhythm4[this.addParams.rhythmIndex]] * 0.6, this.addParams.tom1Pitch, contextPlayTime);
 			}
 
 			if (this.addParams.theBeat.rhythm5[this.addParams.rhythmIndex] /*&& this.addParams.instrumentActive[4]*/) {
-				this.playNote(this.addParams.currentKit.tom2, false, 0, 0, -2, 1, this.addParams.volumes[this.addParams.theBeat.rhythm5[this.addParams.rhythmIndex]] * 0.6, this.addParams.tom2Pitch, contextPlayTime);
+				this.playNote(this.addParams.currentKit.tom2,  this.addParams.volumes[this.addParams.theBeat.rhythm5[this.addParams.rhythmIndex]] * 0.6, this.addParams.tom2Pitch, contextPlayTime);
 			}
 
 			if (this.addParams.theBeat.rhythm6[this.addParams.rhythmIndex] /*&& this.addParams.instrumentActive[5]*/) {
-				this.playNote(this.addParams.currentKit.tom3, false, 0, 0, -2, 1, this.addParams.volumes[this.addParams.theBeat.rhythm6[this.addParams.rhythmIndex]] * 0.6, this.addParams.tom3Pitch, contextPlayTime);
+				this.playNote(this.addParams.currentKit.tom3,  this.addParams.volumes[this.addParams.theBeat.rhythm6[this.addParams.rhythmIndex]] * 0.6, this.addParams.tom3Pitch, contextPlayTime);
 			}
 
 
@@ -438,15 +382,13 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	tempoIncrease() {
 		let kMaxTempo = 180;
 		this.addParams.theBeat.tempo = Math.min(kMaxTempo, this.addParams.theBeat.tempo + 2);
-		this.params.thisBeat.tempo= this.addParams.theBeat.tempo;
-		this.gui._root.getElementById('tempo').innerHTML = this.params.thisBeat.tempo;
+		this.gui._root.getElementById('tempo').innerHTML = this.addParams.theBeat.tempo;
 	}
 
 	tempoDecrease() {
 		let kMinTempo = 52
 		this.addParams.theBeat.tempo = Math.max(kMinTempo, this.addParams.theBeat.tempo - 2);
-		this.params.thisBeat.tempo = this.addParams.theBeat.tempo;
-		this.gui._root.getElementById('tempo').innerHTML = this.params.thisBeat.tempo;
+		this.gui._root.getElementById('tempo').innerHTML = this.addParams.theBeat.tempo;
 	}
 
 	demoChoose(index){
@@ -678,20 +620,34 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	handleReset(event) {
 		this.handleStop();
-		this.loadBeatReset(this.addParams.beatReset);
+		this.loadBeatReset();
 		this.updateControls();
 	}
 
 
 
 	//TODO: see correction with this function
-	loadBeatReset(beat) {
+	loadBeatReset() {
+		let beatReset=
+		{
+			"kitIndex": 0,
+			"tempo": 100,
+			"swingFactor": 0,
+			"kickPitchVal": 0.5,
+			"snarePitchVal": 0.5,
+			"hihatPitchVal": 0.5,
+			"tom1PitchVal": 0.5,
+			"tom2PitchVal": 0.5,
+			"tom3PitchVal": 0.5,
+			"rhythm1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm2": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm3": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm4": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm5": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			"rhythm6": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+		}
 
-		// Check that assets are loaded.
-		if (beat != this.addParams.beatReset && !beat.isLoaded())
-			return false;
-
-		this.addParams.theBeat = this.cloneBeat(this.addParams.beatReset);
+		this.addParams.theBeat = this.cloneBeat(beatReset);
 		this.addParams.currentKit = this.addParams.kits[this.addParams.theBeat.kitIndex];
 		// apply values from sliders
 		this.sliderSetValue('kick_thumb', this.addParams.theBeat.kickPitchVal);
@@ -875,7 +831,7 @@ class Kit {
 				kit.isLoaded = true;
 
 				if (kit.demoIndex != -1) {
-					this.parent.addParams.beatInitial.setKitLoaded();
+					this.parent.addParams.theBeat.setKitLoaded();
 				}
 			}
 		}
