@@ -26,6 +26,10 @@
   var splitter;
   var merger;
 
+  var button = document.querySelector("#toggleGuitarIn");
+  var pluginURL = "./WahVox"; 
+	var plugin = new WasabiWahVox(ctx, pluginURL);
+
     
     var constraints = {
     audio: {
@@ -44,11 +48,15 @@
   })
 
   function toggleGuitarInput(event) {
-    var button = document.querySelector("#toggleGuitarIn");
-    var pluginURL = "./WahVox"; 
-	  var plugin = new WasabiWahVox(ctx, pluginURL);
-    
-    plugin.load().then((node) => 
+    if (!guitarPluggedIn) {
+          button.innerHTML = "Guitar input: <span style='color:green;'>ACTIVATED</span>, click to toggle on/off!";
+        } else {
+          button.innerHTML = "Guitar input: <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!";
+        }
+    guitarPluggedIn = !guitarPluggedIn;
+  }
+
+  plugin.load().then((node) => 
     {
         console.log("node", node);
         plugin.loadGui().then((elem) => 
@@ -57,21 +65,19 @@
             document.body.appendChild(elem);
         });
         
-        
-        if (!guitarPluggedIn) {
+      button.addEventListener('click', function(){
+        if (guitarPluggedIn) {
           userMedia.connect(node);
           node.connect(ctx.destination);
-          button.innerHTML = "Guitar input: <span style='color:green;'>ACTIVATED</span>, click to toggle on/off!";
-        } else {
+        } else if(userMedia != null){
           userMedia.disconnect(node);
           node.disconnect(ctx.destination);
-          button.innerHTML = "Guitar input: <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!";
         }
+      })  
+        
+    });
+
   
-  guitarPluggedIn = !guitarPluggedIn;
-	  });
-    
-  }
 
 
 </script>
