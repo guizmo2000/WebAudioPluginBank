@@ -807,12 +807,30 @@
             instrumentIndex = this._plug.addParams.instruments.indexOf(elId.substr(0, elId.indexOf('_')));
 
             switch (instrumentIndex) {
-                case 0: notes = this._plug.addParams.theBeat.rhythm1; break;
-                case 1: notes = this._plug.addParams.theBeat.rhythm2; break;
-                case 2: notes = this._plug.addParams.theBeat.rhythm3; break;
-                case 3: notes = this._plug.addParams.theBeat.rhythm4; break;
-                case 4: notes = this._plug.addParams.theBeat.rhythm5; break;
-                case 5: notes = this._plug.addParams.theBeat.rhythm6; break;
+                case 0: 
+                    notes = this._plug.addParams.theBeat.rhythm1;
+                    this._plug.params.savedBeat.rhythm1=notes; 
+                    break;
+                case 1:
+                    notes = this._plug.addParams.theBeat.rhythm2;
+                    this._plug.params.savedBeat.rhythm2=notes; 
+                    break;
+                case 2: 
+                    notes = this._plug.addParams.theBeat.rhythm3;
+                    this._plug.params.savedBeat.rhythm3=notes; 
+                    break;
+                case 3: 
+                    notes = this._plug.addParams.theBeat.rhythm4;
+                    this._plug.params.savedBeat.rhythm4=notes; 
+                    break;
+                case 4: 
+                    notes = this._plug.addParams.theBeat.rhythm5;
+                    this._plug.params.savedBeat.rhythm5=notes; 
+                    break;
+                case 5: 
+                    notes = this._plug.addParams.theBeat.rhythm6; 
+                    this._plug.params.savedBeat.rhythm6=notes;
+                    break;
             }
 
             notes[rhythmIndex] = (notes[rhythmIndex] + 1) % 3;
@@ -911,7 +929,7 @@
             toggleLoadContainer();
         }
 
-        handleLoadOk(event) {
+        /*handleLoadOk(event) {
             var elTextarea = this._root.getElementById('load_textarea');
             theBeat = JSON.parse(elTextarea.value);
 
@@ -932,7 +950,7 @@
 
             toggleLoadContainer();
             updateControls();
-        }
+        }*/
 
         handleLoadCancel(event) {
             toggleLoadContainer();

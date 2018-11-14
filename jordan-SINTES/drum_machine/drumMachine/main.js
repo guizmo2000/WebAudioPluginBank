@@ -303,11 +303,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		
 	}
 
-	//TODO: see correction with this function
-	showDemoAvailable(demoIndex /* zero-based */) {
-		this.loadBeatReset(this.index);
-	}
-
 	init() {
 		// Let the beat demos know when all of their assets have been loaded.
 		// Add some new methods to support this.
@@ -320,7 +315,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		this.addParams.theBeat.checkIsLoaded = () => {
 			if (this.addParams.theBeat.isLoaded()) {
-				this.showDemoAvailable(this.index);
+				this.loadBeat(this.params.savedBeat);
 			}
 		};
 
@@ -724,6 +719,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.sliderSetValue('tom2_thumb', this.addParams.theBeat.tom2PitchVal);
 		this.sliderSetValue('tom3_thumb', this.addParams.theBeat.tom3PitchVal);
 		this.sliderSetValue('swing_thumb', this.addParams.theBeat.swingFactor);
+		this.sliderSetValue('swing_thumb', this.params.swingFactor);
 		//this.handleStop();
 		//this.updateControls();
 		return true;
@@ -742,6 +738,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.sliderSetValue('tom2_thumb', this.addParams.theBeat.tom2PitchVal);
 		this.sliderSetValue('tom3_thumb', this.addParams.theBeat.tom3PitchVal);
 		this.sliderSetValue('swing_thumb', this.addParams.theBeat.swingFactor);
+		this.sliderSetValue('swing_thumb', this.params.swingFactor);
 		return true;
 	}
 
