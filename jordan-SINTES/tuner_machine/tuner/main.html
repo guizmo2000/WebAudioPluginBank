@@ -178,8 +178,14 @@
             width="32" height="20"></webaudio-switch>
         <span class="pedalLabel">Tuner</span>
     </div>
+    <select id="menuPresets">
+        <option value= 0>Default</option>
+        <option value =1>Standard tuning</option>
+        <option value =2>Standard tuning (D#)</option>
+        <option value =3>Drop D</option>
+    </select>
     </div>
-      
+    
 </template>
 <script>
     let tunertemp = document.currentScript.ownerDocument.querySelector("#wc-tuner");

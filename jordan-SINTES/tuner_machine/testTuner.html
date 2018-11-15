@@ -9,7 +9,7 @@
 
 <body>
     <button id="play">Play</button>
-    <input type="range" min="440" max="880" value="440" id="freq">
+    <input type="range" min="60" max="320" value="82" id="freq">
 </body>
 
 <script>
@@ -22,8 +22,11 @@
     var player= document.querySelector("#play");
     var isPlaying= false;
 
+    osc.frequency.value=slider.value;
+
     slider.addEventListener("input", function(e){
         osc.frequency.value=e.target.value;
+        console.log("freq= " + e.target.value + "Hz");
     })
 
     player.addEventListener("click", function(e){
