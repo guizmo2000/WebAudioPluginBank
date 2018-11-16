@@ -17,23 +17,22 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.state;
 
 		this.params={
-			savedBeat:{
-				kitIndex: 0,
-				tempo: 100,
-				swingFactor: 0,
-				kickPitchVal: 0.5,
-				snarePitchVal: 0.5,
-				hihatPitchVal: 0.5,
-				tom1PitchVal: 0.5,
-				tom2PitchVal: 0.5,
-				tom3PitchVal: 0.5,
-				rhythm1: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				rhythm2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				rhythm3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				rhythm4: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				rhythm5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-				rhythm6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-			}	
+			kitIndex: 0,
+			tempo: 100,
+			swingFactor: 0,
+			kickPitchVal: 0.5,
+			snarePitchVal: 0.5,
+			hihatPitchVal: 0.5,
+			tom1PitchVal: 0.5,
+			tom2PitchVal: 0.5,
+			tom3PitchVal: 0.5,
+			rhythm1: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			rhythm2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			rhythm3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			rhythm4: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			rhythm5: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			rhythm6: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+			
 		}
 		
 		this.addParams = {
@@ -168,63 +167,63 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 	
 	set kitIndex(val){
-		this.params.savedBeat.kitIndex = val;
+		this.params.kitIndex = val;
 	}
 
 	set tempo(val){
-		this.params.savedBeat.tempo = val;
+		this.params.tempo = val;
 	}
 
 	set swingfactor(val){
-		this.params.savedBeat.swingFactor = val;
+		this.params.swingFactor = val;
 	}
 
 	set kickPitchVal(val){
-		this.params.savedBeat.kickPitchVal = val;
+		this.params.kickPitchVal = val;
 	}
 
 	set snarePitchVal(val){
-		this.params.savedBeat.snarePitchVal = val;
+		this.params.snarePitchVal = val;
 	}
 
 	set hihatPitchVal(val){
-		this.params.savedBeat.hihatPitchVal = val;
+		this.params.hihatPitchVal = val;
 	}
 
 	set tom1PitchVal(val){
-		this.params.savedBeat.tom1PitchVal = val;
+		this.params.tom1PitchVal = val;
 	}
 
 	set tom2PitchVal(val){
-		this.params.savedBeat.tom2PitchVal = val;
+		this.params.tom2PitchVal = val;
 	}
 
 	set tom3PitchVal(val){
-		this.params.savedBeat.tom3PitchVal = val;
+		this.params.tom3PitchVal = val;
 	}
 
 	set rhythm1(val){
-		this.params.savedBeat.rhythm1 = val;
+		this.params.rhythm1 = val;
 	}
 
 	set rhythm2(val){
-		this.params.savedBeat.rhythm2 = val;
+		this.params.rhythm2 = val;
 	}
 
 	set rhythm3(val){
-		this.params.savedBeat.rhythm3 = val;
+		this.params.rhythm3 = val;
 	}
 
 	set rhythm4(val){
-		this.params.savedBeat.rhythm4 = val;
+		this.params.rhythm4 = val;
 	}
 
 	set rhythm5(val){
-		this.params.savedBeat.rhythm5 = val;
+		this.params.rhythm5 = val;
 	}
 
 	set rhythm6(val){
-		this.params.savedBeat.rhythm6 = val;
+		this.params.rhythm6 = val;
 	}
 	
 	/*  #########  DRUMMACHINE METHOD  #########   */
@@ -315,7 +314,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		this.addParams.theBeat.checkIsLoaded = () => {
 			if (this.addParams.theBeat.isLoaded()) {
-				this.loadBeat(this.params.savedBeat);
+				this.loadBeat(this.params);
 			}
 		};
 
@@ -555,7 +554,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			this.loadBeat(demo5);
 		}
 		else if (index == 0){
-			this.addParams.theBeat=this.params.savedBeat;
+			this.addParams.theBeat=this.params;
 			this.loadBeat(this.addParams.theBeat);
 		}
 
