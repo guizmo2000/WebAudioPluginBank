@@ -130,7 +130,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		}
 		this.setup();
-		this.loadBeat(params);
+		this.loadBeat(this.params);
 	}
 	/*    ################     API METHODS    ###############   */
 	// p9 count inputs
