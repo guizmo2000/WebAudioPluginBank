@@ -305,20 +305,20 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	init() {
 		// Let the beat demos know when all of their assets have been loaded.
 		// Add some new methods to support this.
-	
+		
 
-		this.addParams.theBeat.setKitLoaded = () => {
+		this.params.setKitLoaded = () => {
 			this.isKitLoaded = true;
-			this.addParams.theBeat.checkIsLoaded();
+			this.params.checkIsLoaded();
 		};
 
-		this.addParams.theBeat.checkIsLoaded = () => {
-			if (this.addParams.theBeat.isLoaded()) {
-				this.loadBeat(this.addParams.theBeat);
+		this.params.checkIsLoaded = () => {
+			if (this.params.isLoaded()) {
+				this.loadBeat(this.params);
 			}
 		};
 
-		this.addParams.theBeat.isLoaded = () => {
+		this.params.isLoaded = () => {
 			return this.isKitLoaded;
 		};
 
@@ -911,7 +911,7 @@ class Kit {
 				kit.isLoaded = true;
 
 				if (kit.demoIndex != -1) {
-					this.parent.addParams.theBeat.setKitLoaded();
+					this.parent.params.setKitLoaded();
 				}
 			}
 		}
