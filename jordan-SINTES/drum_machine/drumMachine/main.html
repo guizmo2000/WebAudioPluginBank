@@ -930,29 +930,6 @@
             toggleLoadContainer();
         }
 
-        /*handleLoadOk(event) {
-            var elTextarea = this._root.getElementById('load_textarea');
-            theBeat = JSON.parse(elTextarea.value);
-
-            // Set drumkit
-            currentKit = kits[theBeat.kitIndex];
-            this._root.getElementById('kitname').innerHTML = kitNamePretty[theBeat.kitIndex];
-
-            sliderSetValue('kick_thumb', theBeat.kickPitchVal);
-            sliderSetValue('snare_thumb', theBeat.snarePitchVal);
-            sliderSetValue('hihat_thumb', theBeat.hihatPitchVal);
-            sliderSetValue('tom1_thumb', theBeat.tom1PitchVal);
-            sliderSetValue('tom2_thumb', theBeat.tom2PitchVal);
-            sliderSetValue('tom3_thumb', theBeat.tom3PitchVal);
-            sliderSetValue('swing_thumb', theBeat.swingFactor);
-
-            // Clear out the text area post-processing
-            elTextarea.value = '';
-
-            toggleLoadContainer();
-            updateControls();
-        }*/
-
         handleLoadCancel(event) {
             toggleLoadContainer();
         }

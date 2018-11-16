@@ -314,7 +314,8 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		this.addParams.theBeat.checkIsLoaded = () => {
 			if (this.addParams.theBeat.isLoaded()) {
-				this.loadBeat(this.params);
+				this.addParams.theBeat = this.params;
+				this.loadBeat(this.addParams.theBeat);
 			}
 		};
 
@@ -558,7 +559,10 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		this.updateControls();
 	}
-
+	//To change the amplitude depends on parameter
+	map(value, istart, istop, ostart, ostop) {
+		return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+	}
 	savePreset(){
 		this.params.kitIndex = this.addParams.theBeat.kitIndex;
 		this.params.tempo = this.addParams.theBeat.tempo;
@@ -671,7 +675,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 				break;
 			case 'swing_thumb':
 				this.addParams.theBeat.swingFactor = value;
-				
 				break;
 		}
 	}
@@ -773,8 +776,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			}
 		}
 		this.gui._root.getElementById('kitname').innerHTML = this.addParams.kitNamePretty[this.addParams.theBeat.kitIndex];
-		//to include if we inlcude pattern list
-		//this.gui._root.getElementById('patternname').innerHTML = this.addParams.kitNamePretty[this.addParams.theBeat.kitIndex];
+
 		this.gui._root.getElementById('tempo').innerHTML = this.addParams.theBeat.tempo;
 
 	}
