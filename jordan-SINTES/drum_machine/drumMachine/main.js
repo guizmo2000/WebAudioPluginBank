@@ -130,7 +130,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		}
 		this.setup();
-		this.loadBeat(this.params);
 	}
 	/*    ################     API METHODS    ###############   */
 	// p9 count inputs
@@ -315,7 +314,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		this.addParams.theBeat.checkIsLoaded = () => {
 			if (this.addParams.theBeat.isLoaded()) {
-				this.loadBeat(this.params);
+				this.loadBeat(this.addParams.theBeat);
 			}
 		};
 
@@ -339,7 +338,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			this.schedule();
 		};
 		this.addParams.timerWorker.postMessage('init'); // Start the worker.
-		this.loadBeat(this.params);
 	}
 
 	advanceNote() {
@@ -912,9 +910,9 @@ class Kit {
 			if (kit.instrumentLoadCount == kit.instrumentCount) {
 				kit.isLoaded = true;
 
-				/*if (kit.demoIndex != -1) {
+				if (kit.demoIndex != -1) {
 					this.parent.addParams.theBeat.setKitLoaded();
-				}*/
+				}
 			}
 		}
 
