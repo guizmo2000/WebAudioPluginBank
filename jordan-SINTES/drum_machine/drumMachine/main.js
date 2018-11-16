@@ -554,11 +554,15 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			this.loadBeat(demo5);
 		}
 		else if (index == 0){
-			this.addParams.theBeat=this.params;
+			//this.addParams.theBeat=this.params;
 			this.loadBeat(this.addParams.theBeat);
 		}
 
 		this.updateControls();
+	}
+
+	savePreset(){
+		console.log("Saved!");
 	}
 
 	handleSliderMouseDown(event) {

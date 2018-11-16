@@ -742,7 +742,7 @@
             this._root.getElementById('demo4').addEventListener('mousedown', (event) => this._plug.demoChoose(4));
             this._root.getElementById('demo5').addEventListener('mousedown', (event) => this._plug.demoChoose(5));
             this._root.getElementById('load').addEventListener('mousedown', (event) => this._plug.demoChoose(0));
-            this._root.getElementById('save').addEventListener('mousedown', (event) => console.log("Saved!"));
+            this._root.getElementById('save').addEventListener('mousedown', (event) => this._plug.savePreset());
 
             this._root.getElementById('body').addEventListener('mousemove', (event) => this._plug.handleMouseMove(event), true);
             this._root.getElementById('body').addEventListener('mouseup', () => this._plug.handleMouseUp(), true);
