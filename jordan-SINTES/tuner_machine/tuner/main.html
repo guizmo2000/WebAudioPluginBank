@@ -157,14 +157,21 @@
         .sharp #sharp {
             display: inline;
         }
-        .button{
+        #button{
             display: inline;
+            font-size: 12px;
+        }
+        #toneMode{
+            background-color: rgb(204, 204, 204);
+            padding-left: 4px;
+            padding-right: 4px; 
         }
     </style>
     <div class="column">
         <div id="detector" class="vague">
             <div class="pitch">
-                <span id="pitch">--</span>Hz</div>
+                <span id="pitch">--</span>Hz
+            </div>
             <div class="note">
                 <span id="note">--</span>
             </div>
@@ -174,13 +181,15 @@
                 <span id="flat">CENTS &#9837;</span>
                 <span id="sharp">CENTS &#9839;</span>
             </div>
+                
        
     </div>
     <div class="column2">
         <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
             width="32" height="20"></webaudio-switch>
-            <div id =" button">
+            <div id ="button">
                 <button id="less">-</button>
+                <span id="toneMode">--</span>
                 <button id="more">+</button>
             </div>    
         <span class="pedalLabel">Tuner</span>
@@ -239,12 +248,17 @@
         }
 
         changeSemiTone() {
+            this._root.querySelector("#toneMode").innerHTML = this._plug.toneLevel;
+            
             this._root.querySelector("#more").addEventListener('click', (e) =>{
                 this._plug.increaseSemiTone();
+                this._root.querySelector("#toneMode").innerHTML = this._plug.toneLevel;
             });
+            
             this._root.querySelector("#less").addEventListener('click', (e) =>{
                 this._plug.decreaseSemiTone();
-            });
+                this._root.querySelector("#toneMode").innerHTML = this._plug.toneLevel;
+            });    
         }
 
         bypass() {

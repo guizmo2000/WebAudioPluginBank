@@ -260,11 +260,16 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     }
 
     increaseSemiTone(){
-        console.log("increase semitone level...")
+        if(this.toneLevel<4)
+            this.toneLevel++;
+
+        console.log("increase semitone level : toneLevel =" + this.toneLevel )
     }
 
     decreaseSemiTone(){
-        console.log("decrease semitone level...");
+        if(this.toneLevel>-4)
+            this.toneLevel--;
+        console.log("decrease semitone level : toneLevel =" + this.toneLevel );
     }
     
 }
