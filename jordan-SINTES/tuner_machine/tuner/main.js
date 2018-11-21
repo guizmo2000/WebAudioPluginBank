@@ -28,6 +28,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         //for function about mode choice
         this.toneLevel= 0;
         this.gapTone = 0;
+        this.frequencyString=[0, 0, 0, 0, 0, 0]
     }
 
     /*    ################     API METHODS    ###############   */
@@ -260,17 +261,39 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     }
 
     increaseSemiTone(){
-        if(this.toneLevel<4)
+        if(this.toneLevel<2)
             this.toneLevel++;
 
         console.log("increase semitone level : toneLevel =" + this.toneLevel )
     }
 
     decreaseSemiTone(){
-        if(this.toneLevel>-4)
+        if(this.toneLevel>-2)
             this.toneLevel--;
         console.log("decrease semitone level : toneLevel =" + this.toneLevel );
     }
+
+    indicateTone(toneLevel){
+        toneLevel= this.toneLevel;
+        switch(toneLevel) {
+            case -2:
+                this.frequencyString=[73, 98, 131, 175, 220, 294];
+                break;
+            case -1:
+                this.frequencyString=[78, 104, 139, 185, 233, 311];
+                break;
+            case 0:
+                this.frequencyString=[82, 110, 147, 196, 247, 330];
+                break;
+            case 1:
+                this.frequencyString=[87, 117, 156, 208, 262, 349];
+                break;
+            case 2:
+                this.frequencyString=[92, 123, 165, 220, 277, 370];
+                break;
+        }
+    }
+
     
 }
 
