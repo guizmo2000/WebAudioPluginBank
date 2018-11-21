@@ -68,6 +68,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         if (_sig === "enable") {
             this.params.status = "enable";
             this.updatePitch();
+            this.indicateTone(this.toneLevel);
             console.log("Tuner is on");
         }
 
@@ -325,13 +326,26 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
             }
         }
 
-        let middle= (intMin+intMax)/2;
-        if(freqTest<middle){
-            console.log("Il faut monter");
-        }
-        else if(freqTest>middle){
-            console.log("Il faut descendre");
-        }
+        //while(freqTest< intMin + 3 || freqTest > intMax-3){
+            let middle= (intMin+intMax)/2;
+            //Si la fréquence testé est inférieur à la moyenne ou si la fréquence est inférieure à la plus petite freq du tableau
+            if(freqTest>middle || freqTest < this.frequencyString[0]){
+                if(freqTest > intMax-3 && freqTest < intMax+3){
+                    console.log("Là on est ok");
+                }else{
+                    console.log("Il faut monter");
+                }
+                
+            }
+            else if(freqTest<middle || freqTest > this.frequencyString[5]){
+                if(freqTest > intMin-3 && freqTest < intMin+3){
+                    console.log("Là on est ok");
+                }else{
+                    console.log("Il faut descendre");
+                }
+            }
+        //}
+        
     }
 
     
