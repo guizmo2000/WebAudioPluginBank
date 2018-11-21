@@ -24,6 +24,10 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         this.noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
         this.MIN_SAMPLES = 0;
         this.GOOD_ENOUGH_CORRELATION = 0.9;
+
+        //for function about mode choice
+        this.toneLevel= 0;
+        this.gapTone = 0;
     }
 
     /*    ################     API METHODS    ###############   */
@@ -255,7 +259,14 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
          return sampleRate/T0;
     }
 
+    increaseSemiTone(){
+        console.log("increase semitone level...")
+    }
 
+    decreaseSemiTone(){
+        console.log("decrease semitone level...");
+    }
+    
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

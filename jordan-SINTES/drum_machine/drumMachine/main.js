@@ -26,7 +26,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			tom1PitchVal: 0.5,
 			tom2PitchVal: 0.5,
 			tom3PitchVal: 0.5,
-			rhythm1: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+			rhythm1: [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			rhythm2: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			rhythm3: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 			rhythm4: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -281,6 +281,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 	startLoadingAssets() {
 		// Initialize drum kits
+		
 		var numKits = this.addParams.kitName.length;
 		this.addParams.kits = new Array(numKits);
 		for (var i = 0; i < numKits; i++) {
@@ -321,9 +322,9 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.params.isLoaded = () => {
 			return this.isKitLoaded;
 		};
-
+		
 		this.startLoadingAssets();
-
+		
 		// NOTE: THIS NOW RELIES ON THE MONKEYPATCH LIBRARY TO LOAD
 		// IN CHROME AND SAFARI (until they release unprefixed)
 
