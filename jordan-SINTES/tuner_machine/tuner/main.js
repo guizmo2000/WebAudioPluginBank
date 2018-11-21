@@ -280,6 +280,13 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     indicateTone(toneLevel){
         let freq = this.autoCorrelate(this.buf, this.context.sampleRate);
         toneLevel= this.toneLevel;
+        let freqTest= Math.round(freq);
+        console.log(freqTest);
+        let intMin= 0;
+        let intMax= 0;
+        let freqMin= freqTest;
+        let freqMax= freqTest;
+
         switch(toneLevel) {
             case -2:
                 this.frequencyString=[73, 98, 131, 139, 220, 294];
@@ -298,12 +305,14 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                 break;
         }
 
-        let freqTest= Math.round(freq);
-        console.log(freqTest);
-        let intMin= 0;
-        let intMax= 0;
-        let freqMin= freqTest;
-        let freqMax= freqTest;
+        
+        /*
+         * TODO: voir comment faire une exception pour lorsque la fréquence est exacte (mauvais message)
+         *       Et faire en sorte que l'analyse se fasse à chaque fois que la fréquence change
+         *       Afficher des flèches au lieu du message en console.log
+         */
+        
+        
         
         //Tant que la fréquence qu'on lui a attribué ne correspond pas à une valeur du tableau
         while(this.frequencyString.indexOf(freqMin) == -1  && freqMin> 0){
@@ -330,6 +339,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
             let middle= (intMin+intMax)/2;
             //Si la fréquence testé est inférieur à la moyenne ou si la fréquence est inférieure à la plus petite freq du tableau
             if(freqTest>middle || freqTest < this.frequencyString[0]){
+            //Si la fréquence se trouve vers la fréquence maximale à 3Hz près
                 if(freqTest > intMax-3 && freqTest < intMax+3){
                     console.log("Là on est ok");
                 }else{
@@ -338,6 +348,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                 
             }
             else if(freqTest<middle || freqTest > this.frequencyString[5]){
+                //Si la fréquence se trouve vers la fréquence minimale à 3Hz près
                 if(freqTest > intMin-3 && freqTest < intMin+3){
                     console.log("Là on est ok");
                 }else{
