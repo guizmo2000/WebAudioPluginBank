@@ -261,23 +261,27 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     }
 
     increaseSemiTone(){
-        if(this.toneLevel<2)
+        if(this.toneLevel<2){
             this.toneLevel++;
-
+            this.indicateTone(this.toneLevel);
+        }
         console.log("increase semitone level : toneLevel =" + this.toneLevel )
     }
 
     decreaseSemiTone(){
-        if(this.toneLevel>-2)
+        if(this.toneLevel>-2){
             this.toneLevel--;
+            this.indicateTone(this.toneLevel);
+        }
         console.log("decrease semitone level : toneLevel =" + this.toneLevel );
     }
 
     indicateTone(toneLevel){
+        let freq = this.autoCorrelate(this.buf, this.context.sampleRate);
         toneLevel= this.toneLevel;
         switch(toneLevel) {
             case -2:
-                this.frequencyString=[73, 98, 131, 175, 220, 294];
+                this.frequencyString=[73, 98, 131, 139, 220, 294];
                 break;
             case -1:
                 this.frequencyString=[78, 104, 139, 185, 233, 311];
@@ -291,6 +295,42 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
             case 2:
                 this.frequencyString=[92, 123, 165, 220, 277, 370];
                 break;
+        }
+
+        let freqTest= Math.round(freq);
+        console.log(freqTest);
+        let intMin= 0;
+        let intMax= 0;
+        let freqMin= freqTest;
+        let freqMax= freqTest;
+        
+        //Tant que la fréquence qu'on lui a attribué ne correspond pas à une valeur du tableau
+        while(this.frequencyString.indexOf(freqMin) == -1  && freqMin> 0){
+            //On diminue la fréquence de test
+            freqMin --;
+            //Si la fréquence correspond à une des valeurs du tableau
+            if (this.frequencyString.indexOf(freqMin)!= -1){
+                //On attribue à l'intervale minimum la note du tableau
+                intMin= this.frequencyString[this.frequencyString.indexOf(freqMin)];
+                console.log("intMin =" + intMin);
+            }
+        }
+
+        //Pareil que sur le test du dessus mais cette fois on cherche l'intervalle maximum
+        while(this.frequencyString.indexOf(freqMax) == -1 ){ 
+            freqMax ++;
+            if (this.frequencyString.indexOf(freqMax)!= -1){
+                intMax= this.frequencyString[this.frequencyString.indexOf(freqMax)];
+                console.log("intMax =" + intMax);
+            }
+        }
+
+        let middle= (intMin+intMax)/2;
+        if(freqTest<middle){
+            console.log("Il faut monter");
+        }
+        else if(freqTest>middle){
+            console.log("Il faut descendre");
         }
     }
 
