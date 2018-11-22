@@ -295,7 +295,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
 
         switch (toneLevel) {
             case -2:
-                this.frequencyString = [73, 98, 131, 139, 220, 294];
+                this.frequencyString = [73, 98, 131, 175, 220, 294];
                 break;
             case -1:
                 this.frequencyString = [78, 104, 139, 185, 233, 311];
@@ -335,12 +335,12 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
 
             }
 
-            if (freqTest > intMin + 3 || freqTest < intMax - 3) {
+            if (freqTest > intMin + 2 || freqTest < intMax - 2) {
                 let middle = (intMin + intMax) / 2;
                 //Si la fréquence testé est inférieur à la moyenne ou si la fréquence est inférieure à la plus petite freq du tableau
                 if (freqTest > middle || freqTest < this.frequencyString[0]) {
                     //Si la fréquence se trouve vers la fréquence maximale à 3Hz près
-                    if (freqTest > intMax - 3 && freqTest < intMax + 3) {
+                    if (freqTest > intMax - 2 && freqTest < intMax + 2) {
                         console.log("Là on est ok");
                         detuneLessMode.innerHTML = "";
                         detuneMoreMode.innerHTML = "";
@@ -351,18 +351,29 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                 }
                 else if (freqTest < middle || freqTest > this.frequencyString[5]) {
                     //Si la fréquence se trouve vers la fréquence minimale à 3Hz près
-                    if (freqTest > intMin - 3 && freqTest < intMin + 3) {
+                    if (freqTest > intMin - 2 && freqTest < intMin + 2) {
                         console.log("Là on est ok");
                         detuneLessMode.innerHTML = "";
                         detuneMoreMode.innerHTML = "";
                     } else {
-                        detuneMoreMode.innerHTML = "↓";
-                        detuneLessMode.innerHTML = "";
+                        detuneMoreMode.innerHTML = "";
+                        detuneLessMode.innerHTML = "↓";
                     }
                 }
             }
         } else {
-            console.log("Là on est bon");
+            if (freqTest < this.frequencyString[0] - 2 && freqTest>0) {
+                detuneLessMode.innerHTML = "↑";
+                detuneMoreMode.innerHTML = "";
+            }
+            else if (freqTest > this.frequencyString[5] + 2) {
+                detuneMoreMode.innerHTML = "";
+                detuneLessMode.innerHTML = "↓";
+            }
+            else{
+                detuneMoreMode.innerHTML = "";
+                detuneLessMode.innerHTML = "";
+            }
         }
         this.valueSaved = freqTest;
     }
