@@ -166,9 +166,17 @@
             padding-left: 4px;
             padding-right: 4px; 
         }
+        #gain{
+            background-color: red;
+            height: 60px;
+            width: 7px;
+            margin-left: 5px;
+            padding:none;
+        }
     </style>
     <div class="column">
         <div id="detector" class="vague">
+                <div id="gain"></div>   
             <div class="pitch">
                 <span id="pitch">--</span>Hz
             </div>
@@ -183,8 +191,6 @@
                 <span id="flat">CENTS &#9837;</span>
                 <span id="sharp">CENTS &#9839;</span>
             </div>
-                
-       
     </div>
     <div class="column2">
         <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"

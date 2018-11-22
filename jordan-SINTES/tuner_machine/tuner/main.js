@@ -377,6 +377,13 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         }
         this.valueSaved = freqTest;
     }
+    
+    /*
+     *TODO: Créer la fonction permettant d'ttraper le gain du son entrant, le faire réagir avec l'élément graphique 
+     */
+    showGain(){
+        
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
