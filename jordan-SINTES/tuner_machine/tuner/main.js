@@ -289,6 +289,8 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         let intMax = 0;
         let freqMin = freqTest;
         let freqMax = freqTest;
+        var detuneLessMode= this.gui._root.getElementById("lessArrow");
+        var detuneMoreMode= this.gui._root.getElementById("moreArrow");
 
 
         switch (toneLevel) {
@@ -340,16 +342,22 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                     //Si la fréquence se trouve vers la fréquence maximale à 3Hz près
                     if (freqTest > intMax - 3 && freqTest < intMax + 3) {
                         console.log("Là on est ok");
+                        detuneLessMode.innerHTML = "";
+                        detuneMoreMode.innerHTML = "";
                     } else {
-                        console.log("Il faut monter");
+                        detuneLessMode.innerHTML = "↑";
+                        detuneMoreMode.innerHTML = "";
                     }
                 }
                 else if (freqTest < middle || freqTest > this.frequencyString[5]) {
                     //Si la fréquence se trouve vers la fréquence minimale à 3Hz près
                     if (freqTest > intMin - 3 && freqTest < intMin + 3) {
                         console.log("Là on est ok");
+                        detuneLessMode.innerHTML = "";
+                        detuneMoreMode.innerHTML = "";
                     } else {
-                        console.log("Il faut descendre");
+                        detuneMoreMode.innerHTML = "↓";
+                        detuneLessMode.innerHTML = "";
                     }
                 }
             }
