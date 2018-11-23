@@ -5,19 +5,19 @@
     };
 </script>
 <style>
-	@font-face {
-		font-family: 'clock';
-		src: url('./assets/clock.ttf') format('truetype');
-		font-weight: normal;
-		font-style: normal;
+    @font-face {
+        font-family: 'clock';
+        src: url('./assets/clock.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
 
-	}
+    }
 </style>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template id="wc-tuner">
     <style>
         :host {
-            background: linear-gradient( rgb(48, 47, 47), rgb(0, 0, 0));
+            background: linear-gradient(rgb(48, 47, 47), rgb(0, 0, 0));
             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
             font: 'clock';
 
@@ -157,33 +157,36 @@
         .sharp #sharp {
             display: inline;
         }
-        #button{
+
+        #button {
             display: inline;
             font-size: 12px;
         }
-        #toneMode{
+
+        #toneMode {
             background-color: rgb(204, 204, 204);
             padding-left: 4px;
-            padding-right: 4px; 
+            padding-right: 4px;
         }
-        #gain{
+
+        #gain {
             background-color: red;
             height: 60px;
             width: 7px;
-            margin-left: 5px;
-            padding:none;
+            margin: initial;
         }
     </style>
     <div class="column">
         <div id="detector" class="vague">
-                <div id="gain"></div>   
             <div class="pitch">
+                
+
                 <span id="pitch">--</span>Hz
             </div>
             <div class="note">
                 <span id="note">--</span>
                 <span id="lessArrow"></span>
-            <span id="moreArrow"></span>
+                <span id="moreArrow"></span>
             </div>
             <canvas id="output" width=300 height=42></canvas>
             <div id="detune">
@@ -191,19 +194,19 @@
                 <span id="flat">CENTS &#9837;</span>
                 <span id="sharp">CENTS &#9839;</span>
             </div>
-    </div>
-    <div class="column2">
-        <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-            width="32" height="20"></webaudio-switch>
-            <div id ="button">
+        </div>
+        <div class="column2">
+            <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+                width="32" height="20"></webaudio-switch>
+            <div id="button">
                 <button id="less">-</button>
                 <span id="toneMode">--</span>
                 <button id="more">+</button>
-            </div>    
-        <span class="pedalLabel">Tuner</span>
+            </div>
+            <span class="pedalLabel">Tuner</span>
+        </div>
     </div>
-    </div>
-    
+
 </template>
 <script>
     let tunertemp = document.currentScript.ownerDocument.querySelector("#wc-tuner");
@@ -257,16 +260,16 @@
 
         changeSemiTone() {
             this._root.querySelector("#toneMode").innerHTML = this._plug.toneLevel;
-            
-            this._root.querySelector("#more").addEventListener('click', (e) =>{
+
+            this._root.querySelector("#more").addEventListener('click', (e) => {
                 this._plug.increaseSemiTone();
                 this._root.querySelector("#toneMode").innerHTML = this._plug.toneLevel;
             });
-            
-            this._root.querySelector("#less").addEventListener('click', (e) =>{
+
+            this._root.querySelector("#less").addEventListener('click', (e) => {
                 this._plug.decreaseSemiTone();
                 this._root.querySelector("#toneMode").innerHTML = this._plug.toneLevel;
-            });    
+            });
         }
 
         bypass() {
