@@ -48,10 +48,10 @@
         {
             console.log("elem", elem);
             document.body.appendChild(elem);
-        });
+        
 
-        //Save statement
-        document.querySelector("#save").addEventListener('click', () => {
+            //Save statement
+            document.querySelector("#save").addEventListener('click', () => {
                 node.getState()
                     .then((data) => {
                         state = data;
@@ -65,7 +65,7 @@
                     console.log("State restored :", data)
                 })
             });
-        
+        });    
 		mediaSource.connect(node);
 		node.connect(ctx.destination);
 	});
