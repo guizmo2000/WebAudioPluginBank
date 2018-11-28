@@ -234,7 +234,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.createNodes();
 		this.connectNodes();
 		this.linktoParams();
-		this.init();
 	}
 
 	createNodes() {
@@ -315,7 +314,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		this.params.checkIsLoaded = () => {
 			if (this.params.isLoaded()) {
-				this.loadBeat(this.params);
+				this.demoChoose(0);
 			}
 		};
 

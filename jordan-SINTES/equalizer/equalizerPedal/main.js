@@ -67,7 +67,6 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
 		this.createNodes();
 		this.connectNodes();
 		this.linktoParams();
-		this.init();
 	}
 
 	createNodes() {
