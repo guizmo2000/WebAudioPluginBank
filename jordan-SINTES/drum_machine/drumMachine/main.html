@@ -633,8 +633,8 @@
                 <img id='demo3' width='30' height='22'>
                 <img id='demo4' width='30' height='22'>
                 <img id='demo5' width='30' height='22'>
-                <img id='save' width='40' height ='22'>
-                <img id='load' width='40' height='22'>
+                <!--<img id='save' width='40' height ='22'>
+                <img id='load' width='40' height='22'>-->
             </span>
         </section>
 
@@ -742,8 +742,8 @@
             this._root.getElementById('demo3').addEventListener('mousedown', (event) => this._plug.demoChoose(3));
             this._root.getElementById('demo4').addEventListener('mousedown', (event) => this._plug.demoChoose(4));
             this._root.getElementById('demo5').addEventListener('mousedown', (event) => this._plug.demoChoose(5));
-            this._root.getElementById('load').addEventListener('mousedown', (event) => this._plug.demoChoose(0));
-            this._root.getElementById('save').addEventListener('mousedown', (event) => this._plug.savePreset());
+            //this._root.getElementById('load').addEventListener('mousedown', (event) => this._plug.demoChoose(0));
+            //this._root.getElementById('save').addEventListener('mousedown', (event) => this._plug.savePreset());
 
             this._root.getElementById('body').addEventListener('mousemove', (event) => this._plug.handleMouseMove(event), true);
             this._root.getElementById('body').addEventListener('mouseup', () => this._plug.handleMouseUp(), true);
@@ -803,11 +803,16 @@
 
             var instrumentIndex;
             var rhythmIndex;
-
+            
             var elId = event.target.id;
             rhythmIndex = elId.substr(elId.indexOf('_') + 1, 2);
             instrumentIndex = this._plug.addParams.instruments.indexOf(elId.substr(0, elId.indexOf('_')));
-
+            this._plug.params.rhythm1=this._plug.addParams.theBeat.rhythm1;
+            this._plug.params.rhythm2=this._plug.addParams.theBeat.rhythm2;
+            this._plug.params.rhythm3=this._plug.addParams.theBeat.rhythm3;
+            this._plug.params.rhythm4=this._plug.addParams.theBeat.rhythm4;
+            this._plug.params.rhythm5=this._plug.addParams.theBeat.rhythm5;
+            this._plug.params.rhythm6=this._plug.addParams.theBeat.rhythm6;
             switch (instrumentIndex) {
                 case 0: 
                     notes = this._plug.addParams.theBeat.rhythm1;
@@ -842,7 +847,7 @@
             var note = notes[rhythmIndex];
             var btn_play = this._root.getElementById('play');
             var played =  btn_play.getAttribute("class")
-
+            
             if (note && played!="playing") {
                 switch (instrumentIndex) {
                     //put to true to have sound position in function to the click position on drumMachine
@@ -901,6 +906,7 @@
         handleKitMouseDown(event) {
             var index = this._plug.addParams.kitNamePretty.indexOf(event.target.innerHTML);
             this._plug.addParams.theBeat.kitIndex = index;
+            this._plug.params.kitIndex=this._plug.addParams.theBeat.kitIndex;
             this._plug.addParams.currentKit = this._plug.addParams.kits[index];
             this._root.getElementById('kitname').innerHTML = this._plug.addParams.kitNamePretty[index];
         }
@@ -1002,8 +1008,8 @@
             this._root.querySelector("#demo3").setAttribute('src', this._plug.URL + '/images/btn_demo3.png');
             this._root.querySelector("#demo4").setAttribute('src', this._plug.URL + '/images/btn_demo4.png');
             this._root.querySelector("#demo5").setAttribute('src', this._plug.URL + '/images/btn_demo5.png');
-            this._root.querySelector("#load").setAttribute('src', this._plug.URL + '/images/btn_load.png');
-            this._root.querySelector('#save').setAttribute('src', this._plug.URL + '/images/btn_save.png');
+            //this._root.querySelector("#load").setAttribute('src', this._plug.URL + '/images/btn_load.png');
+            //this._root.querySelector('#save').setAttribute('src', this._plug.URL + '/images/btn_save.png');
 
             this._root.querySelector("#load_textarea").setAttribute('src', this._plug.URL + '/images/btn_ok.png');
             this._root.querySelector("#load_ok").setAttribute('src', this._plug.URL + '/images/btn_ok.png');

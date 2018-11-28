@@ -435,12 +435,14 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		let kMaxTempo = 180;
 		this.addParams.theBeat.tempo = Math.min(kMaxTempo, this.addParams.theBeat.tempo + 2);
 		this.gui._root.getElementById('tempo').innerHTML = this.addParams.theBeat.tempo;
+		this.params.tempo = this.addParams.theBeat.tempo;
 	}
 
 	tempoDecrease() {
 		let kMinTempo = 52
 		this.addParams.theBeat.tempo = Math.max(kMinTempo, this.addParams.theBeat.tempo - 2);
 		this.gui._root.getElementById('tempo').innerHTML = this.addParams.theBeat.tempo;
+		this.params.tempo = this.addParams.theBeat.tempo;
 	}
 
 	demoChoose(index){
@@ -561,7 +563,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	map(value, istart, istop, ostart, ostop) {
 		return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
 	}
-	savePreset(){
+	/*savePreset(){
 		this.params.kitIndex = this.addParams.theBeat.kitIndex;
 		this.params.tempo = this.addParams.theBeat.tempo;
 		this.params.swingFactor = this.addParams.theBeat.swingFactor;
@@ -579,7 +581,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.params.rhythm6 = this.addParams.theBeat.rhythm6
 		
 		console.log("Saved!");
-	}
+	}*/
 
 	handleSliderMouseDown(event) {
 		this.addParams.mouseCapture = event.target.id;
@@ -642,7 +644,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	handleMouseUp() {
 		this.addParams.mouseCapture = null;
 	}
-
+	//TODO: applicate pitchrate
 	sliderSetValue(slider, value) {
 		var pitchRate = Math.pow(2.0, 2.0 * (value - 0.5));
 
@@ -650,29 +652,36 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			case 'kick_thumb':
 				this.addParams.theBeat.kickPitchVal = value;
 				this.addParams.kickPitch = pitchRate;
+				this.params.kickPitchVal = value;
 				break;
 			case 'snare_thumb':
 				this.addParams.theBeat.snarePitchVal = value;
 				this.addParams.snarePitch = pitchRate;
+				this.params.snarePitchVal = value;
 				break;
 			case 'hihat_thumb':
 				this.addParams.theBeat.hihatPitchVal = value;
 				this.addParams.hihatPitch = pitchRate;
+				this.params.hihatPitchVal= value;
 				break;
 			case 'tom1_thumb':
 				this.addParams.theBeat.tom1PitchVal = value;
 				this.addParams.tom1Pitch = pitchRate;
+				this.params.tom1PitchVal= value;
 				break;
 			case 'tom2_thumb':
 				this.addParams.theBeat.tom2PitchVal = value;
 				this.addParams.tom2Pitch = pitchRate;
+				this.params.tom2PitchVal= value;
 				break;
 			case 'tom3_thumb':
 				this.addParams.theBeat.tom3PitchVal = value;
 				this.addParams.tom3Pitch = pitchRate;
+				this.params.tom3PitchVal= value;
 				break;
 			case 'swing_thumb':
 				this.addParams.theBeat.swingFactor = value;
+				this.params.swingFactor= value;
 				break;
 		}
 	}
@@ -774,7 +783,6 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 			}
 		}
 		this.gui._root.getElementById('kitname').innerHTML = this.addParams.kitNamePretty[this.addParams.theBeat.kitIndex];
-
 		this.gui._root.getElementById('tempo').innerHTML = this.addParams.theBeat.tempo;
 
 	}
