@@ -105,8 +105,8 @@ class FilterBank {
         this.canvas = document.createElement("canvas");
         // get dimensions, by default the ones from the parent element
         this.canvas.classList.add("graphicEQ");
-        this.canvas.width = this.width = parent.clientWidth;
-        this.canvas.height = this.height = parent.clientHeight;
+        this.canvas.width = this.width = 160;
+        this.canvas.height = this.height = 150;
 
         this.ctx = this.canvas.getContext("2d");
         this.canvasParent.appendChild(this.canvas);
@@ -121,11 +121,11 @@ class FilterBank {
         this.canvasParent.appendChild(this.canvas2);
         this.ctx2 = this.canvas2.getContext("2d");
 
-        this.resize(this.width, this.height);
+        //this.resize(this.width, this.height);
 
-        window.addEventListener('resize',
+        /*window.addEventListener('resize',
             evt => this.resize(this.canvasParent.clientWidth,
-                this.canvasParent.clientHeight));
+                this.canvasParent.clientHeight));*/
 
 
         // global properties
@@ -147,8 +147,8 @@ class FilterBank {
 
         this.initFilters();
 
-        this.resize(this.canvasParent.clientWidth,
-            this.canvasParent.clientHeight);
+        //this.resize(this.canvasParent.clientWidth,
+            //this.canvasParent.clientHeight);
 
         requestAnimationFrame(this.drawFrequencies.bind(this));
     }
@@ -310,7 +310,7 @@ class FilterBank {
     // -----------------------------
 
     // call this method if there is a need to resize the freq analyzer
-    resize(w, h) {
+    /*resize(w, h) {
         //console.log("resize");
         let r = this.canvasParent.getBoundingClientRect();
         let rc = this.canvas.getBoundingClientRect();
@@ -322,7 +322,7 @@ class FilterBank {
 
         this.clearCanvas();
         this.draw();
-    }
+    }*/
     getMousePos(e) {
         let rect = this.canvas.getBoundingClientRect();
         let mouseX = e.x - rect.left;
