@@ -96,7 +96,7 @@ class FilterBank {
         this.audioCtx = audioCtx;
         this.canvasParent = parent;
         this.dbScale = dbScale || 60;
-		this.parent = parent;
+		
 
         // filters
         this.filters = [];
@@ -105,12 +105,13 @@ class FilterBank {
         this.canvas = document.createElement("canvas");
         // get dimensions, by default the ones from the parent element
         this.canvas.classList.add("graphicEQ");
-        this.canvas.width = this.width = 160;
-        this.canvas.height = this.height = 150;
+        this.canvas.width = this.width = 250;
+        this.canvas.height = this.height = 250;
 
         this.ctx = this.canvas.getContext("2d");
         this.canvasParent.appendChild(this.canvas);
 
+        /*
         this.canvas2 = document.createElement("canvas");
         this.canvas2.style.position = "absolute";
         this.canvas2.style.top = 0;
@@ -118,8 +119,8 @@ class FilterBank {
         this.canvas2.width = this.canvas.width;
         this.canvas2.height = this.canvas.height;
         this.canvas2.style.zIndex = -1;
-        this.canvasParent.appendChild(this.canvas2);
-        this.ctx2 = this.canvas2.getContext("2d");
+        //this.canvasParent.appendChild(this.canvas2);
+        this.ctx2 = this.canvas2.getContext("2d");*/
 
         //this.resize(this.width, this.height);
 
@@ -129,8 +130,8 @@ class FilterBank {
 
 
         // global properties
-        this.gridColor = "rgb(100,100,100)";
-        this.textColor = "rgb(153, 153, 153)";
+        this.gridColor = "rgb(235,235,235)";
+        this.textColor = "rgb(235, 235, 235)";
 
         // mouse selection mode
         this.mode = "none";
@@ -221,7 +222,7 @@ class FilterBank {
 
     drawFrequencies() {
         //clear the canvas
-        this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+        //this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
 
         // Get analyser data
         this.analyser.getFloatFrequencyData(this.dataArray);
@@ -237,10 +238,10 @@ class FilterBank {
             barHeight *= this.dbRatio;
 
             //this.ctx2.fillStyle = 'rgb(' + (barHeight+100) + ',0,0)';
-            this.ctx2.fillStyle = 'red';
-            barWidth[i] = (Math.log(i + 2) - Math.log(i + 1)) * this.canvas2.width / Math.log(this.bufferLength - 80);
+            //this.ctx2.fillStyle = 'red';
+            //barWidth[i] = (Math.log(i + 2) - Math.log(i + 1)) * this.canvas2.width / Math.log(this.bufferLength - 80);
 
-            this.ctx2.fillRect(x, this.canvas2.height - barHeight, barWidth[i], barHeight);
+            //this.ctx2.fillRect(x, this.canvas2.height - barHeight, barWidth[i], barHeight);
             // 2 is the number of pixels between bars
             x += barWidth[i] + 1;
         }
@@ -254,7 +255,7 @@ class FilterBank {
         // NEED TO BE REWRITTEN USING LOG SCALE FOR FREQUENCIES
         // AND ADJUST Db to current scale
         // clear the canvas
-        this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+        //this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
 
         // Or use rgba fill to give a slight blur effect
         //canvasContext.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -288,12 +289,12 @@ class FilterBank {
             //barHeight = this.dataArray[i];
 
 
-            this.ctx2.fillStyle = 'rgb(' + (barHeight + 100) + ',0,0)';
+            //this.ctx2.fillStyle = 'rgb(' + (barHeight + 100) + ',0,0)';
             //barHeight *= heightScale;
             //this.ctx2.fillStyle = 'red';
             barWidth[i] = (Math.log(i + 2) - Math.log(i + 1)) * this.canvas2.width / Math.log(this.bufferLength);
             //this.ctx2.fillRect(x, this.canvas2.height-barHeight/2, barWidth[i], barHeight);
-            this.ctx2.fillRect(x, this.canvas2.height - barHeight, barWidth[i], barHeight);
+            //this.ctx2.fillRect(x, this.canvas2.height - barHeight, barWidth[i], barHeight);
             //console.log("barheight=" + barHeight);
             //this.ctx2.fillRect(0, 0, this.canvas2.width, this.canvas2.height)
             // 2 is the number of pixels between bars
@@ -379,10 +380,10 @@ class FilterBank {
         this.draw();
     }
 
-    clearCanvas() {
+    /*clearCanvas() {
         // clear canvas
         this.ctx.fillRect(0, 0, this.width, this.height);
-    }
+    }*/
 
     // --------------- main methods -------------
     addFilter(type, Q, f, g, color) {
