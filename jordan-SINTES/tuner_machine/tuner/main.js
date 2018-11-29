@@ -226,7 +226,10 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
          //	var best_frequency = sampleRate/best_offset;
      }*/
 
-    //Autocorrelation purposed by dalatant, at this link: https://github.com/cwilso/PitchDetect/pull/23/commits/b0d5d28d2803d852dd85d2a1e53c22bcedba4cbf
+    /*
+     * Autocorrelation purposed by dalatant, at this link: 
+     * https://github.com/cwilso/PitchDetect/pull/23/commits/b0d5d28d2803d852dd85d2a1e53c22bcedba4cbf
+     */
     autoCorrelate(buf, sampleRate) {
         // Implements the ACF2+ algorithm
         var SIZE = buf.length;
@@ -281,6 +284,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         console.log("decrease semitone level : toneLevel =" + this.toneLevel);
     }
 
+    //Function about indicating the correct note depending of tuning mode
     indicateTone(toneLevel) {
         let freq = this.autoCorrelate(this.buf, this.context.sampleRate);
         toneLevel = this.toneLevel;
@@ -289,11 +293,12 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         let intMax = 0;
         let freqMin = freqTest;
         let freqMax = freqTest;
-        var detuneLessMode= this.gui._root.getElementById("lessArrow");
-        var detuneMoreMode= this.gui._root.getElementById("moreArrow");
+        var detuneLessMode = this.gui._root.getElementById("lessArrow");
+        var detuneMoreMode = this.gui._root.getElementById("moreArrow");
 
 
         switch (toneLevel) {
+            //Chord Mode, 0 is the standard tuning
             case -2:
                 this.frequencyString = [73, 98, 131, 175, 220, 294];
                 break;
@@ -311,48 +316,51 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                 break;
         }
 
+        /*
+         *  The goal here is while the frequency isn't close to one of frequency
+         *  present in the table, we must to catch on which interval the frequency is present
+         *  and after to indicate if the user must to tune more or less depending of the position
+         *  in the interval
+         */
 
+        //If the frequency catched not corresponding to a frequency in the table and the value between the frequency of the first string and last string
         if (this.frequencyString.indexOf(freqMin) == -1 && freqTest > this.frequencyString[0] && freqTest < this.frequencyString[5]) {
-            //Tant que la fréquence qu'on lui a attribué ne correspond pas à une valeur du tableau
             while (this.frequencyString.indexOf(freqMin) == -1 && freqMin > 0) {
 
-                //On diminue la fréquence de test
+                //We decrease freqMin to find the first value of the interval
                 freqMin--;
-                //Si la fréquence correspond à une des valeurs du tableau
+                //Until we find the first value of the interval
                 if (this.frequencyString.indexOf(freqMin) != -1) {
-                    //On attribue à l'intervale minimum la note du tableau
                     intMin = this.frequencyString[this.frequencyString.indexOf(freqMin)];
                 }
 
             }
-            //Pareil que sur le test du dessus mais cette fois on cherche l'intervalle maximum
+            //Same test but to find the second value for the interval
             while (this.frequencyString.indexOf(freqMax) == -1) {
-
                 freqMax++;
                 if (this.frequencyString.indexOf(freqMax) != -1) {
                     intMax = this.frequencyString[this.frequencyString.indexOf(freqMax)];
                 }
-
             }
 
+            //If the frequency catched is not closed of the exact frequency
             if (freqTest > intMin + 2 || freqTest < intMax - 2) {
                 let middle = (intMin + intMax) / 2;
-                //Si la fréquence testé est inférieur à la moyenne ou si la fréquence est inférieure à la plus petite freq du tableau
+                //if the frequency catched is above of the middle of the interval or under the frequency of the first string
                 if (freqTest > middle || freqTest < this.frequencyString[0]) {
-                    //Si la fréquence se trouve vers la fréquence maximale à 3Hz près
+                    //If it's closed to the max interval
                     if (freqTest > intMax - 2 && freqTest < intMax + 2) {
-                        console.log("Là on est ok");
                         detuneLessMode.innerHTML = "";
                         detuneMoreMode.innerHTML = "";
                     } else {
+                    //Otherwise We told to increase the tuning
                         detuneLessMode.innerHTML = "↑";
                         detuneMoreMode.innerHTML = "";
                     }
                 }
                 else if (freqTest < middle || freqTest > this.frequencyString[5]) {
-                    //Si la fréquence se trouve vers la fréquence minimale à 3Hz près
+                    //Inversing test
                     if (freqTest > intMin - 2 && freqTest < intMin + 2) {
-                        console.log("Là on est ok");
                         detuneLessMode.innerHTML = "";
                         detuneMoreMode.innerHTML = "";
                     } else {
@@ -362,7 +370,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                 }
             }
         } else {
-            if (freqTest < this.frequencyString[0] - 2 && freqTest>0) {
+            if (freqTest < this.frequencyString[0] - 2 && freqTest > 0) {
                 detuneLessMode.innerHTML = "↑";
                 detuneMoreMode.innerHTML = "";
             }
@@ -370,19 +378,19 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                 detuneMoreMode.innerHTML = "";
                 detuneLessMode.innerHTML = "↓";
             }
-            else{
+            else {
                 detuneMoreMode.innerHTML = "";
                 detuneLessMode.innerHTML = "";
             }
         }
         this.valueSaved = freqTest;
     }
-    
+
     /*
-     *TODO: Créer la fonction permettant d'ttraper le gain du son entrant, le faire réagir avec l'élément graphique 
+     *TODO: Create function to catch and show the gain of the sound
      */
-    showGain(){
-        
+    showGain() {
+
     }
 }
 
