@@ -5,15 +5,15 @@
 * Comment: Based on the Equalizer made by M.BUFFA
 */
 window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
-	constructor(ctx, options) {
-		super(ctx, options)
-		/*    ################     API PROPERTIES    ###############   */
+    constructor(ctx, options) {
+        super(ctx, options)
+        /*    ################     API PROPERTIES    ###############   */
 
-		this.state;
+        this.state;
 
-		this.params = {
-            filters:[]
-            
+        this.params = {
+            filters: [],
+            state: "disable"
         }
         this.gridColor = "rgb(235,235,235)";
         this.textColor = "rgb(235, 235, 235)";
@@ -21,68 +21,66 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
         this.mode = "none";
         this.nyquist = 0.5 * this.context.sampleRate;
         this.noctaves = 11;
-		this.setup();
-	}
+        this.setup();
+    }
 
-	/*    ################     API METHODS    ###############   */
+    /*    ################     API METHODS    ###############   */
 
-	get numberOfInputs() {
-		return 1;
-	}
+    get numberOfInputs() {
+        return 1;
+    }
 
-	get numberOfOutputs() {
-		return this.outputs.length;
-	}
-	inputChannelCount() {
-		return 1;
-	}
-	outputChannelCount() {
-		return 1
-	}
-	getMetadata() {
-		return this.metadata;
-	}
+    get numberOfOutputs() {
+        return this.outputs.length;
+    }
+    inputChannelCount() {
+        return 1;
+    }
+    outputChannelCount() {
+        return 1
+    }
+    getMetadata() {
+        return this.metadata;
+    }
 
-	getDescriptor() {
-		return this._descriptor;
-	}
+    getDescriptor() {
+        return this._descriptor;
+    }
 
-	
 
-	getPatch(index) {
-		console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
-	}
-	setPatch(data, index) {
-		console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
-	}
 
-	setParam(key, value) {
-		console.log(key, value);
-		try {
-			this[key] = (value);
-		} catch (error) {
-			console.log(key, error)
-			console.warn("this plugin does not implement this param")
-		}
-	}
+    getPatch(index) {
+        console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
+    }
+    setPatch(data, index) {
+        console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
+    }
 
-	// override setup 
-	setup() {
-		console.log("delay setup");
-		this.createNodes();
-		this.connectNodes();
-		this.linktoParams();
-	}
+    setParam(key, value) {
+        console.log(key, value);
+        try {
+            this[key] = (value);
+        } catch (error) {
+            console.log(key, error)
+            console.warn("this plugin does not implement this param")
+        }
+    }
 
-	createNodes() {
+    // override setup 
+    setup() {
+        console.log("delay setup");
+        this.createNodes();
+        this.connectNodes();
+        this.linktoParams();
+    }
+
+    createNodes() {
         this.addFilter("highpass", 0.00001, 40, 12, "red");
-
         this.addFilter("lowshelf", 0, 80, 0, "yellow");
         this.addFilter("peaking", 1, 230, 0, "green");
         this.addFilter("peaking", 1, 2500, 0, "turquoise");
         this.addFilter("peaking", 1, 5000, 0, "blue");
         this.addFilter("highshelf", 1, 10000, 0, "violet");
-
         this.addFilter("lowpass", 0.00001, 18000, 12, "red");
 
         // connect also to an analyser node
@@ -105,10 +103,10 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
         //console.log("range = " + range);
         //console.log("ratio = " + this.dbRatio);
 
-	}
+    }
 
-	connectNodes() {
-		for (let i = 0; i < this.params.filters.length; i++) {
+    connectNodes() {
+        for (let i = 0; i < this.params.filters.length; i++) {
             let f = this.params.filters[i];
 
             if (i === 0) {
@@ -121,17 +119,17 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
         // connect last filter to outputGain
         this.params.filters[this.params.filters.length - 1].connect(this._output);
         this._output.connect(this.analyser);
-	}
+    }
 
-	linktoParams(){
+    linktoParams() {
 		/*
 		 * set default value for parameters and assign it to the web audio nodes
 		 */
-	};
+    };
 
 
     /*  #########  Personnal code for the web audio graph  #########   */
-    
+
     addFilter(type, Q, f, g, color) {
         let filter = this.context.createBiquadFilter();
         filter.type = type;
@@ -140,14 +138,14 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
         filter.gain.value = g;
         filter.color = color;
         this.params.filters.push(filter);
-    }   	
+    }
 }
 
 
 //////////////////////////////////////////////////////////////////////////////////////////
 
 window.WasabiEqualizer = class WasabiEqualizer extends WebAudioPluginFactory {
-	constructor(context, baseUrl) { super(context, baseUrl); }
+    constructor(context, baseUrl) { super(context, baseUrl); }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////

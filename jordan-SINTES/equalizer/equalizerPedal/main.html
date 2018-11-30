@@ -93,21 +93,12 @@
       margin: 5px;
       margin-top: 10px;
       border-radius: 10px;
+      z-index:0;
     }
 
-    .column2 {
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      flex: 1;
-      margin-top: 10px;
-      text-align: center;
-    }
-
-    .column3 {
-      margin-top: 60px;
-      font-size: 10px;
-    }
+   .frequencyMeasure{
+     background-color: #000
+   }
 
     .row {
       display: flex;
@@ -117,9 +108,7 @@
 
     }
 
-    #divFilterBank {
-      background-color: #000;
-    }
+
   </style>
   <div class="row">
     <div class="column">
@@ -148,7 +137,7 @@
       this.state = new Object();
       this.setSwitchListener();
       this.setCanvas();
-      
+      this.draw();
     }
 
     get properties() {
@@ -193,9 +182,10 @@
      
      
       this.canvas2 = document.createElement("canvas");
+      this.canvas2.classList.add("frequencyMeasure");
       this.canvas2.style.position = "absolute";
-      this.canvas2.style.top = 0;
-      this.canvas2.style.left = 0;
+      this.canvas2.style.top = 95;
+      this.canvas2.style.left = 23;
       this.canvas2.width = this.canvas.width;
       this.canvas2.height = this.canvas.height;
       this.canvas2.style.zIndex = -1;
@@ -516,34 +506,39 @@
     }
 
     drawFrequencies() {
-        //clear the canvas
-        //this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+       //clear the canvas
+      this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+  
+      // Get analyser data
+      this._plug.analyser.getFloatFrequencyData(this._plug.dataArray);
 
-        // Get analyser data
-        this._plug.analyser.getFloatFrequencyData(this._plug.dataArray);
+      var barWidth = [];
+      var barHeight;
+      var x = 0;
 
-        var barWidth = [];
-        var barHeight;
-        var x = 0;
+      var analyserRange = this._plug.analyser.maxDecibels - this._plug.analyser.minDecibels;
+        // ration between analyser range and our range
+      var range = this.dbScale * 2;
+      var dbRatio = range / analyserRange;
+     
+      for(var i = 0; i < this._plug.bufferLength; i++) {
+        // values are all negative
+        barHeight = this.dbToY(-this._plug.dataArray[i]);
+              
+        barHeight *= dbRatio;
 
-        for (var i = 0; i < this.bufferLength; i++) {
-            // values are all negative
-            barHeight = this.dbToY(-this.dataArray[i]);
-
-            barHeight *= this.dbRatio;
-
-            //this.ctx2.fillStyle = 'rgb(' + (barHeight+100) + ',0,0)';
-            //this.ctx2.fillStyle = 'red';
-            //barWidth[i] = (Math.log(i + 2) - Math.log(i + 1)) * this.canvas2.width / Math.log(this.bufferLength - 80);
-
-            //this.ctx2.fillRect(x, this.canvas2.height - barHeight, barWidth[i], barHeight);
-            // 2 is the number of pixels between bars
-            x += barWidth[i] + 1;
-        }
-        // call again the visualize function at 60 frames/s
-        requestAnimationFrame(this.drawFrequencies.bind(this));
-
-    }
+        //this.ctx2.fillStyle = 'rgb(' + (barHeight+100) + ',0,0)';
+        this.ctx2.fillStyle = 'red';
+        barWidth[i] = (Math.log(i+2)-Math.log(i+1))*this.canvas2.width/Math.log(this._plug.bufferLength-80);
+        
+        this.ctx2.fillRect(x,this.canvas2.height-barHeight,barWidth[i],barHeight);
+        // 2 is the number of pixels between bars
+        x += barWidth[i] + 1;  
+      }    
+  // call again the visualize function at 60 frames/s
+  requestAnimationFrame(this.drawFrequencies.bind(this));
+  
+}
 
     getMousePos(e) {
         let rect = this.canvas.getBoundingClientRect();
@@ -661,8 +656,6 @@
         return Math.pow(2, flog); // reverse of a log function is 2^logf
     }
 
-
-
     setSwitchListener() {
       console.log("setswitch");
       this._root.querySelector("#switch1").addEventListener('change', (e) => {
@@ -676,11 +669,12 @@
     }
 
     bypass() {
-      this._plug.setParam("status", "disable");
+      this._plug.params.state="disable";
+      this._plug.connectNodes();
     }
     reactivate() {
-      this._plug.setParam("status", "enable");
-      this.draw();
+      this._plug.params.state="enable";
+      this._plug.connectNodes();
     }
   }
 
