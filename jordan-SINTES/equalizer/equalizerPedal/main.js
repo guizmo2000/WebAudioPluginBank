@@ -12,8 +12,20 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
 		this.state;
 
 		this.params = {
-			filters:[]
-		}
+            filters:[]
+            
+        }
+        
+        // canvas
+        
+        this.canvas = document.createElement("canvas");
+        // get dimensions, by default the ones from the parent element
+        this.canvas.classList.add("graphicEQ");
+        this.canvas.width = this.width = 250;
+        this.canvas.height = this.height = 250;
+
+        this.ctx = this.canvas.getContext("2d");
+        
 
 		
 		this.setup();
@@ -100,7 +112,6 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
         //console.log("range = " + range);
         //console.log("ratio = " + this.dbRatio);
 
-        this._output.connect(this.analyser);
 	}
 
 	connectNodes() {
@@ -116,6 +127,7 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
         }
         // connect last filter to outputGain
         this.params.filters[this.params.filters.length - 1].connect(this._output);
+        this._output.connect(this.analyser);
 	}
 
 	linktoParams(){
