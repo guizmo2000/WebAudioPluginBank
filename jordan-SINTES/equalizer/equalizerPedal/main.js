@@ -12,7 +12,7 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
 		this.state;
 
 		this.params = {
-			
+			filters:[]
 		}
 
 		
@@ -70,11 +70,52 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
 	}
 
 	createNodes() {
-	
+        this.addFilter("highpass", 0.00001, 40, 12, "red");
+
+        this.addFilter("lowshelf", 0, 80, 0, "yellow");
+        this.addFilter("peaking", 1, 230, 0, "green");
+        this.addFilter("peaking", 1, 2500, 0, "turquoise");
+        this.addFilter("peaking", 1, 5000, 0, "blue");
+        this.addFilter("highshelf", 1, 10000, 0, "violet");
+
+        this.addFilter("lowpass", 0.00001, 18000, 12, "red");
+
+        // connect also to an analyser node
+        // Create an analyser node
+        this.analyser = this.context.createAnalyser();
+
+        // Try changing for lower values: 512, 256, 128, 64...
+        this.analyser.fftSize = 256;
+        this.analyser.smoothingTimeConstant = 0.9;
+        //this.analyser.minDecibels = -this.dbScale;
+        //this.analyser.maxDecibels = this.dbScale;
+        this.bufferLength = this.analyser.frequencyBinCount;
+        this.dataArray = new Float32Array(this.bufferLength);
+
+        var analyserRange = this.analyser.maxDecibels - this.analyser.minDecibels;
+        // ration between analyser range and our range
+        var range = this.dbScale * 2;
+        this.dbRatio = range / analyserRange;
+        //console.log("arange = " + analyserRange);
+        //console.log("range = " + range);
+        //console.log("ratio = " + this.dbRatio);
+
+        this._output.connect(this.analyser);
 	}
 
 	connectNodes() {
-		
+		for (let i = 0; i < this.params.filters.length; i++) {
+            let f = this.params.filters[i];
+
+            if (i === 0) {
+                // connect inputGain to first filter
+                this._input.connect(f);
+            } else {
+                this.params.filters[i - 1].connect(f);
+            }
+        }
+        // connect last filter to outputGain
+        this.params.filters[this.params.filters.length - 1].connect(this._output);
 	}
 
 	linktoParams(){
@@ -87,7 +128,18 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
 		let bank = new FilterBank(ctx, this.gui._root.querySelector("#DivFilterBank"), 60);
 	}
 
-	/*  #########  Personnal code for the web audio graph  #########   */
+    /*  #########  Personnal code for the web audio graph  #########   */
+    
+    addFilter(type, Q, f, g, color) {
+        let filter = this.context.createBiquadFilter();
+
+        filter.type = type;
+        filter.Q.value = Q;
+        filter.frequency.value = f;
+        filter.gain.value = g;
+        filter.color = color;
+        this.params.filters.push(filter);
+    }
 	
 }
 
