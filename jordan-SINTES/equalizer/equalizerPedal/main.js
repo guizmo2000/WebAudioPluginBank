@@ -16,15 +16,7 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
             
         }
         
-        // canvas
-        
-        this.canvas = document.createElement("canvas");
-        // get dimensions, by default the ones from the parent element
-        this.canvas.classList.add("graphicEQ");
-        this.canvas.width = this.width = 250;
-        this.canvas.height = this.height = 250;
-
-        this.ctx = this.canvas.getContext("2d");
+       
         
 
 		
@@ -136,9 +128,6 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
 		 */
 	};
 
-	init(){
-		let bank = new FilterBank(ctx, this.gui._root.querySelector("#DivFilterBank"), 60);
-	}
 
     /*  #########  Personnal code for the web audio graph  #########   */
     
@@ -152,6 +141,13 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
         filter.color = color;
         this.params.filters.push(filter);
     }
+
+    dbToY(db) {
+        var y = (0.5 * this.height) - this.pixelsPerDb * db;
+        return y;
+    };
+
+    
 	
 }
 
@@ -224,7 +220,7 @@ class FilterBank {
         this.draw();
     }
 
-    createStandardFilterbank() {
+    /*createStandardFilterbank() {
         // Type, Q, Freq, Gain, Color
         this.addFilter("highpass", 0.00001, 40, 12, "red");
 
@@ -274,7 +270,7 @@ class FilterBank {
         //console.log("ratio = " + this.dbRatio);
 
         this.outputGain.connect(this.analyser);
-    }
+    }*/
 
     getInput() {
         return this.inputGain;

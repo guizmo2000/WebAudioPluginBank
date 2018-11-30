@@ -117,7 +117,7 @@
 
     }
 
-    #divFilterBank{
+    #divFilterBank {
       background-color: #000;
     }
   </style>
@@ -143,6 +143,7 @@
       this._root = this.attachShadow({ mode: 'open' });
       this._root.appendChild(equaltemp.content.cloneNode(true));
       this.setCanvas();
+      this.draw();
     }
 
     get properties() {
@@ -173,10 +174,286 @@
       this.knobs = this._root.querySelectorAll(".knob");
     }
 
-    setCanvas(){
-      this.canvasParent= this._root.querySelector("#DivFilterBank");
-      this.canvasParent.appendChild(this._plug.canvas);
+    setCanvas() {
+      // canvas 
+      this.canvas = document.createElement("canvas");
+      // get dimensions, by default the ones from the parent element
+      this.canvas.classList.add("graphicEQ");
+      this.canvas.width = this.width = 250;
+      this.canvas.height = this.height = 250;
+
+      this.ctx = this.canvas.getContext("2d");
+      this.canvasParent = this._root.querySelector("#DivFilterBank");
+      this.canvasParent.appendChild(this.canvas);
+     
+     
+      this.canvas2 = document.createElement("canvas");
+      this.canvas2.style.position = "absolute";
+      this.canvas2.style.top = 0;
+      this.canvas2.style.left = 0;
+      this.canvas2.width = this.canvas.width;
+      this.canvas2.height = this.canvas.height;
+      this.canvas2.style.zIndex = -1;
+      this.canvasParent.appendChild(this.canvas2);
+      this.ctx2 = this.canvas2.getContext("2d");
     }
+
+    draw() {
+        let ctx = this.ctx;
+        ctx.save();
+
+        ctx.clearRect(0, 0, this.width, this.height);
+
+        this.sumCurveParallel = []; // curves of (x, y) pixels thats sums all filter curves
+        this.sumCurveSerie = [];
+
+        for (let x = 0; x < this.width; x++) {
+            this.sumCurveParallel[x] = 0;
+            this.sumCurveSerie[x] = 0;
+        }
+
+
+        this._plug.params.filters.forEach((filt) => {
+            this.drawFilterCurves(filt);
+            // draw control point
+            this.drawControlPoint(filt);
+        });
+
+        this.drawGrid();
+
+        if (this._plug.params.filters.length > 0) {
+            //this.drawSumOfAllFilterCurveParallel();
+            this.drawSumOfAllFilterCurveSerie();
+        }
+
+        if (this.mode === "dragControlPoint")
+            this.drawTooltip();
+
+
+        ctx.restore();
+    }
+
+    drawFilterCurves(filt) {
+        let frequencyHz = new Float32Array(this.canvas.width);
+        let magResponse = new Float32Array(this.canvas.width);
+        let phaseResponse = new Float32Array(this.canvas.width);
+        let ctx = this.ctx;
+
+        ctx.save();
+        ctx.globalAlpha = 0.3
+        ctx.strokeStyle = "white";
+        ctx.fillStyle = filt.color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+
+        // First get response.
+        for (let i = 0; i < this.width; i++) {
+            let f = i / this.width;
+
+            // Convert to log frequency scale (octaves).
+            f = this.nyquist * Math.pow(2.0, this.noctaves * (f - 1.0));
+
+            frequencyHz[i] = f;
+        }
+        filt.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
+        /*
+      var magResponseOfFilter = new Float32Array(width);
+      filt.getFrequencyResponse(frequencyHz, magResponseOfFilter, phaseResponse);
+      // sum it to magResponse
+      for(var l = 0; l < width; l++) {
+        magResponse[l] = magResponseOfFilter[l];
+      }
+      */
+
+
+        // Draw filters curves
+        for (let i = 0; i < this.width; i++) {
+            let f = magResponse[i];
+            let response = magResponse[i];
+            let dbResponse = 2 * (10.0 * Math.log(response) / Math.LN10);
+
+            let x = i;
+            let y = this.dbToY(dbResponse);
+
+            // curve that sums all filter responses
+            this.sumCurveParallel[x] += response;
+            this.sumCurveSerie[x] += dbResponse;
+
+            if (i === 0)
+                ctx.moveTo(x, y);
+            else
+                ctx.lineTo(x, y);
+        }
+        //ctx.lineTo(this.width, this.height);
+        ctx.lineTo(this.width, this.height / 2);
+        ctx.lineTo(0, this.height / 2);
+
+        ctx.fill();
+        //ctx.stroke();
+
+        ctx.restore();
+    }
+
+    drawControlPoint(filter) {
+        let q = filter.Q.value; // unit = db
+        let f = filter.frequency.value;
+        let gain = filter.gain.value;
+
+        let x, y;
+
+        x = this.fToX(f);
+        switch (filter.type) {
+            case "lowpass":
+            case "highpass":
+                y = this.dbToY(q);
+                break;
+            case "lowshelf":
+            case "highshelf":
+                y = this.dbToY(gain / 2);
+                break;
+            case "peaking":
+                y = this.dbToY(gain);
+                break;
+            case "notch":
+            case "bandpass":
+                if (q > 0.16) {
+                    y = this.dbToY(q);
+                }
+                break;
+        }
+
+        filter.controlPoint = {
+            x: x,
+            y: y,
+        }
+
+        this.drawControlPointAsColoredCircle(x, y, filter.color)
+    }
+
+    drawControlPointAsColoredCircle(x, y, color) {
+        let ctx = this.ctx;
+
+        ctx.save();
+
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(x + 1, y, 5, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.restore();
+    }
+
+    getFontSizeDependingOnWidth() {
+        return this.width / 45;
+    }
+    getFontSizeDependingOnHeight() {
+        return this.height / 35;
+    }
+
+    drawGrid() {
+        let ctx = this.ctx;
+
+        ctx.save();
+        let fontSize = this.getFontSizeDependingOnWidth();
+
+        ctx.beginPath();
+
+        ctx.lineWidth = 1;
+
+        ctx.font = "300 " + fontSize + 'px  OpenSans, sans-serif';
+
+        // Draw frequency scale.
+        for (let octave = 0; octave <= this.noctaves; octave++) {
+            let x = octave * this.width / this.noctaves;
+
+            ctx.strokeStyle = this.gridColor;
+            ctx.moveTo(x, 30);
+            ctx.lineTo(x, this.height);
+            ctx.stroke();
+
+            let f = this.nyquist * Math.pow(2.0, octave - this.noctaves);
+            let value = f.toFixed(0);
+            let unit = 'Hz';
+
+            if (f > 1000) {
+                unit = 'KHz';
+                value = (f / 1000).toFixed(1);
+            }
+
+            ctx.textAlign = "center";
+            ctx.fillStyle = this.textColor;
+            ctx.fillText(value + unit, x, 20);
+        }
+
+        // Draw 0dB line.
+        fontSize = this.getFontSizeDependingOnHeight();
+        ctx.font = "300 " + fontSize + 'px  OpenSans, sans-serif';
+
+        ctx.beginPath();
+        ctx.moveTo(0, 0.5 * this.height);
+        ctx.lineTo(this.width, 0.5 * this.height);
+        ctx.stroke();
+
+        // Draw decibel scale.
+        let dbIncrement = this.dbScale * 10 / 60;
+        for (let db = -this.dbScale; db < this.dbScale; db += dbIncrement) {
+            let y = this.dbToY(db);
+            ctx.fillStyle = this.textColor;
+            ctx.fillText(db.toFixed(0) + "dB", this.width - this.width / 25, y);
+            ctx.strokeStyle = this.gridColor;
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(this.width, y);
+            ctx.stroke();
+        }
+
+        ctx.restore();
+    }
+
+    drawSumOfAllFilterCurveSerie() {
+        //console.log("draw sum")
+        let ctx = this.ctx;
+
+        ctx.save();
+        ctx.strokeStyle = "white";
+        ctx.beginPath();
+        for (let x = 0; x < this.width; x++) {
+            //let y = this.dbToY(0) - 
+            let dbResponse = this.sumCurveSerie[x];
+            let y = this.dbToY(dbResponse);
+
+            //drawControlPointAsColoredCircle(x, y, "red");
+            if (y !== NaN) {
+                if (x === 0)
+                    ctx.moveTo(x, y);
+                else
+                    ctx.lineTo(x, y);
+            }
+            //console.log("x = " + x + " y = " + y)
+        }
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    map(value, istart, istop, ostart, ostop) {
+        return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+    }
+
+    fToX(f) {
+        // logarithmic scale
+        var logf = Math.log2(f);
+        var logmaxf = Math.log2(this.nyquist); // 24Khz for 11 octaves at 48Khz
+        var logminf = Math.log2(10);      // min freq value in our graphic
+        var x = this.map(logf, logminf, logmaxf, -this.width / 50, this.width);
+
+        return x;
+    }
+
+    dbToY(db) {
+        var y = (0.5 * this.height) - this.pixelsPerDb * db;
+        return y;
+    };
 
 
     setSwitchListener() {
