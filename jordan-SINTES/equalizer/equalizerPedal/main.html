@@ -183,8 +183,8 @@
             this.canvas2 = document.createElement("canvas");
             this.canvas2.classList.add("frequencyMeasure");
             this.canvas2.style.position = "absolute";
-            this.canvas2.style.top = 95;
-            this.canvas2.style.left = 23;
+            this.canvas2.style.top = 0;
+            this.canvas2.style.left = 0;
             this.canvas2.width = this.canvas.width;
             this.canvas2.height = this.canvas.height;
             this.canvas2.style.zIndex = -1;
@@ -674,10 +674,6 @@
         reactivate() {
             this._plug.params.state = "enable";
             this._plug.connectNodes();
-        }
-
-        blockElement() {
-            this._root.querySelector(".row").addEventListener("mousedown", (e) => { e.stopPropagation() })
         }
     }
 
