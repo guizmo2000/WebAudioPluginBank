@@ -1,7 +1,7 @@
 {
     "documentation": "...",
     "name": "DistoMachine",
-    "thumbnail": "assets/equal.png",
+    "thumbnail": "assets/disto.png",
     "vendor": "Wasabi",
     "category":"AmpSim",
     "version": "1.0"
