@@ -136,7 +136,9 @@
             this.setSwitchListener();
             this.setCanvas();
             this.draw();
+            this.avoidDrag();
         }
+
 
         get properties() {
             this.boundingRect = {
@@ -674,7 +676,13 @@
             this._plug.params.state = "enable";
             this._plug.connectNodes();
         }
+
+        avoidDrag(){
+			this._root.querySelector("canvas").draggable=false;
+		}
     }
+
+    
 
 
 
