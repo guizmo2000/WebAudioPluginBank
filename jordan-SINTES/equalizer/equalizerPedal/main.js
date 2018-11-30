@@ -15,6 +15,17 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
             filters:[]
             
         }
+
+        this.gridColor = "rgb(235,235,235)";
+        this.textColor = "rgb(235, 235, 235)";
+
+        // mouse selection mode
+        this.mode = "none";
+
+        this.nyquist = 0.5 * this.context.sampleRate;
+        this.noctaves = 11;
+        // should be recomputed in case of resize
+        
         
        
         
