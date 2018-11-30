@@ -1,694 +1,700 @@
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
-  WebAudioControlsOptions = {
-    useMidi: 1,
-  };
+    WebAudioControlsOptions = {
+        useMidi: 1,
+    };
 </script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template id="wc-equalizer">
-  <style>
-    :host {
-      background: linear-gradient(rgb(114, 70, 155), rgb(44, 34, 109));
-      box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+    <style>
+        :host {
+            background: linear-gradient(rgb(114, 70, 155), rgb(44, 34, 109));
+            box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 
-      width: 280px;
-      height: 350px;
-      display: block;
-      user-select: none;
-      cursor: move;
-      z-index: 9;
+            width: 280px;
+            height: 350px;
+            display: block;
+            user-select: none;
+            cursor: move;
+            z-index: 9;
 
-      border-bottom-left-radius: 8px;
-      border-bottom-right-radius: 8px;
-    }
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
 
-    .pedalLabel,
-    .div_buttons {
-      border-radius: 8px;
-    }
+        .pedalLabel,
+        .div_buttons {
+            border-radius: 8px;
+        }
 
-    .div_menuPanel {
-      /* border-top-left-radius: 8px;
+        .div_menuPanel {
+            /* border-top-left-radius: 8px;
         border-top-right-radius: 8px; */
-    }
+        }
 
-    webaudio-switch {
-      left: -6px;
+        webaudio-switch {
+            left: -6px;
 
-    }
+        }
 
-    span {
-      font-family: helvetica;
-      text-shadow: 0px 1px 1px #000;
-    }
+        span {
+            font-family: helvetica;
+            text-shadow: 0px 1px 1px #000;
+        }
 
-    .pedalLabel {
-      /* background: rgba(0, 0, 0, 0.4); */
-      box-shadow: inset 0px 1px 5px #111;
-      border: 1px solid #ccc;
-      color: rgb(204, 204, 204);
-      padding: 4px 10px;
+        .pedalLabel {
+            /* background: rgba(0, 0, 0, 0.4); */
+            box-shadow: inset 0px 1px 5px #111;
+            border: 1px solid #ccc;
+            color: rgb(204, 204, 204);
+            padding: 4px 10px;
 
-      font-size: 10px;
-      text-align: center;
-      user-select: none;
-      font-family: helvetica;
-      text-transform: uppercase;
-      margin-top: 20px;
-    }
+            font-size: 10px;
+            text-align: center;
+            user-select: none;
+            font-family: helvetica;
+            text-transform: uppercase;
+            margin-top: 20px;
+        }
 
-    .knob-label {
-      color: rgb(255, 255, 255);
-      text-shadow: 0px 1px 1px #000;
+        .knob-label {
+            color: rgb(255, 255, 255);
+            text-shadow: 0px 1px 1px #000;
 
-      font-size: 9px;
-      margin-top: -2px;
+            font-size: 9px;
+            margin-top: -2px;
 
-      text-align: center;
-      text-transform: uppercase;
-      overflow: hidden;
-      user-select: none;
-      font-family: helvetica;
-      margin-top: 5px;
+            text-align: center;
+            text-transform: uppercase;
+            overflow: hidden;
+            user-select: none;
+            font-family: helvetica;
+            margin-top: 5px;
 
-    }
+        }
 
-    .elements {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: center;
+        .elements {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
 
-      padding: 10px;
+            padding: 10px;
 
-    }
+        }
 
-    .column {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
-      flex: 1;
-      margin: 5px;
-      margin-top: 10px;
-      border-radius: 10px;
-      z-index:0;
-    }
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            margin: 5px;
+            margin-top: 10px;
+            border-radius: 10px;
+            z-index: 0;
+        }
 
-   .frequencyMeasure{
-     background-color: #000
-   }
+        .frequencyMeasure {
+            background-color: #000
+        }
 
-    .row {
-      display: flex;
-      flex-direction: row;
-      justify-content: flex-start;
-      align-items: stretch;
+        .row {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: stretch;
 
-    }
-
-
-  </style>
-  <div class="row">
-    <div class="column">
-      <div id="DivFilterBank"></div>
-      <span class="knob-label" id="knob1-label">EFFECT</span>
-      <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-        width="32" height="20"></webaudio-switch>
-      <span class="pedalLabel">Equalizer</span>
-    </div>
+        }
+    </style>
+    <div class="row">
+        <div class="column">
+            <div id="DivFilterBank"></div>
+            <span class="knob-label" id="knob1-label">EFFECT</span>
+            <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+                width="32" height="20"></webaudio-switch>
+            <span class="pedalLabel">Equalizer</span>
+        </div>
 
 </template>
 
 <script>
-  let equaltemp = document.currentScript.ownerDocument.querySelector("#wc-equalizer");
-  class EqualizerGUI extends HTMLElement {
+    let equaltemp = document.currentScript.ownerDocument.querySelector("#wc-equalizer");
+    class EqualizerGUI extends HTMLElement {
 
-    constructor(plug) {
-      super();
-      this._plug = plug;
-      this._plug.gui = this;
-      this._root = this.attachShadow({ mode: 'open' });
-      this._root.appendChild(equaltemp.content.cloneNode(true));
-      this.knobs = this._root.querySelectorAll(".knob");
-      this.mode = this._root.querySelectorAll(".mode");
-      this.isOn;
-      this.state = new Object();
-      this.setSwitchListener();
-      this.setCanvas();
-      this.draw();
-    }
-
-    get properties() {
-      this.boundingRect = {
-        dataWidth: {
-          type: Number,
-          value: 180
-        },
-        dataHeight: {
-          type: Number,
-          value: 220
-        }
-      };
-      return this.boundingRect;
-    }
-
-    static get observedAttributes() { return ['state']; }
-
-    attributeChangedCallback() {
-      this.state = JSON.parse(this.getAttribute('state'));
-      console.log(this.state);
-      if (this.state.status == "enable") {
-        this._root.querySelector("#switch1").value = 1;
-        this.isOn = true;
-      }
-
-
-      this.knobs = this._root.querySelectorAll(".knob");
-    }
-
-    setCanvas() {
-      // canvas 
-      this.canvas = document.createElement("canvas");
-      // get dimensions, by default the ones from the parent element
-      this.canvas.classList.add("graphicEQ");
-      this.canvas.width = this.width = 250;
-      this.canvas.height = this.height = 250;
-
-      this.ctx = this.canvas.getContext("2d");
-      this.canvasParent = this._root.querySelector("#DivFilterBank");
-      this.canvasParent.appendChild(this.canvas);
-     
-     
-      this.canvas2 = document.createElement("canvas");
-      this.canvas2.classList.add("frequencyMeasure");
-      this.canvas2.style.position = "absolute";
-      this.canvas2.style.top = 95;
-      this.canvas2.style.left = 23;
-      this.canvas2.width = this.canvas.width;
-      this.canvas2.height = this.canvas.height;
-      this.canvas2.style.zIndex = -1;
-      this.canvasParent.appendChild(this.canvas2);
-      this.ctx2 = this.canvas2.getContext("2d");
-      this.dbScale= 60;
-      this.pixelsPerDb = (0.5 * this.height) / this.dbScale;
-
-      // listeners
-      this.canvas.addEventListener("mousemove", this.processMouseMove.bind(this));
-      this.canvas.addEventListener("mousedown", this.processMouseDown.bind(this));
-      this.canvas.addEventListener("mouseup", this.processMouseUp.bind(this));
-
-        requestAnimationFrame(this.drawFrequencies.bind(this));
-    }
-
-    draw() {
-        let ctx = this.ctx;
-        ctx.save();
-
-        ctx.clearRect(0, 0, this.width, this.height);
-
-        this.sumCurveParallel = []; // curves of (x, y) pixels thats sums all filter curves
-        this.sumCurveSerie = [];
-
-        for (let x = 0; x < this.width; x++) {
-            this.sumCurveParallel[x] = 0;
-            this.sumCurveSerie[x] = 0;
+        constructor(plug) {
+            super();
+            this._plug = plug;
+            this._plug.gui = this;
+            this._root = this.attachShadow({ mode: 'open' });
+            this._root.appendChild(equaltemp.content.cloneNode(true));
+            this.knobs = this._root.querySelectorAll(".knob");
+            this.mode = this._root.querySelectorAll(".mode");
+            this.isOn;
+            this.state = new Object();
+            this.setSwitchListener();
+            this.setCanvas();
+            this.draw();
+            this.blockElement();
         }
 
-
-        this._plug.params.filters.forEach((filt) => {
-            this.drawFilterCurves(filt);
-            // draw control point
-            this.drawControlPoint(filt);
-        });
-
-        this.drawGrid();
-
-        if (this._plug.params.filters.length > 0) {
-            //this.drawSumOfAllFilterCurveParallel();
-            this.drawSumOfAllFilterCurveSerie();
-        }
-
-        if (this._plug.mode === "dragControlPoint")
-            this.drawTooltip();
-
-
-        ctx.restore();
-    }
-
-    drawFilterCurves(filt) {
-        let frequencyHz = new Float32Array(this.canvas.width);
-        let magResponse = new Float32Array(this.canvas.width);
-        let phaseResponse = new Float32Array(this.canvas.width);
-        let ctx = this.ctx;
-
-        ctx.save();
-        ctx.globalAlpha = 0.3
-        ctx.strokeStyle = "white";
-        ctx.fillStyle = filt.color;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-
-        // First get response.
-        for (let i = 0; i < this.width; i++) {
-            let f = i / this.width;
-
-            // Convert to log frequency scale (octaves).
-            f = this._plug.nyquist * Math.pow(2.0, this._plug.noctaves * (f - 1.0));
-
-            frequencyHz[i] = f;
-        }
-        filt.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
-        /*
-      var magResponseOfFilter = new Float32Array(width);
-      filt.getFrequencyResponse(frequencyHz, magResponseOfFilter, phaseResponse);
-      // sum it to magResponse
-      for(var l = 0; l < width; l++) {
-        magResponse[l] = magResponseOfFilter[l];
-      }
-      */
-
-
-        // Draw filters curves
-        for (let i = 0; i < this.width; i++) {
-            let f = magResponse[i];
-            let response = magResponse[i];
-            let dbResponse = 2 * (10.0 * Math.log(response) / Math.LN10);
-
-            let x = i;
-            let y = this.dbToY(dbResponse);
-
-            // curve that sums all filter responses
-            this.sumCurveParallel[x] += response;
-            this.sumCurveSerie[x] += dbResponse;
-
-            if (i === 0)
-                ctx.moveTo(x, y);
-            else
-                ctx.lineTo(x, y);
-        }
-        //ctx.lineTo(this.width, this.height);
-        ctx.lineTo(this.width, this.height / 2);
-        ctx.lineTo(0, this.height / 2);
-
-        ctx.fill();
-        //ctx.stroke();
-
-        ctx.restore();
-    }
-
-    drawControlPoint(filter) {
-        let q = filter.Q.value; // unit = db
-        let f = filter.frequency.value;
-        let gain = filter.gain.value;
-
-        let x, y;
-
-        x = this.fToX(f);
-        switch (filter.type) {
-            case "lowpass":
-            case "highpass":
-                y = this.dbToY(q);
-                break;
-            case "lowshelf":
-            case "highshelf":
-                y = this.dbToY(gain / 2);
-                break;
-            case "peaking":
-                y = this.dbToY(gain);
-                break;
-            case "notch":
-            case "bandpass":
-                if (q > 0.16) {
-                    y = this.dbToY(q);
+        get properties() {
+            this.boundingRect = {
+                dataWidth: {
+                    type: Number,
+                    value: 280
+                },
+                dataHeight: {
+                    type: Number,
+                    value: 350
                 }
-                break;
+            };
+            return this.boundingRect;
         }
 
-        filter.controlPoint = {
-            x: x,
-            y: y,
-        }
+        static get observedAttributes() { return ['state']; }
 
-        this.drawControlPointAsColoredCircle(x, y, filter.color)
-    }
-
-    drawControlPointAsColoredCircle(x, y, color) {
-        let ctx = this.ctx;
-
-        ctx.save();
-
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(x + 1, y, 5, 0, Math.PI * 2);
-        ctx.fill();
-
-        ctx.restore();
-    }
-
-    getFontSizeDependingOnWidth() {
-        return this.width / 45;
-    }
-    getFontSizeDependingOnHeight() {
-        return this.height / 35;
-    }
-
-    drawGrid() {
-        let ctx = this.ctx;
-
-        ctx.save();
-        let fontSize = this.getFontSizeDependingOnWidth();
-
-        ctx.beginPath();
-
-        ctx.lineWidth = 1;
-
-        ctx.font = "300 " + fontSize + 'px  OpenSans, sans-serif';
-
-        // Draw frequency scale.
-        for (let octave = 0; octave <= this._plug.noctaves; octave++) {
-            let x = octave * this.width / this._plug.noctaves;
-
-            ctx.strokeStyle = this._plug.gridColor;
-            ctx.moveTo(x, 30);
-            ctx.lineTo(x, this.height);
-            ctx.stroke();
-
-            let f = this._plug.nyquist * Math.pow(2.0, octave - this._plug.noctaves);
-            let value = f.toFixed(0);
-            let unit = 'Hz';
-
-            if (f > 1000) {
-                unit = 'KHz';
-                value = (f / 1000).toFixed(1);
+        attributeChangedCallback() {
+            this.state = JSON.parse(this.getAttribute('state'));
+            console.log(this.state);
+            if (this.state.status == "enable") {
+                this._root.querySelector("#switch1").value = 1;
+                this.isOn = true;
             }
 
-            ctx.textAlign = "center";
-            ctx.fillStyle = this.textColor;
-            ctx.fillText(value + unit, x, 20);
+
+            this.knobs = this._root.querySelectorAll(".knob");
         }
 
-        // Draw 0dB line.
-        fontSize = this.getFontSizeDependingOnHeight();
-        ctx.font = "300 " + fontSize + 'px  OpenSans, sans-serif';
+        setCanvas() {
+            // canvas 
+            this.canvas = document.createElement("canvas");
+            // get dimensions, by default the ones from the parent element
+            this.canvas.classList.add("graphicEQ");
+            this.canvas.width = this.width = 250;
+            this.canvas.height = this.height = 250;
 
-        ctx.beginPath();
-        ctx.moveTo(0, 0.5 * this.height);
-        ctx.lineTo(this.width, 0.5 * this.height);
-        ctx.stroke();
+            this.ctx = this.canvas.getContext("2d");
+            this.canvasParent = this._root.querySelector("#DivFilterBank");
+            this.canvasParent.appendChild(this.canvas);
 
-        // Draw decibel scale.
-        let dbIncrement = this.dbScale * 10 / 60;
-        for (let db = -this.dbScale; db < this.dbScale; db += dbIncrement) {
-            let y = this.dbToY(db);
-            ctx.fillStyle = this.textColor;
-            ctx.fillText(db.toFixed(0) + "dB", this.width - this.width / 25, y);
-            ctx.strokeStyle = this._plug.gridColor;
+
+            this.canvas2 = document.createElement("canvas");
+            this.canvas2.classList.add("frequencyMeasure");
+            this.canvas2.style.position = "absolute";
+            this.canvas2.style.top = 95;
+            this.canvas2.style.left = 23;
+            this.canvas2.width = this.canvas.width;
+            this.canvas2.height = this.canvas.height;
+            this.canvas2.style.zIndex = -1;
+            this.canvasParent.appendChild(this.canvas2);
+            this.ctx2 = this.canvas2.getContext("2d");
+            this.dbScale = 60;
+            this.pixelsPerDb = (0.5 * this.height) / this.dbScale;
+
+            // listeners
+            this.canvas.addEventListener("mousemove", this.processMouseMove.bind(this));
+            this.canvas.addEventListener("mousedown", this.processMouseDown.bind(this));
+            this.canvas.addEventListener("mouseup", this.processMouseUp.bind(this));
+
+            requestAnimationFrame(this.drawFrequencies.bind(this));
+        }
+
+        draw() {
+            let ctx = this.ctx;
+            ctx.save();
+
+            ctx.clearRect(0, 0, this.width, this.height);
+
+            this.sumCurveParallel = []; // curves of (x, y) pixels thats sums all filter curves
+            this.sumCurveSerie = [];
+
+            for (let x = 0; x < this.width; x++) {
+                this.sumCurveParallel[x] = 0;
+                this.sumCurveSerie[x] = 0;
+            }
+
+
+            this._plug.params.filters.forEach((filt) => {
+                this.drawFilterCurves(filt);
+                // draw control point
+                this.drawControlPoint(filt);
+            });
+
+            this.drawGrid();
+
+            if (this._plug.params.filters.length > 0) {
+                //this.drawSumOfAllFilterCurveParallel();
+                this.drawSumOfAllFilterCurveSerie();
+            }
+
+            if (this._plug.mode === "dragControlPoint")
+                this.drawTooltip();
+
+
+            ctx.restore();
+        }
+
+        drawFilterCurves(filt) {
+            let frequencyHz = new Float32Array(this.canvas.width);
+            let magResponse = new Float32Array(this.canvas.width);
+            let phaseResponse = new Float32Array(this.canvas.width);
+            let ctx = this.ctx;
+
+            ctx.save();
+            ctx.globalAlpha = 0.3
+            ctx.strokeStyle = "white";
+            ctx.fillStyle = filt.color;
+            ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.moveTo(0, y);
-            ctx.lineTo(this.width, y);
-            ctx.stroke();
-        }
+            ctx.moveTo(0, 0);
 
-        ctx.restore();
-    }
+            // First get response.
+            for (let i = 0; i < this.width; i++) {
+                let f = i / this.width;
 
-    drawSumOfAllFilterCurveSerie() {
-        //console.log("draw sum")
-        let ctx = this.ctx;
+                // Convert to log frequency scale (octaves).
+                f = this._plug.nyquist * Math.pow(2.0, this._plug.noctaves * (f - 1.0));
 
-        ctx.save();
-        ctx.strokeStyle = "white";
-        ctx.beginPath();
-        for (let x = 0; x < this.width; x++) {
-            //let y = this.dbToY(0) - 
-            let dbResponse = this.sumCurveSerie[x];
-            let y = this.dbToY(dbResponse);
+                frequencyHz[i] = f;
+            }
+            filt.getFrequencyResponse(frequencyHz, magResponse, phaseResponse);
+            /*
+          var magResponseOfFilter = new Float32Array(width);
+          filt.getFrequencyResponse(frequencyHz, magResponseOfFilter, phaseResponse);
+          // sum it to magResponse
+          for(var l = 0; l < width; l++) {
+            magResponse[l] = magResponseOfFilter[l];
+          }
+          */
 
-            //drawControlPointAsColoredCircle(x, y, "red");
-            if (y !== NaN) {
-                if (x === 0)
+
+            // Draw filters curves
+            for (let i = 0; i < this.width; i++) {
+                let f = magResponse[i];
+                let response = magResponse[i];
+                let dbResponse = 2 * (10.0 * Math.log(response) / Math.LN10);
+
+                let x = i;
+                let y = this.dbToY(dbResponse);
+
+                // curve that sums all filter responses
+                this.sumCurveParallel[x] += response;
+                this.sumCurveSerie[x] += dbResponse;
+
+                if (i === 0)
                     ctx.moveTo(x, y);
                 else
                     ctx.lineTo(x, y);
             }
-            //console.log("x = " + x + " y = " + y)
-        }
-        ctx.stroke();
-        ctx.restore();
-    }
+            //ctx.lineTo(this.width, this.height);
+            ctx.lineTo(this.width, this.height / 2);
+            ctx.lineTo(0, this.height / 2);
 
-    map(value, istart, istop, ostart, ostop) {
-        return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
-    }
+            ctx.fill();
+            //ctx.stroke();
 
-    fToX(f) {
-        // logarithmic scale
-        var logf = Math.log2(f);
-        var logmaxf = Math.log2(this._plug.nyquist); // 24Khz for 11 octaves at 48Khz
-        var logminf = Math.log2(10);      // min freq value in our graphic
-        var x = this.map(logf, logminf, logmaxf, -this.width / 50, this.width);
-
-        return x;
-    }
-
-    dbToY(db) {
-        var y = (0.5 * this.height) - this.pixelsPerDb * db;
-        return y;
-    };
-
-     processMouseMove(e) {
-        this.mousePos = this.getMousePos(e);
-
-
-        switch (this.mode) {
-            case "none":
-                // color each control point in red
-                this._plug.params.filters.forEach((f) => {
-                    this.drawControlPointAsColoredCircle(f.controlPoint.x, f.controlPoint.y, f.color);
-                });
-
-                // if mouse close to a control point color it in green
-                if (this.selectedFilter = this.findClosestFilterControlPoint(this.mousePos.x, this.mousePos.y)) {
-                    this.drawControlPointAsColoredCircle(this.selectedFilter.controlPoint.x, this.selectedFilter.controlPoint.y, "red");
-                }
-                break;
-            case "dragControlPoint":
-                this.dy = (this.clickedY - this.mousePos.y);
-
-                this.changeFilterParameters(this.selectedFilter, this.mousePos.x, this.mousePos.y, this.shiftPressed, this.dy);
-
-                break;
+            ctx.restore();
         }
 
-    }
+        drawControlPoint(filter) {
+            let q = filter.Q.value; // unit = db
+            let f = filter.frequency.value;
+            let gain = filter.gain.value;
 
-    processMouseDown(e) {
-        if (this.selectedFilter) {
-            this.selectedFilter.originalQValue = this.selectedFilter.Q.value;
-            this.mode = "dragControlPoint";
-            this.shiftPressed = (e.shiftKey);
-            this.clickedY = this.getMousePos(e).y;
-            this.drawTooltip();
+            let x, y;
 
-            //console.log("mode=START DRAGGING");
-        }
-    }
-
-    processMouseUp(e) {
-        this.mode = "none";
-        this.selectedFilter = null;
-        this.shiftPressed = false;
-        this.dy = 0;
-        this.draw();
-    }
-
-    drawFrequencies() {
-       //clear the canvas
-      this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
-  
-      // Get analyser data
-      this._plug.analyser.getFloatFrequencyData(this._plug.dataArray);
-
-      var barWidth = [];
-      var barHeight;
-      var x = 0;
-
-      var analyserRange = this._plug.analyser.maxDecibels - this._plug.analyser.minDecibels;
-        // ration between analyser range and our range
-      var range = this.dbScale * 2;
-      var dbRatio = range / analyserRange;
-     
-      for(var i = 0; i < this._plug.bufferLength; i++) {
-        // values are all negative
-        barHeight = this.dbToY(-this._plug.dataArray[i]);
-              
-        barHeight *= dbRatio;
-
-        //this.ctx2.fillStyle = 'rgb(' + (barHeight+100) + ',0,0)';
-        this.ctx2.fillStyle = 'red';
-        barWidth[i] = (Math.log(i+2)-Math.log(i+1))*this.canvas2.width/Math.log(this._plug.bufferLength-80);
-        
-        this.ctx2.fillRect(x,this.canvas2.height-barHeight,barWidth[i],barHeight);
-        // 2 is the number of pixels between bars
-        x += barWidth[i] + 1;  
-      }    
-  // call again the visualize function at 60 frames/s
-  requestAnimationFrame(this.drawFrequencies.bind(this));
-  
-}
-
-    getMousePos(e) {
-        let rect = this.canvas.getBoundingClientRect();
-        let mouseX = e.x - rect.left;
-        let mouseY = e.y - rect.top;
-        return {
-            x: mouseX,
-            y: mouseY
-        }
-    }
-
-    findClosestFilterControlPoint(x, y) {
-        for (let i = 0; i < this._plug.params.filters.length; i++) {
-            let f = this._plug.params.filters[i];
-            let cp = f.controlPoint;
-            if (this.distance(x, y, cp.x, cp.y) < 5) {
-                // mouse cursor is over a control point
-                return f;
+            x = this.fToX(f);
+            switch (filter.type) {
+                case "lowpass":
+                case "highpass":
+                    y = this.dbToY(q);
+                    break;
+                case "lowshelf":
+                case "highshelf":
+                    y = this.dbToY(gain / 2);
+                    break;
+                case "peaking":
+                    y = this.dbToY(gain);
+                    break;
+                case "notch":
+                case "bandpass":
+                    if (q > 0.16) {
+                        y = this.dbToY(q);
+                    }
+                    break;
             }
+
+            filter.controlPoint = {
+                x: x,
+                y: y,
+            }
+
+            this.drawControlPointAsColoredCircle(x, y, filter.color)
+        }
+
+        drawControlPointAsColoredCircle(x, y, color) {
+            let ctx = this.ctx;
+
+            ctx.save();
+
+            ctx.fillStyle = color;
+            ctx.beginPath();
+            ctx.arc(x + 1, y, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        getFontSizeDependingOnWidth() {
+            return this.width / 45;
+        }
+        getFontSizeDependingOnHeight() {
+            return this.height / 35;
+        }
+
+        drawGrid() {
+            let ctx = this.ctx;
+
+            ctx.save();
+            let fontSize = this.getFontSizeDependingOnWidth();
+
+            ctx.beginPath();
+
+            ctx.lineWidth = 1;
+
+            ctx.font = "300 " + fontSize + 'px  OpenSans, sans-serif';
+
+            // Draw frequency scale.
+            for (let octave = 0; octave <= this._plug.noctaves; octave++) {
+                let x = octave * this.width / this._plug.noctaves;
+
+                ctx.strokeStyle = this._plug.gridColor;
+                ctx.moveTo(x, 30);
+                ctx.lineTo(x, this.height);
+                ctx.stroke();
+
+                let f = this._plug.nyquist * Math.pow(2.0, octave - this._plug.noctaves);
+                let value = f.toFixed(0);
+                let unit = 'Hz';
+
+                if (f > 1000) {
+                    unit = 'KHz';
+                    value = (f / 1000).toFixed(1);
+                }
+
+                ctx.textAlign = "center";
+                ctx.fillStyle = this.textColor;
+                ctx.fillText(value + unit, x, 20);
+            }
+
+            // Draw 0dB line.
+            fontSize = this.getFontSizeDependingOnHeight();
+            ctx.font = "300 " + fontSize + 'px  OpenSans, sans-serif';
+
+            ctx.beginPath();
+            ctx.moveTo(0, 0.5 * this.height);
+            ctx.lineTo(this.width, 0.5 * this.height);
+            ctx.stroke();
+
+            // Draw decibel scale.
+            let dbIncrement = this.dbScale * 10 / 60;
+            for (let db = -this.dbScale; db < this.dbScale; db += dbIncrement) {
+                let y = this.dbToY(db);
+                ctx.fillStyle = this.textColor;
+                ctx.fillText(db.toFixed(0) + "dB", this.width - this.width / 25, y);
+                ctx.strokeStyle = this._plug.gridColor;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(this.width, y);
+                ctx.stroke();
+            }
+
+            ctx.restore();
+        }
+
+        drawSumOfAllFilterCurveSerie() {
+            //console.log("draw sum")
+            let ctx = this.ctx;
+
+            ctx.save();
+            ctx.strokeStyle = "white";
+            ctx.beginPath();
+            for (let x = 0; x < this.width; x++) {
+                //let y = this.dbToY(0) - 
+                let dbResponse = this.sumCurveSerie[x];
+                let y = this.dbToY(dbResponse);
+
+                //drawControlPointAsColoredCircle(x, y, "red");
+                if (y !== NaN) {
+                    if (x === 0)
+                        ctx.moveTo(x, y);
+                    else
+                        ctx.lineTo(x, y);
+                }
+                //console.log("x = " + x + " y = " + y)
+            }
+            ctx.stroke();
+            ctx.restore();
+        }
+
+        map(value, istart, istop, ostart, ostop) {
+            return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+        }
+
+        fToX(f) {
+            // logarithmic scale
+            var logf = Math.log2(f);
+            var logmaxf = Math.log2(this._plug.nyquist); // 24Khz for 11 octaves at 48Khz
+            var logminf = Math.log2(10);      // min freq value in our graphic
+            var x = this.map(logf, logminf, logmaxf, -this.width / 50, this.width);
+
+            return x;
+        }
+
+        dbToY(db) {
+            var y = (0.5 * this.height) - this.pixelsPerDb * db;
+            return y;
         };
-        return null;
-    }
 
-    distance(x1, y1, x2, y2) {
-        let dx = x1 - x2;
-        let dy = y1 - y2;
+        processMouseMove(e) {
+            this.mousePos = this.getMousePos(e);
 
-        return Math.sqrt(dx * dx + dy * dy);
-    }
 
-    drawTooltip() {
-        if (this.mousePos === undefined) return;
+            switch (this.mode) {
+                case "none":
+                    // color each control point in red
+                    this._plug.params.filters.forEach((f) => {
+                        this.drawControlPointAsColoredCircle(f.controlPoint.x, f.controlPoint.y, f.color);
+                    });
 
-        let tooltipWidth = 50, tooltipHeight;
-        let displayQ = false, displayGain = false;
+                    // if mouse close to a control point color it in green
+                    if (this.selectedFilter = this.findClosestFilterControlPoint(this.mousePos.x, this.mousePos.y)) {
+                        this.drawControlPointAsColoredCircle(this.selectedFilter.controlPoint.x, this.selectedFilter.controlPoint.y, "red");
+                    }
+                    break;
+                case "dragControlPoint":
+                    this.dy = (this.clickedY - this.mousePos.y);
 
-        switch (this.selectedFilter.type) {
-            case "lowpass":
-            case "highpass":
-            case "bandpass":
-            case "notch":
-                displayQ = true;
-                displayGain = false;
-                tooltipHeight = 44;
-                break;
-            case "peaking":
-                displayQ = true;
-                displayGain = true;
-                tooltipHeight = 55;
-                break;
-            case "highshelf":
-            case "lowshelf":
-                displayQ = false;
-                displayGain = true;
-                tooltipHeight = 44;
-                break;
+                    this.changeFilterParameters(this.selectedFilter, this.mousePos.x, this.mousePos.y, this.shiftPressed, this.dy);
+
+                    break;
+            }
+
         }
 
-    }
+        processMouseDown(e) {
+            if (this.selectedFilter) {
+                this.selectedFilter.originalQValue = this.selectedFilter.Q.value;
+                this.mode = "dragControlPoint";
+                this.shiftPressed = (e.shiftKey);
+                this.clickedY = this.getMousePos(e).y;
+                this.drawTooltip();
 
-    changeFilterParameters(filter, x, y, shiftPressed, dy) {
-        // x = frequency, y = Db
-        let db = this.yToDb(y);
-        let f = this.xToF(x);
-        //console.log("f = " + f + " db = " + db);
+                //console.log("mode=START DRAGGING");
+            }
+        }
 
-        filter.frequency.value = f;
+        processMouseUp(e) {
+            this.mode = "none";
+            this.selectedFilter = null;
+            this.shiftPressed = false;
+            this.dy = 0;
+            this.draw();
+        }
 
-        switch (filter.type) {
-            case "lowpass":
-            case "highpass":
-                filter.Q.value = db;
-                this.draw();
-                break;
-            case "lowshelf":
-            case "highshelf":
-                filter.gain.value = 2 * db;
-                this.draw();
-                break;
-            case "peaking":
-                if (!shiftPressed)
-                    filter.gain.value = db;
-                else {
-                    filter.Q.value = this.dyToQ(dy);
+        drawFrequencies() {
+            //clear the canvas
+            this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+
+            // Get analyser data
+            this._plug.analyser.getFloatFrequencyData(this._plug.dataArray);
+
+            var barWidth = [];
+            var barHeight;
+            var x = 0;
+
+            var analyserRange = this._plug.analyser.maxDecibels - this._plug.analyser.minDecibels;
+            // ration between analyser range and our range
+            var range = this.dbScale * 2;
+            var dbRatio = range / analyserRange;
+
+            for (var i = 0; i < this._plug.bufferLength; i++) {
+                // values are all negative
+                barHeight = this.dbToY(-this._plug.dataArray[i]);
+
+                barHeight *= dbRatio;
+
+                //this.ctx2.fillStyle = 'rgb(' + (barHeight+100) + ',0,0)';
+                this.ctx2.fillStyle = 'red';
+                barWidth[i] = (Math.log(i + 2) - Math.log(i + 1)) * this.canvas2.width / Math.log(this._plug.bufferLength - 80);
+
+                this.ctx2.fillRect(x, this.canvas2.height - barHeight, barWidth[i], barHeight);
+                // 2 is the number of pixels between bars
+                x += barWidth[i] + 1;
+            }
+            // call again the visualize function at 60 frames/s
+            requestAnimationFrame(this.drawFrequencies.bind(this));
+
+        }
+
+        getMousePos(e) {
+            let rect = this.canvas.getBoundingClientRect();
+            let mouseX = e.x - rect.left;
+            let mouseY = e.y - rect.top;
+            return {
+                x: mouseX,
+                y: mouseY
+            }
+        }
+
+        findClosestFilterControlPoint(x, y) {
+            for (let i = 0; i < this._plug.params.filters.length; i++) {
+                let f = this._plug.params.filters[i];
+                let cp = f.controlPoint;
+                if (this.distance(x, y, cp.x, cp.y) < 5) {
+                    // mouse cursor is over a control point
+                    return f;
                 }
-                this.draw();
-                break;
-            case "notch":
-                if (!shiftPressed)
-                    filter.gain.value = db;
-                else {
-                    filter.Q.value = this.dyToQ(dy);
-                }
-                this.draw();
-                break;
-            case "bandpass":
-                if (db >= 0.16)
+            };
+            return null;
+        }
+
+        distance(x1, y1, x2, y2) {
+            let dx = x1 - x2;
+            let dy = y1 - y2;
+
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        drawTooltip() {
+            if (this.mousePos === undefined) return;
+
+            let tooltipWidth = 50, tooltipHeight;
+            let displayQ = false, displayGain = false;
+
+            switch (this.selectedFilter.type) {
+                case "lowpass":
+                case "highpass":
+                case "bandpass":
+                case "notch":
+                    displayQ = true;
+                    displayGain = false;
+                    tooltipHeight = 44;
+                    break;
+                case "peaking":
+                    displayQ = true;
+                    displayGain = true;
+                    tooltipHeight = 55;
+                    break;
+                case "highshelf":
+                case "lowshelf":
+                    displayQ = false;
+                    displayGain = true;
+                    tooltipHeight = 44;
+                    break;
+            }
+
+        }
+
+        changeFilterParameters(filter, x, y, shiftPressed, dy) {
+            // x = frequency, y = Db
+            let db = this.yToDb(y);
+            let f = this.xToF(x);
+            //console.log("f = " + f + " db = " + db);
+
+            filter.frequency.value = f;
+
+            switch (filter.type) {
+                case "lowpass":
+                case "highpass":
                     filter.Q.value = db;
-                this.draw();
-                break;
+                    this.draw();
+                    break;
+                case "lowshelf":
+                case "highshelf":
+                    filter.gain.value = 2 * db;
+                    this.draw();
+                    break;
+                case "peaking":
+                    if (!shiftPressed)
+                        filter.gain.value = db;
+                    else {
+                        filter.Q.value = this.dyToQ(dy);
+                    }
+                    this.draw();
+                    break;
+                case "notch":
+                    if (!shiftPressed)
+                        filter.gain.value = db;
+                    else {
+                        filter.Q.value = this.dyToQ(dy);
+                    }
+                    this.draw();
+                    break;
+                case "bandpass":
+                    if (db >= 0.16)
+                        filter.Q.value = db;
+                    this.draw();
+                    break;
+            }
+        }
+
+        yToDb(y) {
+            var db = ((0.5 * this.height) - y) / this.pixelsPerDb;
+            return db;
+        };
+
+        xToF(x) {
+            // x corresponds to a freq in log scale
+            // logarithmic scale
+            var logmaxf = Math.log2(this._plug.nyquist); // 24Khz for 11 octaves at 48Khz
+            var logminf = Math.log2(10);      // min freq value in our graphic
+            var flog = this.map(x, -this.width / 50, this.width, logminf, logmaxf);
+            return Math.pow(2, flog); // reverse of a log function is 2^logf
+        }
+
+        setSwitchListener() {
+            console.log("setswitch");
+            this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                if (this.isOn)
+                    this.bypass();
+                else {
+                    this.reactivate();
+                }
+                this.isOn = !this.isOn;
+            });
+        }
+
+        bypass() {
+            this._plug.params.state = "disable";
+            this._plug.connectNodes();
+        }
+        reactivate() {
+            this._plug.params.state = "enable";
+            this._plug.connectNodes();
+        }
+
+        blockElement() {
+            this._root.querySelector(".graphicEQ").addEventListener("mousedown", (e) => { e.stopPropagation() })
         }
     }
 
-    yToDb(y) {
-        var db = ((0.5 * this.height) - y) / this.pixelsPerDb;
-        return db;
-    };
 
-     xToF(x) {
-        // x corresponds to a freq in log scale
-        // logarithmic scale
-        var logmaxf = Math.log2(this._plug.nyquist); // 24Khz for 11 octaves at 48Khz
-        var logminf = Math.log2(10);      // min freq value in our graphic
-        var flog = this.map(x, -this.width / 50, this.width, logminf, logmaxf);
-        return Math.pow(2, flog); // reverse of a log function is 2^logf
+
+
+    // Register the x-custom element with the browser
+    try {
+        console.log("Element defined");
+        customElements.define('wasabi-equalizer', EqualizerGUI);
+    } catch (error) {
+        console.log(error);
+        console.log("Element already defined");
     }
 
-    setSwitchListener() {
-      console.log("setswitch");
-      this._root.querySelector("#switch1").addEventListener('change', (e) => {
-        if (this.isOn) 
-        this.bypass();
-        else{
-          this.reactivate();
-        }
-        this.isOn = !this.isOn;
-      });
+    createEqualizer = (plug) => {
+        let elem = new EqualizerGUI(plug);
+        return elem;
     }
-
-    bypass() {
-      this._plug.params.state="disable";
-      this._plug.connectNodes();
-    }
-    reactivate() {
-      this._plug.params.state="enable";
-      this._plug.connectNodes();
-    }
-  }
-
-  // Register the x-custom element with the browser
-  try {
-    console.log("Element defined");
-    customElements.define('wasabi-equalizer', EqualizerGUI);
-  } catch (error) {
-    console.log(error);
-    console.log("Element already defined");
-  }
-
-  createEqualizer = (plug) => {
-    let elem = new EqualizerGUI(plug);
-    return elem;
-  }
 </script>
