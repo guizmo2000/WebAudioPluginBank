@@ -22,7 +22,6 @@
     "TunerMachine": "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/tuner_machine/tuner",
     "DeadGate":"https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/DeadGate",
     "BlueDream":"https://wasabi.i3s.unice.fr/WebAudioPluginBank/Faust/BlueDream",
-    "Equalizer": "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTESequalizer/equalizerPedal"
-
+    "Equalizer": "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/equalizer/equalizerPedal"
   }
 }
