@@ -202,7 +202,14 @@
       this.canvasParent.appendChild(this.canvas2);
       this.ctx2 = this.canvas2.getContext("2d");
       this.dbScale= 60;
-        this.pixelsPerDb = (0.5 * this.height) / this.dbScale;
+      this.pixelsPerDb = (0.5 * this.height) / this.dbScale;
+
+      // listeners
+      this.canvas.addEventListener("mousemove", this.processMouseMove.bind(this));
+      this.canvas.addEventListener("mousedown", this.processMouseDown.bind(this));
+      this.canvas.addEventListener("mouseup", this.processMouseUp.bind(this));
+
+        requestAnimationFrame(this.drawFrequencies.bind(this));
     }
 
     draw() {
@@ -461,6 +468,199 @@
         var y = (0.5 * this.height) - this.pixelsPerDb * db;
         return y;
     };
+
+     processMouseMove(e) {
+        this.mousePos = this.getMousePos(e);
+
+
+        switch (this.mode) {
+            case "none":
+                // color each control point in red
+                this._plug.params.filters.forEach((f) => {
+                    this.drawControlPointAsColoredCircle(f.controlPoint.x, f.controlPoint.y, f.color);
+                });
+
+                // if mouse close to a control point color it in green
+                if (this.selectedFilter = this.findClosestFilterControlPoint(this.mousePos.x, this.mousePos.y)) {
+                    this.drawControlPointAsColoredCircle(this.selectedFilter.controlPoint.x, this.selectedFilter.controlPoint.y, "red");
+                }
+                break;
+            case "dragControlPoint":
+                this.dy = (this.clickedY - this.mousePos.y);
+
+                this.changeFilterParameters(this.selectedFilter, this.mousePos.x, this.mousePos.y, this.shiftPressed, this.dy);
+
+                break;
+        }
+
+    }
+
+    processMouseDown(e) {
+        if (this.selectedFilter) {
+            this.selectedFilter.originalQValue = this.selectedFilter.Q.value;
+            this.mode = "dragControlPoint";
+            this.shiftPressed = (e.shiftKey);
+            this.clickedY = this.getMousePos(e).y;
+            this.drawTooltip();
+
+            //console.log("mode=START DRAGGING");
+        }
+    }
+
+    processMouseUp(e) {
+        this.mode = "none";
+        this.selectedFilter = null;
+        this.shiftPressed = false;
+        this.dy = 0;
+        this.draw();
+    }
+
+    drawFrequencies() {
+        //clear the canvas
+        //this.ctx2.clearRect(0, 0, this.canvas2.width, this.canvas2.height);
+
+        // Get analyser data
+        this._plug.analyser.getFloatFrequencyData(this._plug.dataArray);
+
+        var barWidth = [];
+        var barHeight;
+        var x = 0;
+
+        for (var i = 0; i < this.bufferLength; i++) {
+            // values are all negative
+            barHeight = this.dbToY(-this.dataArray[i]);
+
+            barHeight *= this.dbRatio;
+
+            //this.ctx2.fillStyle = 'rgb(' + (barHeight+100) + ',0,0)';
+            //this.ctx2.fillStyle = 'red';
+            //barWidth[i] = (Math.log(i + 2) - Math.log(i + 1)) * this.canvas2.width / Math.log(this.bufferLength - 80);
+
+            //this.ctx2.fillRect(x, this.canvas2.height - barHeight, barWidth[i], barHeight);
+            // 2 is the number of pixels between bars
+            x += barWidth[i] + 1;
+        }
+        // call again the visualize function at 60 frames/s
+        requestAnimationFrame(this.drawFrequencies.bind(this));
+
+    }
+
+    getMousePos(e) {
+        let rect = this.canvas.getBoundingClientRect();
+        let mouseX = e.x - rect.left;
+        let mouseY = e.y - rect.top;
+        return {
+            x: mouseX,
+            y: mouseY
+        }
+    }
+
+    findClosestFilterControlPoint(x, y) {
+        for (let i = 0; i < this._plug.params.filters.length; i++) {
+            let f = this._plug.params.filters[i];
+            let cp = f.controlPoint;
+            if (this.distance(x, y, cp.x, cp.y) < 5) {
+                // mouse cursor is over a control point
+                return f;
+            }
+        };
+        return null;
+    }
+
+    distance(x1, y1, x2, y2) {
+        let dx = x1 - x2;
+        let dy = y1 - y2;
+
+        return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    drawTooltip() {
+        if (this.mousePos === undefined) return;
+
+        let tooltipWidth = 50, tooltipHeight;
+        let displayQ = false, displayGain = false;
+
+        switch (this.selectedFilter.type) {
+            case "lowpass":
+            case "highpass":
+            case "bandpass":
+            case "notch":
+                displayQ = true;
+                displayGain = false;
+                tooltipHeight = 44;
+                break;
+            case "peaking":
+                displayQ = true;
+                displayGain = true;
+                tooltipHeight = 55;
+                break;
+            case "highshelf":
+            case "lowshelf":
+                displayQ = false;
+                displayGain = true;
+                tooltipHeight = 44;
+                break;
+        }
+
+    }
+
+    changeFilterParameters(filter, x, y, shiftPressed, dy) {
+        // x = frequency, y = Db
+        let db = this.yToDb(y);
+        let f = this.xToF(x);
+        //console.log("f = " + f + " db = " + db);
+
+        filter.frequency.value = f;
+
+        switch (filter.type) {
+            case "lowpass":
+            case "highpass":
+                filter.Q.value = db;
+                this.draw();
+                break;
+            case "lowshelf":
+            case "highshelf":
+                filter.gain.value = 2 * db;
+                this.draw();
+                break;
+            case "peaking":
+                if (!shiftPressed)
+                    filter.gain.value = db;
+                else {
+                    filter.Q.value = this.dyToQ(dy);
+                }
+                this.draw();
+                break;
+            case "notch":
+                if (!shiftPressed)
+                    filter.gain.value = db;
+                else {
+                    filter.Q.value = this.dyToQ(dy);
+                }
+                this.draw();
+                break;
+            case "bandpass":
+                if (db >= 0.16)
+                    filter.Q.value = db;
+                this.draw();
+                break;
+        }
+    }
+
+    yToDb(y) {
+        var db = ((0.5 * this.height) - y) / this.pixelsPerDb;
+        return db;
+    };
+
+     xToF(x) {
+        // x corresponds to a freq in log scale
+        // logarithmic scale
+        var logmaxf = Math.log2(this._plug.nyquist); // 24Khz for 11 octaves at 48Khz
+        var logminf = Math.log2(10);      // min freq value in our graphic
+        var flog = this.map(x, -this.width / 50, this.width, logminf, logmaxf);
+        return Math.pow(2, flog); // reverse of a log function is 2^logf
+    }
+
 
 
     setSwitchListener() {
