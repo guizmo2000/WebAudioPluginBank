@@ -133,6 +133,8 @@
             this.mode = this._root.querySelectorAll(".mode");
             this.isOn;
             this.state = new Object();
+            this.gridColor = "rgb(235,235,235)";
+            this.textColor = "rgb(235, 235, 235)";
             this.setSwitchListener();
             this.setCanvas();
             this.draw();
@@ -370,7 +372,7 @@
             for (let octave = 0; octave <= this._plug.noctaves; octave++) {
                 let x = octave * this.width / this._plug.noctaves;
 
-                ctx.strokeStyle = this._plug.gridColor;
+                ctx.strokeStyle = this.gridColor;
                 ctx.moveTo(x, 30);
                 ctx.lineTo(x, this.height);
                 ctx.stroke();
@@ -404,7 +406,7 @@
                 let y = this.dbToY(db);
                 ctx.fillStyle = this.textColor;
                 ctx.fillText(db.toFixed(0) + "dB", this.width - this.width / 25, y);
-                ctx.strokeStyle = this._plug.gridColor;
+                ctx.strokeStyle = this.gridColor;
                 ctx.beginPath();
                 ctx.moveTo(0, y);
                 ctx.lineTo(this.width, y);
