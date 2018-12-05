@@ -16,9 +16,6 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
             state: ""
         }
         // mouse selection mode
-        this.mode = "none";
-        this.nyquist = 0.5 * this.context.sampleRate;
-        this.noctaves = 11;
         this.setup();
     }
 
@@ -125,6 +122,7 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
             this._input.disconnect(this.filters);
             this.params.filters[this.params.filters.length - 1].disconnect(this._output);
             this._input.connect(this._output);
+            this._output.disconnect(this.analyser);
         }
     }
 

@@ -130,11 +130,13 @@
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(equaltemp.content.cloneNode(true));
             this.knobs = this._root.querySelectorAll(".knob");
-            this.mode = this._root.querySelectorAll(".mode");
+            this.mode = "none";
             this.isOn;
             this.state = new Object();
             this.gridColor = "rgb(235,235,235)";
             this.textColor = "rgb(235, 235, 235)";
+            this.nyquist = 0.5 * this._plug.context.sampleRate;
+            this.noctaves = 11;
             this.setSwitchListener();
             this.setCanvas();
             this.draw();
@@ -231,7 +233,7 @@
                 this.drawSumOfAllFilterCurveSerie();
             }
 
-            if (this._plug.mode === "dragControlPoint")
+            if (this.mode === "dragControlPoint")
                 this.drawTooltip();
 
 
@@ -257,7 +259,7 @@
                 let f = i / this.width;
 
                 // Convert to log frequency scale (octaves).
-                f = this._plug.nyquist * Math.pow(2.0, this._plug.noctaves * (f - 1.0));
+                f = this.nyquist * Math.pow(2.0, this.noctaves * (f - 1.0));
 
                 frequencyHz[i] = f;
             }
@@ -369,15 +371,15 @@
             ctx.font = "300 " + fontSize + 'px  OpenSans, sans-serif';
 
             // Draw frequency scale.
-            for (let octave = 0; octave <= this._plug.noctaves; octave++) {
-                let x = octave * this.width / this._plug.noctaves;
+            for (let octave = 0; octave <= this.noctaves; octave++) {
+                let x = octave * this.width / this.noctaves;
 
                 ctx.strokeStyle = this.gridColor;
                 ctx.moveTo(x, 30);
                 ctx.lineTo(x, this.height);
                 ctx.stroke();
 
-                let f = this._plug.nyquist * Math.pow(2.0, octave - this._plug.noctaves);
+                let f = this.nyquist * Math.pow(2.0, octave - this.noctaves);
                 let value = f.toFixed(0);
                 let unit = 'Hz';
 
@@ -448,7 +450,7 @@
         fToX(f) {
             // logarithmic scale
             var logf = Math.log2(f);
-            var logmaxf = Math.log2(this._plug.nyquist); // 24Khz for 11 octaves at 48Khz
+            var logmaxf = Math.log2(this.nyquist); // 24Khz for 11 octaves at 48Khz
             var logminf = Math.log2(10);      // min freq value in our graphic
             var x = this.map(logf, logminf, logmaxf, -this.width / 50, this.width);
 
@@ -651,7 +653,7 @@
         xToF(x) {
             // x corresponds to a freq in log scale
             // logarithmic scale
-            var logmaxf = Math.log2(this._plug.nyquist); // 24Khz for 11 octaves at 48Khz
+            var logmaxf = Math.log2(this.nyquist); // 24Khz for 11 octaves at 48Khz
             var logminf = Math.log2(10);      // min freq value in our graphic
             var flog = this.map(x, -this.width / 50, this.width, logminf, logmaxf);
             return Math.pow(2, flog); // reverse of a log function is 2^logf
