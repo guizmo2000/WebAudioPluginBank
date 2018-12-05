@@ -13,7 +13,7 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
 
         this.params = {
             filters: [],
-            state: "disable"
+            state: ""
         }
         // mouse selection mode
         this.mode = "none";
@@ -104,19 +104,27 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
     }
 
     connectNodes() {
-        for (let i = 0; i < this.params.filters.length; i++) {
-            let f = this.params.filters[i];
+        this._input.connect(this._output);
+        if(this.params.state == "enable"){
+            this._input.disconnect(this._output);
+            for (let i = 0; i < this.params.filters.length; i++) {
+                let f = this.params.filters[i];
 
-            if (i === 0) {
-                // connect inputGain to first filter
-                this._input.connect(f);
-            } else {
-                this.params.filters[i - 1].connect(f);
+                if (i === 0) {
+                    // connect inputGain to first filter
+                    this._input.connect(f);
+                } else {
+                    this.params.filters[i - 1].connect(f);
+                }
             }
+            // connect last filter to outputGain
+            this.params.filters[this.params.filters.length - 1].connect(this._output);
+            this._output.connect(this.analyser);
         }
-        // connect last filter to outputGain
-        this.params.filters[this.params.filters.length - 1].connect(this._output);
-        this._output.connect(this.analyser);
+        else if(this.params.state == "disable"){
+            this._input.disconnect(this.filter);
+            this._input.connect(this._output);
+        }
     }
 
     linktoParams() {
