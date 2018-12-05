@@ -122,7 +122,8 @@ window.Equalizer = class Equalizer extends WebAudioPluginCompositeNode {
             this._output.connect(this.analyser);
         }
         else if(this.params.state == "disable"){
-            this._input.disconnect(this.filter);
+            this._input.disconnect(this.filters);
+            this.params.filters[this.params.filters.length - 1].disconnect(this._output);
             this._input.connect(this._output);
         }
     }
