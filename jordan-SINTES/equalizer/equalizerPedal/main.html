@@ -136,7 +136,6 @@
             this.setSwitchListener();
             this.setCanvas();
             this.draw();
-            this.avoidDrag();
         }
 
 
@@ -175,7 +174,7 @@
             this.canvas.classList.add("graphicEQ");
             this.canvas.width = this.width = 250;
             this.canvas.height = this.height = 250;
-
+            this.canvas.style.position = "absolute";
             this.ctx = this.canvas.getContext("2d");
             this.canvasParent = this._root.querySelector("#DivFilterBank");
             this.canvasParent.appendChild(this.canvas);
@@ -183,7 +182,7 @@
 
             this.canvas2 = document.createElement("canvas");
             this.canvas2.classList.add("frequencyMeasure");
-            this.canvas2.style.position = "absolute";
+            this.canvas2.style.position = "relative";
             this.canvas2.style.top = 0;
             this.canvas2.style.left = 0;
             this.canvas2.width = this.canvas.width;
@@ -676,10 +675,6 @@
             this._plug.params.state = "enable";
             this._plug.connectNodes();
         }
-
-        avoidDrag(){
-			this._root.querySelector("canvas").draggable=false;
-		}
     }
 
     
