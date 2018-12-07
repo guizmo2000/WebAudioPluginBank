@@ -433,7 +433,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 	}
 
 	tempoIncrease() {
-		let kMaxTempo = 180;
+		let kMaxTempo = 500;
 		this.addParams.theBeat.tempo = Math.min(kMaxTempo, this.addParams.theBeat.tempo + 2);
 		this.gui._root.getElementById('tempo').innerHTML = this.addParams.theBeat.tempo;
 		this.params.tempo = this.addParams.theBeat.tempo;
@@ -460,7 +460,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		if(this.timer==0){
 			chrono=setInterval(() => {
 				this.timer++; 
-				console.log("timer = " +  this.timer/100);
+				//console.log("timer = " +  this.timer/100);
 				if(this.timer>=200){
 					clearInterval(chrono);
 					this.timer=0;
@@ -470,7 +470,7 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		else if (this.timer>=1){
 			bpm= Math.round(60/(this.timer/100));
 			//console.log(bpm);
-			if(bpm > 180) bpm=180;
+			if(bpm > 500) bpm=500;
 			if(bpm < 52) bpm=52;
 			this.timer=0;
 			this.addParams.theBeat.tempo=bpm;
