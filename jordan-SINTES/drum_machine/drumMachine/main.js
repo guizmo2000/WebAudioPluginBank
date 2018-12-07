@@ -455,14 +455,19 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 
 		
 		let bpm=0; //bpm is calculate -> 60/duration(in sec) between two click
-		let duration=0; //time elapsed during the two clicks
 		let chrono;
 
 		if(this.timer==0){
-			chrono=setInterval(() => {this.timer++; console.log("timer = " +  this.timer/100);}, 10);
+			chrono=setInterval(() => {
+				this.timer++; 
+				//console.log("timer = " +  this.timer/100);
+				if(this.timer>=200){
+					clearInterval(chrono);
+					this.timer=0;
+				}
+			}, 10);
 		}
-		else if (this.timer>=0.01){
-			clearInterval(chrono);
+		else if (this.timer>=1){
 			bpm= Math.round(60/(this.timer/100));
 			console.log(bpm);
 			this.timer=0;
