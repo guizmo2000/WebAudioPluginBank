@@ -445,6 +445,19 @@ window.DrumMachine = class DrumMachine extends WebAudioPluginCompositeNode {
 		this.params.tempo = this.addParams.theBeat.tempo;
 	}
 
+	makeTempo(){
+		/*
+		 * To calculate a tempo, the user click a first time to th button
+		 * The timer starts and will stop when the user click a second time on the button
+		 * we take the time during the two click and we calculate the tempo
+		 */
+
+
+		let timer=0;
+		let bpm=0; //bpm is calculate -> 60/duration(in sec) between two click
+		let duration=0; //time elapsed during the two clicks
+	}
+
 	demoChoose(index){
 		this.handleReset();
 		let demo1= {

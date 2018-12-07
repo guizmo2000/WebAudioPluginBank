@@ -380,6 +380,7 @@
     <img class="preload" id="preload12">
     <img class="preload" id="preload13">
     <img class="preload" id="preload14">
+    <img class="preload" id="preload15">
 
     <!--  The markup below keeps all images in a row on a single long line to avoid 
             a bizarre bug where otherwise the browser inserts an extra pixel between 
@@ -633,6 +634,7 @@
                 <img id='demo3' width='30' height='22'>
                 <img id='demo4' width='30' height='22'>
                 <img id='demo5' width='30' height='22'>
+                <img id='tempoMaker' width='40' height="20">
                 <!--<img id='save' width='40' height ='22'>
                 <img id='load' width='40' height='22'>-->
             </span>
@@ -742,6 +744,7 @@
             this._root.getElementById('demo3').addEventListener('mousedown', (event) => this._plug.demoChoose(3));
             this._root.getElementById('demo4').addEventListener('mousedown', (event) => this._plug.demoChoose(4));
             this._root.getElementById('demo5').addEventListener('mousedown', (event) => this._plug.demoChoose(5));
+            this._root.getElementById('tempoMaker').addEventListener('mousedown', (event) => this._plug.makeTempo());
             //this._root.getElementById('load').addEventListener('mousedown', (event) => this._plug.demoChoose(0));
             //this._root.getElementById('save').addEventListener('mousedown', (event) => this._plug.savePreset());
 
@@ -988,6 +991,7 @@
             this._root.querySelector("#preload12").setAttribute('src', this._plug.URL + '/images/btn_demo5.png');
             this._root.querySelector("#preload13").setAttribute('src', this._plug.URL + '/images/btn_load.png');
             this._root.querySelector("#preload14").setAttribute('src', this._plug.URL + '/images/btn_save.png');
+            this._root.querySelector("#preload15").setAttribute('src', this._plug.URL + '/images/btn_tempo.png');
 
             this._root.querySelector("#arrow").setAttribute('src', this._plug.URL + '/images/drop_arrow.png');
 
@@ -1008,6 +1012,7 @@
             this._root.querySelector("#demo3").setAttribute('src', this._plug.URL + '/images/btn_demo3.png');
             this._root.querySelector("#demo4").setAttribute('src', this._plug.URL + '/images/btn_demo4.png');
             this._root.querySelector("#demo5").setAttribute('src', this._plug.URL + '/images/btn_demo5.png');
+            this._root.querySelector("#tempoMaker").setAttribute('src', this._plug.URL + '/images/btn_tempo.png');
             //this._root.querySelector("#load").setAttribute('src', this._plug.URL + '/images/btn_load.png');
             //this._root.querySelector('#save').setAttribute('src', this._plug.URL + '/images/btn_save.png');
 
