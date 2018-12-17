@@ -203,6 +203,17 @@
             this.canvas.addEventListener("mouseup", this.processMouseUp.bind(this));
 
             requestAnimationFrame(this.drawFrequencies.bind(this));
+            
+            this.canvas.addEventListener('mouseenter', this.setFocus, false);
+            this.canvas.addEventListener('mouseleave', this.unsetFocus, false);
+        }
+
+        setFocus(){
+            this.canvas.focus();
+        }
+
+        unsetFocus(){
+            this.canvas.blur();
         }
 
         draw() {
