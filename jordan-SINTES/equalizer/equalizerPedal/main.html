@@ -204,8 +204,8 @@
 
             requestAnimationFrame(this.drawFrequencies.bind(this));
             
-            this.canvas.addEventListener('mouseenter', this.setFocus, false);
-            this.canvas.addEventListener('mouseleave', this.unsetFocus, false);
+            this.canvas.addEventListener('mouseenter', () => this.setFocus, false);
+            this.canvas.addEventListener('mouseleave', () => this.unsetFocus, false);
         }
 
         setFocus(){
