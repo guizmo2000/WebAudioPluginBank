@@ -600,6 +600,40 @@
                     break;
             }
 
+            let ctx = this.ctx;
+            ctx.save();
+            if (this.mousePos.x < (this.canvas.width - tooltipWidth))
+                ctx.translate(this.mousePos.x, this.mousePos.y);
+            else
+                ctx.translate(this.mousePos.x - tooltipWidth, this.mousePos.y);
+
+            ctx.fillStyle = "rgba(200, 200, 200, 0.3)";
+            ctx.strokeStyle = "rgba(153, 153, 153)";
+            ctx.beginPath();
+            ctx.rect(10, 0, tooltipWidth, tooltipHeight);
+            ctx.fill();
+            ctx.stroke()
+
+            ctx.fillStyle = "rgba(255, 255, 255, 0.7)";
+            ctx.font = "11px OpenSans, sanserif";
+
+            let xText = 12;
+            ctx.fillText(this.selectedFilter.type, 15, xText);
+            xText += 13;
+
+            ctx.fillText(this.selectedFilter.frequency.value.toFixed(0) + "Hz", 15, xText);
+            xText += 13;
+
+            if (displayGain) {
+                ctx.fillText(this.selectedFilter.gain.value.toFixed(0) + "dB/Oct", 15, 38);
+                xText += 13;
+            }
+
+            if (displayQ)
+                ctx.fillText(this.selectedFilter.Q.value.toFixed(3), 15, xText);
+
+            ctx.restore();
+
         }
 
         changeFilterParameters(filter, x, y, shiftPressed, dy) {
@@ -680,15 +714,15 @@
             this._plug.connectNodes();
         }
 
-        letDrag(){
-            this._root.querySelector("#DivFilterBank").draggable=true;
-            
+        letDrag() {
+            this._root.querySelector("#DivFilterBank").draggable = true;
+
         }
 
     }
 
-    
-    
+
+
 
 
 
