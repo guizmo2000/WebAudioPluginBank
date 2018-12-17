@@ -210,10 +210,12 @@
 
         setFocus(){
             this.focus();
+            this.tabIndex=1;
         }
 
         unsetFocus(){
             this.blur();
+            this.tabIndex=-1;
         }
 
         draw() {
