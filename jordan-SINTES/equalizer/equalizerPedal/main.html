@@ -195,6 +195,7 @@
             this.canvasParent.appendChild(this.canvas2);
             this.ctx2 = this.canvas2.getContext("2d");
             this.dbScale = 60;
+            //TODO: 
             this.pixelsPerDb = (0.5 * this.height) / this.dbScale;
 
             // listeners
@@ -252,6 +253,21 @@
 
             ctx.restore();
         }
+
+        //TODO: how to manipulate this function about the zoom of pedalboard
+        resize(w, h) {
+        //console.log("resize");
+        let r = this.canvasParent.getBoundingClientRect();
+        let rc = this.canvas.getBoundingClientRect();
+        this.canvas.width = this.width = this.canvasParent.clientWidth - (r.left + rc.left) / 2;
+        this.canvas.height = this.height = this.canvasParent.clientHeight - (r.top + rc.top) / 2;
+        this.canvas2.width = this.canvas.width;
+        this.canvas2.height = this.canvas.height;
+        this.pixelsPerDb = (0.5 * this.height) / this.dbScale;
+
+        this.clearCanvas();
+        this.draw();
+    }
 
         drawFilterCurves(filt) {
             let frequencyHz = new Float32Array(this.canvas.width);
@@ -322,6 +338,7 @@
 
             let x, y;
 
+            //TODO: See this function to know X
             x = this.fToX(f);
             switch (filter.type) {
                 case "lowpass":
