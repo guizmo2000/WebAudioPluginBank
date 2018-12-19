@@ -8,7 +8,7 @@
 <template id="wc-switcher">
   <style>
     :host {
-      background: linear-gradient( rgb(228, 215, 233), rgb(226, 212, 206));
+      background: linear-gradient( rgb(150, 33, 33), rgb(82, 26, 15));
       box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 
@@ -86,7 +86,6 @@
       flex-direction: column;
       justify-content: flex-start;
       align-items: center;
-      background-color: black;
       flex: 1;
       margin: 5px;
       margin-top: 10px;
@@ -119,20 +118,9 @@
   </style>
   <div class="row">
     <div class="column">
-      <webaudio-slider id="masterSlider" midilearn="true" units="Db" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/wah_effect/WahVox/image/vsliderbody.png"
-        knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/wah_effect/WahVox/image/vsliderknob.png" value="50"
-        min="0" max="100" step="1" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100" oncontextmenu="return false;"
-        defvalue="2" tooltip="Effect" data-role="effect" midicc="1.7">
-
-        <div class="webaudio-slider-body" tabindex="1" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 128px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png); outline: none;">
-          <div class="webaudio-slider-knob" touch-action="none" style="background-size: 100% 100%; width: 24px; height: 24px; background-image: url(https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png); left: 0px; top: 50px;">
-          </div>
-        </div>
-        <div class="webaudioctrl-tooltip" style="display: inline-block; width: auto; height: auto; transition: opacity 0.1s 0s, visibility 0.1s 0s; opacity: 0; visibility: hidden; left: 976.234px; top: -33px;">Slider1 : 0
-        </div>
-
-      </webaudio-slider>
-      <span class="knob-label" id="knob1-label" style="color: black">Switch</span>
+        <webaudio-knob id="knob" class="knob" sprites="99" min="30" max="60" step="1" value=40" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+        width="30" height="30" data-role="frequency" diameter="24" tooltip="Frequency" style="transform: rotate(90deg)"></webaudio-knob>
+      <span class="knob-label" id="knob1-label" style="color: white;">Switch</span>
       <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
         width="32" height="20"></webaudio-switch>
       <span class="pedalLabel">Switcher</span>
