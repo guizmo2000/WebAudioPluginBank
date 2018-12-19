@@ -92,7 +92,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
 			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMax, this.params.qMin);
 			this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
-			console.log("f=" + freq + " q =" + qparam);
+			//console.log("f=" + freq + " q =" + qparam);
 		}
 
 		else if (this.params.mode === 2) {
@@ -107,7 +107,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
 			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMax, this.params.qMin);
 			this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
-			console.log("f=" + freq + " q =" + qparam);
+			//console.log("f=" + freq + " q =" + qparam);
 		}
 
 		else if (this.params.mode === 3) {
@@ -117,7 +117,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 			this.bandPass.frequency.setValueAtTime(freq, this.context.currentTime);
 			var qparam = this.map(freq, this.params.freqMin, this.params.freqMax, this.params.qMax, this.params.qMin);
 			this.bandPass.Q.setValueAtTime(qparam, this.context.currentTime);
-			console.log("f=" + freq + " q =" + qparam);
+			//console.log("f=" + freq + " q =" + qparam);
 		}
 	}
 
@@ -130,7 +130,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 				this._input.gain.setValueAtTime(this.gainboosted, this.context.currentTime);
 			}
 			else if (this.params.boost === "disable") {
-				console.log(this.gainnotboosted);
+				//console.log(this.gainnotboosted);
 				this._input.gain.setValueAtTime(this.gainnotboosted, this.context.currentTime);
 			}
 		}
@@ -155,7 +155,7 @@ window.WahVox = class WahVox extends WebAudioPluginCompositeNode {
 		}
 
 		else if (this.params.status === "disable") {
-			console.log("Boost aren't avaiable");
+			//console.log("Boost aren't avaiable");
 			this._input.gain.setValueAtTime(1, this.context.currentTime);
 		}
 	}
