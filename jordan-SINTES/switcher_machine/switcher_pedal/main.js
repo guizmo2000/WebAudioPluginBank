@@ -47,7 +47,22 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 	}
 
 	connectNodes() {
-		
+		if(this.params.stateSwitch[0] == 1){
+			this._input.connect(this.dryGainNode);
+			this.dryGainNode.connect(this._output[0]);
+		}
+		else if(this.params.stateSwitch[1] == 1){
+			this._input.connect(this.dryGainNode);
+			this.dryGainNode.connect(this._output[1]);
+		}
+		else if(this.params.stateSwitch[2] == 1){
+			this._input.connect(this.dryGainNode);
+			this.dryGainNode.connect(this._output[2]);
+		}
+		else if(this.params.stateSwitch[3] == 1){
+			this._input.connect(this.dryGainNode);
+			this.dryGainNode.connect(this._output[3]);
+		}
 	}
 
 	/*  #########  Personnal code for the web audio graph  #########   */
