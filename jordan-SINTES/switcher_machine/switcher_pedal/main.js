@@ -11,7 +11,8 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 
 		this.state;
 		this.params = {
-			
+			outputNumber : 4,
+			stateSwitch: [0, 0, 0, 0]
 		}
 
 		
@@ -27,6 +28,10 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 		console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
 	}
 
+	get numberOfOutputs(){
+		return this.params.outputNumber;
+	}
+
 	setParam(key, value) {
 		console.log(key, value);
 		try {
@@ -38,7 +43,7 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 	}
 
 	createNodes() {
-		
+		this.dryGainNode = this.context.createGain();
 	}
 
 	connectNodes() {
