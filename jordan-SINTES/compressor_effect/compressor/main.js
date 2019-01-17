@@ -11,8 +11,13 @@ window.Compressor = class Compressor extends WebAudioPluginCompositeNode {
 
 		this.state;
 		this.params = {
-			
-		}
+			"status": "disable"
+        }
+        
+        this.addParam({ name: 'threshold', defaultValue: -50, minValue: -100, maxValue: 0 });
+        this.addParam({ name: 'ratio', defaultValue: 10, minValue: 1, maxValue: 20 });
+        this.addParam({ name: 'attack', defaultValue: 0.5, minValue: 0, maxValue: 1 });
+        this.addParam({ name: 'release', defaultValue: 0.5, minValue: 0, maxValue: 1 });
 
 		super.setup();
 	}
@@ -37,15 +42,44 @@ window.Compressor = class Compressor extends WebAudioPluginCompositeNode {
 	}
 
 	createNodes() {
-		
+        this.dryGainNode = this.context.createGain();
+        this.wetGainNode = this.context.createGain();
+
+        this.compressorNode = this.context.createDynamicsCompressor();
+        this.compressorNode.threshold.value=-50;
+        this.compressorNode.ratio.value=10;
+        this.compressorNode.attack.value=0.5;
+        this.compressorNode.release.value=0.5;
 	}
 
 	connectNodes() {
-		
+        this._input.connect(this.dryGainNode);
+        this.dryGainNode.connect(this.compressorNode);
+        this.compressorNode.connect(this.wetGainNode);
+        this.wetGainNode.connect(this._output);
 	}
 
 	/*  #########  Personnal code for the web audio graph  #########   */
 
+    set threshold(_threshold){
+        this.params.threshold = _threshold;
+        this.compressorNode.threshold.value=_threshold;
+    }
+
+    set ratio(_ratio){
+        this.params.ratio = _ratio;
+        this.compressorNode.ratio.value=_ratio;
+    }
+
+    set attack(_attack){
+        this.params.attack = _attack;
+        this.compressorNode.attack.value=_attack;
+    }
+
+    set release(_release){
+        this.params.release = _release;
+        this.compressorNode.release.value=_release;
+    }
 }
 //////////////////////////////////////////////////////////////////////////////////////////
 
