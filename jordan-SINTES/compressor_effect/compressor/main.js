@@ -478,12 +478,12 @@ window.untitled = class untitled {
         return new Promise((resolve, reject) => {
             try {
                 // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
-                let real_url = (this.baseURL === "") ? "main.html" : (this.baseURL + "/main.html");
-                if (!this.linkExists(real_url)) {
+                let url = this.baseURL + "/main.html";
+                if (!this.linkExists(url)) {
                     // LINK DOES NOT EXIST, let's add it to the document
                     var link = document.createElement('link');
                     link.rel = 'import';
-                    link.href = real_url;
+                    link.href = url;
                     document.head.appendChild(link);
                     link.onload = (e) => {
                         // the file has been loaded, instanciate GUI

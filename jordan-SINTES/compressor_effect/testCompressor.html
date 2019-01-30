@@ -25,7 +25,7 @@
     var mediaSource = ctx.createMediaElementSource(player);
     var state = {};
     var pluginURL = "./compressor";
-    var plugin = new WasabiCompressor(ctx, pluginURL);
+    var plugin = new untitled(ctx, pluginURL);
 
     plugin.load().then((node) => {
         console.log("node", node);
