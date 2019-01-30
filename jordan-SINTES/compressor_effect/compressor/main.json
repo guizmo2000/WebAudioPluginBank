@@ -1,8 +1,10 @@
 {
-    "documentation": "TODO", 
-    "name": "Compressor",
-    "thumbnail": "WasabiWahCompressor.png",
-    "vendor": "Wasabi",
-    "category":"Modulation",
-    "version": "1.0"
+  "name": "untitled",
+  "vendor": "Faust",
+  "version": "1.0",
+  "url": "untitled.js",
+  "homepage": "https://faust.grame.fr",
+  "thumbnail": "",
+  "category":"Modulation"
   }
+  
