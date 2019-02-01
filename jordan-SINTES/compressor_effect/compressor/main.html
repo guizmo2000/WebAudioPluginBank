@@ -197,7 +197,7 @@
             this.setKnobs();
             this.setBypass();
             this._plug.setParam("/COMPRESSOR/Makeup_Gain", 10)
-            this._plug.setParam("/COMPRESSOR/0x00/Bypass", 0);
+            this._plug.setParam("/COMPRESSOR/0x00/Bypass", 1);
         }
 
         get properties() {
@@ -232,7 +232,7 @@
         }
 
         setBypass(){
-            this._root.querySelector("#bypass").querySelector("webaudio-switch").addEventListener('click', (e) => this._plug.setParam("/COMPRESSOR/0x00/Bypass", e.target.value));
+            this._root.querySelector("#bypass").querySelector("webaudio-switch").addEventListener('click', (e) => this._plug.setParam("/COMPRESSOR/0x00/Bypass", e.target.value-1));
         }    
         
     }
