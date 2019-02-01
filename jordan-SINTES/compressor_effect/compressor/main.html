@@ -152,9 +152,10 @@
         </div>
     </div>
     <div class="label">
-        <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-            width="32" height="20"></webaudio-switch>
-        
+        <div class="switch" id="bypass">
+                <webaudio-switch id="/COMPRESSOR/0x00/Bypass" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+                width="32" height="20"></webaudio-switch>
+        </div>
     </div>
     <div class="label">
             <span class="pedalLabel">Compressor</span>
@@ -175,7 +176,7 @@
             this.isOn;
             this.state = new Object();
             this.setKnobs();
-            this.setSwitchListener();
+            this.setBypass();
         }
 
         get properties() {
@@ -198,15 +199,9 @@
             this.state = JSON.parse(this.getAttribute('state'));
             console.log(this.state);
             if (this.state.status == "enable") {
-                this._root.querySelector("#switch1").value = 1;
+                this._root.querySelector("#bypass").querySelector("webaudio-switch").value = 0;
                 this.isOn = true;
             }
-
-            this.knobs = this._root.querySelectorAll(".knob");
-            this._root.querySelector("#knob1").setValue(this.state["threshold"], false);
-            this._root.querySelector("#knob2").setValue(this.state["ratio"], false);
-            this._root.querySelector("#knob3").setValue(this.state["attack"], false);
-            this._root.querySelector("#knob4").setValue(this.state["release"], false);
 
         }
 
@@ -218,21 +213,11 @@
             this._root.querySelector("#release").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("/COMPRESSOR/0x00/Compression_Response/Release", e.target.value));
         }
 
-        setSwitchListener() {
-            console.log("setswitch");
-            this._root.querySelector("#switch1").addEventListener('change', (e) => {
-                if (this.isOn) this.bypass();
-                else this.reactivate();
-                this.isOn = !this.isOn;
-            });
+        setBypass(){
+            this._root.querySelector("#bypass").querySelector("webaudio-switch").addEventListener('click', (e) => this._plug.setParam("/COMPRESSOR/0x00/Bypass", e.target.value));
         }
 
-        bypass() {
-            this._plug.setParam("status", "disable");
-        }
-        reactivate() {
-            this._plug.setParam("status", "enable");
-        }
+        
 
     }
 
