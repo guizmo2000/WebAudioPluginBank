@@ -100,6 +100,17 @@
             text-align: center;
         }
 
+        .column3 {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            margin: 5px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
 
         .row {
             display: flex;
@@ -148,7 +159,15 @@
             
             <span class="knob-label" id="knob1-label" style="color: black">RELEASE</span>
 
+        </div>
 
+        <div class="column3">
+                <div class="knob" id ="gain">
+                        <webaudio-knob id="/COMPRESSOR/0x00/Compressor_Gain" class="knob" sprites="99" min="-50" max="10" step="1" value="1" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+                        width="40" height="40" data-role="Threshold" diameter="24" tooltip="Release"></webaudio-knob>
+                </div>
+                
+                <span class="knob-label" id="knob1-label" style="color: black">GAIN</span>
         </div>
     </div>
     <div class="label">
@@ -177,8 +196,7 @@
             this.state = new Object();
             this.setKnobs();
             this.setBypass();
-            this._plug.setParam("/COMPRESSOR/0x00/Compressor_Gain", 1);
-            this._plug.setParam("/COMPRESSOR/0x00/Bypass", 1);
+            this._plug.setParam("/COMPRESSOR/0x00/Bypass", 0);
         }
 
         get properties() {
@@ -200,11 +218,6 @@
         attributeChangedCallback() {
             this.state = JSON.parse(this.getAttribute('state'));
             console.log(this.state);
-            if (this.state.status == "enable") {
-                this._root.querySelector("#bypass").querySelector("webaudio-switch").value = 0;
-                this.isOn = true;
-            }
-
         }
 
         setKnobs() {
@@ -213,14 +226,14 @@
             this._root.querySelector("#ratio").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("/COMPRESSOR/0x00/Compression_Control/Ratio", e.target.value));
             this._root.querySelector("#attack").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("/COMPRESSOR/0x00/Compression_Response/Attack_____tooltip:_Time_constant_in_ms_(1/e_smoothing_time)_for_the_compression_gain__to_approach_(exponentially)_a_new_lower_target_level_(the_compression__`kicking_in')]", e.target.value));
             this._root.querySelector("#release").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("/COMPRESSOR/0x00/Compression_Response/Release", e.target.value));
+
+            this._root.querySelector("#gain").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("/COMPRESSOR/0x00/Compressor_Gain", e.target.value));
         }
 
         setBypass(){
             this._root.querySelector("#bypass").querySelector("webaudio-switch").addEventListener('click', (e) => this._plug.setParam("/COMPRESSOR/0x00/Bypass", e.target.value));
-        }
-
+        }    
         
-
     }
 
     // Register the x-custom element with the browser
