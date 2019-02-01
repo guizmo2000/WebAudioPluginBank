@@ -177,6 +177,8 @@
             this.state = new Object();
             this.setKnobs();
             this.setBypass();
+            this._plug.setParam("/COMPRESSOR/0x00/Compressor_Gain", 1);
+            this._plug.setParam("/COMPRESSOR/0x00/Bypass", 1);
         }
 
         get properties() {
