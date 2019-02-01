@@ -163,7 +163,7 @@
 
         <div class="column3">
                 <div class="knob" id ="gain">
-                        <webaudio-knob id="/COMPRESSOR/Makeup_Gain" class="knob" sprites="99" min="-96" max="96" step="1" value="40" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
+                        <webaudio-knob id="/COMPRESSOR/Makeup_Gain" class="knob" sprites="99" min="-96" max="96" step="1" value="10" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
                         width="40" height="40" data-role="Threshold" diameter="24" tooltip="Gain"></webaudio-knob>
                 </div>
                 
@@ -196,6 +196,7 @@
             this.state = new Object();
             this.setKnobs();
             this.setBypass();
+            this._plug.setParam("/COMPRESSOR/Makeup_Gain", 10)
             this._plug.setParam("/COMPRESSOR/0x00/Bypass", 0);
         }
 
