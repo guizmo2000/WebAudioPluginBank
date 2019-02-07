@@ -1,7 +1,7 @@
 {
     "documentation": "TODO", 
     "name": "Switcher",
-    "thumbnail": "switcher.png",
+    "thumbnail": "assets/switcher.png",
     "vendor": "Wasabi",
     "category":"Mixing",
     "version": "1.0"
