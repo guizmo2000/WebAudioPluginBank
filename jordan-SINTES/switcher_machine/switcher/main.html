@@ -12,8 +12,8 @@
             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 
-            width: 180px;
-            height: auto;
+            width: 120px;
+            height: 240px;
             display: block;
             user-select: none;
             cursor: move;
@@ -115,28 +115,46 @@
             align-items: stretch;
 
         }
+
+        .label {
+            margin-top: 10px;
+        }
+
+        #mode_switch {
+            transform: rotate(90deg);
+            transform:
+        }
     </style>
     <div class="row">
         <div class="column">
             <div class="knob" id="switcher">
-                <webaudio-knob id="switcher_knob" class="knob" sprites="99" min="-100"
-                    max="10" step="0.1" value="-30" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-                    width="40" height="40" data-role="Threshold" diameter="24" tooltip="Threshold"></webaudio-knob>
+
+                <div class="switch" id="mode">
+                    <webaudio-switch id="mode_switch" class="switch" midilearn="true" src="./switcher/assets/switch_toggle.png"
+                        width="40" height="40"></webaudio-switch>
+                </div>
+                <div class="switch" id="mode">
+                    <webaudio-switch id="mode_switch" class="switch" midilearn="true" src="./switcher/assets/switch_toggle.png"
+                        width="40" height="40"></webaudio-switch>
+                </div>
+                <div class="switch" id="mode">
+                    <webaudio-switch id="mode_switch" class="switch" midilearn="true" src="./switcher/assets/switch_toggle.png"
+                        width="40" height="40"></webaudio-switch>
+                </div>
+                <div class="switch" id="mode">
+                    <webaudio-switch id="mode_switch" class="switch" midilearn="true" src="./switcher/assets/switch_toggle.png"
+                        width="40" height="40"></webaudio-switch>
+                </div>
             </div>
 
-            <span class="knob-label" id="knob1-label" style="color: black">THRESHOLD</span>
-        </div>
-        <div class="label">
             <div class="switch" id="bypass">
                 <webaudio-switch id="bypass_switch" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
                     width="32" height="20"></webaudio-switch>
             </div>
+            <div class="label">
+                    <span class="pedalLabel">Switcher</span>
+                </div>
         </div>
-        <div class="label">
-            <span class="pedalLabel">Switcher</span>
-        </div>
-    </div>
-
 </template>
 <script>
     let switchtemp = document.currentScript.ownerDocument.querySelector("#wc-switcher");
