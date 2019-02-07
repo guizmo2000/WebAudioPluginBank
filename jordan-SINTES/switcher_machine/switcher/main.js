@@ -24,7 +24,11 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 	}
 	setPatch(data, index) {
 		console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
-	}
+    }
+    
+    numberOfOutputs(){
+        return 4;
+    }
 
 	setParam(key, value) {
 		console.log(key, value);
