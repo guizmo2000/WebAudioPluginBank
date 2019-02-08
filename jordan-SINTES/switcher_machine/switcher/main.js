@@ -10,7 +10,7 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 		/*    ################     API PROPERTIES    ###############   */
 
 		this.state;
-		this._numberOfInputs=4;
+		this._numberOfOutputs=4;
 		this.params = {
 			
 		}
@@ -27,11 +27,11 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 		console.warn("this module does not implements patches use getState / setState to get an array of current params values ");
     }
     
-    get numberOfInputs() {
-		return this._numberOfInputs;
+    get numberOfOutputs() {
+		return this._numberOfOutputs;
 	}
-	set numberOfInputs(num) {
-		this._numberOfInputs = num;
+	set numberOfOutputs(num) {
+		this._numberOfOutputs = num;
 	}
 
 	setParam(key, value) {
