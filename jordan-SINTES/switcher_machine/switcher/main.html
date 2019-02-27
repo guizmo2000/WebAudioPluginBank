@@ -13,7 +13,7 @@
 
 
             width: 120px;
-            height: 240px;
+            height: 180px;
             display: block;
             user-select: none;
             cursor: move;
@@ -121,7 +121,7 @@
         }
 
         #mode_switch {
-            transform: rotate(90deg);
+            margin-top:10px;
         }
     </style>
     <div class="row">
@@ -129,27 +129,23 @@
             <div class="knob" id="switcher">
 
                 <div class="switch" id="mode1">
-                    <webaudio-switch id="mode_switch" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/switcher_machine/switcher/assets/switch_toggle.png"
-                        width="40" height="40"></webaudio-switch>
+                    <webaudio-switch id="mode_switch" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+                        width="32" height="20"></webaudio-switch>
                 </div>
                 <div class="switch" id="mode2">
-                    <webaudio-switch id="mode_switch" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/switcher_machine/switcher/assets/switch_toggle.png"
-                        width="40" height="40"></webaudio-switch>
+                    <webaudio-switch id="mode_switch" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+                        width="32" height="20"></webaudio-switch>
                 </div>
                 <div class="switch" id="mode3">
-                    <webaudio-switch id="mode_switch" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/switcher_machine/switcher/assets/switch_toggle.png"
-                        width="40" height="40"></webaudio-switch>
+                    <webaudio-switch id="mode_switch" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+                        width="32" height="20"></webaudio-switch>
                 </div>
                 <div class="switch" id="mode4">
-                    <webaudio-switch id="mode_switch" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/switcher_machine/switcher/assets/switch_toggle.png"
-                        width="40" height="40"></webaudio-switch>
+                    <webaudio-switch id="mode_switch" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
+                        width="32" height="20"></webaudio-switch>
                 </div>
             </div>
 
-            <div class="switch" id="bypass">
-                <webaudio-switch id="bypass_switch" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-                    width="32" height="20"></webaudio-switch>
-            </div>
             <div class="label">
                     <span class="pedalLabel">Switcher</span>
                 </div>
@@ -166,10 +162,8 @@
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(switchtemp.content.cloneNode(true));
             this.knobs = this._root.querySelectorAll(".knob");
-            this.isOn;
             this.state = new Object();
             this.setSwitchMode();
-            this.setBypass();
         }
 
         get properties() {
@@ -180,7 +174,7 @@
                 },
                 dataHeight: {
                     type: Number,
-                    value: 240
+                    value: 180
                 }
             };
             return this.boundingRect;
@@ -199,11 +193,6 @@
             this._root.querySelector("#mode2").querySelector("webaudio-switch").addEventListener('click', (e) => this._plug.setParam("mode2", e.target.value));
             this._root.querySelector("#mode3").querySelector("webaudio-switch").addEventListener('click', (e) => this._plug.setParam("mode3", e.target.value));
             this._root.querySelector("#mode4").querySelector("webaudio-switch").addEventListener('click', (e) => this._plug.setParam("mode4", e.target.value));
-        }
-
-        setBypass() {
-            console.log("setbypass");
-            this._root.querySelector("#bypass").querySelector("webaudio-switch").addEventListener('click', (e) => this._plug.setParam("bypass", e.target.value));
         }
 
     }

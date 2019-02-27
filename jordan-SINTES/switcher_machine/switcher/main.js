@@ -12,8 +12,10 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 		this.state;
 		this._numberOfOutputs=4;
 		this.params = {
-			bypass:0,
-			mode:[0, 0, 0, 0]
+			mode1:0,
+			mode2:0,
+			mode3:0,
+			mode4:0,
 		}
 
 		super.setup();
@@ -46,16 +48,57 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 	}
 
 	createNodes() {
-		this.dryGainNode = this.context.createGain();
+		this.dryGainNodeMode1 = this.context.createGain();
+		this.dryGainNodeMode2 = this.context.createGain();
+		this.dryGainNodeMode3 = this.context.createGain();
+		this.dryGainNodeMode4 = this.context.createGain();
 	}
 
 	connectNodes() {
-		this._input.connect(this.dryGainNode);
-		this.dryGainNode.connect(this._output);
+		this._input.connect(this._output);
 	}
 
 	/*  #########  Personnal code for the web audio graph  #########   */
 
+	set mode1(_sig){
+		this.params.mode1=_sig;
+		if (this.params.mode1=== 1){
+			console.log("ok 1");
+		}
+		else if (this.params.mode1 === 0){
+			console.log("pas ok 0");
+		}
+	}
+
+	set mode2(_sig){
+		this.params.mode1=_sig;
+		if (this.params.mode1=== 1){
+			console.log("ok 1");
+		}
+		else if (this.params.mode1 === 0){
+			console.log("pas ok 0");
+		}
+	}
+
+	set mode3(_sig){
+		this.params.mode1=_sig;
+		if (this.params.mode1=== 1){
+			console.log("ok 1");
+		}
+		else if (this.params.mode1 === 0){
+			console.log("pas ok 0");
+		}
+	}
+
+	set mode4(_sig){
+		this.params.mode1=_sig;
+		if (this.params.mode1=== 1){
+			console.log("ok 1");
+		}
+		else if (this.params.mode1 === 0){
+			console.log("pas ok 0");
+		}
+	}
 	
 }
 
