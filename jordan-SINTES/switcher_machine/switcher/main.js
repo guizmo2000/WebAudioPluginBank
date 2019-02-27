@@ -12,10 +12,10 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 		this.state;
 		this._numberOfOutputs=4;
 		this.params = {
-			mode1:0,
-			mode2:0,
-			mode3:0,
-			mode4:0,
+			mode1:-1,
+			mode2:-1,
+			mode3:-1,
+			mode4:-1,
 		}
 
 		super.setup();
@@ -55,48 +55,62 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 	}
 
 	connectNodes() {
-		this._input.connect(this._output);
+		if(this.params.mode1 === -1 && this.params.mode2 === -1 && this.params.mode3 === -1 && this.params.mode4 === -1){
+			this._input.connect(this._output);
+		}else{
+			this._input.disconnect(this._output);
+		}
+		
 	}
 
 	/*  #########  Personnal code for the web audio graph  #########   */
 
+	
 	set mode1(_sig){
 		this.params.mode1=_sig;
 		if (this.params.mode1=== 1){
-			console.log("ok 1");
+			this._input.connect(this.dryGainNodeMode1);
+			this.dryGainNodeMode1.connect(this._output);
 		}
 		else if (this.params.mode1 === 0){
-			console.log("pas ok 0");
+			this.dryGainNodeMode1.disconnect(this._output);
+			this._input.disconnect(this.dryGainNodeMode1);
 		}
 	}
 
 	set mode2(_sig){
-		this.params.mode1=_sig;
-		if (this.params.mode1=== 1){
-			console.log("ok 1");
+		this.params.mode2=_sig;
+		if (this.params.mode2=== 1){
+			this._input.connect(this.dryGainNodeMode2);
+			this.dryGainNodeMode2.connect(this._output);
 		}
-		else if (this.params.mode1 === 0){
-			console.log("pas ok 0");
+		else if (this.params.mode2 === 0){
+			this.dryGainNodeMode2.disconnect(this._output);
+			this._input.disconnect(this.dryGainNodeMode2);
 		}
 	}
 
 	set mode3(_sig){
-		this.params.mode1=_sig;
-		if (this.params.mode1=== 1){
-			console.log("ok 1");
+		this.params.mode3=_sig;
+		if (this.params.mode3=== 1){
+			this._input.connect(this.dryGainNodeMode3);
+			this.dryGainNodeMode3.connect(this._output);
 		}
-		else if (this.params.mode1 === 0){
-			console.log("pas ok 0");
+		else if (this.params.mode3 === 0){
+			this.dryGainNodeMode3.disconnect(this._output);
+			this._input.disconnect(this.dryGainNodeMode3);
 		}
 	}
 
 	set mode4(_sig){
-		this.params.mode1=_sig;
-		if (this.params.mode1=== 1){
-			console.log("ok 1");
+		this.params.mode4=_sig;
+		if (this.params.mode4=== 1){
+			this._input.connect(this.dryGainNodeMode4);
+			this.dryGainNodeMode4.connect(this._output);
 		}
-		else if (this.params.mode1 === 0){
-			console.log("pas ok 0");
+		else if (this.params.mode4 === 0){
+			this.dryGainNodeMode4.disconnect(this._output);
+			this._input.disconnect(this.dryGainNodeMode4);
 		}
 	}
 	
