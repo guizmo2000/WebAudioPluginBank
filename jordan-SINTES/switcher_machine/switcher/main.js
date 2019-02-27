@@ -12,7 +12,8 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 		this.state;
 		this._numberOfOutputs=4;
 		this.params = {
-			
+			bypass:0,
+			mode:[0, 0, 0, 0]
 		}
 
 		super.setup();
@@ -45,11 +46,12 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 	}
 
 	createNodes() {
-
+		this.dryGainNode = this.context.createGain();
 	}
 
 	connectNodes() {
-
+		this._input.connect(this.dryGainNode);
+		this.dryGainNode.connect(this._output);
 	}
 
 	/*  #########  Personnal code for the web audio graph  #########   */
