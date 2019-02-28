@@ -49,7 +49,7 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 
 	createNodes() {
 		
-		this.dryGainNode = this.context.createGain();
+		
 		for(let i = 1; i< this.numberOfOutputs; i++){
 			let numChannel = "output" + this.numberOfOutputs +1;
 			this[numChannel]= this.context.createGain();
@@ -63,7 +63,10 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 	}
 
 	connectNodes() {
-		
+		this._input.connect(this.outputs[0]);
+		this._input.connect(this.outputs[1]);
+		this._input.connect(this.outputs[2]);
+		this._input.connect(this.outputs[3]);
 		
 	}
 
