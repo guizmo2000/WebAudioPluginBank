@@ -48,18 +48,22 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 	}
 
 	createNodes() {
-		this.dryGainNodeMode1 = this.context.createGain();
-		this.dryGainNodeMode2 = this.context.createGain();
-		this.dryGainNodeMode3 = this.context.createGain();
-		this.dryGainNodeMode4 = this.context.createGain();
+		
+		this.dryGainNode = this.context.createGain();
+		for(let i = 1; i< this.numberOfOutputs; i++){
+			let numChannel = "output" + this.numberOfOutputs +1;
+			this[numChannel]= this.context.createGain();
+			this.outputs.push(this[numChannel]);
+			this.outputs.forEach(output => {
+				output.gain.setValueAtTime(1 / Math.sqrt(this.numberOfOutputs), this.context.currentTime);
+			});
+		}
+		
+		console.log(this.outputs);
 	}
 
 	connectNodes() {
-		if(this.params.mode1 === -1 && this.params.mode2 === -1 && this.params.mode3 === -1 && this.params.mode4 === -1){
-			this._input.connect(this._output);
-		}else{
-			this._input.disconnect(this._output);
-		}
+		
 		
 	}
 
@@ -69,48 +73,40 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 	set mode1(_sig){
 		this.params.mode1=_sig;
 		if (this.params.mode1=== 1){
-			this._input.connect(this.dryGainNodeMode1);
-			this.dryGainNodeMode1.connect(this._output);
+			this._input.connect(this.outputs[0]);
 		}
 		else if (this.params.mode1 === 0){
-			this.dryGainNodeMode1.disconnect(this._output);
-			this._input.disconnect(this.dryGainNodeMode1);
+			this._input.disconnect(this.outputs[0]);
 		}
 	}
 
 	set mode2(_sig){
 		this.params.mode2=_sig;
 		if (this.params.mode2=== 1){
-			this._input.connect(this.dryGainNodeMode2);
-			this.dryGainNodeMode2.connect(this._output);
+			this._input.connect(this.outputs[1]);
 		}
 		else if (this.params.mode2 === 0){
-			this.dryGainNodeMode2.disconnect(this._output);
-			this._input.disconnect(this.dryGainNodeMode2);
+			this._input.disconnect(this.outputs[1]);
 		}
 	}
 
 	set mode3(_sig){
 		this.params.mode3=_sig;
 		if (this.params.mode3=== 1){
-			this._input.connect(this.dryGainNodeMode3);
-			this.dryGainNodeMode3.connect(this._output);
+			this._input.connect(this.outputs[2]);
 		}
 		else if (this.params.mode3 === 0){
-			this.dryGainNodeMode3.disconnect(this._output);
-			this._input.disconnect(this.dryGainNodeMode3);
+			this._input.disconnect(this.outputs[2]);
 		}
 	}
 
 	set mode4(_sig){
 		this.params.mode4=_sig;
 		if (this.params.mode4=== 1){
-			this._input.connect(this.dryGainNodeMode4);
-			this.dryGainNodeMode4.connect(this._output);
+			this._input.connect(this.outputs[3]);
 		}
 		else if (this.params.mode4 === 0){
-			this.dryGainNodeMode4.disconnect(this._output);
-			this._input.disconnect(this.dryGainNodeMode4);
+			this._input.disconnect(this.outputs[3]);
 		}
 	}
 	
