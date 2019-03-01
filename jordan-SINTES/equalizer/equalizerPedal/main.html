@@ -208,8 +208,11 @@
             this.canvas.addEventListener('mouseenter', this.setFocus, false);
             this.canvas.addEventListener('mouseleave', this.unsetFocus, false);
             this.canvasParent.addEventListener('resize',
-            evt => this.resize(this.canvasParent.clientWidth,
-                this.canvasParent.clientHeight));
+            (evt) => {
+                console.log("resize " + this.canvasParent.clientWidth + " " +  this.canvasParent.clientWidth);
+                this.resize(this.canvasParent.clientWidth,
+                this.canvasParent.clientWidth);
+            });
      
         }
 
@@ -582,6 +585,7 @@
 
         getMousePos(e) {
             let rect = this.canvas.getBoundingClientRect();
+            console.log("cx= " + e.clientX  + " lx= " + e.layerX);
             let mouseX = e.clientX - rect.left;
             let mouseY = e.clientY - rect.top;
             return {
