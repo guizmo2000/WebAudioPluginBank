@@ -207,6 +207,10 @@
             
             this.canvas.addEventListener('mouseenter', this.setFocus, false);
             this.canvas.addEventListener('mouseleave', this.unsetFocus, false);
+            this.canvasParent.addEventListener('resize',
+            evt => this.resize(this.canvasParent.clientWidth,
+                this.canvasParent.clientHeight));
+     
         }
 
         setFocus(){
@@ -578,8 +582,8 @@
 
         getMousePos(e) {
             let rect = this.canvas.getBoundingClientRect();
-            let mouseX = e.layerX;
-            let mouseY = e.layerY;
+            let mouseX = e.clientX - rect.left;
+            let mouseY = e.clientY - rect.top;
             return {
                 x: mouseX,
                 y: mouseY
