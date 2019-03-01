@@ -207,7 +207,7 @@
             
             this.canvas.addEventListener('mouseenter', this.setFocus, false);
             this.canvas.addEventListener('mouseleave', this.unsetFocus, false);
-            this.canvasParent.addEventListener('resize',
+            window.addEventListener('resize',
             (evt) => {
                 console.log("resize " + this.canvasParent.clientWidth + " " +  this.canvasParent.clientWidth);
                 this.resize(this.canvasParent.clientWidth,
