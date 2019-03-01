@@ -576,8 +576,8 @@
 
         getMousePos(e) {
             let rect = this.canvas.getBoundingClientRect();
-            let mouseX = e.x - rect.left;
-            let mouseY = e.y - rect.top;
+            let mouseX = e.layerX;
+            let mouseY = e.layerY;
             return {
                 x: mouseX,
                 y: mouseY
