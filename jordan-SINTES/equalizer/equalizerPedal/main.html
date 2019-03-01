@@ -494,7 +494,7 @@
 
         processMouseMove(e) {
             this.mousePos = this.getMousePos(e);
-            //console.log(this.mousePos);
+            console.log(this.mousePos);
 
             switch (this.mode) {
                 case "none":
@@ -592,6 +592,7 @@
                     // mouse cursor is over a control point
                     return f;
                 }
+                 console.log(this.distance(x, y, cp.x, cp.y));
             };
             return null;
         }
