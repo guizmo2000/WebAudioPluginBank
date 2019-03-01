@@ -494,6 +494,7 @@
 
         processMouseMove(e) {
             this.mousePos = this.getMousePos(e);
+            e.stopPropagation();
             console.log(this.mousePos);
 
             switch (this.mode) {
