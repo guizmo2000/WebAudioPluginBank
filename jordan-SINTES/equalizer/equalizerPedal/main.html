@@ -520,6 +520,7 @@
         }
 
         processMouseDown(e) {
+            e.stopPropagation();
             if (this.selectedFilter) {
                 this.selectedFilter.originalQValue = this.selectedFilter.Q.value;
                 this.mode = "dragControlPoint";
