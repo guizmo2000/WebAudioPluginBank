@@ -29,6 +29,10 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         this.toneLevel = 0;
         this.frequencyString = [0, 0, 0, 0, 0, 0]
         this.valueSaved = 0;
+        this.wA = null;
+        this.hA = null;
+        this.hRect = null;
+        this.Angle = null
     }
 
     /*    ################     API METHODS    ###############   */
@@ -95,6 +99,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     }
 
     updatePitch(time) {
+        var canvasElem = this.gui._root.getElementById("output");
         var detectorElem = this.gui._root.getElementById("detector");
         var DEBUGCANVAS = this.gui._root.getElementById("waveform");
         if (DEBUGCANVAS) {
@@ -102,6 +107,22 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
             waveCanvas.strokeStyle = "black";
             waveCanvas.lineWidth = 1;
         }
+        
+        this.wA = this.gui._root.getElementById("output").offsetWidth;
+        this.hA = this.gui._root.getElementById("output").offsetHeight;
+
+        //canvas aiguille
+        //le canvas de l'aiguille a été envelé pour le mettre dans le canvas principale
+
+        let outputA = canvasElem.getContext('2d');
+       
+
+        //canvas diode
+        let canvasdio = this.gui._root.getElementById("diode");
+        let outputD = canvasdio.getContext('2d');
+        
+
+        //Tuner canvas
         var pitchElem = this.gui._root.getElementById("pitch");
         var noteElem = this.gui._root.getElementById("note");
         var detuneElem = this.gui._root.getElementById("detune");
@@ -109,8 +130,20 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         this.analyser.getFloatTimeDomainData(this.buf);
         var ac = this.autoCorrelate(this.buf, this.context.sampleRate);
 
+        var newAngle = this.angle_frequence(ac); //angle modifié en fonction de la freq
 
-        if (this.gui._root.getElementById("waveform")) {  // This draws the current waveform, useful for debugging
+        outputA.clearRect(0, 0, this.wA, this.hA); //pour effacer aiguille quand elle bouge(animation)
+
+        this.background(outputA);
+        this.inittrait(outputA, newAngle);
+
+        outputD = canvasdio.getContext('2d');
+        this.initdiiode(outputD, ac);
+
+        this.drawGain(outputA);
+
+
+       /* if (this.gui._root.getElementById("waveform")) {  // This draws the current waveform, useful for debugging
             this.gui._root.waveCanvas.clearRect(0, 0, 512, 256);
             waveCanvas.strokeStyle = "red";
             waveCanvas.beginPath();
@@ -132,7 +165,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                 waveCanvas.lineTo(i, 128 + (buf[i] * 128));
             }
             waveCanvas.stroke();
-        }
+        }*/
 
         if (ac == -1) {
             detectorElem.className = "vague";
@@ -157,6 +190,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                     detuneElem.className = "sharp";
                 detuneAmount.innerHTML = Math.abs(detune);
             }
+            this.Modifdio(outputD, detune, detuneElem.className);
         }
         let freq = Math.round(ac);
         if (this.valueSaved != freq) {
@@ -168,6 +202,234 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
             window.requestAnimationFrame = window.webkitRequestAnimationFrame;
         this.rafID = window.requestAnimationFrame(this.updatePitch.bind(this));
     }
+
+    background(ctx) {
+        ctx.save();
+        /*Modification afin de mettre une partie de l'arc de cercle à sa place*/
+        ctx.translate(this.wA / 2, this.hA - 10);
+
+        ctx.strokeStyle = "rgb(255, 0, 0)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, -this.hA / 3 - 15);
+        ctx.lineTo(0, -this.hA / 3 - 30);
+        ctx.stroke();
+
+        var mesure = -50;
+        var cnorm;
+        this.Angle = 0;
+        while (mesure < 40) {
+
+            //	ctx.rotate(Angle);
+            cnorm = this.map(mesure, -50, 0, 1, 0.1);
+            cnorm = this.mapLinearToLog(cnorm, -0.1, -1, 0.1, 1);
+            this.Angle = this.map(cnorm, -1, -0.1, -Math.PI / 4, 0); //angle
+
+            ctx.rotate(this.Angle);
+
+            // Graduation qui suit les cents de façon logarithmique
+            ctx.strokeStyle = "rgb(255, 0, 0)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, -this.hA / 3 - 15);
+            ctx.lineTo(0, -this.hA / 3 - 30);
+            ctx.stroke();
+
+            mesure += 10;
+        }
+        ctx.restore();
+
+
+        ctx.save();
+        /*Modification afin de mettre une l'autre de l'arc de cercle à sa place*/
+        ctx.translate(this.wA / 2, this.hA - 10);
+
+        var mesure2 = -50;
+        var cnorm2;
+        var Angle2 = 0;
+        while (mesure2 < 40) {
+
+            //	ctx.rotate(Angle);
+            cnorm2 = this.map(mesure2, -50, 0, 1, 0.1);
+            cnorm2 = this.mapLinearToLog(cnorm2, -0.1, -1, 0.1, 1);
+            Angle2 = this.map(cnorm2, -1, -0.1, Math.PI / 4, 0); //angle
+
+            ctx.rotate(Angle2);
+
+            // Graduation qui suit les cents de façon logarithmique
+            ctx.strokeStyle = "rgb(255, 0, 0)";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, -this.hA / 3 - 15);
+            ctx.lineTo(0, -this.hA / 3 - 30);
+            ctx.stroke();
+
+            mesure2 += 10;
+        }
+        ctx.restore();
+    }
+
+    // maps a value from [istart, istop] into [ostart, ostop]
+    map(value, istart, istop, ostart, ostop) {
+        return ostart + (ostop - ostart) * ((value - istart) / (istop - istart));
+    }
+
+    // passage echelle linéaire -> echelle logarithmique
+    mapLinearToLog(x, istart, istop, ostart, ostop) {
+        // sliderValue is in [0, 10] range, adjust to [0, 1500] range  
+        var value = x;
+        var minp = istart;
+        var maxp = istop;
+
+        // The result should be between 10 an 1500
+        var minv = Math.log(ostart);
+        var maxv = Math.log(ostop);
+
+        // calculate adjustment factor
+        var scale = (maxv - minv) / (maxp - minp);
+
+        value = Math.exp(minv + scale * (value - minp));
+        // end of logarithmic adjustment
+        return value;
+    }
+
+    /**************** AIGUILLE Canvas ****************/
+    inittrait(ctx, A) // A l'angle défini par angle_fréquence(f)
+    {
+        ctx.save();
+        /*Modification afin de mettre l'aiguille a sa place*/
+        ctx.translate(this.wA / 2, this.hA - 10);
+        ctx.rotate(A);
+
+        ctx.strokeStyle = "rgb(70, 70, 70)";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        /*Modification de la taille de l'aiguille*/
+        ctx.lineTo(0, -60);
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    initdiiode(ctx) // ctx context du canvas des diiode
+    {
+        ctx.fillStyle = "rgb(70, 70, 70)";
+        ctx.beginPath();
+
+        ctx.arc(150, 20, 10, 0, 2 * Math.PI);
+        ctx.arc(75, 20, 10, 0, 2 * Math.PI);
+        ctx.arc(225, 20, 10, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    /**************** GAIN Canvas ****************/
+    // Fonction qui initialisera le rectangle qui representera le volume du son
+    initGain(ctx) {
+        ctx.save();
+        ctx.fillStyle = "rgb(70, 70, 70)";
+        ctx.fillRect(this.wA - 30, 0, 50, this.hA);
+        this.hRect = this.hA;
+        ctx.restore();
+    }
+    // Fonction qui dessine le rectangle representant le volume du sons
+    drawGain(ctx) {
+        ctx.save();
+        ctx.clearRect(this.wA - 30, 0, 50, this.hA);
+        ctx.fillStyle = "rgb(70, 70, 70)";
+        ctx.fillRect(this.wA - 30, 0, 50, this.hA);
+        ctx.fillStyle = "rgb(0, 179, 0)";
+        ctx.fillRect(this.wA - 30, this.hA, 50, -this.hRect);
+        ctx.restore();
+    }
+
+    angle_frequence(f) { // variation de l'angle en fonction de la fréquence émise
+        var note = this.noteFromPitch(f);
+        var cents = this.centsOffFromPitch(f, note);
+        var ref_freq = this.frequencyFromNoteNumber(note);
+        var cnorm;
+        if (f < ref_freq) {
+            cnorm = this.map(cents, -50, 0, 1, 0.1);
+            cnorm = this.mapLinearToLog(cnorm, 0.1, 1, 0.1, 1);
+            this.Angle = this.map(cnorm, 1, 0.1, -Math.PI / 2 + 0.2, 0); //angle
+            return this.Angle;
+        } else {
+            cnorm = this.map(cents, 0, 50, 0.1, 1);
+            cnorm = this.mapLinearToLog(cnorm, 0.1, 1, 0.1, 1);
+            this.Angle = this.map(cnorm, 0.1, 1, 0, Math.PI / 2 - 0.2); //angle
+            return this.Angle;
+        }
+    }
+
+    Modifdio(ctx,ecart,side) //ecart = l'ecart entre la frequence du son et celle de la note reconnu 
+								  //et side contient une chaine de caractère qui va nous servir à savoir de quel côté allumé la diiode
+								  //flat: à gauche  sharp:à gauhche  "": au centre  
+{
+	ctx.save();
+	ctx.clearRect(0,0,300,200);
+	if(side=="flat"&&ecart<=-5)
+	{
+		if(ecart>=-15)
+		{
+			ctx.fillStyle="rgb(0, 150, 0)";
+		}
+		else if(ecart>=-35)
+		{
+			ctx.fillStyle="rgb(255, 102, 0)";
+		}
+		else if(ecart<=-35)
+		{
+			ctx.fillStyle="rgb(200,0,0)";
+		}
+		
+	}
+	else
+	{
+		ctx.fillStyle="rgb(70, 70, 70)";
+	}
+	ctx.beginPath();
+	
+	ctx.arc(75, 20, 10, 0, 2 * Math.PI);
+	ctx.fill();
+	
+	if(side=="sharp"&&ecart>=5)
+	{
+		if(ecart<=15)
+		{
+			ctx.fillStyle="rgb(0, 150, 0)";
+		}
+		else if(ecart<=35)
+		{
+			ctx.fillStyle="rgb(255, 102, 0)";
+		}
+		else if(ecart>=35)
+		{
+			ctx.fillStyle="rgb(200,0,0)";
+		}
+	}
+	else
+	{
+		ctx.fillStyle="rgb(70, 70, 70)";
+	}
+	ctx.beginPath();
+	ctx.arc(225, 20, 10, 0, 2 * Math.PI);
+	ctx.fill();
+  	
+  	if(ecart <=5 && ecart >=-5)
+  	{	
+  		ctx.fillStyle="rgb(0, 230, 0)"
+  	}
+  	else
+  	{
+  		ctx.fillStyle="rgb(70, 70, 70)";
+  	}
+	ctx.beginPath();
+	ctx.arc(150, 20, 10, 0, 2 * Math.PI);
+	ctx.fill();
+  	ctx.restore();
+}
+
+    
 
     /*autoCorrelate(buf, sampleRate) {
          var MIN_SAMPLES = 0;  // will be initialized when AudioContext is created.
@@ -353,7 +615,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
                         detuneLessMode.innerHTML = "";
                         detuneMoreMode.innerHTML = "";
                     } else {
-                    //Otherwise We told to increase the tuning
+                        //Otherwise We told to increase the tuning
                         detuneLessMode.innerHTML = "↑";
                         detuneMoreMode.innerHTML = "";
                     }

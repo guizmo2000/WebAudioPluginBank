@@ -1,23 +1,19 @@
-<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
     WebAudioControlsOptions = {
         useMidi: 1,
     };
 </script>
 <style>
-    @font-face {
-        font-family: 'clock';
-        src: url('./assets/clock.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
 
-    }
 </style>
-<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template id="wc-tuner">
     <style>
         :host {
-            background: linear-gradient(rgb(48, 47, 47), rgb(0, 0, 0));
+            background: linear-gradient(rgb(243, 243, 243), rgb(0, 0, 0));
             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
             font: 'clock';
 
@@ -124,22 +120,17 @@
         }
 
         #detector {
-            width: 110px;
-            height: 90px;
+            width: 300px;
+            height: 300px;
             border: 1.5px solid rgb(35, 53, 49);
             border-radius: 10px;
             text-align: center;
             color: black;
-            background-color: rgb(124, 158, 146);
+
             padding-top: 3.3px;
             margin: auto;
             font-family: 'clock';
             margin-top: 10px;
-        }
-
-        #output {
-            width: 100px;
-            height: 14px;
         }
 
         #flat {
@@ -178,9 +169,10 @@
     </style>
     <div class="column">
         <div id="detector" class="vague">
+            <div class="diode">
+                <canvas id="diode" width="300" height=35></canvas>
+            </div>
             <div class="pitch">
-                
-
                 <span id="pitch">--</span>Hz
             </div>
             <div class="note">
@@ -188,7 +180,9 @@
                 <span id="lessArrow"></span>
                 <span id="moreArrow"></span>
             </div>
-            <canvas id="output" width=300 height=42></canvas>
+            <div class="output">
+                <canvas id="output" width=300 height=160></canvas>
+            </div>
             <div id="detune">
                 <span id="detune_amt">--</span>
                 <span id="flat">CENTS &#9837;</span>
@@ -196,8 +190,9 @@
             </div>
         </div>
         <div class="column2">
-            <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-                width="32" height="20"></webaudio-switch>
+            <webaudio-switch id="switch1" class="switch" midilearn="true"
+                src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png" width="32" height="20">
+            </webaudio-switch>
             <div id="button">
                 <button id="less">-</button>
                 <span id="toneMode">--</span>
@@ -222,6 +217,7 @@
             this.isOn;
             this.setSwitchListener();
             this.changeSemiTone();
+           // this.loadCanvas()
         }
 
         get properties() {
@@ -249,6 +245,35 @@
             }
         }
 
+        loadCanvas() {
+            var canvasElem = this._root.getElementById("output");
+            var detectorElem = this._root.getElementById("detector");
+            var DEBUGCANVAS = this._root.getElementById("waveform");
+            if (DEBUGCANVAS) {
+                var waveCanvas = DEBUGCANVAS.getContext("2d");
+                waveCanvas.strokeStyle = "black";
+                waveCanvas.lineWidth = 1;
+            }
+
+            let wA = 300;
+            let hA = 160;
+
+            //canvas aiguille
+            //le canvas de l'aiguille a été envelé pour le mettre dans le canvas principale
+
+            let outputA = canvasElem.getContext('2d');
+            this._plug.background(outputA);
+            this._plug.inittrait(outputA, this.Angle);
+
+            //canvas diode
+            let canvasdio = this._root.getElementById("diode");
+            let outputD = canvasdio.getContext('2d');
+            this._plug.initdiiode(outputD);
+            //outputA = canvasaig.getContext('2d');
+
+            this._plug.initGain(outputA);
+        }
+
         setSwitchListener() {
             console.log("setswitch");
             this._root.querySelector("#switch1").addEventListener('change', (e) => {
@@ -257,7 +282,7 @@
                 this.isOn = !this.isOn;
             });
         }
-        
+
         //Function about tuning mode for guitar
         changeSemiTone() {
             this._root.querySelector("#toneMode").innerHTML = this._plug.toneLevel;
@@ -279,7 +304,6 @@
         reactivate() {
             this._plug.setParam("status", "enable");
         }
-
 
 
     }
