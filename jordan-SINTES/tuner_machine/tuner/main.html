@@ -100,7 +100,7 @@
             align-items: center;
             flex: 1;
             margin: 3px;
-            margin-top: 25px;
+            margin-top: 5px;
             border-radius: 5px;
         }
 
@@ -120,7 +120,7 @@
 
         #detector {
             width: 180px;
-            height: 180px;
+            height: 210px;
             border: 1.5px solid rgb(35, 53, 49);
             border-radius: 10px;
             text-align: center;
@@ -166,6 +166,10 @@
             height: 60px;
             width: 7px;
             margin: initial;
+        }
+
+        #detune{
+            margin-bottom: 5px;
         }
 
     </style>
@@ -225,11 +229,11 @@
             this.boundingRect = {
                 dataWidth: {
                     type: Number,
-                    value: 150
+                    value: 200
                 },
                 dataHeight: {
                     type: Number,
-                    value: 190
+                    value: 280
                 }
             };
             return this.boundingRect;
