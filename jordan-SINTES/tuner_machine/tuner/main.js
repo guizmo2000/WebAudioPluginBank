@@ -59,6 +59,8 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
 
         this.dryGainNode.gain.value = 3;
         this.analyser.fftSize = 2048;
+        this.bufferLength = this.analyser.frequencyBinCount;
+		this.dataArray = new Uint8Array(this.bufferLength);
     }
 
     connectNodes() {
@@ -98,7 +100,30 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         return 440 * Math.pow(2, (note - 69) / 12);
     }
 
+    getAverageFrequency(arrayFrequencies)
+			{
+				let values = 0;
+				let average;
+
+				let length = arrayFrequencies.length;
+
+				for (let i = 0; i < length; i++) {
+					values += arrayFrequencies[i];
+				}
+
+				average = values / length;
+				return average;
+			}
+
     updatePitch(time) {
+        this.analyser.getByteFrequencyData(this.dataArray);
+
+			const averageFrequency = this.getAverageFrequency(this.dataArray);
+			var coordinateY = (averageFrequency);
+
+			if(coordinateY < 0)
+				coordinateY = 0;
+        this.hRect=coordinateY;
         var canvasElem = this.gui._root.getElementById("output");
         var detectorElem = this.gui._root.getElementById("detector");
         var DEBUGCANVAS = this.gui._root.getElementById("waveform");
@@ -328,18 +353,18 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     initGain(ctx) {
         ctx.save();
         ctx.fillStyle = "rgb(70, 70, 70)";
-        ctx.fillRect(this.wA - 30, 0, 0, this.hA);
+        ctx.fillRect(this.wA - 15, 0, 10, this.hA);
         this.hRect = this.hA;
         ctx.restore();
     }
     // Fonction qui dessine le rectangle representant le volume du sons
     drawGain(ctx) {
         ctx.save();
-        ctx.clearRect(this.wA - 30, 0, 50, this.hA);
+        ctx.clearRect(this.wA - 15, 0, 10, this.hA);
         ctx.fillStyle = "rgb(70, 70, 70)";
-        ctx.fillRect(this.wA - 30, 0, 50, this.hA);
+        ctx.fillRect(this.wA - 15, 0, 10, this.hA);
         ctx.fillStyle = "rgb(0, 179, 0)";
-        ctx.fillRect(this.wA - 30, this.hA, 50, -this.hRect);
+        ctx.fillRect(this.wA - 15, this.hA, 10, -this.hRect);
         ctx.restore();
     }
 
@@ -647,13 +672,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         }
         this.valueSaved = freqTest;
     }
-
-    /*
-     *TODO: Create function to catch and show the gain of the sound
-     */
-    showGain() {
-
-    }
+    */
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
