@@ -13,17 +13,16 @@
 <template id="wc-tuner">
     <style>
         :host {
-            background: linear-gradient(rgb(243, 243, 243), rgb(0, 0, 0));
+            background: linear-gradient(rgb(37, 37, 37), rgb(0, 0, 0));
             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
             font: 'clock';
 
-            width: 150px;
-            height: 190px;
+            width: 200px;
+            height: 280px;
             display: block;
             user-select: none;
             cursor: move;
             z-index: 9;
-
             border-bottom-left-radius: 8px;
             border-bottom-right-radius: 8px;
         }
@@ -101,7 +100,7 @@
             align-items: center;
             flex: 1;
             margin: 3px;
-            margin-top: 10px;
+            margin-top: 25px;
             border-radius: 5px;
         }
 
@@ -120,18 +119,20 @@
         }
 
         #detector {
-            width: 300px;
-            height: 300px;
+            width: 180px;
+            height: 180px;
             border: 1.5px solid rgb(35, 53, 49);
             border-radius: 10px;
             text-align: center;
             color: black;
-
+            background-color: rgb(201, 201, 201);
             padding-top: 3.3px;
             margin: auto;
             font-family: 'clock';
             margin-top: 10px;
         }
+
+       
 
         #flat {
             display: none;
@@ -166,11 +167,12 @@
             width: 7px;
             margin: initial;
         }
+
     </style>
     <div class="column">
         <div id="detector" class="vague">
             <div class="diode">
-                <canvas id="diode" width="300" height=35></canvas>
+                <canvas id="diode" width="300" height=30></canvas>
             </div>
             <div class="pitch">
                 <span id="pitch">--</span>Hz
@@ -181,7 +183,7 @@
                 <span id="moreArrow"></span>
             </div>
             <div class="output">
-                <canvas id="output" width=300 height=160></canvas>
+                <canvas id="output" width=180 height=90></canvas>
             </div>
             <div id="detune">
                 <span id="detune_amt">--</span>
@@ -193,11 +195,11 @@
             <webaudio-switch id="switch1" class="switch" midilearn="true"
                 src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png" width="32" height="20">
             </webaudio-switch>
-            <div id="button">
+            <!--<div id="button">
                 <button id="less">-</button>
                 <span id="toneMode">--</span>
                 <button id="more">+</button>
-            </div>
+            </div>-->
             <span class="pedalLabel">Tuner</span>
         </div>
     </div>
@@ -216,8 +218,7 @@
             this.state = new Object();
             this.isOn;
             this.setSwitchListener();
-            this.changeSemiTone();
-           // this.loadCanvas()
+            //this.changeSemiTone();
         }
 
         get properties() {
@@ -245,34 +246,6 @@
             }
         }
 
-        loadCanvas() {
-            var canvasElem = this._root.getElementById("output");
-            var detectorElem = this._root.getElementById("detector");
-            var DEBUGCANVAS = this._root.getElementById("waveform");
-            if (DEBUGCANVAS) {
-                var waveCanvas = DEBUGCANVAS.getContext("2d");
-                waveCanvas.strokeStyle = "black";
-                waveCanvas.lineWidth = 1;
-            }
-
-            let wA = 300;
-            let hA = 160;
-
-            //canvas aiguille
-            //le canvas de l'aiguille a été envelé pour le mettre dans le canvas principale
-
-            let outputA = canvasElem.getContext('2d');
-            this._plug.background(outputA);
-            this._plug.inittrait(outputA, this.Angle);
-
-            //canvas diode
-            let canvasdio = this._root.getElementById("diode");
-            let outputD = canvasdio.getContext('2d');
-            this._plug.initdiiode(outputD);
-            //outputA = canvasaig.getContext('2d');
-
-            this._plug.initGain(outputA);
-        }
 
         setSwitchListener() {
             console.log("setswitch");
@@ -284,7 +257,7 @@
         }
 
         //Function about tuning mode for guitar
-        changeSemiTone() {
+        /*changeSemiTone() {
             this._root.querySelector("#toneMode").innerHTML = this._plug.toneLevel;
 
             this._root.querySelector("#more").addEventListener('click', (e) => {
@@ -296,7 +269,7 @@
                 this._plug.decreaseSemiTone();
                 this._root.querySelector("#toneMode").innerHTML = this._plug.toneLevel;
             });
-        }
+        }*/
 
         bypass() {
             this._plug.setParam("status", "disable");

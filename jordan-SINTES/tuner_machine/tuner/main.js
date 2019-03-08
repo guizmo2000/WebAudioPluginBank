@@ -192,10 +192,10 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
             }
             this.Modifdio(outputD, detune, detuneElem.className);
         }
-        let freq = Math.round(ac);
+       /* let freq = Math.round(ac);
         if (this.valueSaved != freq) {
             this.indicateTone(this.toneLevel);
-        }
+        }*/
 
 
         if (!window.requestAnimationFrame)
@@ -316,9 +316,9 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         ctx.fillStyle = "rgb(70, 70, 70)";
         ctx.beginPath();
 
-        ctx.arc(150, 20, 10, 0, 2 * Math.PI);
-        ctx.arc(75, 20, 10, 0, 2 * Math.PI);
-        ctx.arc(225, 20, 10, 0, 2 * Math.PI);
+        ctx.arc(20, 20, 10, 0, 2 * Math.PI);
+        ctx.arc(90, 20, 10, 0, 2 * Math.PI);
+        ctx.arc(160, 20, 10, 0, 2 * Math.PI);
         ctx.fill();
         ctx.restore();
     }
@@ -328,7 +328,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
     initGain(ctx) {
         ctx.save();
         ctx.fillStyle = "rgb(70, 70, 70)";
-        ctx.fillRect(this.wA - 30, 0, 50, this.hA);
+        ctx.fillRect(this.wA - 30, 0, 0, this.hA);
         this.hRect = this.hA;
         ctx.restore();
     }
@@ -389,7 +389,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
 	}
 	ctx.beginPath();
 	
-	ctx.arc(75, 20, 10, 0, 2 * Math.PI);
+	ctx.arc(20, 20, 10, 0, 2 * Math.PI);
 	ctx.fill();
 	
 	if(side=="sharp"&&ecart>=5)
@@ -412,7 +412,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
 		ctx.fillStyle="rgb(70, 70, 70)";
 	}
 	ctx.beginPath();
-	ctx.arc(225, 20, 10, 0, 2 * Math.PI);
+	ctx.arc(160, 20, 10, 0, 2 * Math.PI);
 	ctx.fill();
   	
   	if(ecart <=5 && ecart >=-5)
@@ -424,7 +424,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
   		ctx.fillStyle="rgb(70, 70, 70)";
   	}
 	ctx.beginPath();
-	ctx.arc(150, 20, 10, 0, 2 * Math.PI);
+	ctx.arc(90, 20, 10, 0, 2 * Math.PI);
 	ctx.fill();
   	ctx.restore();
 }
@@ -530,7 +530,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
         return sampleRate / T0;
     }
 
-    increaseSemiTone() {
+   /* increaseSemiTone() {
         if (this.toneLevel < 2) {
             this.toneLevel++;
             this.indicateTone(this.toneLevel);
@@ -583,7 +583,7 @@ window.TunerMachine = class TunerMachine extends WebAudioPluginCompositeNode {
          *  present in the table, we must to catch on which interval the frequency is present
          *  and after to indicate if the user must to tune more or less depending of the position
          *  in the interval
-         */
+         *
 
         //If the frequency catched not corresponding to a frequency in the table and the value between the frequency of the first string and last string
         if (this.frequencyString.indexOf(freqMin) == -1 && freqTest > this.frequencyString[0] && freqTest < this.frequencyString[5]) {
