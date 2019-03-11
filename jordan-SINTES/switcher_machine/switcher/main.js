@@ -67,6 +67,7 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 		this._input.connect(this.outputs[1]);
 		this._input.connect(this.outputs[2]);
 		this._input.connect(this.outputs[3]);
+		this.outputs[3].connect(this._output);
 		
 	}
 
