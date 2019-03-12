@@ -6,7 +6,7 @@
   }
 </style>
 <head>
-  <title>Host that loads a plugin with its GUI</title>
+  <title>Test_multi_pedal</title>
   <meta http-equiv="origin-trial" data-feature="AudioWorklet" data-expires="2018-03-06" content="AuqouVYOpuBqGUbQMwRTvnR9R5K1T0u5vw5KUqvZQSNox/gKa/dGig1VWcPYXUzuHN1OtTijH+lhVjg8has9RggAAABseyJvcmlnaW4iOiJodHRwczovL3dhc2FiaS5pM3MudW5pY2UuZnI6NDQzIiwiZmVhdHVyZSI6IkF1ZGlvV29ya2xldCIsImV4cGlyeSI6MTUyMDI5NDQwMCwiaXNTdWJkb21haW4iOnRydWV9">
   <script src="./../../sdk/WebAudioSDK.js"></script>
 </head>
@@ -14,7 +14,7 @@
 <script src="../equalizer/equalizerPedal/main.js"></script>
 <script src="../tuner_machine/tuner/main.js"></script>
 <script src="../wah_effect/WahVox/main.js"></script>
-<script src="../disto_machine/disto/main.js"></script>
+<script src="../compressor_effect/compressor/main.js"></script>
 <body>
 <h1>Test Switcher</h1>
 <audio src="../../BasketCaseGreendayriffDI.mp3" id="soundSample" controls loop></audio>
@@ -30,22 +30,27 @@
   var plugin2 = new WasabiEqualizer(ctx, "../equalizer/equalizerPedal");
   var plugin3 = new WasabiTunerMachine(ctx, "../tuner_machine/tuner");
   var plugin4 = new WasabiWahVox(ctx, "../wah_effect/WahVox");
-  var plugin5 = new WasabiDistoMachine(ctx, "../disto_machine/disto");
+  var plugin5 = new untitled(ctx, "../compressor_effect/compressor");
   var waps = document.getElementById("waps");
 
-Promise.all([plugin1.load(),plugin2.load(),plugin3.load(),plugin4.load()]).then(plugins=>{
+Promise.all([plugin1.load(),plugin2.load(),plugin3.load(),plugin4.load(),plugin5.load()]).then(plugins=>{
 
-  Promise.all([plugin1.loadGui(),plugin2.loadGui(),plugin3.loadGui(),plugin4.loadGui()]).then(wrappers=>{
+  Promise.all([plugin1.loadGui(),plugin2.loadGui(),plugin3.loadGui(),plugin4.loadGui(), plugin5.loadGui()]).then(wrappers=>{
   waps.appendChild(wrappers[0]);
   waps.appendChild(wrappers[1]);  
   waps.appendChild(wrappers[2]);  
   waps.appendChild(wrappers[3]);  
+  waps.appendChild(wrappers[4]); 
 });
   mediaSource.connect(plugins[0]);
   plugins[0].connect(plugins[1]);
-  plugins[1].connect(plugins[2]);
-  plugins[2].connect(plugins[3]);
+  plugins[0].connect(plugins[2]);
+  plugins[0].connect(plugins[3]);
+  plugins[0].connect(plugins[4]);
+  plugins[1].connect(ctx.destination);
+  plugins[2].connect(ctx.destination);
   plugins[3].connect(ctx.destination);
+  plugins[4].connect(ctx.destination);
 
 });
 </script>
