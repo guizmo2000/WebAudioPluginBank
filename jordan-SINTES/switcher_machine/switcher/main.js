@@ -9,6 +9,7 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 		super(ctx, URL, options)
 		/*    ################     API PROPERTIES    ###############   */
 
+		this.ctx=ctx;
 		this.state;
 		this._numberOfOutputs=4;
 		this.params = {
