@@ -75,10 +75,10 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 		this.params.mode1=_sig;
 		if (this.params.mode1=== 1){
 			this._input.connect(this.outputs[0]);
-			this.outputs[0].connect(ctx.destination);
+			this.outputs[0].connect(this.ctx.destination);
 		}
 		else if (this.params.mode1 === 0){
-			this.outputs[0].disconnect(ctx.destination)
+			this.outputs[0].disconnect(this.ctx.destination)
 			this._input.disconnect(this.outputs[0]);
 		}
 	}
@@ -87,10 +87,10 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 		this.params.mode2=_sig;
 		if (this.params.mode2=== 1){
 			this._input.connect(this.outputs[1]);
-			this.outputs[1].connect(ctx.destination);
+			this.outputs[1].connect(this.ctx.destination);
 		}
 		else if (this.params.mode2 === 0){
-			this.outputs[1].disconnect(ctx.destination)
+			this.outputs[1].disconnect(this.ctx.destination)
 			this._input.disconnect(this.outputs[1]);
 		}
 	}
@@ -99,10 +99,10 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 		this.params.mode3=_sig;
 		if (this.params.mode3=== 1){
 			this._input.connect(this.outputs[2]);
-			this.outputs[2].connect(ctx.destination);
+			this.outputs[2].connect(this.ctx.destination);
 		}
 		else if (this.params.mode3 === 0){
-			this.outputs[2].disconnect(ctx.destination)
+			this.outputs[2].disconnect(this.ctx.destination)
 			this._input.disconnect(this.outputs[2]);
 		}
 	}
@@ -111,10 +111,10 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 		this.params.mode4=_sig;
 		if (this.params.mode4=== 1){
 			this._input.connect(this.outputs[3]);
-			this.outputs[3].connect(ctx.destination);
+			this.outputs[3].connect(this.ctx.destination);
 		}
 		else if (this.params.mode4 === 0){
-			this.outputs[3].disconnect(ctx.destination)
+			this.outputs[3].disconnect(this.ctx.destination)
 			this._input.disconnect(this.outputs[3]);
 		}
 	}
