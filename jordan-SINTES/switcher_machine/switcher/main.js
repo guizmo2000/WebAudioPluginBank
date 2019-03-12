@@ -57,18 +57,18 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 			this.outputs.forEach(output => {
 				output.gain.setValueAtTime(1 / Math.sqrt(this.numberOfOutputs), this.context.currentTime);
 			});
+
 		}
 		
 		console.log(this.outputs);
+		
 	}
 
 	connectNodes() {
-		this._input.connect(this.outputs[0]);
+		/*this._input.connect(this.outputs[0]);
 		this._input.connect(this.outputs[1]);
 		this._input.connect(this.outputs[2]);
-		this._input.connect(this.outputs[3]);
-		this.outputs[3].connect(this._output);
-		
+		this._input.connect(this.outputs[3]);*/
 	}
 
 	/*  #########  Personnal code for the web audio graph  #########   */
