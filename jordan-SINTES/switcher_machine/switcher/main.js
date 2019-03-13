@@ -74,48 +74,48 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 	set mode1(_sig){
 		this.params.mode1=_sig;
 		if (this.params.mode1=== 1){
-			this._input.connect(this.outputs[0]);
+			this._input.connect(this._output, 0);
 			this.outputs[0].connect(this.ctx.destination);
 		}
 		else if (this.params.mode1 === 0){
 			this.outputs[0].disconnect(this.ctx.destination)
-			this._input.disconnect(this.outputs[0]);
+			this._input.disconnect(this._output, 0);
 		}
 	}
 
 	set mode2(_sig){
 		this.params.mode2=_sig;
 		if (this.params.mode2=== 1){
-			this._input.connect(this.outputs[1]);
+			this._input.connect(this._output, 1);
 			this.outputs[1].connect(this.ctx.destination);
 		}
 		else if (this.params.mode2 === 0){
 			this.outputs[1].disconnect(this.ctx.destination)
-			this._input.disconnect(this.outputs[1]);
+			this._input.disconnect(this._output, 1);
 		}
 	}
 
 	set mode3(_sig){
 		this.params.mode3=_sig;
 		if (this.params.mode3=== 1){
-			this._input.connect(this.outputs[2]);
+			this._input.connect(this._output, 2);
 			this.outputs[2].connect(this.ctx.destination);
 		}
 		else if (this.params.mode3 === 0){
 			this.outputs[2].disconnect(this.ctx.destination)
-			this._input.disconnect(this.outputs[2]);
+			this._input.disconnect(this._output, 2);
 		}
 	}
 
 	set mode4(_sig){
 		this.params.mode4=_sig;
 		if (this.params.mode4=== 1){
-			this._input.connect(this.outputs[3]);
+			this._input.connect(this._output, 3);
 			this.outputs[3].connect(this.ctx.destination);
 		}
 		else if (this.params.mode4 === 0){
 			this.outputs[3].disconnect(this.ctx.destination)
-			this._input.disconnect(this.outputs[3]);
+			this._input.disconnect(this._output, 3);
 		}
 	}
 	
