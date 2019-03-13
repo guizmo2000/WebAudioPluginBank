@@ -66,7 +66,7 @@ window.Switcher = class Switcher extends WebAudioPluginCompositeNode {
 	}
 
 	connectNodes() {
-
+		//todo: reguler gain en fonction du nombre de chemin allumé
 	}
 
 	/*  #########  Personnal code for the web audio graph  #########   */
