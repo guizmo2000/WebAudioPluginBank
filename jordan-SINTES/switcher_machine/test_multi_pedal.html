@@ -43,10 +43,10 @@ Promise.all([plugin1.load(),plugin2.load(),plugin3.load(),plugin4.load(),plugin5
   waps.appendChild(wrappers[4]); 
 });
   mediaSource.connect(plugins[0]);
-  plugins[0].connect(plugins[1]);
-  plugins[0].connect(plugins[2]);
-  plugins[0].connect(plugins[3]);
-  plugins[0].connect(plugins[4]);
+  plugins[0].outputs[0].connect(plugins[1]);
+  plugins[0].outputs[1].connect(plugins[2]);
+  plugins[0].outputs[2].connect(plugins[3]);
+  plugins[0].outputs[3].connect(plugins[4]);
   plugins[1].connect(ctx.destination);
   plugins[2].connect(ctx.destination);
   plugins[3].connect(ctx.destination);
