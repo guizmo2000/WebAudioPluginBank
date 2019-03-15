@@ -23,6 +23,7 @@ class untitledNode extends AudioWorkletNode {
 
     constructor(context, baseURL, options) {
 
+        
         var json_object = JSON.parse(getJSONuntitled());
 
         // Setting values for the input, the output and the channel count.

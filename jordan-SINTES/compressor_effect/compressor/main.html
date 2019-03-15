@@ -219,6 +219,8 @@
         attributeChangedCallback() {
             this.state = JSON.parse(this.getAttribute('state'));
             console.log(this.state);
+
+            this._root.querySelector("#threshold").querySelector("webaudio-knob").setValue(this._plug.getCOMPRESSOR0x00Compression_ControlThreshold.value, false);
         }
 
         setKnobs() {
