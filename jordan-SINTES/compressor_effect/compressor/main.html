@@ -1,10 +1,12 @@
-<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
     WebAudioControlsOptions = {
         useMidi: 1,
     };
 </script>
-<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template id="wc-comp">
     <style>
         :host {
@@ -128,56 +130,68 @@
 
     <div class="row">
         <div class="column">
-            <div class= "knob" id="threshold">
-                    <webaudio-knob id="/COMPRESSOR/0x00/Compression_Control/Threshold" class="knob" sprites="99" min="-100" max="10" step="0.1" value="-30" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-                    width="40" height="40" data-role="Threshold" diameter="24" tooltip="Threshold"></webaudio-knob>
+            <div class="knob" id="threshold">
+                <webaudio-knob id="/COMPRESSOR/0x00/Compression_Control/Threshold"  sprites="99" min="-100"
+                    max="10" step="0.1" value="-30" midilearn="true"
+                    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" width="40"
+                    height="40" data-role="Threshold" diameter="24" tooltip="Threshold"></webaudio-knob>
             </div>
-            
+
             <span class="knob-label" id="knob1-label" style="color: black">THRESHOLD</span>
 
             <div class="knob" id="ratio">
-                    <webaudio-knob id="/COMPRESSOR/0x00/Compression_Control/Ratio" class="knob" sprites="99" min="1" max="20" step="0.1" value="5" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-                    width="40" height="40" data-role="Threshold" diameter="24" tooltip="Ratio"></webaudio-knob>
+                <webaudio-knob id="/COMPRESSOR/0x00/Compression_Control/Ratio"  sprites="99" min="1"
+                    max="20" step="0.1" value="5" midilearn="true"
+                    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" width="40"
+                    height="40" data-role="Threshold" diameter="24" tooltip="Ratio"></webaudio-knob>
             </div>
-            
+
             <span class="knob-label" id="knob1-label" style="color: black">RATIO</span>
 
         </div>
 
         <div class="column2">
-            <div class= "knob" id="attack">
-                    <webaudio-knob id="/COMPRESSOR/0x00/Compression_Response/Attack_____tooltip:_Time_constant_in_ms_(1/e_smoothing_time)_for_the_compression_gain__to_approach_(exponentially)_a_new_lower_target_level_(the_compression__`kicking_in')]" class="knob" sprites="99" min="1" max="1000" step="0.1" value="50" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-                    width="40" height="40" data-role="Threshold" diameter="24" tooltip="Attack"></webaudio-knob>
+            <div class="knob" id="attack">
+                <webaudio-knob
+                    id="/COMPRESSOR/0x00/Compression_Response/Attack_____tooltip:_Time_constant_in_ms_(1/e_smoothing_time)_for_the_compression_gain__to_approach_(exponentially)_a_new_lower_target_level_(the_compression__`kicking_in')]"
+                     sprites="99" min="1" max="1000" step="0.1" value="50" midilearn="true"
+                    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" width="40"
+                    height="40" data-role="Threshold" diameter="24" tooltip="Attack"></webaudio-knob>
             </div>
-            
+
             <span class="knob-label" id="knob1-label" style="color: black">ATTACK</span>
 
-            <div class="knob" id ="release">
-                    <webaudio-knob id="/COMPRESSOR/0x00/Compression_Response/Release" class="knob" sprites="99" min="1" max="1000" step="0.1" value="500" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-                    width="40" height="40" data-role="Threshold" diameter="24" tooltip="Release"></webaudio-knob>
+            <div class="knob" id="release">
+                <webaudio-knob id="/COMPRESSOR/0x00/Compression_Response/Release"  sprites="99" min="1"
+                    max="1000" step="0.1" value="500" midilearn="true"
+                    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" width="40"
+                    height="40" data-role="Threshold" diameter="24" tooltip="Release"></webaudio-knob>
             </div>
-            
+
             <span class="knob-label" id="knob1-label" style="color: black">RELEASE</span>
 
         </div>
 
         <div class="column3">
-                <div class="knob" id ="gain">
-                        <webaudio-knob id="/COMPRESSOR/Makeup_Gain" class="knob" sprites="99" min="5" max="15" step="1" value="10" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
-                        width="40" height="40" data-role="Threshold" diameter="24" tooltip="Gain"></webaudio-knob>
-                </div>
-                
-                <span class="knob-label" id="knob1-label" style="color: black">GAIN</span>
+            <div class="knob" id="gain">
+                <webaudio-knob id="/COMPRESSOR/Makeup_Gain"  sprites="99" min="5" max="15" step="1"
+                    value="10" midilearn="true"
+                    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" width="40"
+                    height="40" data-role="Threshold" diameter="24" tooltip="Gain"></webaudio-knob>
+            </div>
+
+            <span class="knob-label" id="knob1-label" style="color: black">GAIN</span>
         </div>
     </div>
     <div class="label">
         <div class="switch" id="bypass">
-                <webaudio-switch id="/COMPRESSOR/0x00/Bypass" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
-                width="32" height="20"></webaudio-switch>
+            <webaudio-switch id="/COMPRESSOR/0x00/Bypass" class="switch" midilearn="true"
+                src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png" width="32" height="20">
+            </webaudio-switch>
         </div>
     </div>
     <div class="label">
-            <span class="pedalLabel">Compressor</span>
+        <span class="pedalLabel">Compressor</span>
     </div>
 </template>
 
@@ -219,8 +233,11 @@
         attributeChangedCallback() {
             this.state = JSON.parse(this.getAttribute('state'));
             console.log(this.state);
-
-            this._root.querySelector("#threshold").querySelector("webaudio-knob").setValue(this._plug.getCOMPRESSOR0x00Compression_ControlThreshold.value, false);
+            for (var i = 0; i < this.knobs.length; i++) {
+                //this.knobs[i].querySelector("webaudio-konb").value = this.state[this.labels[i].innerHTML.toLowerCase().replace(/ /g, "")] * 100;
+                this.knobs[i].querySelector("webaudio-knob").value = this.state[this.knobs[i].querySelector("webaudio-knob").id];
+            }
+            //this._root.querySelector("#threshold").querySelector("webaudio-knob").setValue(this._plug.getCOMPRESSOR0x00Compression_ControlThreshold.value, false);
         }
 
         setKnobs() {
@@ -233,10 +250,10 @@
             this._root.querySelector("#gain").querySelector("webaudio-knob").addEventListener('input', (e) => this._plug.setParam("/COMPRESSOR/Makeup_Gain", e.target.value));
         }
 
-        setBypass(){
-            this._root.querySelector("#bypass").querySelector("webaudio-switch").addEventListener('click', (e) => this._plug.setParam("/COMPRESSOR/0x00/Bypass", e.target.value-1));
-        }    
-        
+        setBypass() {
+            this._root.querySelector("#bypass").querySelector("webaudio-switch").addEventListener('click', (e) => this._plug.setParam("/COMPRESSOR/0x00/Bypass", e.target.value - 1));
+        }
+
     }
 
     // Register the x-custom element with the browser
