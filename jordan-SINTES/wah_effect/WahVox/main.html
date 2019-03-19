@@ -8,12 +8,12 @@
 <template id="wc-wahvox">
   <style>
     :host {
-      background: linear-gradient( rgb(228, 215, 233), rgb(226, 212, 206));
+      background: linear-gradient( rgb(168, 53, 53), rgb(102, 13, 13));
       box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
 
 
       width: 180px;
-      height: auto;
+      height: 250px;
       display: block;
       user-select: none;
       cursor: move;
@@ -40,6 +40,7 @@
 
     span{
       font-family: helvetica;
+      color: rgb(255, 255, 255);
       text-shadow: 0px 1px 1px #000;
     }
 
@@ -132,7 +133,7 @@
         </div>
 
       </webaudio-slider>
-      <span class="knob-label" id="knob1-label" style="color: black">EFFECT</span>
+      <span class="knob-label" id="knob1-label" style="color: rgb(255, 255, 255)">EFFECT</span>
       <webaudio-switch id="switch1" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
         width="32" height="20"></webaudio-switch>
       <span class="pedalLabel">Vox V847</span>
@@ -140,22 +141,22 @@
     <div class="column2">
       <webaudio-switch id="switch2" class="switch" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png"
         width="32" height="20"></webaudio-switch>
-      <span class="knob-label" id="knob1-label" style="color: black">BOOST</span>
+      <span class="knob-label" id="knob1-label" style="color: rgb(255, 255, 255)">BOOST</span>
       
         <webaudio-slider class="knob" id="mode" midilearn="1" midicc="2.0" value="1" min="1" max="3" step="1" width="15" height="34"
           tooltip="Mode (1: log, 2: exp, 3: lin)"></webaudio-slider>
 
-      <span class="knob-label" id="knob1-label" style="color: black">MODE</span>
+      <span class="knob-label" id="knob1-label" style="color: rgb(255, 249, 249)">MODE</span>
       
 
       <webaudio-knob id="knob" class="knob" sprites="99" min="1" max="5" step="1" value="3" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
         width="30" height="30" data-role="frequency" diameter="24" tooltip="Frequency"></webaudio-knob>
-      <span class="knob-label" id="knob3-label" style="color: black">FREQUENCY</span>
+      <span class="knob-label" id="knob3-label" style="color: rgb(255, 255, 255)">FREQUENCY</span>
       
       
       <webaudio-knob id="knob2" class="knob" sprites="99" min="1" max="5" step="1" value="3" midilearn="true" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png"
         width="30" height="30" data-role="frequency" diameter="24" tooltip="Q Factor"></webaudio-knob>
-      <span class="knob-label" id="knob3-label" style="color: black">Q FACTOR</span>
+      <span class="knob-label" id="knob3-label" style="color: rgb(255, 255, 255)">Q FACTOR</span>
     </div>
 
 </template>
