@@ -89,7 +89,7 @@
             justify-content: flex-start;
             align-items: center;
             flex: 1;
-            margin: 3px;
+            margin-top: 3px;
             border-radius: 5px;
         }
 
@@ -174,7 +174,14 @@
 
     </style>
     <div class="column">
-        
+        <div class="knob" id="mix">
+            <webaudio-knob id="setmix"  sprites="99" min="0"
+                max="100" step="0.1" value="50" midilearn="true"
+                src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" width="40"
+                height="40" data-role="Mix" diameter="24" tooltip="Mix"></webaudio-knob>
+        </div>
+
+        <span class="knob-label" id="knob1-label" style="color: black">Mix</span>
         <div class="column2">
             <webaudio-switch id="switch1" class="switch" midilearn="true"
                 src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png" width="32" height="20">
@@ -195,9 +202,8 @@
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(loopertemp.content.cloneNode(true));
             this.state = new Object();
-            this.isOn;
             this.setSwitchListener();
-            //this.changeSemiTone();
+            this.state=0;
         }
 
         get properties() {
@@ -229,35 +235,18 @@
         setSwitchListener() {
             console.log("setswitch");
             this._root.querySelector("#switch1").addEventListener('change', (e) => {
-                if (this.isOn) this.bypass();
-                else this.reactivate();
-                this.isOn = !this.isOn;
+                if (this.state===0){
+                    this.state=1;
+                    this._plug.setParam("status", "record");
+                }else if(this.state===1){
+                    this.state=2;
+                    this._plug.setParam("status", "play");
+                }else if (this.state===2){
+                    this.state=0;
+                    this._plug.setParam("status", "stop");
+                }
             });
         }
-
-        //Function about tuning mode for guitar
-        /*changeSemiTone() {
-            this._root.querySelector("#toneMode").innerHTML = this._plug.toneLevel;
-
-            this._root.querySelector("#more").addEventListener('click', (e) => {
-                this._plug.increaseSemiTone();
-                this._root.querySelector("#toneMode").innerHTML = this._plug.toneLevel;
-            });
-
-            this._root.querySelector("#less").addEventListener('click', (e) => {
-                this._plug.decreaseSemiTone();
-                this._root.querySelector("#toneMode").innerHTML = this._plug.toneLevel;
-            });
-        }*/
-
-        bypass() {
-            this._plug.setParam("status", "disable");
-        }
-        reactivate() {
-            this._plug.setParam("status", "enable");
-        }
-
-
     }
 
     // Register the x-custom element with the browser

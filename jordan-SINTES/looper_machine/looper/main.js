@@ -11,7 +11,7 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
 
         this.options = options;
         this.state;
-        this.params = { "status": "disable" }
+        this.params = { "status": "unavaiable" }
         super.setup();
 
     }
@@ -35,15 +35,37 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
     }
 
     createNodes() {
-   
+
     }
 
     connectNodes() {
-   
+
     }
 
     /*  #########  Personnal code for Looper  #########   */
-    
+
+    set status(_status) {
+        var mediaRecorder;
+        if (_status === "record") {
+            if (navigator.mediaDevices) {
+                console.log('getUserMedia supported');
+                var constraints = { audio: true };
+                var chunks = [];
+                navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
+                    mediaRecorder = new MediaRecorder(stream);
+                    mediaRecorder.start();
+                    console.log(mediaRecorder.state);
+                      console.log("recorder started");
+                        
+                    });
+            }
+        } else if (_status === "play") {
+            mediaRecorder.stop();
+            console.log(mediaRecorder);
+        } else if (_status === "stop") {
+
+        }
+    }
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
