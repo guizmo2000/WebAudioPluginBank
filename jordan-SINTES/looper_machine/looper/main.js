@@ -54,14 +54,14 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
                 mediaRecorder = new MediaRecorder(stream);
                 if (_status === "record") {
                     mediaRecorder.start();
-                    mediaRecorder.state;
-                    mediaRecorder.stream;
+                    console.log(mediarecorder);
 
                 }
                
                 mediaRecorder.stop();
-                mediaRecorder.state;
-                    mediaRecorder.stream;
+                console.log(mediarecorder);
+                mediarecorder.stream();
+                
             });
         }
         if (_status === "record") {
