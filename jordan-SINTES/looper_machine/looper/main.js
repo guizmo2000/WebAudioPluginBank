@@ -11,7 +11,7 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
 
         this.options = options;
         this.state;
-        this.params = { "status": "unavaiable", "mix":50 }
+        this.params = { "status": "unavaiable", "mix": 50 }
         super.setup();
 
     }
@@ -52,14 +52,20 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
             var chunks = [];
             navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
                 mediaRecorder = new MediaRecorder(stream);
-                if(_status === "record"){
-                   
+                if (_status === "record") {
+                    mediaRecorder.start();
+                    console.log(mediaRecorder.state);
+                    console.log("recorder started");
+
                 }
                 mediaRecorder.start();
                 console.log(mediaRecorder.state);
-                  console.log("recorder started");
-                
-                });
+                console.log("recorder started");
+                mediaRecorder.stop();
+                console.log(mediaRecorder.state);
+                console.log("recorder stopped");
+
+            });
         }
         if (_status === "record") {
         } else if (_status === "play") {
@@ -70,8 +76,8 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
         }
     }
 
-    set mix(_mix){
-        this.params.mix=_mix;
+    set mix(_mix) {
+        this.params.mix = _mix;
     }
 }
 
