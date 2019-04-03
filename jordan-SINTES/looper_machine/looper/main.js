@@ -13,7 +13,11 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
         this.state;
         this.params = { "status": "unavaiable", "mix": 50 }
         super.setup();
-
+        this.mediaRecorder;
+        this.audioChunks;
+        this.audioBlob;
+        this.audioUrl;
+        this.audio;
     }
 
     /*    ################     API METHODS    ###############   */
@@ -35,40 +39,63 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
     }
 
     createNodes() {
-
+        this.dryGainNode = this.context.createGain();
+        this.dryGainNode.gain.value = 1;
     }
 
     connectNodes() {
-
+        this._input.connect(this.dryGainNode);
+        this.dryGainNode.connect(this._output);
     }
 
     /*  #########  Personnal code for Looper  #########   */
 
     set status(_status) {
-        var mediaRecorder;
-        if (navigator.mediaDevices) {
-            console.log('getUserMedia supported');
-            var constraints = { audio: true };
-            var chunks = [];
-            navigator.mediaDevices.getUserMedia(constraints).then(function (stream) {
-                mediaRecorder = new MediaRecorder(stream);
-                if (_status === "record") {
-                    mediaRecorder.start();
-                    console.log(mediarecorder);
 
-                }
-               
-                mediaRecorder.stop();
-                console.log(mediarecorder);
-                mediarecorder.stream();
-                
-            });
-        }
         if (_status === "record") {
+            //console.log("Recording...")
+            var constraints = {
+                audio: {
+                    echoCancellation: false,
+                    mozNoiseSuppression: false,
+                    mozAutoGainControl: false,
+                    //deviceId: id ? {exact: id} : undefined
+                }
+            };
+            navigator.mediaDevices.getUserMedia(constraints)
+                .then(stream => {
+                    this.mediaRecorder = new MediaRecorder(stream);
+                    this.mediaRecorder.start();
+
+                    this.audioChunks = [];
+
+                    this.mediaRecorder.addEventListener("dataavailable", event =>{
+                        this.audioChunks.push(event.data);
+                        this.audioBlob = new Blob(this.audioChunks);
+                        this.audioUrl = URL.createObjectURL(this.audioBlob);
+                        this.audio = new Audio(this.audioUrl);
+                    });
+
+                    this.mediaRecorder.addEventListener("stop", event => {
+                        this.audio.play();
+                        this.audio.addEventListener("ended", event => {
+                            this.audio.currentTime = 2;
+                            this.audio.play();
+                        })
+                        //console.log(this.audioBlob);
+                    });
+
+                    setTimeout(() => {
+                        this.mediaRecorder.stop();
+                        //console.log(this.audioChunks);
+                    }, 5000);
+                });
+
         } else if (_status === "play") {
-            mediaRecorder.stop();
-            console.log(mediaRecorder);
+            console.log("I playing...");
+
         } else if (_status === "stop") {
+            console.log("okay stop");
 
         }
     }
@@ -76,6 +103,7 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
     set mix(_mix) {
         this.params.mix = _mix;
     }
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
