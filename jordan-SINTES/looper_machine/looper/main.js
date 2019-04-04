@@ -76,27 +76,29 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
                         this.audio = new Audio(this.audioUrl);
                     });
 
-                    this.mediaRecorder.addEventListener("stop", event => {
-                        this.audio.play();
-                        this.audio.addEventListener("ended", event => {
-                            this.audio.currentTime = 2;
-                            this.audio.play();
-                        })
-                        //console.log(this.audioBlob);
-                    });
-
-                    setTimeout(() => {
+                    /*setTimeout(() => {
                         this.mediaRecorder.stop();
                         //console.log(this.audioChunks);
-                    }, 5000);
+                    }, 5000);*/
                 });
 
         } else if (_status === "play") {
-            console.log("I playing...");
+            //console.log("I playing...");
+            this.mediaRecorder.stop();
+            this.mediaRecorder.addEventListener("stop", event => {
+                this.audio.play();
+                this.audio.addEventListener("ended", event => {
+                    this.audio.currentTime = 2;
+                    this.audio.play();
+                })
+                //console.log(this.audioBlob);
+            });
 
         } else if (_status === "stop") {
-            console.log("okay stop");
-
+            //console.log("okay stop");
+            this.audio.pause();
+            this.audio=null;
+            this.audioChunks =[]; 
         }
     }
 
