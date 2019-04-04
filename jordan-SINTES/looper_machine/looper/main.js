@@ -18,6 +18,7 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
         this.audioBlob;
         this.audioUrl;
         this.audio;
+        this.stopRecord;
     }
 
     /*    ################     API METHODS    ###############   */
@@ -76,20 +77,26 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
                         this.audio = new Audio(this.audioUrl);
                     });
 
-                    /*setTimeout(() => {
-                        this.mediaRecorder.stop();
-                        //console.log(this.audioChunks);
-                    }, 5000);*/
+                    if(this.status != "play"){
+                        this.stopRecord= setTimeout(() => {
+                            this.status="play";
+                            //console.log(this.audioChunks);
+                        }, 10000);
+                    }
                 });
 
         } else if (_status === "play") {
-            //console.log("I playing...");
+            console.log("I playing...");
+            clearTimeout(this.stopRecord);
             this.mediaRecorder.stop();
             this.mediaRecorder.addEventListener("stop", event => {
                 this.audio.play();
-                this.audio.addEventListener("ended", event => {
-                    this.audio.currentTime = 2;
-                    this.audio.play();
+                this.audio.addEventListener("timeupdate", function(){
+                    let buffer = .44;
+                    if(this.currentTime > this.duration - buffer){
+                        this.currentTime = 0;
+                        this.play();
+                    }
                 })
                 //console.log(this.audioBlob);
             });
