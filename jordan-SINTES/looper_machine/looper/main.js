@@ -91,6 +91,8 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
             this.mediaRecorder.stop();
             this.mediaRecorder.addEventListener("stop", event => {
                 this.audio.play();
+                
+                //Checking the time of song to avoid latency between loop (src: https://stackoverflow.com/questions/7330023/gapless-looping-audio-html5)
                 this.audio.addEventListener("timeupdate", function(){
                     let buffer = .44;
                     if(this.currentTime > this.duration - buffer){
