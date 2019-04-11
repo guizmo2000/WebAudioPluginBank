@@ -11,14 +11,24 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
 
         this.options = options;
         this.state;
-        this.params = { "status": "unavaiable", "mix": 50 }
-        super.setup();
+        this.params = { 
+            "status": "unavailable",
+            "stateArm": "unavailable", 
+        }
+
+        this.addParam({name: 'mix', defaultValue: 50, minValue: 0, maxValue: 100});
+        
         this.mediaRecorder;
         this.audioChunks;
         this.audioBlob;
         this.audioUrl;
         this.audio;
         this.stopRecord;
+        this.ready=false;
+        this.currentTime1;
+        this.curentTime2;
+
+        super.setup();
     }
 
     /*    ################     API METHODS    ###############   */
@@ -51,10 +61,10 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
 
     /*  #########  Personnal code for Looper  #########   */
 
-    set status(_status) {
-
-        if (_status === "record") {
-            //console.log("Recording...")
+    set stateArm(_stateArm){
+        if(_stateArm=="preparing"){
+            console.log("Patientez...");
+            this.context= new AudioContext();
             var constraints = {
                 audio: {
                     echoCancellation: false,
@@ -77,33 +87,53 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
                         this.audio = new Audio(this.audioUrl);
                     });
 
-                    if(this.status != "play"){
+                    /*if(this.status != "play"){
                         this.stopRecord= setTimeout(() => {
                             this.status="play";
                             //console.log(this.audioChunks);
                         }, 10000);
-                    }
-                });
+                    }*/
+                })
+        }else if(_stateArm=="available"){
+            this.ready=true;
+            console.log("Prêt!")
+        }
+    }
+    set status(_status) {
+        var parent = this;
+    if(this.ready == true){
+        if (_status === "record") {
+            this.currentTime1=this.context.currentTime;
+            console.log(this.currentTime1); 
+        }
 
-        } else if (_status === "play") {
+        else if (_status === "play") {
+            this.currentTime2=this.context.currentTime;
+            console.log(this.currentTime2);
             console.log("I playing...");
-            clearTimeout(this.stopRecord);
+            //clearTimeout(this.stopRecord);
             this.mediaRecorder.stop();
+        
             this.mediaRecorder.addEventListener("stop", event => {
                 this.audio.play();
-                
+                this.currentTime=this.currentTime1;
                 //Checking the time of song to avoid latency between loop (src: https://stackoverflow.com/questions/7330023/gapless-looping-audio-html5)
                 this.audio.addEventListener("timeupdate", function(){
                     let buffer = .44;
                     if(this.currentTime > this.duration - buffer){
-                        this.currentTime = 0;
+                        this.currentTime = parent.currentTime1;
                         this.play();
+                        console.log(this.duration)
                     }
                 })
+                
                 //console.log(this.audioBlob);
             });
 
-        } else if (_status === "stop") {
+        }
+    }
+    
+    else if (_status === "stop") {
             //console.log("okay stop");
             this.audio.pause();
             this.audio=null;
