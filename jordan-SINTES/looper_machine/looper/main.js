@@ -113,7 +113,7 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
             console.log("I playing...");
             //clearTimeout(this.stopRecord);
             this.mediaRecorder.stop();
-        
+            this.ready=false;
             this.mediaRecorder.addEventListener("stop", event => {
                 this.audio.play();
                 this.audio.currentTime=this.currentTime1;
@@ -132,14 +132,16 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
 
         }
     }
-    
-    else if (_status === "stop") {
+    else if(this.ready==false){
+        console.log("Recorder not ready!")
+    }
+    /*else if (_status === "stop") {
             //console.log("okay stop");
             this.audio.pause();
             this.audio=null;
             this.audioChunks =[]; 
-        }
-    }
+    }*/
+}
 
     set mix(_mix) {
         this.params.mix = _mix;
