@@ -11,22 +11,29 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
 
         this.options = options;
         this.state;
-        this.params = { 
+        this.params = {
             "status": "unavailable",
-            "stateArm": "unavailable", 
+            "stateArm": "unavailable",
         }
 
-        this.addParam({name: 'mix', defaultValue: 50, minValue: 0, maxValue: 100});
-        
+        this.addParam({ name: 'mix', defaultValue: 50, minValue: 0, maxValue: 100 });
+
+        //Variable for recording/play sound
         this.mediaRecorder;
         this.audioChunks;
         this.audioBlob;
         this.audioUrl;
         this.audio;
-        this.stopRecord;
-        this.ready=false;
+        //this.stopRecord;
+
+        //curretTime to play the loop
         this.currentTime1;
         this.curentTime2;
+        
+        //Statement
+        this.statePlayMusic = false;
+        this.ready = false;
+        this.musicExist;
 
         super.setup();
     }
@@ -61,10 +68,14 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
 
     /*  #########  Personnal code for Looper  #########   */
 
-    set stateArm(_stateArm){
-        if(_stateArm=="preparing"){
+    set stateArm(_stateArm) {
+        if (this.statePlayMusic == true) {
+            //console.log("stop music...")
+            this.audio.pause()
+        }
+        if (_stateArm == "preparing") {
             console.log("Patientez...");
-            this.context= new AudioContext();
+            this.context = new AudioContext();
             var constraints = {
                 audio: {
                     echoCancellation: false,
@@ -80,7 +91,7 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
 
                     this.audioChunks = [];
 
-                    this.mediaRecorder.addEventListener("dataavailable", event =>{
+                    this.mediaRecorder.addEventListener("dataavailable", event => {
                         this.audioChunks.push(event.data);
                         this.audioBlob = new Blob(this.audioChunks);
                         this.audioUrl = URL.createObjectURL(this.audioBlob);
@@ -94,54 +105,57 @@ window.LooperMachine = class LooperMachine extends WebAudioPluginCompositeNode {
                         }, 10000);
                     }*/
                 })
-        }else if(_stateArm=="available"){
-            this.ready=true;
+        } else if (_stateArm == "available") {
+            this.ready = true;
             console.log("Prêt!")
         }
     }
     set status(_status) {
         var parent = this;
-    if(this.ready == true){
-        if (_status === "record") {
-            this.currentTime1=Math.round(this.context.currentTime*1000)/1000;
-            console.log(this.currentTime1); 
-        }
+        if (this.ready == true) {
+            if (_status === "record") {
+                this.currentTime1 = Math.round(this.context.currentTime * 1000) / 1000;
+                console.log(this.currentTime1);
+            }
 
-        else if (_status === "play") {
-            this.currentTime2=Math.round(this.context.currentTime*1000)/1000;
-            console.log(this.currentTime2);
-            console.log("I playing...");
-            //clearTimeout(this.stopRecord);
-            this.mediaRecorder.stop();
-            this.ready=false;
-            this.mediaRecorder.addEventListener("stop", event => {
-                this.audio.play();
-                this.audio.currentTime=this.currentTime1;
-                //Checking the time of song to avoid latency between loop (src: https://stackoverflow.com/questions/7330023/gapless-looping-audio-html5)
-                this.audio.addEventListener("timeupdate", function(){
-                    let buffer = .44;
-                    if((this.currentTime*1000)/1000+buffer > parent.currentTime2){
-                        this.currentTime = parent.currentTime1;
-                        this.play();
-                        console.log(this.duration)
-                    }
-                })
-                
-                //console.log(this.audioBlob);
-            });
+            else if (_status === "play") {
+                this.currentTime2 = Math.round(this.context.currentTime * 1000) / 1000;
+                console.log(this.currentTime2);
+                let dur = this.currentTime2 - this.currentTime1;
+                console.log("durée: " +dur) 
+                console.log("I playing...");
+                //clearTimeout(this.stopRecord);
+                this.mediaRecorder.stop();
+                this.statePlayMusic = true;
+                this.ready = false;
+                this.mediaRecorder.addEventListener("stop", event => {
+                    this.audio.play();
+                    this.audio.currentTime = this.currentTime1;
+                    //Checking the time of song to avoid latency between loop (src: https://stackoverflow.com/questions/7330023/gapless-looping-audio-html5)
+                    this.audio.addEventListener("timeupdate", function () {
+                        let buffer = .44;
+                        if ((this.currentTime * 1000) / 1000 + buffer > parent.currentTime2) {
+                            this.currentTime = parent.currentTime1;
+                            this.play();
+                            let dur2= this.duration - parent.currentTime1
+                            console.log(dur2);
+                            console.log()
+                        }
+                    })
 
+                    //console.log(this.audioBlob);
+                });
+
+            }
         }
-    }
-    else if(this.ready==false){
-        console.log("Recorder not ready!")
-    }
-    /*else if (_status === "stop") {
+        else if (this.ready == false) {
+            console.log("Recorder not ready!")
+        }
+        if (_status === "stop") {
             //console.log("okay stop");
             this.audio.pause();
-            this.audio=null;
-            this.audioChunks =[]; 
-    }*/
-}
+        }
+    }
 
     set mix(_mix) {
         this.params.mix = _mix;
