@@ -182,14 +182,14 @@
         <span class="knob-label" id="knob1-label">Mix</span>
         <div class="column2">
             <webaudio-switch id="switch1" class="switch" midilearn="true"
-                src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png" width="32" height="20">
+                src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_3.png" width="32" height="20">
             </webaudio-switch>
             <span class="knob-label" id="knob1-label">Record / Play</span>
         </div>
 
         <div class="column2">
             <webaudio-switch id="switch2" class="switch" midilearn="true"
-                src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png" width="32" height="20">
+                src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_4.png" width="32" height="20">
             </webaudio-switch>
             <span class="knob-label" id="knob1-label">Arm</span>
             <span class="pedalLabel">Looper</span>
@@ -245,14 +245,15 @@
             this._root.querySelector("#switch1").addEventListener('change', (e) => {
                 if (this.stateArm == 1) {
                     if (this.status === 0) {
-                        this._root.querySelector("#switch1").setAttribute('src', "https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_4.png");
                         this._plug.setParam("status", "record");
                         this.status = 1;
                     } else if (this.status === 1) {
+                        this._root.querySelector(".webaudio-switch-body").setAttribute('style', "background-image: url(\"https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_5.png\"); background-size: 100% 200%; width: 32px; height: 20px; outline: none; background-position: 0px -100%;");
                         this._plug.setParam("status", "play");
                         this.status = 2;
                         this.stateArm=0;
                     } else if (this.status === 2) {
+                        this._root.querySelector(".webaudio-switch-body").setAttribute('style', "background-image: url(\"https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_3.png\"); background-size: 100% 200%; width: 32px; height: 20px; outline: none; background-position: 0px -100%;");
                         this._plug.setParam("status", "stop");
                         this.status = 0;
                     }
