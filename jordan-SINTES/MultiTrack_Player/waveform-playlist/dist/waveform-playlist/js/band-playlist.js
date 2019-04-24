@@ -37,7 +37,7 @@ var playlist = WaveformPlaylist.init({
     container: document.getElementById("playlist"),
     timescale: true,
     state: 'cursor',
-    mono:false,
+    mono:true,
     colors: {
       waveOutlineColor: '#E0EFF1',
       timeColor: 'grey',
