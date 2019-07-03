@@ -905,7 +905,7 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
   // PRESETS
   // --------
   function initPresets() {
-    // updated 10/4/2016
+    // updated July 2019
     var preset0 = {
       "name": "Default",
       "distoName": "standard",
@@ -956,13 +956,13 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
       "Q2": "49.0",
       "Q3": "42.0",
       "Q4": "11.0",
-      "OG": "8.8",
+      "OG": "5.0",
       "BF": "5.0",
       "MF": "4.2",
       "TF": "3.1",
-      "PF": "5.0",
+      "PF": "3.1",
       "EQ": [-2, -1, 0, 3, -9, -4],
-      "MV": "8.6",
+      "MV": "5.0",
       "RN": "Fender Hot Rod",
       "RG": "2.0",
       "CN": "Vintage Marshall 1",
@@ -986,13 +986,13 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
       "Q2": 29,
       "Q3": 55,
       "Q4": 20,
-      "OG": "7.1",
+      "OG": "5.0",
       "BF": 7.2,
       "MF": 6.5,
       "TF": 5.9,
-      "PF": 8,
+      "PF": 5.0,
       "EQ": [-2, -1, -2, 4, 11, 3],
-      "MV": "8.3",
+      "MV": "5.0",
       "RG": "2.8",
       "CG": "6.3"
     };
@@ -1019,9 +1019,9 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
       "BF": "8.1",
       "MF": "4.5",
       "TF": "2.9",
-      "PF": "9.8",
+      "PF": "7.0",
       "EQ": [6, -5, -21, -3, 3, 0],
-      "MV": "9.8",
+      "MV": "5.0",
       "RG": "3.7",
       "CG": "4.6"
     }
@@ -1033,8 +1033,8 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
       "HCF": 7000,
       "K1": "4.7",
       "K2": "4.1",
-      "K3": "10.0",
-      "K4": "10.0",
+      "K3": "5.0",
+      "K4": "5.0",
       "F1": 147,
       "F2": 569,
       "F3": 1915,
@@ -1063,8 +1063,8 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
       "HCF": 17716,
       "K1": "2.5",
       "K2": "2.5",
-      "K3": "5.0",
-      "K4": "5.0",
+      "K3": "6.0",
+      "K4": "6.0",
       "F1": 147,
       "F2": 569,
       "F3": 1915,
@@ -1073,13 +1073,13 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
       "Q2": "0.6",
       "Q3": "1.1",
       "Q4": "0.1",
-      "OG": "4.8",
+      "OG": "1.8",
       "BF": "5.0",
       "MF": "5.0",
       "TF": "5.0",
       "PF": "5.0",
       "EQ": [14, 8, 0, 3, 14, 3],
-      "MV": "1.7",
+      "MV": "1.1",
       "RN": "Fender Hot Rod",
       "RG": "2.0",
       "CN": "Vintage Marshall 1",
@@ -1105,11 +1105,11 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
       "Q2": "1.7",
       "Q3": "2.7",
       "Q4": "1.0",
-      "OG": "1.7",
+      "OG": "1.2",
       "BF": "4.8",
       "MF": "6.0",
       "TF": "5.9",
-      "PF": "9.6",
+      "PF": "6.0",
       "EQ": [15, 16, 19, -2, 17, -3],
       "MV": "2.1",
       "RN": "Fender Hot Rod",
@@ -1120,65 +1120,6 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
     presets.push(preset6);
 
     preset7 = {
-      "name": "Aerosmith WTW",
-      "distoName": "standard",
-      "LCF": 345,
-      "HCF": 7000,
-      "K1": "3.3",
-      "K2": "3.3",
-      "K3": "6.6",
-      "K4": "6.6",
-      "F1": 186,
-      "F2": 792,
-      "F3": 2402,
-      "F4": 6368,
-      "Q1": "2.0",
-      "Q2": "1.0",
-      "Q3": "1.0",
-      "Q4": "1.0",
-      "OG": "0.6",
-      "BF": "4.8",
-      "MF": "4.1",
-      "TF": "3.4",
-      "PF": "8.3",
-      "EQ": [12, 2, 22, 13, 16, 18],
-      "MV": "2.2",
-      "RG": "0.0",
-      "CG": "0.0"
-    };
-
-    presets.push(preset7);
-
-    preset8 = {
-      "name": "Heartbreak Riff",
-      "distoName": "standard",
-      "LCF": 214,
-      "HCF": 15820,
-      "K1": "4.1",
-      "K2": "4.1",
-      "K3": "8.2",
-      "K4": "8.2",
-      "F1": 186,
-      "F2": 792,
-      "F3": 2402,
-      "F4": 4836,
-      "Q1": "2.9",
-      "Q2": "0.7",
-      "Q3": "1.0",
-      "Q4": "1.0",
-      "OG": "0.8",
-      "BF": "4.8",
-      "MF": "6.0",
-      "TF": "5.9",
-      "PF": "8.9",
-      "EQ": [15, 19, 19, -2, 17, -3],
-      "MV": "2.1",
-      "RG": "1.2",
-      "CG": "7.4"
-    }
-    presets.push(preset8);
-
-    preset9 = {
       "name": "Light My Knob",
       "distoName": "superClean",
       "LCF": 256,
@@ -1195,51 +1136,19 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
       "Q2": "0.0",
       "Q3": "0.0",
       "Q4": "0.0",
-      "OG": "5.9",
+      "OG": "5.0",
       "BF": "5.0",
       "MF": "5.0",
       "TF": "5.0",
-      "PF": "8.0",
+      "PF": "3.0",
       "EQ": [-2, 10, -10, -20, 17, 3],
-      "MV": "6.5",
+      "MV": "4.0",
       "RG": "2.0",
       "CG": "6.7"
     }
-    presets.push(preset9);
+    presets.push(preset7);
 
-    preset10 = {
-      "name": "Love RnRoll",
-      "distoName": "smooth",
-      "boost": true,
-      "LCF": 214,
-      "HCF": 15820,
-      "K1": "3.8",
-      "K2": "3.8",
-      "K3": "7.5",
-      "K4": "7.5",
-      "F1": 186,
-      "F2": 792,
-      "F3": 2402,
-      "F4": 4836,
-      "Q1": "2.9",
-      "Q2": "0.7",
-      "Q3": "1.0",
-      "Q4": "1.0",
-      "OG": "2.3",
-      "BF": "4.8",
-      "MF": "6.0",
-      "TF": "5.9",
-      "PF": "8.9",
-      "EQ": [15, 19, 19, -2, 17, -3],
-      "MV": "2.1",
-      "RN": "Fender Hot Rod",
-      "RG": "1.2",
-      "CN": "Vintage Marshall 1",
-      "CG": "7.4"
-    };
-    presets.push(preset10);
-
-    preset11 = {
+    preset8 = {
       "name": "Folk Metal String",
       "distoName": "superClean",
       "LCF": 345,
@@ -1266,9 +1175,9 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
       "RG": "2.0",
       "CG": "4.2"
     }
-    presets.push(preset11);
+    presets.push(preset8);
 
-    preset12 = {
+    preset9 = {
       "name": "Electro Acoustic",
       "distoName": "smooth",
       "LCF": 200,
@@ -1295,7 +1204,7 @@ function CleamAmp(context, boost, eq, reverb, cabinetSim) {
       "RG": "3.7",
       "CG": "4.6"
     }
-    presets.push(preset12);
+    presets.push(preset9);
 
     /*
     presets.forEach(function (p, index) {
