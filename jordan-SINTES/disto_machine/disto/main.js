@@ -1082,40 +1082,9 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
     // PRESETS
     // --------
     function initPresets() {
-        // updated 10/4/2016
+        // updated July 2019
 
         var preset0 = {
-            "name": "Default",
-            "boost": false,
-            "LS1Freq": 720,
-            "LS1Gain": -6,
-            "LS2Freq": 320,
-            "LS2Gain": -6.300000190734863,
-            "gain1": 3,
-            "distoName1": "asymetric",
-            "K1": "3",
-            "HP1Freq": 6,
-            "HP1Q": 0.707099974155426,
-            "LS3Freq": 720,
-            "LS3Gain": -6,
-            "gain2": 1,
-            "distoName2": "crunch",
-            "K2": "3.0",
-            "OG": "3.0",
-            "BF": "3.0",
-            "MF": "3.0",
-            "TF": "3.0",
-            "PF": "3.0",
-            "EQ": [5, 5, 5, 5, 5, 5],
-            "MV": "3.0",
-            "RN": "Fender Hot Rod",
-            "RG": "3.0",
-            "CN": "Marshall 1960, axis",
-            "CG": "3.0"
-        };
-        presets.push(preset0);
-
-        var preset1 = {
             "name": "Jimmy HDX",
             "boost": false,
             "LS1Freq": 720,
@@ -1144,9 +1113,9 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
             "CN": "Marshall 1960, axis",
             "CG": "4.5"
         };
-        presets.push(preset1);
+        presets.push(preset0);
 
-        var preset2 = {
+        var preset1 = {
             "name":"Slasher",
             "boost":true,
             "LS1Freq":720,
@@ -1175,9 +1144,9 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
             "CN":"Fender Champ, axis",
             "CG":"3.9"
         }
-        presets.push(preset2)
+        presets.push(preset1)
 
-        var preset3 = {
+        var preset2 = {
             "name":"Metal",
             "boost":false,
             "LS1Freq":720,
@@ -1206,9 +1175,9 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
             "CN":"Marshall 1960, axis",
             "CG":"1.5"
         }
-        presets.push(preset3);
+        presets.push(preset2);
 
-        var preset4 = {
+        var preset3 = {
             "name": "Hard Rock classic 1",
             "boost": false,
             "LS1Freq": 720,
@@ -1238,10 +1207,10 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
             "CN": "Marshall 1960, axis",
             "CG": "9.4"
         };
-        presets.push(preset4);
+        presets.push(preset3);
 
 
-        var preset5 = { 
+        var preset4 = { 
             "name": "Hard Rock classic 2", 
             "boost": false, 
             "LS1Freq": 720, 
@@ -1270,9 +1239,9 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
             "CN": "Marshall 1960, axis", 
             "CG": "9.2" 
         };
-        presets.push(preset5);
+        presets.push(preset4);
 
-        var preset6 = {
+        var preset5 = {
             "name": "Clean and Warm",
             "boost": false,
             "LS1Freq": 720,
@@ -1301,40 +1270,9 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
             "CN": "Marshall 1960, axis",
             "CG": "8.8"
         };
-        presets.push(preset6);
+        presets.push(preset5);
 
-        var preset7 = {
-            "name": "Strong and Warm",
-            "boost": false,
-            "LS1Freq": 720,
-            "LS1Gain": -6,
-            "LS2Freq": 320,
-            "LS2Gain": -1,
-            "gain1": 1.0299999713897705,
-            "distoName1": "asymetric",
-            "K1": "7.8",
-            "HP1Freq": 6,
-            "HP1Q": 0.707099974155426,
-            "LS3Freq": 720,
-            "LS3Gain": -6,
-            "gain2": 1,
-            "distoName2": "superClean",
-            "K2": "7.8",
-            "OG": "7.0",
-            "BF": "8.2",
-            "MF": "6.7",
-            "TF": "5.0",
-            "PF": "6.9",
-            "EQ": [0, 0, 0, -1, 0, 1],
-            "MV": "5.9", "RN":
-                "Fender Hot Rod",
-            "RG": "1.1",
-            "CN": "Vox Custom Bright 4x12 M930 Axis 1",
-            "CG": "8.0"
-        };
-        presets.push(preset7);
-
-        var preset8 = {
+        var preset6 = {
             "name": "Another Clean Sound",
             "boost": false,
             "LS1Freq": 720,
@@ -1363,10 +1301,10 @@ function AmpDisto(context, boost, eq, reverb, cabinetSim) {
             "CN": "Marshall 1960, axis",
             "CG": "4.5"
         };
-        presets.push(preset8);
-        var preset9=
-        {"name":"Hard Rock Classic 3","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-10.199999809265137,"gain1":1,"distoName1":"standard","K1":"5.2","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"notSoDistorded","K2":"5.1","OG":"2.7","BF":"8.7","MF":"8.0","TF":"3.8","PF":"9.4","EQ":[19,8,-6,-10,7,2],"MV":"5.5","RN":"Fender Hot Rod","RG":"0.7","CN":"Marshall 1960, axis","CG":"9.2"}
-        presets.push(preset9);
+        presets.push(preset6);
+        var preset7=
+        {"name":"crunchyTube","boost":false,"LS1Freq":720,"LS1Gain":-6,"LS2Freq":320,"LS2Gain":-10.199999809265137,"gain1":1,"distoName1":"standard","K1":"5.2","HP1Freq":6,"HP1Q":0.707099974155426,"LS3Freq":720,"LS3Gain":-6,"gain2":1,"distoName2":"notSoDistorded","K2":"5.1","OG":"2.7","BF":"8.7","MF":"8.0","TF":"3.8","PF":"9.4","EQ":[19,8,-6,-10,7,2],"MV":"5.5","RN":"Fender Hot Rod","RG":"0.7","CN":"Marshall 1960, axis","CG":"9.2"}
+        presets.push(preset7);
         
         /*
         presets.forEach(function (p, index) {
