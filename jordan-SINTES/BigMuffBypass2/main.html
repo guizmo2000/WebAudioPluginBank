@@ -1,0 +1,410 @@
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js">
+</script>
+<script>
+    WebAudioControlsOptions = {
+        useMidi: 1,
+    };
+</script>
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js">
+</script>
+<template>
+    <style>
+        :host {
+            display: block;
+            box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(rgb(255, 255, 255), rgb(205, 205, 205));
+            position: relative;
+            width: 222px;
+            height: 205px;
+            user-select: none;
+            cursor: move;
+            z-index: 9;
+            /* bring your own prefixes */
+        }
+
+        .knob,
+        .switch,
+        .icon,
+        .label,
+        .slider {
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .knob {
+            margin: 12px;
+            align-content: center;
+        }
+
+        .selected {
+            border: 1px dashed black;
+            cursor: move;
+        }
+
+        .selected:hover {
+            border: 1px dashed black;
+            cursor: move;
+        }
+
+        .selected webaudio-knob {
+            cursor: move;
+        }
+
+        .selected webaudio-switch {
+            cursor: move;
+        }
+
+        .selected span {
+            cursor: move;
+        }
+
+        .selected:hover span {
+            cursor: move;
+        }
+
+        .selected webaudio-slider {
+            cursor: move;
+        }
+
+        .selected:hover webaudio-knob {
+            cursor: move;
+        }
+
+        .selected:hover webaudio-switch {
+            cursor: move;
+        }
+
+        .selected:hover webaudio-slider {
+            cursor: move;
+        }
+
+
+        #switch1 {
+            bottom: 10px;
+            right: 0px;
+        }
+
+        #Drive {
+            left: 40px;
+            top: 10px;
+        }
+
+        #Drive div {
+            color: #000000;
+            font-family: "Verdana";
+            font-size: 14px;
+
+        }
+
+        #Input {
+            left: 40px;
+            top: 90px;
+        }
+
+        #Input div {
+            color: #000000;
+            font-family: "Verdana";
+            font-size: 14px;
+
+        }
+
+        #Output {
+            left: 40px;
+            top: 170px;
+        }
+
+        #Output div {
+            color: #000000;
+            font-family: "Verdana";
+            font-size: 14px;
+
+        }
+
+        #Tone {
+            left: 40px;
+            top: 250px;
+        }
+
+        #Tone div {
+            color: #000000;
+            font-family: "Verdana";
+            font-size: 14px;
+
+        }
+
+        #bypass {
+            left: 25px;
+            top: 330px;
+            margin-top: 15px;
+        }
+
+        #bypass div {
+            color: #000000;
+            font-family: "Verdana";
+            font-size: 14px;
+
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            margin: 5px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .column2 {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            margin: 5px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+        .pedalLabel {
+            margin-top: 10px;
+            margin-left: 60px;
+            top: 225px;
+            font-size: 25px;
+            font-family: Gecko Lunch;
+            /*{font}*/
+            text-align: center;
+            line-height: 30px;
+            /*{pedalfontsize}*/
+            width: 150px;
+            color: rgb(145, 20, 20);
+            /*{fontcolor}*/
+        }
+
+        .knob-label {
+            position: absolute;
+            font-size: 12px;
+            /*{knobfontsize}*/
+            line-height: 12px;
+            width: 64px;
+            max-width: 64px;
+            overflow: hidden;
+            text-align: center;
+            font-family: Sansita;
+            /*{font}*/
+            color: rgb(78, 4, 4);
+            /*{fontcolor}*/
+        }
+
+        #knob1-label {
+            top: 84px;
+            left: 43px;
+        }
+
+        #switch1 {
+            background: rgb(31, 30, 30);
+            padding-left: 63px;
+            padding-right: 80px;
+            padding-bottom: 5px;
+            padding-top: 20px;
+            border-radius: 10px;
+        }
+    </style>
+
+    <div class="row">
+
+        <div class="knob" id="Input">
+            <webaudio-knob src="./img/knobs/greenish_sloped.png" height="50" width="50" sprites="100" min="-24" max="12"
+                step="0.1" value="0" id="/BigMuffBypass2/Input" style="height: 50px;"></webaudio-knob>
+            <div style="text-align:center; font-family: Gecko Lunch; color: rgb(51, 16, 16);">Volume</div>
+        </div>
+
+        <div class="knob" id="Tone">
+            <webaudio-knob src="./img/knobs/greenish_sloped.png" height="50" width="50" sprites="100" min="0" max="1"
+                step="0.01" value="0.5" id="/BigMuffBypass2/Tone" style="height: 50px;"></webaudio-knob>
+            <div style="text-align:center; font-family: Gecko Lunch; color: rgb(51, 16, 16);">Tone</div>
+        </div>
+
+        <div class="knob" id="Drive">
+            <webaudio-knob src="./img/knobs/greenish_sloped.png" height="50" width="50" sprites="100" min="-3" max="100"
+                step="1" value="1" id="/BigMuffBypass2/Drive" style="height: 50px;"></webaudio-knob>
+            <div style="text-align:center; font-family: Gecko Lunch; color: rgb(51, 16, 16);">Sustain</div>
+        </div>
+
+    </div>
+
+    <span class="pedalLabel">Big Fuzz</span>
+    <div class="switch" id="bypass">
+        <webaudio-switch src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png" height="32" width="50"
+            id="switch1"></webaudio-switch>
+    </div>
+
+
+
+</template>
+<script>
+    let BigMuffBypass2Temp = document.currentScript.ownerDocument.querySelector('template');
+    class BigMuffBypass2Gui extends HTMLElement {
+
+
+        constructor(plug) {
+
+            super();
+            this._plug = plug;
+            this._plug.gui = this;
+            console.log(this._plug);
+            this._root = this.attachShadow({
+                mode: 'open'
+            });
+            this._root.appendChild(BigMuffBypass2Temp.content.cloneNode(true));
+            this.isOn;
+            this.state = new Object();
+            this.setKnobs();
+            this.setSliders();
+            this.setSwitchListener();
+            this.setActive(false);
+
+        }
+
+        attributeChangedCallback() {
+
+            console.log("Custom element attributes changed.");
+            this.state = JSON.parse(this.getAttribute('state'));
+            let tmp = "/BigMuffBypass2/bypass";
+            if (this.state[tmp] == 1) {
+                this._root.querySelector("#switch1").value = 0;
+                this.isOn = false;
+            } else if (this.state[tmp] == 0) {
+                this._root.querySelector("#switch1").value = 1;
+                this.isOn = true;
+            }
+            this.knobs = this._root.querySelectorAll(".knob");
+            console.log(this.state);
+            for (var i = 0; i < this.knobs.length; i++) {
+                this.knobs[i].setValue(this.state[this.knobs[i].id], false);
+                console.log(this.knobs[i].value);
+            }
+
+        }
+
+        get properties() {
+
+            this.boundingRect = {
+                dataWidth: {
+                    type: Number,
+                    value: 130
+                },
+                dataHeight: {
+                    type: Number,
+                    value: 410
+                }
+            };
+            return this.boundingRect;
+
+        }
+
+        static get observedAttributes() {
+
+            return ['state'];
+
+        }
+
+        setResources() {
+
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL +
+                    '/assets/MiniMoog_Main.png');
+            });
+
+            this._root.querySelectorAll(".switch").forEach((s) => {
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL +
+                    '/assets/switch_1.png');
+            });
+
+
+
+        }
+
+        setKnobs() {
+            this._root.getElementById("/BigMuffBypass2/Drive").addEventListener("input", (e) => this._plug.setParam(
+                "/BigMuffBypass2/Drive", e.target.value));
+            this._root.getElementById("/BigMuffBypass2/Input").addEventListener("input", (e) => this._plug.setParam(
+                "/BigMuffBypass2/Input", e.target.value));
+            this._root.getElementById("/BigMuffBypass2/Tone").addEventListener("input", (e) => this._plug.setParam(
+                "/BigMuffBypass2/Tone", e.target.value));
+
+        }
+
+        bypass() {
+
+            this._plug.setParam("/BigMuffBypass2/bypass", 1);
+            console.log("disabled");
+
+        }
+
+        setSwitchListener() {
+
+            console.log("setswitch");
+            if (this._root.querySelector("#switch1")) {
+                this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                    if (this.isOn) this.bypass()
+                    else this.reactivate();
+                    this.isOn = !this.isOn;
+                });
+            }
+
+        }
+
+        reactivate() {
+
+            this._plug.setParam("/BigMuffBypass2/bypass", 0);
+
+        }
+
+        setSliders() {
+
+        }
+
+        setActive(active) {
+
+            // Where there is not swtich, no need to set activation logic. 
+            if (!this._root.querySelector("#switch1")) {
+                return;
+            }
+            if (active == undefined || active == false) {
+                this.isOn = false;
+                this.bypass();
+                this._root.querySelector("#switch1").value = 0;
+            } else if (active) {
+                this.isOn = true;
+                this.reactivate();
+                this._root.querySelector("#switch1").value = 1;
+            }
+
+        }
+    }
+    try {
+        customElements.define('wap-bigmuffbypass2', BigMuffBypass2Gui);
+        console.log("Element defined");
+    } catch (error) {
+        console.log(error);
+        console.log("Element already defined");
+    }
+
+    createBigMuffBypass2GUI = (plug) => {
+        let elem = new BigMuffBypass2Gui(plug);
+        return elem;
+    }
+</script>
