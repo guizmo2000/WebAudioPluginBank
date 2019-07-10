@@ -2,7 +2,7 @@
 "name": "BigMuffBypass2",
 "vendor": "Faust",
 "version": "1.0",
-"category":"distortion",
-"homepage": "https://faust.grame.fr",
+"category":"FaustIDE",
+"homaepage": "https://faust.grame.fr",
 "thumbnail": "img/BigMuff.png"
 }
