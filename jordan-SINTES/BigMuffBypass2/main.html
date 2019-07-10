@@ -251,7 +251,8 @@
 
 </template>
 <script>
-    let BigMuffBypass2Temp = document.currentScript.ownerDocument.querySelector('template');
+    let template = document.currentScript.ownerDocument.querySelector('template');
+
     class BigMuffBypass2Gui extends HTMLElement {
 
 
@@ -264,16 +265,31 @@
             this._root = this.attachShadow({
                 mode: 'open'
             });
-            this._root.appendChild(BigMuffBypass2Temp.content.cloneNode(true));
+            //console.log("maindoc URI = " + template.baseURI);
+            let posOfLastSlash = template.baseURI.lastIndexOf("/");
+            //console.log("Base URI = " + template.baseURI.substring(0, posOfLastSlash))
+            this.basePath = template.baseURI.substring(0, posOfLastSlash);
+            //console.log("baseURI = " + this.baseURI)
+            this.fixRelativeImagePathsInCSS();
+
+            // add template to the shadow dom
+            this._root.appendChild(template.content.cloneNode(true));
+
             this.isOn;
             this.state = new Object();
             this.setKnobs();
             this.setSliders();
             this.setSwitchListener();
             this.setActive(false);
-
         }
 
+        fixRelativeImagePathsInCSS() {
+            let webaudioControls = template.querySelectorAll("webaudio-knobs, webaudio-switch, webaudio-slider");
+            webaudioControls.forEach(e => {
+                let imagePath = e.src;
+                e.src = this.basePath + e.src;
+            });
+        }
         attributeChangedCallback() {
 
             console.log("Custom element attributes changed.");
