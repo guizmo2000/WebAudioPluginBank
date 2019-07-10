@@ -2,7 +2,8 @@
 "name": "BigMuffBypass2",
 "vendor": "Faust",
 "version": "1.0",
-"url": "BigMuffBypass2.js",
+"url": "main.js",
+"category":"distortion",
 "homepage": "https://faust.grame.fr",
-"thumbnail": ""
+"thumbnail": "img/BigMuff.png"
 }

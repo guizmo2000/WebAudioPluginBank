@@ -269,7 +269,8 @@
             let posOfLastSlash = template.baseURI.lastIndexOf("/");
             //console.log("Base URI = " + template.baseURI.substring(0, posOfLastSlash))
             this.basePath = template.baseURI.substring(0, posOfLastSlash);
-            //console.log("baseURI = " + this.baseURI)
+            console.log("basePath = " + this.basePath)
+            console.log("baseURI = " + this.baseURI)
             this.fixRelativeImagePathsInCSS();
 
             // add template to the shadow dom
@@ -284,10 +285,12 @@
         }
 
         fixRelativeImagePathsInCSS() {
-            let webaudioControls = template.querySelectorAll("webaudio-knobs, webaudio-switch, webaudio-slider");
+            let webaudioControls = this._root.querySelectorAll("webaudio-knob");
             webaudioControls.forEach(e => {
+                console.log("Got wc src as " + e.src);
                 let imagePath = e.src;
                 e.src = this.basePath + e.src;
+                console.log("After fix : wc src as " + e.src);
             });
         }
         attributeChangedCallback() {
