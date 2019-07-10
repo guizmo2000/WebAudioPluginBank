@@ -1,5 +1,5 @@
 <script
-    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+    src="./../../../bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
     WebAudioControlsOptions = {
         useMidi: 1,
@@ -9,7 +9,7 @@
 
 </style>
 <script
-    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+    src="./../../../bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template id="wc-looper">
     <style>
         :host {
@@ -175,21 +175,21 @@
     <div class="column">
         <div class="knob" id="mix">
             <webaudio-knob id="setmix" sprites="99" min="0" max="100" step="0.1" value="50" midilearn="true"
-                src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" width="40"
+                src="./../../../img/nux_black_white_stripe.png" width="40"
                 height="40" data-role="Mix" diameter="24" tooltip="Mix"></webaudio-knob>
         </div>
 
         <span class="knob-label" id="knob1-label">Mix</span>
         <div class="column2">
             <webaudio-switch id="switch1" class="switch" midilearn="true"
-                src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_3.png" width="32" height="20">
+                src="./../../../img/switch_3.png" width="32" height="20">
             </webaudio-switch>
             <span class="knob-label" id="knob1-label">Record / Play</span>
         </div>
 
         <div class="column2">
             <webaudio-switch id="switch2" class="switch" midilearn="true"
-                src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_4.png" width="32" height="20">
+                src="./../../../img/switch_4.png" width="32" height="20">
             </webaudio-switch>
             <span class="knob-label" id="knob1-label">Arm</span>
             <span class="pedalLabel">Looper</span>
@@ -245,16 +245,16 @@
             this._root.querySelector("#switch1").addEventListener('change', (e) => {
                 if (this.stateArm == 1) {
                     if (this.status === 0) {
-                        this._root.querySelector(".webaudio-switch-body").setAttribute('style', "background-image: url(\"https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_only_2.png\"); background-size: 100% 100%; width: 32px; height: 20px; outline: none; background-position: 0px -100%;");
+                        this._root.querySelector(".webaudio-switch-body").setAttribute('style', "background-image: url(\"./../../../img/switch_only_2.png\"); background-size: 100% 100%; width: 32px; height: 20px; outline: none; background-position: 0px -100%;");
                         this._plug.setParam("status", "record");
                         this.status = 1;
                     } else if (this.status === 1) {
-                        this._root.querySelector(".webaudio-switch-body").setAttribute('style', "background-image: url(\"https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_only_3.png\"); background-size: 100% 100%; width: 32px; height: 20px; outline: none; background-position: 0px -100%;");
+                        this._root.querySelector(".webaudio-switch-body").setAttribute('style', "background-image: url(\"./../../../img/switch_only_3.png\"); background-size: 100% 100%; width: 32px; height: 20px; outline: none; background-position: 0px -100%;");
                         this._plug.setParam("status", "play");
                         this.status = 2;
                         this.stateArm=0;
                     } else if (this.status === 2) {
-                        this._root.querySelector(".webaudio-switch-body").setAttribute('style', "background-image: url(\"https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_only_1.png\"); background-size: 100% 100%; width: 32px; height: 20px; outline: none; background-position: 0px -100%;");
+                        this._root.querySelector(".webaudio-switch-body").setAttribute('style', "background-image: url(\"./../../../img/switch_only_1.png\"); background-size: 100% 100%; width: 32px; height: 20px; outline: none; background-position: 0px -100%;");
                         this._plug.setParam("status", "stop");
                         this.status = 0;
                     }

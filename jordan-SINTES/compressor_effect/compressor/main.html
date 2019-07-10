@@ -1,12 +1,12 @@
 <script
-    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+    src="./../../../bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
     WebAudioControlsOptions = {
         useMidi: 1,
     };
 </script>
 <script
-    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+    src="./../../../bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template id="wc-comp">
     <style>
         :host {
@@ -133,7 +133,7 @@
             <div class="knob" id="threshold">
                 <webaudio-knob id="/COMPRESSOR/0x00/Compression_Control/Threshold"  sprites="99" min="-100"
                     max="10" step="0.1" value="-30" midilearn="true"
-                    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" width="40"
+                    src="./../../../img/nux_black_white_stripe.png" width="40"
                     height="40" data-role="Threshold" diameter="24" tooltip="Threshold"></webaudio-knob>
             </div>
 
@@ -142,7 +142,7 @@
             <div class="knob" id="ratio">
                 <webaudio-knob id="/COMPRESSOR/0x00/Compression_Control/Ratio"  sprites="99" min="1"
                     max="20" step="0.1" value="5" midilearn="true"
-                    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" width="40"
+                    src="./../../../img/nux_black_white_stripe.png" width="40"
                     height="40" data-role="Threshold" diameter="24" tooltip="Ratio"></webaudio-knob>
             </div>
 
@@ -155,7 +155,7 @@
                 <webaudio-knob
                     id="/COMPRESSOR/0x00/Compression_Response/Attack_____tooltip:_Time_constant_in_ms_(1/e_smoothing_time)_for_the_compression_gain__to_approach_(exponentially)_a_new_lower_target_level_(the_compression__`kicking_in')]"
                      sprites="99" min="1" max="1000" step="0.1" value="50" midilearn="true"
-                    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" width="40"
+                    src="./../../../img/nux_black_white_stripe.png" width="40"
                     height="40" data-role="Threshold" diameter="24" tooltip="Attack"></webaudio-knob>
             </div>
 
@@ -164,7 +164,7 @@
             <div class="knob" id="release">
                 <webaudio-knob id="/COMPRESSOR/0x00/Compression_Response/Release"  sprites="99" min="1"
                     max="1000" step="0.1" value="500" midilearn="true"
-                    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" width="40"
+                    src="./../../../img/nux_black_white_stripe.png" width="40"
                     height="40" data-role="Threshold" diameter="24" tooltip="Release"></webaudio-knob>
             </div>
 
@@ -176,7 +176,7 @@
             <div class="knob" id="gain">
                 <webaudio-knob id="/COMPRESSOR/Makeup_Gain"  sprites="99" min="5" max="15" step="1"
                     value="10" midilearn="true"
-                    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/nux_black_white_stripe.png" width="40"
+                    src="./../../../img/nux_black_white_stripe.png" width="40"
                     height="40" data-role="Threshold" diameter="24" tooltip="Gain"></webaudio-knob>
             </div>
 
@@ -186,7 +186,7 @@
     <div class="label">
         <div class="switch" id="bypass">
             <webaudio-switch id="/COMPRESSOR/0x00/Bypass" class="switch" midilearn="true"
-                src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/img/switch_1.png" width="32" height="20">
+                src="./../../../img/switch_1.png" width="32" height="20">
             </webaudio-switch>
         </div>
     </div>

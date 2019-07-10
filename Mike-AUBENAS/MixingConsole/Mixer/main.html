@@ -1,6 +1,6 @@
-<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script src="./../../../bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script> WebAudioControlsOptions = { useMidi: 1 }; </script>
-<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<script src="./../../../bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <script src="../ChannelMixer/main.js"></script>
 
 <template id="wc-mixer">
@@ -114,15 +114,15 @@
 
 		<div class="column" id="master">
 
-			<webaudio-slider id="masterKnob" midilearn="true" units="Db" src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png"
-			 knobsrc="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png"
+			<webaudio-slider id="masterKnob" midilearn="true" units="Db" src="./../../../Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderbody.png"
+			 knobsrc="./../../../Mike-AUBENAS/MixingConsole/ChannelMixer/Image/vsliderknob.png"
 			 min="0" max="1" step="0.01" basewidth="24" height="128" knobwidth="24" knobheight="24" ditchlength="100"
 			  value="0.5" defvalue="0.5" tooltip="Master">
 			</webaudio-slider>
 			
 
 			<div class="column">
-				<img src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/Mixer/Image/plus.png" alt="Add a channel"
+				<img src="./../../../Mike-AUBENAS/MixingConsole/Mixer/Image/plus.png" alt="Add a channel"
 				 height="30" width="30" title="Add a channel" id="add">
 			</div>
 
@@ -145,7 +145,7 @@
 			this._plug.gui = this;
 			this._root = this.attachShadow({ mode: 'open' });
 			this._root.appendChild(leMixer.content.cloneNode(true));
-			this.urlChannel = "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer";
+			this.urlChannel = "./../../../Mike-AUBENAS/MixingConsole/ChannelMixer";
 			//this.arrayNodeToConnectChannel = this._plug.getArrayNodeToConnect();
 			this.listOfWasabiChannels = [];
 			that = this;
@@ -179,7 +179,7 @@
 			this.state = JSON.parse(this.getAttribute('state'));
 			console.log(this._plug.numberOfInputs);
 			if (this.state.nbcanaux > this._plug.numberOfInputs) {
-				let plugin = new window.WasabiChannelMixer(this._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", this._plug.numberOfInputs + 1);
+				let plugin = new window.WasabiChannelMixer(this._plug.context, "./../../../Mike-AUBENAS/MixingConsole/ChannelMixer", this._plug.numberOfInputs + 1);
 				(async function loop() {
 					for (let i = 1; i < (that.state.nbcanaux - that._plug.numberOfInputs); i++) {
 						await that.addCh(plugin, i);
@@ -205,7 +205,7 @@
 
 			(async function loop() {
 				for (let i = 1; i < parent._plug._numberOfInputs + 1; i++) {
-					let plugin = new window.WasabiChannelMixer(parent._plug.context, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/Mike-AUBENAS/MixingConsole/ChannelMixer", { "channelNumber": i });
+					let plugin = new window.WasabiChannelMixer(parent._plug.context, "./../../../Mike-AUBENAS/MixingConsole/ChannelMixer", { "channelNumber": i });
 					await parent.addCh(plugin, i, parent);
 					
 
