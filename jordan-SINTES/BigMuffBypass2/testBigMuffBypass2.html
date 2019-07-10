@@ -18,6 +18,12 @@
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/disto_machine/disto/main.js"></script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Buffa/CleanMachine/main.js"></script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Buffa/MetalMachine/metal/main.js"></script>
+<script>
+  WebAudioControlsOptions = {
+    useMidi: 1,
+  };
+</script>
+</head>
 
 <body>
   <audio src="./CleanGuitarRiff.mp3" id="soundSample" controls loop></audio>
@@ -45,7 +51,7 @@
   }
 
   function gotDevices(deviceInfos) {
-  
+
     for (let i = 0; i !== deviceInfos.length; ++i) {
       const deviceInfo = deviceInfos[i];
       const option = document.createElement('option');
@@ -59,17 +65,17 @@
     }
 
     selectors.forEach((select, selectorIndex) => {
-    if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
-      select.value = values[selectorIndex];
-    }
-  });
+      if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
+        select.value = values[selectorIndex];
+      }
+    });
   }
 
   navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
 
   function handleError(error) {
-  console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
-}
+    console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+  }
 
   var guitarPluggedIn = false;
   var userMedia;
@@ -105,7 +111,8 @@
   var mediaSource = ctx.createMediaElementSource(player);
   var pluginURL = ".";
   const plugin = new FaustBigMuffBypass2(ctx, pluginURL);
-  const amp1 = new WasabiDistoMachine(ctx, "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/disto_machine/disto");
+  const amp1 = new WasabiDistoMachine(ctx,
+    "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/disto_machine/disto");
 
   var currentAmp = amp1;
 
@@ -117,8 +124,12 @@
   function loadnewPreset(amp) {
     Promise.all([plugin.load(), amp.load()]).then((nnn) => {
       const [plugin_, amp_] = nnn;
-      plugin.loadGui().then((elem) => { document.getElementById('plugin').appendChild(elem); });
-      amp.loadGui().then((elem) => { document.getElementById('amp').appendChild(elem); });
+      plugin.loadGui().then((elem) => {
+        document.getElementById('plugin').appendChild(elem);
+      });
+      amp.loadGui().then((elem) => {
+        document.getElementById('amp').appendChild(elem);
+      });
       mediaSource.connect(plugin_);
       gain.connect(plugin_);
       plugin_.connect(amp_);
@@ -132,7 +143,6 @@
       })
     });
   }
-
 </script>
 
 </html>

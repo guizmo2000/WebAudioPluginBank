@@ -7,17 +7,19 @@
 </script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js">
 </script>
-  <link href="https://fonts.googleapis.com/css?family=Bungee&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Bungee&display=swap" rel="stylesheet">
 
 <template>
     <style>
         :host {
             display: block;
             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
-            background: linear-gradient(rgb(255, 255, 255), rgb(205, 205, 205));
+            /*background: linear-gradient(rgb(255, 255, 255), rgb(205, 205, 205));*/
+            background-image: url("img/BigMuffBackground.png");
+            background-size: 200px 262px;
             position: relative;
-            width: 222px;
-            height: 205px;
+            width: 200px;
+            height: 262px;
             user-select: none;
             cursor: move;
             z-index: 9;
@@ -34,8 +36,38 @@
         }
 
         .knob {
-            margin: 12px;
+            margin: 10px;
             align-content: center;
+            position: absolute;
+        }
+
+        .led-red {
+            position: absolute;
+            margin: 0 auto;
+            width: 12px;
+            height: 12px;
+            background-color: #F00;
+            border-radius: 50%;
+            box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
+            -webkit-animation: blinkRed 0.5s infinite;
+            -moz-animation: blinkRed 0.5s infinite;
+            -ms-animation: blinkRed 0.5s infinite;
+            -o-animation: blinkRed 0.5s infinite;
+            animation: blinkRed 0.5s infinite;
+        }
+
+        .led-grey {
+            position: absolute;
+            margin: 0 auto;
+            width: 12px;
+            height: 12px;
+            background-color: grey;
+            border-radius: 50%;
+            box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(0, 0, 0, 0.5) 0 2px 12px;
+            -webkit-animation: blinkRed 0.5s infinite;
+            -moz-animation: blinkRed 0.5s infinite;
+            -ms-animation: blinkRed 0.5s infinite;
+            -o-animation: blinkRed 0.5s infinite;
         }
 
         .selected {
@@ -182,7 +214,7 @@
             top: 225px;
             font-size: 30px;
             /*font-family: Gecko Lunch;*/
-	    font-family: 'Bungee', cursive;
+            font-family: 'Bungee', cursive;
             /*{font}*/
             text-align: center;
             line-height: 30px;
@@ -191,19 +223,19 @@
             color: rgb(145, 20, 20);
             /*{fontcolor}*/
 
-text-shadow: 0px 1px 1px #ddd,
-                     0px 2px 1px #d6d6d6,
-                     0px 3px 1px #ccc,
-                     0px 4px 1px #c5c5c5,
-                     0px 5px 1px #c1c1c1,
-                     0px 6px 1px #bbb,
-                     0px 7px 1px #777,
-                     0px 8px 3px rgba(100, 100, 100, 0.4),
-                     0px 9px 5px rgba(100, 100, 100, 0.1),
-                     0px 10px 7px rgba(100, 100, 100, 0.15),
-                     0px 11px 9px rgba(100, 100, 100, 0.2),
-                     0px 12px 11px rgba(100, 100, 100, 0.25),
-                     0px 13px 15px rgba(100, 100, 100, 0.3);
+            text-shadow: 0px 1px 1px #ddd,
+                0px 2px 1px #d6d6d6,
+                0px 3px 1px #ccc,
+                0px 4px 1px #c5c5c5,
+                0px 5px 1px #c1c1c1,
+                0px 6px 1px #bbb,
+                0px 7px 1px #777,
+                0px 8px 3px rgba(100, 100, 100, 0.4),
+                0px 9px 5px rgba(100, 100, 100, 0.1),
+                0px 10px 7px rgba(100, 100, 100, 0.15),
+                0px 11px 9px rgba(100, 100, 100, 0.2),
+                0px 12px 11px rgba(100, 100, 100, 0.25),
+                0px 13px 15px rgba(100, 100, 100, 0.3);
 
         }
 
@@ -228,41 +260,43 @@ text-shadow: 0px 1px 1px #ddd,
         }
 
         #switch1 {
-            background: rgb(31, 30, 30);
-            width:70%;
-	    padding-left:15px;
-	    margin:auto;
-            padding-bottom: 5px;
-            padding-top: 20px;
-            border-radius: 10px;
+            /*background: rgb(31, 30, 30);*/
+            width: 72%;
+            position: absolute;
+            top: 195px;
+            left: 26px;
+            /*border-radius: 10px;*/
         }
     </style>
 
     <div class="row">
 
-        <div class="knob" id="Input">
-            <webaudio-knob src="img/knobs/greenish_sloped.png" height="50" width="50" sprites="100" min="-24" max="12"
-                step="0.1" value="0" id="/BigMuffBypass2/Input" style="height: 50px;"></webaudio-knob>
-            <div style="text-align:center; font-family: Gecko Lunch; color: rgb(51, 16, 16);">Volume</div>
+        <div class="knob" id="Input" style="top:5px; left:0px;">
+            <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
+                min="-24" max="12" step="0.1" value="0" id="/BigMuffBypass2/Input" style="height: 50px; ">
+            </webaudio-knob>
+            <div id="powerLed" class="led-grey" style="left:53px; top:45px;"></div>
         </div>
 
-        <div class="knob" id="Tone">
-            <webaudio-knob src="img/knobs/greenish_sloped.png" height="50" width="50" sprites="100" min="0" max="1"
-                step="0.01" value="0.5" id="/BigMuffBypass2/Tone" style="height: 50px;"></webaudio-knob>
-            <div style="text-align:center; font-family: Gecko Lunch; color: rgb(51, 16, 16);">Tone</div>
+        <div class="knob" id="Tone" style="top:5px; left:63px;">
+            <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
+                min="0" max="1" step="0.01" value="0.5" id="/BigMuffBypass2/Tone" style="height: 50px;">
+            </webaudio-knob>
         </div>
 
-        <div class="knob" id="Drive">
-            <webaudio-knob src="img/knobs/greenish_sloped.png" height="50" width="50" sprites="100" min="-3" max="100"
-                step="1" value="1" id="/BigMuffBypass2/Drive" style="height: 50px;"></webaudio-knob>
-            <div style="text-align:center; font-family: Gecko Lunch; color: rgb(51, 16, 16);">Sustain</div>
+        <div class="knob" id="Drive" style="top:5px; left:128px;">
+            <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
+                min="-3" max="100" step="1" value="1" id="/BigMuffBypass2/Drive" style="height: 50px;"></webaudio-knob>
         </div>
 
     </div>
 
+    <!--
     <span class="pedalLabel">Big Fuzz</span>
+    -->
     <div class="switch" id="bypass">
-        <webaudio-switch src="img/switches/switch_1.png" height="32" width="50" id="switch1"></webaudio-switch>
+        <webaudio-switch src="img/switches/switch_1.png" midilearn="true" height="32" width="50" id="switch1">
+        </webaudio-switch>
     </div>
 
 
@@ -316,7 +350,7 @@ text-shadow: 0px 1px 1px #ddd,
                 }
             });
         }
-        
+
         attributeChangedCallback() {
 
             console.log("Custom element attributes changed.");
@@ -413,6 +447,12 @@ text-shadow: 0px 1px 1px #ddd,
                     if (this.isOn) this.bypass()
                     else this.reactivate();
                     this.isOn = !this.isOn;
+
+                    // change color of power led
+                    let led = this._root.querySelector("#powerLed");
+                    led.classList.toggle("led-red");
+                    led.classList.toggle("led-grey");
+
                 });
             }
 
