@@ -104,7 +104,7 @@
 
 </template>
 <script>
-    let template = document.currentScript.ownerDocument.querySelector('template');
+    let templateBigMuffBypass2Gui = document.currentScript.ownerDocument.querySelector('template');
 
     class BigMuffBypass2Gui extends HTMLElement {
 
@@ -136,10 +136,10 @@
             // to fix all relative paths in CSS, as they are relative to
             // the main document, not the plugin's main.html
 
-            //console.log("maindoc URI = " + template.baseURI);
-            let posOfLastSlash = template.baseURI.lastIndexOf("/");
-            //console.log("Base URI = " + template.baseURI.substring(0, posOfLastSlash))
-            this.basePath = template.baseURI.substring(0, posOfLastSlash);
+            //console.log("maindoc URI = " + templateBigMuffBypass2Gui.baseURI);
+            let posOfLastSlash = templateBigMuffBypass2Gui.baseURI.lastIndexOf("/");
+            //console.log("Base URI = " + templateBigMuffBypass2Gui.baseURI.substring(0, posOfLastSlash))
+            this.basePath = templateBigMuffBypass2Gui.baseURI.substring(0, posOfLastSlash);
             //console.log("basePath = " + this.basePath)
             //console.log("baseURI = " + this.baseURI)
 
