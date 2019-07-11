@@ -104,14 +104,14 @@
 
 </template>
 <script>
+    let templateBigMuffBypass2Gui = document.currentScript.ownerDocument.querySelector('template');
+
     class BigMuffBypass2Gui extends HTMLElement {
 
 
         constructor(plug) {
 
             super();
-            this.template = document.currentScript.ownerDocument.querySelector('template');
-
             this._plug = plug;
             this._plug.gui = this;
 
@@ -123,7 +123,7 @@
 
 
             // add template to the shadow dom
-            this._root.appendChild(this.template.content.cloneNode(true));
+            this._root.appendChild(templateBigMuffBypass2Gui.content.cloneNode(true));
 
             this.isOn;
             this.state = new Object();
@@ -137,9 +137,9 @@
             // the main document, not the plugin's main.html
 
             //console.log("maindoc URI = " + template.baseURI);
-            let posOfLastSlash = this.template.baseURI.lastIndexOf("/");
-            //console.log("Base URI = " + template.baseURI.substring(0, posOfLastSlash))
-            this.basePath = this.template.baseURI.substring(0, posOfLastSlash);
+            let posOfLastSlash = templateBigMuffBypass2Gui.baseURI.lastIndexOf("/");
+            //console.log("Base URI = " + templateBigMuffBypass2Gui.baseURI.substring(0, posOfLastSlash))
+            this.basePath = templateBigMuffBypass2Gui.baseURI.substring(0, posOfLastSlash);
             //console.log("basePath = " + this.basePath)
             //console.log("baseURI = " + this.baseURI)
 
