@@ -4,5 +4,6 @@
 "version": "1.0",
 "url": "Distorder.js",
 "homepage": "https://faust.grame.fr",
-"thumbnail": "assets/img/thumbnail/distorder.png"
+"thumbnail": "assets/img/thumbnail/distorder.png",
+"category":"FaustIDE"
 }
