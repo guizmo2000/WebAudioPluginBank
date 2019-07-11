@@ -1,11 +1,12 @@
-<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js">
+<script
+    src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js">
 </script>
 <script>
     WebAudioControlsOptions = {
         useMidi: 1,
     };
 </script>
-<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js">
+<script src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js">
 </script>
 <link href="https://fonts.googleapis.com/css?family=Bungee&display=swap" rel="stylesheet">
 
@@ -15,7 +16,6 @@
             display: block;
             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
             /*background: linear-gradient(rgb(255, 255, 255), rgb(205, 205, 205));*/
-
             position: relative;
             width: 200px;
             height: 262px;
@@ -73,25 +73,23 @@
         }
     </style>
     <div id="main">
-        <div>
-            <div class="knob" id="Input" style="top:5px; left:0px;">
-                <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
-                    min="-24" max="12" step="0.1" value="0" id="/BigMuffBypass2/Input" style="height: 50px; ">
-                </webaudio-knob>
-                <div id="powerLed" class="led" style="left:53px; top:45px;"></div>
-            </div>
+        <div class="knob" id="Input" style="top:5px; left:0px;">
+            <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
+                min="-24" max="12" step="0.1" value="0" id="/BigMuffBypass2/Input" style="height: 50px; ">
+            </webaudio-knob>
+            <div id="powerLed" class="led" style="left:53px; top:45px;"></div>
+        </div>
 
-            <div class="knob" id="Tone" style="top:5px; left:63px;">
-                <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
-                    min="0" max="1" step="0.01" value="0.5" id="/BigMuffBypass2/Tone" style="height: 50px;">
-                </webaudio-knob>
-            </div>
+        <div class="knob" id="Tone" style="top:5px; left:63px;">
+            <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
+                min="0" max="1" step="0.01" value="0.5" id="/BigMuffBypass2/Tone" style="height: 50px;">
+            </webaudio-knob>
+        </div>
 
-            <div class="knob" id="Drive" style="top:5px; left:128px;">
-                <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
-                    min="-3" max="100" step="1" value="1" id="/BigMuffBypass2/Drive" style="height: 50px;">
-                </webaudio-knob>
-            </div>
+        <div class="knob" id="Drive" style="top:5px; left:128px;">
+            <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
+                min="-3" max="100" step="1" value="1" id="/BigMuffBypass2/Drive" style="height: 50px;">
+            </webaudio-knob>
         </div>
 
         <!--
@@ -116,16 +114,13 @@
             super();
             this._plug = plug;
             this._plug.gui = this;
-            console.log(this._plug);
+
+            //console.log(this._plug);
+
             this._root = this.attachShadow({
                 mode: 'open'
             });
-            //console.log("maindoc URI = " + template.baseURI);
-            let posOfLastSlash = template.baseURI.lastIndexOf("/");
-            //console.log("Base URI = " + template.baseURI.substring(0, posOfLastSlash))
-            this.basePath = template.baseURI.substring(0, posOfLastSlash);
-            console.log("basePath = " + this.basePath)
-            console.log("baseURI = " + this.baseURI)
+
 
             // add template to the shadow dom
             this._root.appendChild(template.content.cloneNode(true));
@@ -136,7 +131,19 @@
             this.setSliders();
             this.setSwitchListener();
             this.setActive(false);
-            // this.setResources();
+
+            // Compute base URI of this main.html file. This is needed in order
+            // to fix all relative paths in CSS, as they are relative to
+            // the main document, not the plugin's main.html
+
+            //console.log("maindoc URI = " + template.baseURI);
+            let posOfLastSlash = template.baseURI.lastIndexOf("/");
+            //console.log("Base URI = " + template.baseURI.substring(0, posOfLastSlash))
+            this.basePath = template.baseURI.substring(0, posOfLastSlash);
+            //console.log("basePath = " + this.basePath)
+            //console.log("baseURI = " + this.baseURI)
+
+            // Fix relative path in WebAudio Controls elements
             this.fixRelativeImagePathsInCSS();
 
             // optionnal : set image background using a relative URI (relative
@@ -145,14 +152,15 @@
         }
 
         fixRelativeImagePathsInCSS() {
+            // change webaudiocontrols relative paths for spritesheets to absolute
             let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch");
             webaudioControls.forEach(e => {
                 let currentImagePath = e.getAttribute("src");
                 if (currentImagePath !== undefined) {
-                    console.log("Got wc src as " + e.getAttribute("src"));
+                    //console.log("Got wc src as " + e.getAttribute("src"));
                     let imagePath = e.getAttribute("src");
                     e.setAttribute("src", this.basePath + "/" + imagePath);
-                    console.log("After fix : wc src as " + e.getAttribute("src"));
+                    //console.log("After fix : wc src as " + e.getAttribute("src"));
                 }
             });
         }
@@ -162,11 +170,11 @@
             let mainDiv = this._root.querySelector("#main");
             mainDiv.style.backgroundImage = "url(" + this.basePath + "/" + imageRelativeURI + ")";
 
-            console.log("background =" + mainDiv.style.backgroundImage);
+            //console.log("background =" + mainDiv.style.backgroundImage);
             //this._root.style.backgroundImage = "toto.png";
         }
-        attributeChangedCallback() {
 
+        attributeChangedCallback() {
             console.log("Custom element attributes changed.");
             this.state = JSON.parse(this.getAttribute('state'));
             let tmp = "/BigMuffBypass2/bypass";
@@ -187,53 +195,21 @@
         }
 
         get properties() {
-
             this.boundingRect = {
                 dataWidth: {
                     type: Number,
-                    value: 130
+                    value: 200
                 },
                 dataHeight: {
                     type: Number,
-                    value: 410
+                    value: 262
                 }
             };
             return this.boundingRect;
-
         }
 
         static get observedAttributes() {
-
             return ['state'];
-
-        }
-
-        setResources() {
-
-            // Sets theerger background image and style.
-            //var background = this._root.querySelector('img');
-            // background.src = this._plug.URL + '/assets/undefined';
-            //background.style = 'border-radius : 10px;'
-            this._root.querySelectorAll(".knob").forEach((knobDiv) => {
-                let k = knobDiv.querySelector("webaudio-knob");
-
-                let newPath = this.basePath + "/" + k.getAttribute("src");
-
-                k.setAttribute('src', newPath);
-            });
-
-            this._root.querySelectorAll(".switch").forEach((s) => {
-
-                let sl = s.querySelector("webaudio-switch");
-
-                let newPath = this.basePath + "/" + sl.getAttribute("src");
-
-                sl.setAttribute('src', newPath);
-
-            });
-
-
-
         }
 
         setKnobs() {
@@ -243,19 +219,15 @@
                 "/BigMuffBypass2/Input", e.target.value));
             this._root.getElementById("/BigMuffBypass2/Tone").addEventListener("input", (e) => this._plug.setParam(
                 "/BigMuffBypass2/Tone", e.target.value));
-
         }
 
         bypass() {
-
             this._plug.setParam("/BigMuffBypass2/bypass", 1);
-            console.log("disabled");
-
+            //console.log("disabled");
         }
 
         setSwitchListener() {
-
-            console.log("setswitch");
+            //console.log("setswitch");
             if (this._root.querySelector("#switch1")) {
                 this._root.querySelector("#switch1").addEventListener('change', (e) => {
                     if (this.isOn) this.bypass()
@@ -273,21 +245,15 @@
                         led.style.backgroundColor = "red";
                 });
             }
-
         }
 
         reactivate() {
-
             this._plug.setParam("/BigMuffBypass2/bypass", 0);
-
         }
 
-        setSliders() {
-
-        }
+        setSliders() {}
 
         setActive(active) {
-
             // Where there is not swtich, no need to set activation logic. 
             if (!this._root.querySelector("#switch1")) {
                 return;
@@ -301,7 +267,6 @@
                 this.reactivate();
                 this._root.querySelector("#switch1").value = 1;
             }
-
         }
     }
     try {
