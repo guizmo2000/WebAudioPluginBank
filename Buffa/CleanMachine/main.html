@@ -265,19 +265,19 @@
 
 
 <script>
-	let template = document.currentScript.ownerDocument.querySelector('template');
+	let cleanMachine = document.currentScript.ownerDocument.querySelector('#cleanmachine');
 	class CleanMachineGui extends HTMLElement {
 
 
 		constructor(plug) {
 
 			super();
-			let posOfLastSlash = template.baseURI.lastIndexOf("/");
-			this.basePath = template.baseURI.substring(0, posOfLastSlash);
+			let posOfLastSlash = cleanMachine.baseURI.lastIndexOf("/");
+			this.basePath = cleanMachine.baseURI.substring(0, posOfLastSlash);
 			this._plug = plug;
 			this._plug.gui = this;
 			this._root = this.attachShadow({ mode: 'open' });
-			this._root.appendChild(template.content.cloneNode(true));
+			this._root.appendChild(cleanMachine.content.cloneNode(true));
 			this.knobs = this._root.querySelectorAll(".knob");
 			this.isOn;
 			this.state = new Object();
