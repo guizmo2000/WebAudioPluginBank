@@ -108,9 +108,10 @@
 
 
         constructor(plug) {
-            this.template = document.currentScript.ownerDocument.querySelector('template');
 
             super();
+            this.template = document.currentScript.ownerDocument.querySelector('template');
+
             this._plug = plug;
             this._plug.gui = this;
 
