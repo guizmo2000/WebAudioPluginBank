@@ -327,7 +327,6 @@
 			this.changePreset();
 			this.fixRelativeImagePathsInCSS();
 			this.setImageBackground("assets/img/background/MetalMachine.png");
-			//this.avoidDrag();
 		}
 
 		fixRelativeImagePathsInCSS() {
@@ -455,10 +454,6 @@
 				else this.reactivate();
 				this.isOn = !this.isOn;
 			});
-		}
-
-		avoidDrag() {
-			this._root.querySelector("#background-image").draggable = false;
 		}
 
 	}

@@ -53,19 +53,6 @@
 		}
 
 
-		#background-image {
-			width: 450px;
-			height: 150px;
-			opacity: 1;
-
-			box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7),
-				inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2),
-				inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2),
-				1px 0px 1px 0px rgba(0, 0, 0, 0.9),
-				0 2px 1px 0 rgba(0, 0, 0, 0.9),
-				1px 1px 1px 0px rgba(0, 0, 0, 0.9);
-		}
-
 		.knob,
 		.switch,
 		.icon,
@@ -90,7 +77,6 @@
 			font-size: 11px;
 
 		}
-
 
 		#reverb {
 			left: 325px;
@@ -177,7 +163,6 @@
 		}
 
 		#label_713 {
-
 			left: 150px;
 			top: 95px;
 			color: #000000;
@@ -266,12 +251,11 @@
 
 <script>
 	let cleanMachine = document.currentScript.ownerDocument.querySelector('#cleanmachine');
+	
 	class CleanMachineGui extends HTMLElement {
-
-
 		constructor(plug) {
-
 			super();
+
 			let posOfLastSlash = cleanMachine.baseURI.lastIndexOf("/");
 			this.basePath = cleanMachine.baseURI.substring(0, posOfLastSlash);
 			this._plug = plug;
@@ -288,7 +272,6 @@
 			this.changePreset();
 			this.fixRelativeImagePathsInCSS();
 			this.setImageBackground("assets/img/background/CleanMachine.png");
-			//this.avoidDrag();
 		}
 
 		fixRelativeImagePathsInCSS() {
@@ -399,10 +382,6 @@
 				else this.reactivate();
 				this.isOn = !this.isOn;
 			});
-		}
-
-		avoidDrag() {
-			this._root.querySelector("#background-image").draggable = false;
 		}
 
 	}

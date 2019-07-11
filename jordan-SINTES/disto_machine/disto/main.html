@@ -57,15 +57,6 @@
 			font-size: 11px !important;
 		}
 
-
-		#background-image {
-			width: 450px;
-			height: 150px;
-			opacity: 1;
-
-
-		}
-
 		.knob,
 		.switch,
 		.icon,
@@ -283,7 +274,6 @@
 			this.changePreset();
 			this.fixRelativeImagePathsInCSS();
 			this.setImageBackground("assets/img/background/DistoMachine.png");
-			//this.avoidDrag();
 		}
 
 		fixRelativeImagePathsInCSS() {
@@ -396,10 +386,6 @@
 				else this.reactivate();
 				this.isOn = !this.isOn;
 			});
-		}
-
-		avoidDrag() {
-			this._root.querySelector("#background-image").draggable = false;
 		}
 
 	}
