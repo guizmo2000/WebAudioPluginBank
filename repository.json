@@ -26,6 +26,7 @@
     "Compressor": "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/compressor_effect/compressor",
     "Switcher": "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/switcher_machine/switcher",
     "Looper": "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/looper_machine/looper",
-    "BigMuff": "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/BigMuffBypass2"
+    "BigMuff": "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/BigMuffBypass2",
+    "Distorder": "https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/Distorder"
   }
 }
