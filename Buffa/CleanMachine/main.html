@@ -285,6 +285,7 @@
 			this.index = this.menu.value;
 			this.setKnobs();
 			this.setSwitchListener();
+			this.changePreset();
 			this.fixRelativeImagePathsInCSS();
 			this.setImageBackground("assets/img/background/CleanMachine.png");
 			//this.avoidDrag();
@@ -353,6 +354,15 @@
 
 			}
 
+		}
+
+		changePreset(){
+			let menuPresets = this._root.querySelector("#menuPresets");
+			menuPresets.onchange = (e) => {
+				this.index = e.target.value;
+				this._plug.setParam("preset", this.index);
+				//this._plug.setPatch(null, this.index);
+			}
 		}
 
 
