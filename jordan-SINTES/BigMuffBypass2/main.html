@@ -26,7 +26,12 @@
         }
 
         #main {
+            /* this relative uri is fixed by a call to setBackgroundImage in 
+            constructor. It should be turned into an absolute one */
             background-image: url("img/BigMuffBackground.png");
+
+            /* this is equal to the size of the plugin, and should be equal to the
+               size of the background image if you want to see it entirely */
             background-size: 200px 262px;
             width: 100%;
             height: 100%;
@@ -47,222 +52,15 @@
             position: absolute;
         }
 
-        .led-red {
-            position: absolute;
-            margin: 0 auto;
-            width: 12px;
-            height: 12px;
-            background-color: #F00;
-            border-radius: 50%;
-            box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
-            -webkit-animation: blinkRed 0.5s infinite;
-            -moz-animation: blinkRed 0.5s infinite;
-            -ms-animation: blinkRed 0.5s infinite;
-            -o-animation: blinkRed 0.5s infinite;
-            animation: blinkRed 0.5s infinite;
-        }
-
-        .led-grey {
+        .led {
             position: absolute;
             margin: 0 auto;
             width: 12px;
             height: 12px;
             background-color: grey;
             border-radius: 50%;
-            box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(0, 0, 0, 0.5) 0 2px 12px;
-            -webkit-animation: blinkRed 0.5s infinite;
-            -moz-animation: blinkRed 0.5s infinite;
-            -ms-animation: blinkRed 0.5s infinite;
-            -o-animation: blinkRed 0.5s infinite;
-        }
-
-        .selected {
-            border: 1px dashed black;
-            cursor: move;
-        }
-
-        .selected:hover {
-            border: 1px dashed black;
-            cursor: move;
-        }
-
-        .selected webaudio-knob {
-            cursor: move;
-        }
-
-        .selected webaudio-switch {
-            cursor: move;
-        }
-
-        .selected span {
-            cursor: move;
-        }
-
-        .selected:hover span {
-            cursor: move;
-        }
-
-        .selected webaudio-slider {
-            cursor: move;
-        }
-
-        .selected:hover webaudio-knob {
-            cursor: move;
-        }
-
-        .selected:hover webaudio-switch {
-            cursor: move;
-        }
-
-        .selected:hover webaudio-slider {
-            cursor: move;
-        }
-
-
-        #switch1 {
-            bottom: 10px;
-            right: 0px;
-        }
-
-        #Drive {
-            left: 40px;
-            top: 10px;
-        }
-
-        #Drive div {
-            color: #000000;
-            font-family: "Verdana";
-            font-size: 14px;
-
-        }
-
-        #Input {
-            left: 40px;
-            top: 90px;
-        }
-
-        #Input div {
-            color: #000000;
-            font-family: "Verdana";
-            font-size: 14px;
-
-        }
-
-        #Output {
-            left: 40px;
-            top: 170px;
-        }
-
-        #Output div {
-            color: #000000;
-            font-family: "Verdana";
-            font-size: 14px;
-
-        }
-
-        #Tone {
-            left: 40px;
-            top: 250px;
-        }
-
-        #Tone div {
-            color: #000000;
-            font-family: "Verdana";
-            font-size: 14px;
-
-        }
-
-        #bypass {
-            left: 25px;
-            top: 330px;
-            margin-top: 15px;
-        }
-
-        #bypass div {
-            color: #000000;
-            font-family: "Verdana";
-            font-size: 14px;
-
-        }
-
-        .column {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            flex: 1;
-            margin: 5px;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .column2 {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            flex: 1;
-            margin: 5px;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .row {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: stretch;
-        }
-
-        .pedalLabel {
-            margin-top: 10px;
-            margin-left: 35px;
-            top: 225px;
-            font-size: 30px;
-            /*font-family: Gecko Lunch;*/
-            font-family: 'Bungee', cursive;
-            /*{font}*/
-            text-align: center;
-            line-height: 30px;
-            /*{pedalfontsize}*/
-            width: 150px;
-            color: rgb(145, 20, 20);
-            /*{fontcolor}*/
-
-            text-shadow: 0px 1px 1px #ddd,
-                0px 2px 1px #d6d6d6,
-                0px 3px 1px #ccc,
-                0px 4px 1px #c5c5c5,
-                0px 5px 1px #c1c1c1,
-                0px 6px 1px #bbb,
-                0px 7px 1px #777,
-                0px 8px 3px rgba(100, 100, 100, 0.4),
-                0px 9px 5px rgba(100, 100, 100, 0.1),
-                0px 10px 7px rgba(100, 100, 100, 0.15),
-                0px 11px 9px rgba(100, 100, 100, 0.2),
-                0px 12px 11px rgba(100, 100, 100, 0.25),
-                0px 13px 15px rgba(100, 100, 100, 0.3);
-
-        }
-
-        .knob-label {
-            position: absolute;
-            font-size: 12px;
-            /*{knobfontsize}*/
-            line-height: 12px;
-            width: 64px;
-            max-width: 64px;
-            overflow: hidden;
-            text-align: center;
-            font-family: Sansita;
-            /*{font}*/
-            color: rgb(78, 4, 4);
-            /*{fontcolor}*/
-        }
-
-        #knob1-label {
-            top: 84px;
-            left: 43px;
+            box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
+            transition: all 0.5s;
         }
 
         #switch1 {
@@ -275,13 +73,12 @@
         }
     </style>
     <div id="main">
-        <div class="row">
-
+        <div>
             <div class="knob" id="Input" style="top:5px; left:0px;">
                 <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
                     min="-24" max="12" step="0.1" value="0" id="/BigMuffBypass2/Input" style="height: 50px; ">
                 </webaudio-knob>
-                <div id="powerLed" class="led-grey" style="left:53px; top:45px;"></div>
+                <div id="powerLed" class="led" style="left:53px; top:45px;"></div>
             </div>
 
             <div class="knob" id="Tone" style="top:5px; left:63px;">
@@ -295,7 +92,6 @@
                     min="-3" max="100" step="1" value="1" id="/BigMuffBypass2/Drive" style="height: 50px;">
                 </webaudio-knob>
             </div>
-
         </div>
 
         <!--
@@ -343,6 +139,9 @@
             // this.setResources();
             this.fixRelativeImagePathsInCSS();
 
+            // optionnal : set image background using a relative URI (relative
+            // to this main.html file)
+            this.setImageBackground("/img/BigMuffBackground.png");
         }
 
         fixRelativeImagePathsInCSS() {
@@ -356,16 +155,16 @@
                     console.log("After fix : wc src as " + e.getAttribute("src"));
                 }
             });
+        }
 
+        setImageBackground(imageRelativeURI) {
             // check if the shadowroot host has a background image
             let mainDiv = this._root.querySelector("#main");
-            let imagePath = mainDiv.style.backGroundImage;
-            mainDiv.style.backgroundImage = "url(" + this.basePath + "/img/BigMuffBackground.png)";
+            mainDiv.style.backgroundImage = "url(" + this.basePath + "/" + imageRelativeURI + ")";
 
             console.log("background =" + mainDiv.style.backgroundImage);
             //this._root.style.backgroundImage = "toto.png";
         }
-
         attributeChangedCallback() {
 
             console.log("Custom element attributes changed.");
@@ -465,9 +264,13 @@
 
                     // change color of power led
                     let led = this._root.querySelector("#powerLed");
+                    /*
                     led.classList.toggle("led-red");
-                    led.classList.toggle("led-grey");
-
+                    led.classList.toggle("led-grey");*/
+                    if (led.style.backgroundColor === "red")
+                        led.style.backgroundColor = "grey";
+                    else
+                        led.style.backgroundColor = "red";
                 });
             }
 
