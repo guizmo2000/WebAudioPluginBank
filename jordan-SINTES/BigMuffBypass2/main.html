@@ -15,8 +15,7 @@
             display: block;
             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
             /*background: linear-gradient(rgb(255, 255, 255), rgb(205, 205, 205));*/
-            background-image: url("img/BigMuffBackground.png");
-            background-size: 200px 262px;
+
             position: relative;
             width: 200px;
             height: 262px;
@@ -24,6 +23,13 @@
             cursor: move;
             z-index: 9;
             /* bring your own prefixes */
+        }
+
+        #main {
+            background-image: url("img/BigMuffBackground.png");
+            background-size: 200px 262px;
+            width: 100%;
+            height: 100%;
         }
 
         .knob,
@@ -261,44 +267,45 @@
 
         #switch1 {
             /*background: rgb(31, 30, 30);*/
-            width: 72%;
+            width: 80%;
             position: absolute;
             top: 195px;
-            left: 26px;
+            left: 18px;
             /*border-radius: 10px;*/
         }
     </style>
+    <div id="main">
+        <div class="row">
 
-    <div class="row">
+            <div class="knob" id="Input" style="top:5px; left:0px;">
+                <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
+                    min="-24" max="12" step="0.1" value="0" id="/BigMuffBypass2/Input" style="height: 50px; ">
+                </webaudio-knob>
+                <div id="powerLed" class="led-grey" style="left:53px; top:45px;"></div>
+            </div>
 
-        <div class="knob" id="Input" style="top:5px; left:0px;">
-            <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
-                min="-24" max="12" step="0.1" value="0" id="/BigMuffBypass2/Input" style="height: 50px; ">
-            </webaudio-knob>
-            <div id="powerLed" class="led-grey" style="left:53px; top:45px;"></div>
+            <div class="knob" id="Tone" style="top:5px; left:63px;">
+                <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
+                    min="0" max="1" step="0.01" value="0.5" id="/BigMuffBypass2/Tone" style="height: 50px;">
+                </webaudio-knob>
+            </div>
+
+            <div class="knob" id="Drive" style="top:5px; left:128px;">
+                <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
+                    min="-3" max="100" step="1" value="1" id="/BigMuffBypass2/Drive" style="height: 50px;">
+                </webaudio-knob>
+            </div>
+
         </div>
 
-        <div class="knob" id="Tone" style="top:5px; left:63px;">
-            <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
-                min="0" max="1" step="0.01" value="0.5" id="/BigMuffBypass2/Tone" style="height: 50px;">
-            </webaudio-knob>
-        </div>
-
-        <div class="knob" id="Drive" style="top:5px; left:128px;">
-            <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
-                min="-3" max="100" step="1" value="1" id="/BigMuffBypass2/Drive" style="height: 50px;"></webaudio-knob>
-        </div>
-
-    </div>
-
-    <!--
+        <!--
     <span class="pedalLabel">Big Fuzz</span>
     -->
-    <div class="switch" id="bypass">
-        <webaudio-switch src="img/switches/switch_1.png" midilearn="true" height="32" width="50" id="switch1">
-        </webaudio-switch>
+        <div class="switch" id="bypass">
+            <webaudio-switch src="img/switches/switch_1.png" midilearn="true" height="32" width="50" id="switch1">
+            </webaudio-switch>
+        </div>
     </div>
-
 
 
 </template>
@@ -349,6 +356,14 @@
                     console.log("After fix : wc src as " + e.getAttribute("src"));
                 }
             });
+
+            // check if the shadowroot host has a background image
+            let mainDiv = this._root.querySelector("#main");
+            let imagePath = mainDiv.style.backGroundImage;
+            mainDiv.style.backgroundImage = "url(" + this.basePath + "/img/BigMuffBackground.png)";
+
+            console.log("background =" + mainDiv.style.backgroundImage);
+            //this._root.style.backgroundImage = "toto.png";
         }
 
         attributeChangedCallback() {
