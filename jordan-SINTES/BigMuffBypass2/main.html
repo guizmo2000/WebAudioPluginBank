@@ -104,12 +104,11 @@
 
 </template>
 <script>
-    let template = document.currentScript.ownerDocument.querySelector('template');
-
     class BigMuffBypass2Gui extends HTMLElement {
 
 
         constructor(plug) {
+            this.template = document.currentScript.ownerDocument.querySelector('template');
 
             super();
             this._plug = plug;
@@ -123,7 +122,7 @@
 
 
             // add template to the shadow dom
-            this._root.appendChild(template.content.cloneNode(true));
+            this._root.appendChild(this.template.content.cloneNode(true));
 
             this.isOn;
             this.state = new Object();
@@ -137,9 +136,9 @@
             // the main document, not the plugin's main.html
 
             //console.log("maindoc URI = " + template.baseURI);
-            let posOfLastSlash = template.baseURI.lastIndexOf("/");
+            let posOfLastSlash = this.template.baseURI.lastIndexOf("/");
             //console.log("Base URI = " + template.baseURI.substring(0, posOfLastSlash))
-            this.basePath = template.baseURI.substring(0, posOfLastSlash);
+            this.basePath = this.template.baseURI.substring(0, posOfLastSlash);
             //console.log("basePath = " + this.basePath)
             //console.log("baseURI = " + this.baseURI)
 
