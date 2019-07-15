@@ -5,11 +5,21 @@
         useMidi: 1,
     };
 </script>
+
+<style>
+    @font-face {
+        font-family: "DarkMoon";
+        src: url('assets/font/DarkMoon.otf') format('otf');
+        font-weight: normal;
+        font-style: normal;
+    }
+</style>
 <script
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template>
     <style>
         :host {
+            font: "DarkMoon", 'Arial Black';
             display: block;
             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
             background: linear-gradient(rgb(84, 38, 116), rgb(57, 20, 82));
@@ -84,6 +94,7 @@
             top: 225px;
             font-size: 30px;
             /*{font}*/
+            font-family: "DarkMoon";
             text-align: center;
             line-height: 30px;
             /*{pedalfontsize}*/
@@ -95,82 +106,83 @@
     <div id="main">
         <div class="row">
             <div class="column">
-                
-                
+
+
                 <div class="knob" id="highBand">
                     <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="1000"
                         max="10000" step="0.1" value="2000" id="/ReverbRaw/highBand" style="height: 50px;">
                     </webaudio-knob>
-                    <div style="text-align:center">highBand</div>
+                    <div style="text-align:center; font-family: DarkMoon;">highBand</div>
                 </div>
 
                 <div class="knob" id="earlyDiff">
-                        <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0" max="0.99"
-                            step="0.001" value="0.707" id="/ReverbRaw/earlyDiff" style="height: 50px;"></webaudio-knob>
-                        <div style="text-align:center">earlyDiff</div>
-                    </div>
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="0.99" step="0.001" value="0.707" id="/ReverbRaw/earlyDiff" style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; font-family: DarkMoon;">earlyDiff</div>
+                </div>
 
                 <div class="knob" id="lowBand">
-                        <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="100" max="6000"
-                            step="0.1" value="500" id="/ReverbRaw/lowBand" style="height: 50px;"></webaudio-knob>
-                        <div style="text-align:center">lowBand</div>
-                    </div>
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="100"
+                        max="6000" step="0.1" value="500" id="/ReverbRaw/lowBand" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; font-family: DarkMoon;">lowBand</div>
+                </div>
             </div>
             <div class="column">
                 <div class="knob" id="highX">
-                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0" max="1"
-                        step="0.01" value="1" id="/ReverbRaw/highX" style="height: 50px;"></webaudio-knob>
-                    <div style="text-align:center">highX</div>
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.01" value="1" id="/ReverbRaw/highX" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; font-family: DarkMoon;">highX</div>
                 </div>
 
                 <div class="knob" id="midX">
-                        <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0" max="1"
-                            step="0.01" value="1" id="/ReverbRaw/midX" style="height: 50px;"></webaudio-knob>
-                        <div style="text-align:center">midX</div>
-                    </div>
-               
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.01" value="1" id="/ReverbRaw/midX" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; font-family: DarkMoon;">midX</div>
+                </div>
+
                 <div class="knob" id="lowX">
-                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0" max="1"
-                        step="0.01" value="1" id="/ReverbRaw/lowX" style="height: 50px;"></webaudio-knob>
-                    <div style="text-align:center">lowX</div>
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.01" value="1" id="/ReverbRaw/lowX" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; font-family: DarkMoon;">lowX</div>
                 </div>
             </div>
             <div class="column">
                 <div class="knob" id="mDepth">
-                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0" max="1"
-                        step="0.001" value="0.1" id="/ReverbRaw/mDepth" style="height: 50px;"></webaudio-knob>
-                    <div style="text-align:center">mDepth</div>
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.001" value="0.1" id="/ReverbRaw/mDepth" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; font-family: DarkMoon;">mDepth</div>
                 </div>
 
 
                 <div class="knob" id="mFreq">
-                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0" max="10"
-                        step="0.01" value="2" id="/ReverbRaw/mFreq" style="height: 50px;"></webaudio-knob>
-                    <div style="text-align:center">mFreq</div>
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="10" step="0.01" value="2" id="/ReverbRaw/mFreq" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; font-family: DarkMoon;">mFreq</div>
                 </div>
 
                 <div class="knob" id="damp">
-                        <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0" max="0.999"
-                            step="0.0001" value="0" id="/ReverbRaw/damp" style="height: 50px;"></webaudio-knob>
-                        <div style="text-align:center">damp</div>
-                    </div>
-                
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="0.999" step="0.0001" value="0" id="/ReverbRaw/damp" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; font-family: DarkMoon;">damp</div>
+                </div>
+
             </div>
             <div class="column">
                 <div class="knob" id="size">
-                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0.5" max="3"
-                        step="0.01" value="1" id="/ReverbRaw/size" style="height: 50px;"></webaudio-knob>
-                    <div style="text-align:center">size</div>
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0.5"
+                        max="3" step="0.01" value="1" id="/ReverbRaw/size" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; font-family: DarkMoon;">size</div>
                 </div>
                 <div class="knob" id="t60">
-                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0.1" max="60"
-                        step="0.1" value="1" id="/ReverbRaw/t60" style="height: 50px;"></webaudio-knob>
-                    <div style="text-align:center">t60</div>
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0.1"
+                        max="60" step="0.1" value="1" id="/ReverbRaw/t60" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; font-family: DarkMoon;">t60</div>
                 </div>
                 <div class="knob" id="wet">
-                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0" max="1"
-                        step="0.01" value="0.5" id="/ReverbRaw/wet" style="height: 50px;"></webaudio-knob>
-                    <div style="text-align:center">wet</div>
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.01" value="0.5" id="/ReverbRaw/wet" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; font-family: DarkMoon;">wet</div>
                 </div>
             </div>
         </div>
