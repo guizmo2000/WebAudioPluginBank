@@ -1,0 +1,359 @@
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script>
+    WebAudioControlsOptions = {
+        useMidi: 1,
+    };
+</script>
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<template>
+    <style>
+        :host {
+            display: block;
+            box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(rgb(84, 38, 116), rgb(57, 20, 82));
+            position: relative;
+            width: 360px;
+            height: 380px;
+            user-select: none;
+            cursor: move;
+            z-index: 9;
+            /* bring your own prefixes */
+        }
+
+
+        .knob,
+        .switch,
+        .icon,
+        .label,
+        .slider {
+            cursor: pointer;
+            text-align: center;
+        }
+
+        #main {
+            /* this relative uri is fixed by a call to setBackgroundImage in 
+            constructor. It should be turned into an absolute one */
+            /*background-image: url("img/BigMuffBackground.png");*/
+
+            /* this is equal to the size of the plugin, and should be equal to the
+               size of the background image if you want to see it entirely */
+            background-size: 200px 262px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+
+        .knob {
+            margin: 12px;
+            align-content: center;
+            color: rgb(255, 255, 255);
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            margin: 5px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        #knob1-label {
+            top: 84px;
+            left: 43px;
+        }
+
+        #switch1 {
+            bottom: 10px;
+            right: 0px;
+        }
+
+        .pedalLabel {
+            margin-left: 98px;
+            top: 225px;
+            font-size: 30px;
+            /*{font}*/
+            text-align: center;
+            line-height: 30px;
+            /*{pedalfontsize}*/
+            width: 150px;
+            color: rgb(255, 255, 255);
+            /*{fontcolor}*/
+        }
+    </style>
+    <div id="main">
+        <div class="row">
+            <div class="column">
+                
+                
+                <div class="knob" id="highBand">
+                    <webaudio-knob src="assets/img/knobs/carbon.png" height="50" width="50" sprites="100" min="1000"
+                        max="10000" step="0.1" value="2000" id="/ReverbRaw/highBand" style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center">highBand</div>
+                </div>
+
+                <div class="knob" id="earlyDiff">
+                        <webaudio-knob src="assets/img/knobs/carbon.png" height="50" width="50" sprites="100" min="0" max="0.99"
+                            step="0.001" value="0.707" id="/ReverbRaw/earlyDiff" style="height: 50px;"></webaudio-knob>
+                        <div style="text-align:center">earlyDiff</div>
+                    </div>
+                    
+                <div class="knob" id="lowBand">
+                        <webaudio-knob src="assets/img/knobs/carbon.png" height="50" width="50" sprites="100" min="100" max="6000"
+                            step="0.1" value="500" id="/ReverbRaw/lowBand" style="height: 50px;"></webaudio-knob>
+                        <div style="text-align:center">lowBand</div>
+                    </div>
+            </div>
+            <div class="column">
+                <div class="knob" id="highX">
+                    <webaudio-knob src="assets/img/knobs/carbon.png" height="50" width="50" sprites="100" min="0" max="1"
+                        step="0.01" value="1" id="/ReverbRaw/highX" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">highX</div>
+                </div>
+
+                <div class="knob" id="midX">
+                        <webaudio-knob src="assets/img/knobs/carbon.png" height="50" width="50" sprites="100" min="0" max="1"
+                            step="0.01" value="1" id="/ReverbRaw/midX" style="height: 50px;"></webaudio-knob>
+                        <div style="text-align:center">midX</div>
+                    </div>
+               
+                <div class="knob" id="lowX">
+                    <webaudio-knob src="assets/img/knobs/carbon.png" height="50" width="50" sprites="100" min="0" max="1"
+                        step="0.01" value="1" id="/ReverbRaw/lowX" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">lowX</div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="knob" id="mDepth">
+                    <webaudio-knob src="assets/img/knobs/carbon.png" height="50" width="50" sprites="100" min="0" max="1"
+                        step="0.001" value="0.1" id="/ReverbRaw/mDepth" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">mDepth</div>
+                </div>
+
+
+                <div class="knob" id="mFreq">
+                    <webaudio-knob src="assets/img/knobs/carbon.png" height="50" width="50" sprites="100" min="0" max="10"
+                        step="0.01" value="2" id="/ReverbRaw/mFreq" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">mFreq</div>
+                </div>
+
+                <div class="knob" id="damp">
+                        <webaudio-knob src="assets/img/knobs/carbon.png" height="50" width="50" sprites="100" min="0" max="0.999"
+                            step="0.0001" value="0" id="/ReverbRaw/damp" style="height: 50px;"></webaudio-knob>
+                        <div style="text-align:center">damp</div>
+                    </div>
+                
+            </div>
+            <div class="column">
+                <div class="knob" id="size">
+                    <webaudio-knob src="assets/img/knobs/carbon.png" height="50" width="50" sprites="100" min="0.5" max="3"
+                        step="0.01" value="1" id="/ReverbRaw/size" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">size</div>
+                </div>
+                <div class="knob" id="t60">
+                    <webaudio-knob src="assets/img/knobs/carbon.png" height="50" width="50" sprites="100" min="0.1" max="60"
+                        step="0.1" value="1" id="/ReverbRaw/t60" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">t60</div>
+                </div>
+                <div class="knob" id="wet">
+                    <webaudio-knob src="assets/img/knobs/carbon.png" height="50" width="50" sprites="100" min="0" max="1"
+                        step="0.01" value="0.5" id="/ReverbRaw/wet" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">wet</div>
+                </div>
+            </div>
+        </div>
+        <span class="pedalLabel">ReverbRaw</span>
+        <div class="switch" id="bypass">
+            <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" id="switch1"
+                style="height: 50px;">
+            </webaudio-switch>
+        </div>
+    </div>
+</template>
+<script>
+    let templateReverbRawGui = document.currentScript.ownerDocument.querySelector('template');
+    class ReverbRawGui extends HTMLElement {
+
+
+        constructor(plug) {
+
+            super();
+            this._plug = plug;
+            this._plug.gui = this;
+            let posOfLastSlash = templateReverbRawGui.baseURI.lastIndexOf("/");
+            this.basePath = templateReverbRawGui.baseURI.substring(0, posOfLastSlash);
+            this._root = this.attachShadow({ mode: 'open' });
+            this._root.appendChild(templateReverbRawGui.content.cloneNode(true));
+            this.isOn;
+            this.state = new Object();
+            this.setKnobs();
+            this.setSliders();
+            this.setSwitchListener();
+            this.setActive(false);
+            this.fixRelativeImagePathsInCSS();
+
+        }
+
+        fixRelativeImagePathsInCSS() {
+            // change webaudiocontrols relative paths for spritesheets to absolute
+            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch");
+            webaudioControls.forEach(e => {
+                let currentImagePath = e.getAttribute("src");
+                if (currentImagePath !== undefined) {
+                    //console.log("Got wc src as " + e.getAttribute("src"));
+                    let imagePath = e.getAttribute("src");
+                    e.setAttribute("src", this.basePath + "/" + imagePath);
+                    //console.log("After fix : wc src as " + e.getAttribute("src"));
+                }
+            });
+        }
+
+        attributeChangedCallback() {
+
+            console.log("Custom element attributes changed.");
+            this.state = JSON.parse(this.getAttribute('state'));
+            let tmp = "/ReverbRaw/bypass";
+            if (this.state[tmp] == 1) {
+                this._root.querySelector("#switch1").value = 0;
+                this.isOn = false;
+            } else if (this.state[tmp] == 0) {
+                this._root.querySelector("#switch1").value = 1;
+                this.isOn = true;
+            }
+            this.knobs = this._root.querySelectorAll(".knob");
+            console.log(this.state);
+            for (var i = 0; i < this.knobs.length; i++) {
+                this.knobs[i].setValue(this.state[this.knobs[i].id], false);
+                console.log(this.knobs[i].value);
+            }
+
+        }
+
+        get properties() {
+
+            this.boundingRect = {
+                dataWidth: {
+                    type: Number,
+                    value: 130
+                },
+                dataHeight: {
+                    type: Number,
+                    value: 1050
+                }
+            };
+            return this.boundingRect;
+
+        }
+
+        static get observedAttributes() {
+
+            return ['state'];
+
+        }
+
+        setResources() {
+
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+            });
+
+            this._root.querySelectorAll(".switch").forEach((s) => {
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+            });
+
+
+
+        }
+
+        setKnobs() {
+            this._root.getElementById("/ReverbRaw/damp").addEventListener("input", (e) => this._plug.setParam("/ReverbRaw/damp", e.target.value));
+            this._root.getElementById("/ReverbRaw/earlyDiff").addEventListener("input", (e) => this._plug.setParam("/ReverbRaw/earlyDiff", e.target.value));
+            this._root.getElementById("/ReverbRaw/highBand").addEventListener("input", (e) => this._plug.setParam("/ReverbRaw/highBand", e.target.value));
+            this._root.getElementById("/ReverbRaw/highX").addEventListener("input", (e) => this._plug.setParam("/ReverbRaw/highX", e.target.value));
+            this._root.getElementById("/ReverbRaw/lowBand").addEventListener("input", (e) => this._plug.setParam("/ReverbRaw/lowBand", e.target.value));
+            this._root.getElementById("/ReverbRaw/lowX").addEventListener("input", (e) => this._plug.setParam("/ReverbRaw/lowX", e.target.value));
+            this._root.getElementById("/ReverbRaw/mDepth").addEventListener("input", (e) => this._plug.setParam("/ReverbRaw/mDepth", e.target.value));
+            this._root.getElementById("/ReverbRaw/mFreq").addEventListener("input", (e) => this._plug.setParam("/ReverbRaw/mFreq", e.target.value));
+            this._root.getElementById("/ReverbRaw/midX").addEventListener("input", (e) => this._plug.setParam("/ReverbRaw/midX", e.target.value));
+            this._root.getElementById("/ReverbRaw/size").addEventListener("input", (e) => this._plug.setParam("/ReverbRaw/size", e.target.value));
+            this._root.getElementById("/ReverbRaw/t60").addEventListener("input", (e) => this._plug.setParam("/ReverbRaw/t60", e.target.value));
+            this._root.getElementById("/ReverbRaw/wet").addEventListener("input", (e) => this._plug.setParam("/ReverbRaw/wet", e.target.value));
+
+        }
+
+        bypass() {
+
+            this._plug.setParam("/ReverbRaw/bypass", 1);
+
+        }
+
+        setSwitchListener() {
+
+            console.log("setswitch");
+            if (this._root.querySelector("#switch1")) {
+                this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                    if (this.isOn) this.bypass()
+                    else this.reactivate();
+                    this.isOn = !this.isOn;
+                });
+            }
+
+        }
+
+        reactivate() {
+
+            this._plug.setParam("/ReverbRaw/bypass", 0);
+
+        }
+
+        setSliders() {
+
+        }
+
+        setActive(active) {
+
+            // Where there is not swtich, no need to set activation logic. 
+            if (!this._root.querySelector("#switch1")) {
+                return;
+            }
+            if (active == undefined || active == false) {
+                this.isOn = false;
+                this.bypass();
+                this._root.querySelector("#switch1").value = 0;
+            } else if (active) {
+                this.isOn = true;
+                this.reactivate();
+                this._root.querySelector("#switch1").value = 1;
+            }
+
+        }
+    }
+    try {
+        customElements.define('wap-reverbraw', ReverbRawGui);
+        console.log("Element defined");
+    } catch (error) {
+        console.log(error);
+        console.log("Element already defined");
+    }
+
+    createReverbRawGUI = (plug) => {
+        let elem = new ReverbRawGui(plug);
+        return elem;
+    }
+</script>
