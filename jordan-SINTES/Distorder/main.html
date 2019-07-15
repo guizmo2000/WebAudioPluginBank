@@ -163,20 +163,20 @@
     </div>
 </template>
 <script>
-    let template = document.currentScript.ownerDocument.querySelector('template');
+    let templateDistorderGui = document.currentScript.ownerDocument.querySelector('template');
     class DistorderGui extends HTMLElement {
 
 
         constructor(plug) {
 
             super();
-            let posOfLastSlash = template.baseURI.lastIndexOf("/");
-            this.basePath = template.baseURI.substring(0, posOfLastSlash);
+            let posOfLastSlash = templateDistorderGui.baseURI.lastIndexOf("/");
+            this.basePath = templateDistorderGui.baseURI.substring(0, posOfLastSlash);
             this._plug = plug;
             this._plug.gui = this;
             console.log(this._plug);
             this._root = this.attachShadow({ mode: 'open' });
-            this._root.appendChild(template.content.cloneNode(true));
+            this._root.appendChild(templateDistorderGui.content.cloneNode(true));
             this.isOn;
             this.state = new Object();
             this.setKnobs();

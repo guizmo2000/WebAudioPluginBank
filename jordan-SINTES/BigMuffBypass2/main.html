@@ -28,7 +28,7 @@
         #main {
             /* this relative uri is fixed by a call to setBackgroundImage in 
             constructor. It should be turned into an absolute one */
-            background-image: url("img/BigMuffBackground.png");
+            background-image: url("assets/img/background/BigMuffBackground.png");
 
             /* this is equal to the size of the plugin, and should be equal to the
                size of the background image if you want to see it entirely */
@@ -74,20 +74,20 @@
     </style>
     <div id="main">
         <div class="knob" id="Input" style="top:5px; left:0px;">
-            <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
+            <webaudio-knob src="assets/img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
                 min="-24" max="12" step="0.1" value="0" id="/BigMuffBypass2/Input" style="height: 50px; ">
             </webaudio-knob>
             <div id="powerLed" class="led" style="left:53px; top:45px;"></div>
         </div>
 
         <div class="knob" id="Tone" style="top:5px; left:63px;">
-            <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
+            <webaudio-knob src="assets/img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
                 min="0" max="1" step="0.01" value="0.5" id="/BigMuffBypass2/Tone" style="height: 50px;">
             </webaudio-knob>
         </div>
 
         <div class="knob" id="Drive" style="top:5px; left:128px;">
-            <webaudio-knob src="img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
+            <webaudio-knob src="assets/img/knobs/greenish_sloped.png" midilearn="true" height="50" width="50" sprites="100"
                 min="-3" max="100" step="1" value="1" id="/BigMuffBypass2/Drive" style="height: 50px;">
             </webaudio-knob>
         </div>
@@ -96,7 +96,7 @@
     <span class="pedalLabel">Big Fuzz</span>
     -->
         <div class="switch" id="bypass">
-            <webaudio-switch src="img/switches/switch_1.png" midilearn="true" height="32" width="50" id="switch1">
+            <webaudio-switch src="assets/img/switches/switch_1.png" midilearn="true" height="32" width="50" id="switch1">
             </webaudio-switch>
         </div>
     </div>
@@ -148,7 +148,7 @@
 
             // optionnal : set image background using a relative URI (relative
             // to this main.html file)
-            this.setImageBackground("/img/BigMuffBackground.png");
+            this.setImageBackground("assets/img/BigMuffBackground.png");
         }
 
         fixRelativeImagePathsInCSS() {
