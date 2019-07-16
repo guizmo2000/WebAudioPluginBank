@@ -96,24 +96,24 @@
             <div class="column">
                 <div class="knob" id="delay">
                     <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="0"
-                        max="0.2" step="0.001" value="0.025" id="/chorus/delay" style="height: 50px;"></webaudio-knob>
+                        max="0.2" step="0.001" value="0.025" id="/stereoChorus/delay" style="height: 50px;"></webaudio-knob>
                     <div style="text-align:center">delay</div>
                 </div>
                 <div class="knob" id="depth">
                     <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="0"
-                        max="1" step="0.001" value="0.02" id="/chorus/depth" style="height: 50px;"></webaudio-knob>
+                        max="1" step="0.001" value="0.02" id="/stereoChorus/depth" style="height: 50px;"></webaudio-knob>
                     <div style="text-align:center">depth</div>
                 </div>
             </div>
             <div class="column">
                 <div class="knob" id="freq">
                     <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="0"
-                        max="10" step="0.01" value="3" id="/chorus/freq" style="height: 50px;"></webaudio-knob>
+                        max="10" step="0.01" value="3" id="/stereoChorus/freq" style="height: 50px;"></webaudio-knob>
                     <div style="text-align:center">freq</div>
                 </div>
                 <div class="knob" id="level">
                     <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="0"
-                        max="1" step="0.01" value="0.5" id="/chorus/level" style="height: 50px;"></webaudio-knob>
+                        max="1" step="0.01" value="0.5" id="/stereoChorus/level" style="height: 50px;"></webaudio-knob>
                     <div style="text-align:center">level</div>
                 </div>
             </div>
@@ -224,10 +224,10 @@
         }
 
         setKnobs() {
-            this._root.getElementById("/chorus/delay").addEventListener("input", (e) => this._plug.setParam("/chorus/delay", e.target.value));
-            this._root.getElementById("/chorus/depth").addEventListener("input", (e) => this._plug.setParam("/chorus/depth", e.target.value));
-            this._root.getElementById("/chorus/freq").addEventListener("input", (e) => this._plug.setParam("/chorus/freq", e.target.value));
-            this._root.getElementById("/chorus/level").addEventListener("input", (e) => this._plug.setParam("/chorus/level", e.target.value));
+            this._root.getElementById("/stereoChorus/delay").addEventListener("input", (e) => this._plug.setParam("/stereoChorus/delay", e.target.value));
+            this._root.getElementById("/stereoChorus/depth").addEventListener("input", (e) => this._plug.setParam("/stereoChorus/depth", e.target.value));
+            this._root.getElementById("/stereoChorus/freq").addEventListener("input", (e) => this._plug.setParam("/stereoChorus/freq", e.target.value));
+            this._root.getElementById("/stereoChorus/level").addEventListener("input", (e) => this._plug.setParam("/stereoChorus/level", e.target.value));
 
         }
 
