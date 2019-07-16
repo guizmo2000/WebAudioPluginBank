@@ -454,7 +454,7 @@ class GreyHoleRaw {
                 }
             };
 
-            let real_url = (this.baseURL === "") ? "GreyHoleRaw.wasm" : (this.baseURL + "/GreyHoleRaw.wasm");
+            let real_url = (this.baseURL === "") ? "GreyholeRaw.wasm" : (this.baseURL + "/GreyholeRaw.wasm");
             const dspFile = await fetch(real_url);
             const dspBuffer = await dspFile.arrayBuffer();
             const dspModule = await WebAssembly.compile(dspBuffer);
