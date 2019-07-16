@@ -1,0 +1,316 @@
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script>
+    WebAudioControlsOptions = {
+        useMidi: 1,
+    };
+</script>
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<template>
+    <style>
+        :host {
+            font: "DarkMoon", 'Arial Black';
+            display: block;
+            box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(rgb(197, 164, 18), rgb(139, 119, 30));
+            position: relative;
+            width: 250px;
+            height: 320px;
+            user-select: none;
+            cursor: move;
+            z-index: 9;
+            /* bring your own prefixes */
+        }
+
+        #main {
+            /* this relative uri is fixed by a call to setBackgroundImage in 
+            constructor. It should be turned into an absolute one */
+            /*background-image: url("img/BigMuffBackground.png");*/
+
+            /* this is equal to the size of the plugin, and should be equal to the
+               size of the background image if you want to see it entirely */
+            background-size: 200px 262px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .knob,
+        .switch,
+        .icon,
+        .label,
+        .slider {
+            cursor: pointer;
+            text-align: center;
+        }
+
+
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            margin: 5px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+
+        #switch1 {
+            bottom: 10px;
+            right: 0px;
+        }
+
+
+
+        .pedalLabel {
+            margin-left: 70px;
+            top: 225px;
+            font-size: 20px;
+            /*{font}*/
+            font-family: "DarkMoon";
+            text-align: center;
+            line-height: 30px;
+            /*{pedalfontsize}*/
+            width: 150px;
+            color: rgb(255, 255, 255);
+            /*{fontcolor}*/
+        }
+
+        #knob1-label {
+            top: 84px;
+            left: 43px;
+        }
+    </style>
+    <div class="main">
+        <div class="row">
+            <div class="column">
+                <div class="knob" id="damping">
+                    <webaudio-knob src="assets/img/knobs/m400.png" height="50" width="50" sprites="100" min="0" max="0.99"
+                        step="0.001" value="0" id="/GreyHoleRaw/damping" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">damping</div>
+                </div>
+                <div class="knob" id="delayTime">
+                    <webaudio-knob src="assets/img/knobs/m400.png" height="50" width="50" sprites="100" min="0.001"
+                        max="1.45" step="0.0001" value="0.2" id="/GreyHoleRaw/delayTime" style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center">delayTime</div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="knob" id="diffusion">
+                    <webaudio-knob src="assets/img/knobs/m400.png" height="50" width="50" sprites="100" min="0" max="0.99"
+                        step="0.0001" value="0.5" id="/GreyHoleRaw/diffusion" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">diffusion</div>
+                </div>
+
+                <div class="knob" id="feedback">
+                    <webaudio-knob src="assets/img/knobs/m400.png" height="50" width="50" sprites="100" min="0" max="1"
+                        step="0.01" value="0.9" id="/GreyHoleRaw/feedback" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">feedback</div>
+                </div>
+                <div class="knob" id="modDepth">
+                    <webaudio-knob src="assets/img/knobs/m400.png" height="50" width="50" sprites="100" min="0" max="1"
+                        step="0.001" value="0.1" id="/GreyHoleRaw/modDepth" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">modDepth</div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="knob" id="modFreq">
+                    <webaudio-knob src="assets/img/knobs/m400.png" height="50" width="50" sprites="100" min="0" max="10"
+                        step="0.01" value="2" id="/GreyHoleRaw/modFreq" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">modFreq</div>
+                </div>
+                <div class="knob" id="size">
+                    <webaudio-knob src="assets/img/knobs/m400.png" height="50" width="50" sprites="100" min="0.5" max="3"
+                        step="0.0001" value="1" id="/GreyHoleRaw/size" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">size</div>
+                </div>
+            </div>
+        </div>
+        <span class="pedalLabel">GreyHoleRaw</span>
+        <div class="switch" id="bypass">
+            <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" id="switch1"
+                style="height: 50px;"></webaudio-switch>
+        </div>
+    </div>
+</template>
+<script>
+    let templateGreyHoleRawGui = document.currentScript.ownerDocument.querySelector('template');
+    class GreyHoleRawGui extends HTMLElement {
+
+
+        constructor(plug) {
+
+            super();
+            this._plug = plug;
+            this._plug.gui = this;
+            let posOfLastSlash = templateGreyHoleRawGui .baseURI.lastIndexOf("/");
+            this.basePath = templateGreyHoleRawGui .baseURI.substring(0, posOfLastSlash);
+            this._root = this.attachShadow({ mode: 'open' });
+            this._root.appendChild(templateGreyHoleRawGui.content.cloneNode(true));
+            this.isOn;
+            this.state = new Object();
+            this.setKnobs();
+            this.setSliders();
+            this.setSwitchListener();
+            this.setActive(false);
+            this.fixRelativeImagePathsInCSS();
+        }
+
+        fixRelativeImagePathsInCSS() {
+            // change webaudiocontrols relative paths for spritesheets to absolute
+            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch, img");
+            webaudioControls.forEach(e => {
+                let currentImagePath = e.getAttribute("src");
+                if (currentImagePath !== undefined) {
+                    //console.log("Got wc src as " + e.getAttribute("src"));
+                    let imagePath = e.getAttribute("src");
+                    e.setAttribute("src", this.basePath + "/" + imagePath);
+                    //console.log("After fix : wc src as " + e.getAttribute("src"));
+                }
+            });
+        }
+
+        attributeChangedCallback() {
+
+            console.log("Custom element attributes changed.");
+            this.state = JSON.parse(this.getAttribute('state'));
+            let tmp = "/GreyHoleRaw/bypass";
+            if (this.state[tmp] == 1) {
+                this._root.querySelector("#switch1").value = 0;
+                this.isOn = false;
+            } else if (this.state[tmp] == 0) {
+                this._root.querySelector("#switch1").value = 1;
+                this.isOn = true;
+            }
+            this.knobs = this._root.querySelectorAll(".knob");
+            console.log(this.state);
+            for (var i = 0; i < this.knobs.length; i++) {
+                this.knobs[i].setValue(this.state[this.knobs[i].id], false);
+                console.log(this.knobs[i].value);
+            }
+
+        }
+
+        get properties() {
+
+            this.boundingRect = {
+                dataWidth: {
+                    type: Number,
+                    value: 130
+                },
+                dataHeight: {
+                    type: Number,
+                    value: 650
+                }
+            };
+            return this.boundingRect;
+
+        }
+
+        static get observedAttributes() {
+
+            return ['state'];
+
+        }
+
+        setResources() {
+
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+            });
+
+            this._root.querySelectorAll(".switch").forEach((s) => {
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+            });
+
+
+
+        }
+
+        setKnobs() {
+            this._root.getElementById("/GreyHoleRaw/damping").addEventListener("input", (e) => this._plug.setParam("/GreyHoleRaw/damping", e.target.value));
+            this._root.getElementById("/GreyHoleRaw/delayTime").addEventListener("input", (e) => this._plug.setParam("/GreyHoleRaw/delayTime", e.target.value));
+            this._root.getElementById("/GreyHoleRaw/diffusion").addEventListener("input", (e) => this._plug.setParam("/GreyHoleRaw/diffusion", e.target.value));
+            this._root.getElementById("/GreyHoleRaw/feedback").addEventListener("input", (e) => this._plug.setParam("/GreyHoleRaw/feedback", e.target.value));
+            this._root.getElementById("/GreyHoleRaw/modDepth").addEventListener("input", (e) => this._plug.setParam("/GreyHoleRaw/modDepth", e.target.value));
+            this._root.getElementById("/GreyHoleRaw/modFreq").addEventListener("input", (e) => this._plug.setParam("/GreyHoleRaw/modFreq", e.target.value));
+            this._root.getElementById("/GreyHoleRaw/size").addEventListener("input", (e) => this._plug.setParam("/GreyHoleRaw/size", e.target.value));
+
+        }
+
+        bypass() {
+
+            this._plug.setParam("/GreyHoleRaw/bypass", 1);
+            console.log("disabled");
+
+        }
+
+        setSwitchListener() {
+
+            console.log("setswitch");
+            if (this._root.querySelector("#switch1")) {
+                this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                    if (this.isOn) this.bypass()
+                    else this.reactivate();
+                    this.isOn = !this.isOn;
+                });
+            }
+
+        }
+
+        reactivate() {
+
+            this._plug.setParam("/GreyHoleRaw/bypass", 0);
+
+        }
+
+        setSliders() {
+
+        }
+
+        setActive(active) {
+
+            // Where there is not swtich, no need to set activation logic. 
+            if (!this._root.querySelector("#switch1")) {
+                return;
+            }
+            if (active == undefined || active == false) {
+                this.isOn = false;
+                this.bypass();
+                this._root.querySelector("#switch1").value = 0;
+            } else if (active) {
+                this.isOn = true;
+                this.reactivate();
+                this._root.querySelector("#switch1").value = 1;
+            }
+
+        }
+    }
+    try {
+        customElements.define('wap-greyholeraw', GreyHoleRawGui);
+        console.log("Element defined");
+    } catch (error) {
+        console.log(error);
+        console.log("Element already defined");
+    }
+
+    createGreyHoleRawGUI = (plug) => {
+        let elem = new GreyHoleRawGui(plug);
+        return elem;
+    }
+</script>
