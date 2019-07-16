@@ -118,8 +118,8 @@ class stereoChorusNode extends AudioWorkletNode {
 
         /*var entries  = this.parameters.entries()
         for (var [key, value] of entries) {
-        console.log(key + ' = ' + value);*/
-}
+        console.log(key + ' = ' + value);
+}*/
 
     }
 
