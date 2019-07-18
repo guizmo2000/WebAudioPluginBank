@@ -1,0 +1,301 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Bungee">
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js">
+</script>
+<script>
+    WebAudioControlsOptions = {
+        useMidi: 1,
+    };
+</script>
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js">
+</script>
+<template>
+    <style>
+        :host {
+            font: "Bungee";
+            display: block;
+            box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(rgb(14, 197, 157), rgb(5, 109, 78));
+            position: relative;
+            width: 150px;
+            height: 250px;
+            user-select: none;
+            cursor: move;
+            z-index: 9;
+            /* bring your own prefixes */
+        }
+
+
+
+        .knob,
+        .switch,
+        .icon,
+        .label,
+        .slider {
+            cursor: pointer;
+            text-align: center;
+        }
+
+        #main {
+            /* this relative uri is fixed by a call to setBackgroundImage in 
+            constructor. It should be turned into an absolute one */
+            /*background-image: url("img/BigMuffBackground.png");*/
+
+            /* this is equal to the size of the plugin, and should be equal to the
+               size of the background image if you want to see it entirely */
+            background-size: 80px 200px;
+            width: 100%;
+            height: 100%;
+            padding-top: 10px;
+        }
+
+        .pedalLabel {
+            position: absolute;
+            top: 210px;
+            left: 65px;
+            font-size: 15px;
+            /*{font}*/
+            font-family: "Bungee";
+            line-height: 30px;
+            /*{pedalfontsize}*/
+            color: rgb(255, 255, 255);
+            /*{fontcolor}*/
+        }
+
+        .knob-label {
+            position: absolute;
+            font-size: 12px;
+            /*{knobfontsize}*/
+            line-height: 12px;
+            width: 64px;
+            max-width: 64px;
+            overflow: hidden;
+            text-align: center;
+            font-family: Sansita;
+            /*{font}*/
+            color: #6B0000;
+            /*{fontcolor}*/
+        }
+
+        #knob1-label {
+            top: 84px;
+            left: 43px;
+        }
+
+        #wahSlider {
+            position: absolute;
+            top: 10px;
+            left: 90px;
+        }
+
+        #imgWah {
+            transform: rotateX(0deg);
+            transition: all 0.1s;
+        }
+
+        #Bypass {
+            position: absolute;
+            top: 210px;
+            left: 10px;
+            width: 10px;
+            height: 10px;
+        }
+    </style>
+    <div class="main">
+        <img id="imgWah" height=200 src="assets/img/crybaby.png">
+
+        <div class="slider" id="wahSlider">
+            <webaudio-slider direction="vert" height=180 value="0" max="1" min="0" step="0.01"
+                src="assets/img/sliders/vsliderbody.png" knobsrc="assets/img/sliders/vsliderknob.png"
+                id="/CRYBABY/Wah_parameter"></webaudio-slider>
+        </div>
+        <span class="pedalLabel">WahBaby</span>
+        <div class="switch" id="Bypass">
+            <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" id="switch1">
+            </webaudio-switch>
+            </webaudio-switch>
+        </div>
+    </div>
+</template>
+<script>
+    let templateWahBabyGui = document.currentScript.ownerDocument.querySelector('template');
+    class WahBabyGui extends HTMLElement {
+
+
+        constructor(plug) {
+
+            super();
+            this._plug = plug;
+            this._plug.gui = this;
+            let posOfLastSlash = templateWahBabyGui.baseURI.lastIndexOf("/");
+            this.basePath = templateWahBabyGui.baseURI.substring(0, posOfLastSlash);
+            this._root = this.attachShadow({
+                mode: 'open'
+            });
+            this._root.appendChild(templateWahBabyGui.content.cloneNode(true));
+            this.isOn;
+            this.state = new Object();
+            this.setKnobs();
+            this.setSliders();
+            this.setSwitchListener();
+            this.setActive(false);
+            this.fixRelativeImagePathsInCSS();
+
+        }
+
+        fixRelativeImagePathsInCSS() {
+            // change webaudiocontrols relative paths for spritesheets to absolute
+            let webaudioControls = this._root.querySelectorAll(
+                "webaudio-knob, webaudio-slider, webaudio-switch, webaudio-slider, img");
+            webaudioControls.forEach(e => {
+                let currentImagePath = e.getAttribute("src");
+                //for webaudio-slider who has a second parameter to get the src of the knob
+                let currentKnobSliderPath = e.getAttribute("knobsrc")
+                if (currentImagePath !== undefined) {
+                    //console.log("Got wc src as " + e.getAttribute("src"));
+                    let imagePath = e.getAttribute("src");
+                    e.setAttribute("src", this.basePath + "/" + imagePath);
+                    //console.log("After fix : wc src as " + e.getAttribute("src"));
+                }
+                if (currentKnobSliderPath != undefined) {
+                    let sliderKnobPath = e.getAttribute("knobsrc");
+                    e.setAttribute("knobsrc", this.basePath + "/" + sliderKnobPath);
+                }
+            });
+        }
+
+        attributeChangedCallback() {
+
+            console.log("Custom element attributes changed.");
+            this.state = JSON.parse(this.getAttribute('state'));
+            let tmp = "/WahBaby/bypass";
+            if (this.state[tmp] == 1) {
+                this._root.querySelector("#switch1").value = 0;
+                this.isOn = false;
+            } else if (this.state[tmp] == 0) {
+                this._root.querySelector("#switch1").value = 1;
+                this.isOn = true;
+            }
+            this.knobs = this._root.querySelectorAll(".knob");
+            console.log(this.state);
+            for (var i = 0; i < this.knobs.length; i++) {
+                this.knobs[i].setValue(this.state[this.knobs[i].id], false);
+                console.log(this.knobs[i].value);
+            }
+
+        }
+
+        get properties() {
+
+            this.boundingRect = {
+                dataWidth: {
+                    type: Number,
+                    value: 200
+                },
+                dataHeight: {
+                    type: Number,
+                    value: 170
+                }
+            };
+            return this.boundingRect;
+
+        }
+
+        static get observedAttributes() {
+
+            return ['state'];
+
+        }
+
+        setResources() {
+
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL +
+                    '/assets/MiniMoog_Main.png');
+            });
+
+            this._root.querySelectorAll(".switch").forEach((s) => {
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL +
+                    '/assets/switch_1.png');
+            });
+
+
+
+        }
+
+        setKnobs() {
+
+        }
+
+        bypass() {
+
+            this._plug.setParam("/CRYBABY/Bypass", 1);
+            console.log("disabled");
+
+        }
+
+        setSwitchListener() {
+
+            console.log("setswitch");
+            if (this._root.querySelector("#switch1")) {
+                this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                    if (this.isOn) this.bypass()
+                    else this.reactivate();
+                    this.isOn = !this.isOn;
+                });
+            }
+
+        }
+
+        reactivate() {
+
+            this._plug.setParam("/CRYBABY/Bypass", 0);
+
+        }
+
+        setSliders() {
+            this._root.getElementById("/CRYBABY/Wah_parameter").addEventListener("input", (e) => {
+                this._plug.setParam("/CRYBABY/Wah_parameter", 1 - e.target.value);
+                console.log(e.target.value);
+                let wah = this._root.querySelector("#imgWah");
+                let angle = 40 * e.target.value;
+
+                wah.style.transform = "rotateX(" + angle + "deg)";
+
+            });
+        }
+
+        setActive(active) {
+
+            // Where there is not swtich, no need to set activation logic. 
+            if (!this._root.querySelector("#switch1")) {
+                return;
+            }
+            if (active == undefined || active == false) {
+                this.isOn = false;
+                this.bypass();
+                this._root.querySelector("#switch1").value = 0;
+            } else if (active) {
+                this.isOn = true;
+                this.reactivate();
+                this._root.querySelector("#switch1").value = 1;
+            }
+
+        }
+    }
+    try {
+        customElements.define('wap-wahbaby', WahBabyGui);
+        console.log("Element defined");
+    } catch (error) {
+        console.log(error);
+        console.log("Element already defined");
+    }
+
+    createWahBabyGUI = (plug) => {
+        let elem = new WahBabyGui(plug);
+        return elem;
+    }
+</script>
