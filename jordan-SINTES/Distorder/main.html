@@ -1,3 +1,5 @@
+<link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Bungee|Bungee+Outline">
 <script
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
@@ -9,23 +11,18 @@
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template>
     <style>
-        @font-face {
-            font-family: 'Gecko Lunch';
-            src: url('assets/font/GeckoLunch.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
 
         :host {
             display: block;
             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
             background: linear-gradient(rgb(21, 83, 141), rgb(16, 67, 114));
             position: relative;
-            width: 255px;
+            width: 305px;
             height: 290px;
             user-select: none;
             cursor: move;
             z-index: 9;
+            font-family: 'Bungee';
             /* bring your own prefixes */
         }
 
@@ -95,10 +92,10 @@
             margin-left: 68px;
             top: 225px;
             font-size: 30px;
-            font-family: Gecko Lunch;
             /*{font}*/
             text-align: center;
             line-height: 30px;
+            font-family: "Bungee Outline";
             /*{pedalfontsize}*/
             width: 150px;
             color: rgb(255, 255, 255);
@@ -112,13 +109,13 @@
                     <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100"
                         min="-15" max="15" step="0.1" value="0" id="/Distorder/bass" style="height: 50px;">
                     </webaudio-knob>
-                    <div style="text-align:center; font-family: Gecko Lunch; color: rgb(255, 255, 255);">bass</div>
+                    <div style="text-align:center; color: rgb(255, 255, 255);">bass</div>
                 </div>
                 <div class="knob" id="drive">
                     <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100"
                         min="0" max="100" step="0.01" value="63" id="/Distorder/drive" style="height: 50px;">
                     </webaudio-knob>
-                    <div style="text-align:center; font-family: Gecko Lunch; color: rgb(255, 255, 255);">drive</div>
+                    <div style="text-align:center;  color: rgb(255, 255, 255);">drive</div>
                 </div>
             </div>
             <div class="column">
@@ -126,7 +123,7 @@
                     <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100"
                         min="-15" max="15" step="0.1" value="0" id="/Distorder/middle" style="height: 50px;">
                     </webaudio-knob>
-                    <div style="text-align:center; font-family: Gecko Lunch; color: rgb(255, 255, 255);">middle</div>
+                    <div style="text-align:center;  color: rgb(255, 255, 255);">middle</div>
                 </div>
 
 
@@ -136,7 +133,7 @@
                     <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100"
                         min="-15" max="15" step="0.1" value="0" id="/Distorder/treble" style="height: 50px;">
                     </webaudio-knob>
-                    <div style="text-align:center; font-family: Gecko Lunch; color: rgb(255, 255, 255);">treble</div>
+                    <div style="text-align:center;  color: rgb(255, 255, 255);">treble</div>
                 </div>
             </div>
             <div class="column">
@@ -144,20 +141,20 @@
                     <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100"
                         min="0" max="1" step="0.001" value="0.5" id="/Distorder/voice" style="height: 50px;">
                     </webaudio-knob>
-                    <div style="text-align:center; font-family: Gecko Lunch; color: rgb(255, 255, 255);">voice</div>
+                    <div style="text-align:center;  color: rgb(255, 255, 255);">voice</div>
                 </div>
                 <div class="knob" id="volume">
                     <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100"
                         min="0" max="1" step="0.001" value="0.5" id="/Distorder/volume" style="height: 50px;">
                     </webaudio-knob>
-                    <div style="text-align:center; font-family: Gecko Lunch; color: rgb(255, 255, 255);">volume</div>
+                    <div style="text-align:center;  color: rgb(255, 255, 255);">volume</div>
                 </div>
 
             </div>
         </div>
         <span class="pedalLabel">Distorder</span>
         <div class="switch" id="bypass">
-            <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="50" id="switch1"
+            <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" id="switch1"
                 style="height: 50px;"></webaudio-switch>
         </div>
     </div>
