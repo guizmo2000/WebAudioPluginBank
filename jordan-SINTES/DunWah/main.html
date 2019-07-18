@@ -1,0 +1,305 @@
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script>
+    WebAudioControlsOptions = {
+        useMidi: 1,
+    };
+</script>
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<template>
+    <style>
+        :host {
+            font: "DarkMoon", 'Arial Black';
+            display: block;
+            box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(rgb(14, 197, 157), rgb(5, 109, 78));
+            position: relative;
+            width: 150px;
+            height: 260px;
+            user-select: none;
+            cursor: move;
+            z-index: 9;
+            /* bring your own prefixes */
+        }
+
+
+
+        .knob,
+        .switch,
+        .icon,
+        .label,
+        .slider {
+
+            cursor: pointer;
+            text-align: center;
+        }
+
+        #main {
+            /* this relative uri is fixed by a call to setBackgroundImage in 
+            constructor. It should be turned into an absolute one */
+            /*background-image: url("img/BigMuffBackground.png");*/
+
+            /* this is equal to the size of the plugin, and should be equal to the
+               size of the background image if you want to see it entirely */
+            background-size: 200px 262px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            margin: 5px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        #switch1 {
+            bottom: 10px;
+            right: 0px;
+        }
+
+
+        .pedalLabel {
+            margin-left: 42px;
+            top: 225px;
+            font-size: 20px;
+            /*{font}*/
+            font-family: "DarkMoon";
+            text-align: center;
+            line-height: 30px;
+            /*{pedalfontsize}*/
+            width: 150px;
+            color: rgb(255, 255, 255);
+            /*{fontcolor}*/
+        }
+
+        .knob-label {
+            position: absolute;
+            font-size: 12px;
+            /*{knobfontsize}*/
+            line-height: 12px;
+            width: 64px;
+            max-width: 64px;
+            overflow: hidden;
+            text-align: center;
+            font-family: Sansita;
+            /*{font}*/
+            color: #6B0000;
+            /*{fontcolor}*/
+        }
+
+        #knob1-label {
+            top: 84px;
+            left: 43px;
+        }
+    </style>
+    <div class="main">
+        <div class="row">
+            <div class="column">
+                <div class="slider" id="Dry/Wet">
+                    <webaudio-slider value="0.5" height="150" width="30" max="1" min="0" step="0.01"
+                        src="assets/img/sliders/vslider.png" knobsrc="assets/img/sliders/sliderKnob.png"
+                        id="/DunWah/Dry/Wet" style="height: 150px;"></webaudio-slider>
+                    <div>Dry/Wet</div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="knob" id="Super Wah">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.01" value="0" id="/DunWah/Super_Wah" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">Super Wah</div>
+                </div>
+                <div class="knob" id="Wah">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.01" value="0" id="/DunWah/Wah" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">Wah</div>
+                </div>
+            </div>
+        </div>
+        <span class="pedalLabel">DunWah</span>
+        <div class="switch" id="bypass">
+            <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" id="switch1"
+                style="height: 50px;"></webaudio-switch>
+           
+        </div>
+    </div>
+</template>
+<script>
+    let templateDunWahGui = document.currentScript.ownerDocument.querySelector('template');
+    class DunWahGui extends HTMLElement {
+
+
+        constructor(plug) {
+
+            super();
+            this._plug = plug;
+            this._plug.gui = this;
+            let posOfLastSlash = templateDunWahGui.baseURI.lastIndexOf("/");
+            this.basePath = templateDunWahGui.baseURI.substring(0, posOfLastSlash);
+            this._root = this.attachShadow({ mode: 'open' });
+            this._root.appendChild(templateDunWahGui.content.cloneNode(true));
+            this.isOn;
+            this.state = new Object();
+            this.setKnobs();
+            this.setSliders();
+            this.setSwitchListener();
+            this.setActive(false);
+            this.fixRelativeImagePathsInCSS();
+
+        }
+
+        fixRelativeImagePathsInCSS() {
+            // change webaudiocontrols relative paths for spritesheets to absolute
+            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch, img");
+            webaudioControls.forEach(e => {
+                let currentImagePath = e.getAttribute("src");
+                if (currentImagePath !== undefined) {
+                    //console.log("Got wc src as " + e.getAttribute("src"));
+                    let imagePath = e.getAttribute("src");
+                    e.setAttribute("src", this.basePath + "/" + imagePath);
+                    //console.log("After fix : wc src as " + e.getAttribute("src"));
+                }
+            });
+        }
+
+        attributeChangedCallback() {
+
+            console.log("Custom element attributes changed.");
+            this.state = JSON.parse(this.getAttribute('state'));
+            let tmp = "/DunWah/bypass";
+            if (this.state[tmp] == 1) {
+                this._root.querySelector("#switch1").value = 0;
+                this.isOn = false;
+            } else if (this.state[tmp] == 0) {
+                this._root.querySelector("#switch1").value = 1;
+                this.isOn = true;
+            }
+            this.knobs = this._root.querySelectorAll(".knob");
+            console.log(this.state);
+            for (var i = 0; i < this.knobs.length; i++) {
+                this.knobs[i].setValue(this.state[this.knobs[i].id], false);
+                console.log(this.knobs[i].value);
+            }
+
+        }
+
+        get properties() {
+
+            this.boundingRect = {
+                dataWidth: {
+                    type: Number,
+                    value: 130
+                },
+                dataHeight: {
+                    type: Number,
+                    value: 430
+                }
+            };
+            return this.boundingRect;
+
+        }
+
+        static get observedAttributes() {
+
+            return ['state'];
+
+        }
+
+        setResources() {
+
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+            });
+
+            this._root.querySelectorAll(".switch").forEach((s) => {
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+            });
+
+
+
+        }
+
+        setKnobs() {
+            this._root.getElementById("/DunWah/Super_Wah").addEventListener("input", (e) => this._plug.setParam("/DunWah/Super_Wah", e.target.value));
+            this._root.getElementById("/DunWah/Wah").addEventListener("input", (e) => this._plug.setParam("/DunWah/Wah", e.target.value));
+
+        }
+
+        bypass() {
+
+            this._plug.setParam("/DunWah/bypass", 1);
+            console.log("disabled");
+
+        }
+
+        setSwitchListener() {
+
+            console.log("setswitch");
+            if (this._root.querySelector("#switch1")) {
+                this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                    if (this.isOn) this.bypass()
+                    else this.reactivate();
+                    this.isOn = !this.isOn;
+                });
+            }
+
+        }
+
+        reactivate() {
+
+            this._plug.setParam("/DunWah/bypass", 0);
+
+        }
+
+        setSliders() {
+            this._root.getElementById("/DunWah/Dry/Wet").addEventListener("input", (e) => this._plug.setParam("/DunWah/Dry/Wet", e.target.value));
+
+        }
+
+        setActive(active) {
+
+            // Where there is not swtich, no need to set activation logic. 
+            if (!this._root.querySelector("#switch1")) {
+                return;
+            }
+            if (active == undefined || active == false) {
+                this.isOn = false;
+                this.bypass();
+                this._root.querySelector("#switch1").value = 0;
+            } else if (active) {
+                this.isOn = true;
+                this.reactivate();
+                this._root.querySelector("#switch1").value = 1;
+            }
+
+        }
+    }
+    try {
+        customElements.define('wap-dunwah', DunWahGui);
+        console.log("Element defined");
+    } catch (error) {
+        console.log(error);
+        console.log("Element already defined");
+    }
+
+    createDunWahGUI = (plug) => {
+        let elem = new DunWahGui(plug);
+        return elem;
+    }
+</script>
