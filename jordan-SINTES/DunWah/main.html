@@ -165,11 +165,17 @@
             let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch, webaudio-slider, img");
             webaudioControls.forEach(e => {
                 let currentImagePath = e.getAttribute("src");
+                //for webaudio-slider who has a second parameter to get the src of the knob
+                let currentKnobSliderPath = e.getAttribute("knobsrc")
                 if (currentImagePath !== undefined) {
                     //console.log("Got wc src as " + e.getAttribute("src"));
                     let imagePath = e.getAttribute("src");
                     e.setAttribute("src", this.basePath + "/" + imagePath);
                     //console.log("After fix : wc src as " + e.getAttribute("src"));
+                }
+                if(currentKnobSliderPath != undefined){
+                    let sliderKnobPath = e.getAttribute("knobsrc");
+                    e.setAttribute("knobsrc", this.basePath + "/" + sliderKnobPath);
                 }
             });
         }
