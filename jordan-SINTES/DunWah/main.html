@@ -1,5 +1,3 @@
-<link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Bungee|Bungee+Outline">
 <script
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
@@ -11,26 +9,28 @@
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template>
     <style>
-
         :host {
+            font: "DarkMoon", 'Arial Black';
             display: block;
             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
-            background: linear-gradient(rgb(21, 83, 141), rgb(16, 67, 114));
+            background: linear-gradient(rgb(14, 197, 157), rgb(5, 109, 78));
             position: relative;
-            width: 305px;
-            height: 290px;
+            width: 150px;
+            height: 260px;
             user-select: none;
             cursor: move;
             z-index: 9;
-            font-family: 'Bungee';
             /* bring your own prefixes */
         }
+
+
 
         .knob,
         .switch,
         .icon,
         .label,
         .slider {
+
             cursor: pointer;
             text-align: center;
         }
@@ -47,8 +47,6 @@
             height: 100%;
         }
 
-
-
         .row {
             display: flex;
             flex-direction: row;
@@ -56,23 +54,7 @@
             align-items: stretch;
         }
 
-        .knob {
-            margin: 12px;
-            align-content: center;
-        }
-
         .column {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            flex: 1;
-            margin: 5px;
-            margin-top: 10px;
-            text-align: center;
-        }
-
-        .column2 {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
@@ -88,92 +70,86 @@
             right: 0px;
         }
 
+
         .pedalLabel {
-            margin-left: 68px;
+            margin-left: 42px;
             top: 225px;
-            font-size: 30px;
+            font-size: 20px;
             /*{font}*/
+            font-family: "DarkMoon";
             text-align: center;
             line-height: 30px;
-            font-family: "Bungee Outline";
             /*{pedalfontsize}*/
             width: 150px;
             color: rgb(255, 255, 255);
             /*{fontcolor}*/
         }
+
+        .knob-label {
+            position: absolute;
+            font-size: 12px;
+            /*{knobfontsize}*/
+            line-height: 12px;
+            width: 64px;
+            max-width: 64px;
+            overflow: hidden;
+            text-align: center;
+            font-family: Sansita;
+            /*{font}*/
+            color: #6B0000;
+            /*{fontcolor}*/
+        }
+
+        #knob1-label {
+            top: 84px;
+            left: 43px;
+        }
     </style>
-    <div id="main">
+    <div class="main">
         <div class="row">
             <div class="column">
-                <div class="knob" id="bass">
-                    <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100"
-                        min="-15" max="15" step="0.1" value="0" id="/Distorder/bass" style="height: 50px;">
-                    </webaudio-knob>
-                    <div style="text-align:center; color: rgb(255, 255, 255);">bass</div>
-                </div>
-                <div class="knob" id="drive">
-                    <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100"
-                        min="0" max="100" step="0.01" value="63" id="/Distorder/drive" style="height: 50px;">
-                    </webaudio-knob>
-                    <div style="text-align:center;  color: rgb(255, 255, 255);">drive</div>
+                <div class="slider" id="Dry/Wet">
+                    <webaudio-slider value="0.5" height="150" width="30" max="1" min="0" step="0.01"
+                        src="assets/img/sliders/vslider.png" knobsrc="assets/img/sliders/sliderKnob.png"
+                        id="/DunWah/Dry/Wet" style="height: 150px;"></webaudio-slider>
+                    <div>Dry/Wet</div>
                 </div>
             </div>
             <div class="column">
-                <div class="knob" id="middle">
-                    <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100"
-                        min="-15" max="15" step="0.1" value="0" id="/Distorder/middle" style="height: 50px;">
-                    </webaudio-knob>
-                    <div style="text-align:center;  color: rgb(255, 255, 255);">middle</div>
+                <div class="knob" id="Super Wah">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.01" value="0" id="/DunWah/Super_Wah" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">Super Wah</div>
                 </div>
-
-
-
-
-                <div class="knob" id="treble">
-                    <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100"
-                        min="-15" max="15" step="0.1" value="0" id="/Distorder/treble" style="height: 50px;">
-                    </webaudio-knob>
-                    <div style="text-align:center;  color: rgb(255, 255, 255);">treble</div>
+                <div class="knob" id="Wah">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.01" value="0" id="/DunWah/Wah" style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center">Wah</div>
                 </div>
-            </div>
-            <div class="column">
-                <div class="knob" id="voice">
-                    <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100"
-                        min="0" max="1" step="0.001" value="0.5" id="/Distorder/voice" style="height: 50px;">
-                    </webaudio-knob>
-                    <div style="text-align:center;  color: rgb(255, 255, 255);">voice</div>
-                </div>
-                <div class="knob" id="volume">
-                    <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100"
-                        min="0" max="1" step="0.001" value="0.5" id="/Distorder/volume" style="height: 50px;">
-                    </webaudio-knob>
-                    <div style="text-align:center;  color: rgb(255, 255, 255);">volume</div>
-                </div>
-
             </div>
         </div>
-        <span class="pedalLabel">Distorder</span>
+        <span class="pedalLabel">DunWah</span>
         <div class="switch" id="bypass">
             <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" id="switch1"
                 style="height: 50px;"></webaudio-switch>
+           
         </div>
     </div>
 </template>
 <script>
-    let templateDistorderGui = document.currentScript.ownerDocument.querySelector('template');
-    class DistorderGui extends HTMLElement {
+    let templateDunWahGui = document.currentScript.ownerDocument.querySelector('template');
+    class DunWahGui extends HTMLElement {
 
 
         constructor(plug) {
 
             super();
-            let posOfLastSlash = templateDistorderGui.baseURI.lastIndexOf("/");
-            this.basePath = templateDistorderGui.baseURI.substring(0, posOfLastSlash);
             this._plug = plug;
             this._plug.gui = this;
-            console.log(this._plug);
+            let posOfLastSlash = templateDunWahGui.baseURI.lastIndexOf("/");
+            this.basePath = templateDunWahGui.baseURI.substring(0, posOfLastSlash);
             this._root = this.attachShadow({ mode: 'open' });
-            this._root.appendChild(templateDistorderGui.content.cloneNode(true));
+            this._root.appendChild(templateDunWahGui.content.cloneNode(true));
             this.isOn;
             this.state = new Object();
             this.setKnobs();
@@ -181,19 +157,25 @@
             this.setSwitchListener();
             this.setActive(false);
             this.fixRelativeImagePathsInCSS();
-            //this.setImageBackground("/img/BigMuffBackground.png");
+
         }
 
         fixRelativeImagePathsInCSS() {
             // change webaudiocontrols relative paths for spritesheets to absolute
-            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch");
+            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch, webaudio-slider, img");
             webaudioControls.forEach(e => {
                 let currentImagePath = e.getAttribute("src");
+                //for webaudio-slider who has a second parameter to get the src of the knob
+                let currentKnobSliderPath = e.getAttribute("knobsrc")
                 if (currentImagePath !== undefined) {
                     //console.log("Got wc src as " + e.getAttribute("src"));
                     let imagePath = e.getAttribute("src");
                     e.setAttribute("src", this.basePath + "/" + imagePath);
                     //console.log("After fix : wc src as " + e.getAttribute("src"));
+                }
+                if(currentKnobSliderPath != undefined){
+                    let sliderKnobPath = e.getAttribute("knobsrc");
+                    e.setAttribute("knobsrc", this.basePath + "/" + sliderKnobPath);
                 }
             });
         }
@@ -202,7 +184,7 @@
 
             console.log("Custom element attributes changed.");
             this.state = JSON.parse(this.getAttribute('state'));
-            let tmp = "/Distorder/bypass";
+            let tmp = "/DunWah/bypass";
             if (this.state[tmp] == 1) {
                 this._root.querySelector("#switch1").value = 0;
                 this.isOn = false;
@@ -224,11 +206,11 @@
             this.boundingRect = {
                 dataWidth: {
                     type: Number,
-                    value: 255
+                    value: 130
                 },
                 dataHeight: {
                     type: Number,
-                    value: 290
+                    value: 430
                 }
             };
             return this.boundingRect;
@@ -241,19 +223,33 @@
 
         }
 
+        setResources() {
+
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+            });
+
+            this._root.querySelectorAll(".switch").forEach((s) => {
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+            });
+
+
+
+        }
+
         setKnobs() {
-            this._root.getElementById("/Distorder/bass").addEventListener("input", (e) => this._plug.setParam("/Distorder/bass", e.target.value));
-            this._root.getElementById("/Distorder/drive").addEventListener("input", (e) => this._plug.setParam("/Distorder/drive", e.target.value));
-            this._root.getElementById("/Distorder/middle").addEventListener("input", (e) => this._plug.setParam("/Distorder/middle", e.target.value));
-            this._root.getElementById("/Distorder/treble").addEventListener("input", (e) => this._plug.setParam("/Distorder/treble", e.target.value));
-            this._root.getElementById("/Distorder/voice").addEventListener("input", (e) => this._plug.setParam("/Distorder/voice", e.target.value));
-            this._root.getElementById("/Distorder/volume").addEventListener("input", (e) => this._plug.setParam("/Distorder/volume", e.target.value));
+            this._root.getElementById("/DunWah/Super_Wah").addEventListener("input", (e) => this._plug.setParam("/DunWah/Super_Wah", e.target.value));
+            this._root.getElementById("/DunWah/Wah").addEventListener("input", (e) => this._plug.setParam("/DunWah/Wah", e.target.value));
 
         }
 
         bypass() {
 
-            this._plug.setParam("/Distorder/bypass", 1);
+            this._plug.setParam("/DunWah/bypass", 1);
             console.log("disabled");
 
         }
@@ -273,11 +269,12 @@
 
         reactivate() {
 
-            this._plug.setParam("/Distorder/bypass", 0);
+            this._plug.setParam("/DunWah/bypass", 0);
 
         }
 
         setSliders() {
+            this._root.getElementById("/DunWah/Dry/Wet").addEventListener("input", (e) => this._plug.setParam("/DunWah/Dry/Wet", e.target.value));
 
         }
 
@@ -300,15 +297,15 @@
         }
     }
     try {
-        customElements.define('wap-distorder', DistorderGui);
+        customElements.define('wap-dunwah', DunWahGui);
         console.log("Element defined");
     } catch (error) {
         console.log(error);
         console.log("Element already defined");
     }
 
-    createDistorderGUI = (plug) => {
-        let elem = new DistorderGui(plug);
+    createDunWahGUI = (plug) => {
+        let elem = new DunWahGui(plug);
         return elem;
     }
 </script>

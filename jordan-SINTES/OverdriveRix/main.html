@@ -1,0 +1,281 @@
+<link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Fugaz+One">
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script>
+    WebAudioControlsOptions = {
+        useMidi: 1,
+    };
+</script>
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<template>
+    <style>
+        :host {
+            display: block;
+            box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(rgb(134, 7, 7), rgb(80, 16, 16));
+            position: relative;
+            width: 150px;
+            height: 210px;
+            user-select: none;
+            cursor: move;
+            z-index: 9;
+            font-family: "Fugaz One";
+            font-size:10px
+            /* bring your own prefixes */
+        }
+
+
+
+        .knob,
+        .switch,
+        .icon,
+        .label,
+        .slider {
+
+            cursor: pointer;
+            text-align: center;
+        }
+
+
+
+
+
+
+        #switch1 {
+            bottom: 10px;
+            right: 0px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            margin: 5px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+
+
+        .pedalLabel {
+            margin-left: 14px;
+            top: 225px;
+            font-size: 20px;
+            /*{font}*/
+            text-align: center;
+            line-height: 30px;
+            /*{pedalfontsize}*/
+            width: 150px;
+            color: rgb(255, 255, 255);
+            /*{fontcolor}*/
+        }
+
+        .knob-label {
+            position: absolute;
+            font-size: 12px;
+            /*{knobfontsize}*/
+            line-height: 12px;
+            width: 64px;
+            max-width: 64px;
+            overflow: hidden;
+            text-align: center;
+            /*{font}*/
+            color: #6B0000;
+            /*{fontcolor}*/
+        }
+
+        #knob1-label {
+            top: 84px;
+            left: 43px;
+        }
+    </style>
+    <div class="main">
+       
+        <div class="knob" id="Drive">
+            <webaudio-knob src="assets/img/knobs/m400.png" height="50" width="50" sprites="100" min="1" max="20" step="0.1"
+                value="1" id="/OverdriveRix/Drive" style="height: 50px;"></webaudio-knob>
+            <div style="text-align:center; color:white">Drive</div>
+        </div>
+        <div class="knob" id="Dry/Wet">
+            <webaudio-knob src="assets/img/knobs/m400.png" height="50" width="50" sprites="100" min="0" max="100" step="1"
+                value="100" id="/OverdriveRix/Dry/Wet" style="height: 50px;"></webaudio-knob>
+            <div style="text-align:center; color:white">Dry/Wet</div>
+        </div>
+    <span class="pedalLabel">OverdriveRix</span>
+        <div class="switch" id="bypass">
+            <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" id="switch1"
+                style="height: 50px;"></webaudio-switch>
+        </div>
+    </div>
+</template>
+<script>
+    let templateOverdriveRixGui = document.currentScript.ownerDocument.querySelector('template');
+    class OverdriveRixGui extends HTMLElement {
+
+
+        constructor(plug) {
+
+            super();
+            this._plug = plug;
+            this._plug.gui = this;
+            let posOfLastSlash = templateOverdriveRixGui .baseURI.lastIndexOf("/");
+            this.basePath = templateOverdriveRixGui .baseURI.substring(0, posOfLastSlash);
+            this._root = this.attachShadow({ mode: 'open' });
+            this._root.appendChild(templateOverdriveRixGui.content.cloneNode(true));
+            this.isOn;
+            this.state = new Object();
+            this.setKnobs();
+            this.setSliders();
+            this.setSwitchListener();
+            this.setActive(false);
+            this.fixRelativeImagePathsInCSS();
+
+        }
+
+        fixRelativeImagePathsInCSS() {
+            // change webaudiocontrols relative paths for spritesheets to absolute
+            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch, img");
+            webaudioControls.forEach(e => {
+                let currentImagePath = e.getAttribute("src");
+                if (currentImagePath !== undefined) {
+                    //console.log("Got wc src as " + e.getAttribute("src"));
+                    let imagePath = e.getAttribute("src");
+                    e.setAttribute("src", this.basePath + "/" + imagePath);
+                    //console.log("After fix : wc src as " + e.getAttribute("src"));
+                }
+            });
+        }
+
+
+        attributeChangedCallback() {
+
+            console.log("Custom element attributes changed.");
+            this.state = JSON.parse(this.getAttribute('state'));
+            let tmp = "/OverdriveRix/bypass";
+            if (this.state[tmp] == 1) {
+                this._root.querySelector("#switch1").value = 0;
+                this.isOn = false;
+            } else if (this.state[tmp] == 0) {
+                this._root.querySelector("#switch1").value = 1;
+                this.isOn = true;
+            }
+            this.knobs = this._root.querySelectorAll(".knob");
+            console.log(this.state);
+            for (var i = 0; i < this.knobs.length; i++) {
+                this.knobs[i].setValue(this.state[this.knobs[i].id], false);
+                console.log(this.knobs[i].value);
+            }
+
+        }
+
+        get properties() {
+
+            this.boundingRect = {
+                dataWidth: {
+                    type: Number,
+                    value: 150
+                },
+                dataHeight: {
+                    type: Number,
+                    value: 210
+                }
+            };
+            return this.boundingRect;
+
+        }
+
+        static get observedAttributes() {
+
+            return ['state'];
+
+        }
+
+        setResources() {
+
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+            });
+
+            this._root.querySelectorAll(".switch").forEach((s) => {
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+            });
+
+
+
+        }
+
+        setKnobs() {
+            this._root.getElementById("/OverdriveRix/Drive").addEventListener("input", (e) => this._plug.setParam("/OverdriveRix/Drive", e.target.value));
+            this._root.getElementById("/OverdriveRix/Dry/Wet").addEventListener("input", (e) => this._plug.setParam("/OverdriveRix/Dry/Wet", e.target.value));
+
+        }
+
+        bypass() {
+
+            this._plug.setParam("/OverdriveRix/bypass", 1);
+            console.log("disabled");
+
+        }
+
+        setSwitchListener() {
+
+            console.log("setswitch");
+            if (this._root.querySelector("#switch1")) {
+                this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                    if (this.isOn) this.bypass()
+                    else this.reactivate();
+                    this.isOn = !this.isOn;
+                });
+            }
+
+        }
+
+        reactivate() {
+
+            this._plug.setParam("/OverdriveRix/bypass", 0);
+
+        }
+
+        setSliders() {
+
+        }
+
+        setActive(active) {
+
+            // Where there is not swtich, no need to set activation logic. 
+            if (!this._root.querySelector("#switch1")) {
+                return;
+            }
+            if (active == undefined || active == false) {
+                this.isOn = false;
+                this.bypass();
+                this._root.querySelector("#switch1").value = 0;
+            } else if (active) {
+                this.isOn = true;
+                this.reactivate();
+                this._root.querySelector("#switch1").value = 1;
+            }
+
+        }
+    }
+    try {
+        customElements.define('wap-overdriverix', OverdriveRixGui);
+        console.log("Element defined");
+    } catch (error) {
+        console.log(error);
+        console.log("Element already defined");
+    }
+
+    createOverdriveRixGUI = (plug) => {
+        let elem = new OverdriveRixGui(plug);
+        return elem;
+    }
+</script>

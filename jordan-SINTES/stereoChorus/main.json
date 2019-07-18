@@ -1,0 +1,9 @@
+{
+    "name": "stereoChorus",
+    "vendor": "Faust",
+    "version": "1.0",
+    "category": "FaustIDE",
+    "homepage": "https://faust.grame.fr",
+    "thumbnail": "assets/img/thumbnail/stereochorus.png"
+    }
+    
