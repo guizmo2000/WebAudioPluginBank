@@ -1,3 +1,5 @@
+<link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Mitr">
 <script
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
@@ -9,23 +11,19 @@
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
 <template>
     <style>
-        @font-face {
-            font-family: 'Gecko Lunch';
-            src: url('assets/font/GeckoLunch.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
 
         :host {
             display: block;
             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
             background: linear-gradient(rgb(73, 73, 73), rgb(41, 41, 41));
             position: relative;
-            width: 165px;
+            width: 145px;
             height: 200px;
             user-select: none;
             cursor: move;
             z-index: 9;
+            font-family: 'Mitr';
+            font-size: 10px;
             /* bring your own prefixes */
         }
 
@@ -73,8 +71,7 @@
         .pedalLabel {
             margin-left: 19px;
             top: 225px;
-            font-size: 18px;
-            font-family: Gecko Lunch;
+            font-size: 15px;
             /*{font}*/
             text-align: center;
             line-height: 30px;
@@ -90,19 +87,19 @@
             <div class="knob" id="Bass Cut">
                 <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100" min="20"
                     max="720" step="0.001" value="20" id="/humbucker/Bass_Cut" style="height: 50px;"></webaudio-knob>
-                <div style="text-align:center; font-family: Gecko Lunch; color: rgb(255, 255, 255);">Bass Cut</div>
+                <div style="text-align:center; color: rgb(255, 255, 255);">Bass Cut</div>
             </div>
             <div class="knob " id="Humbuckerize">
                 <webaudio-knob src="assets/img/knobs/greenish_sloped.png" height="50" width="50" sprites="100" min="0"
                     max="1" step="0.001" value="1" id="/humbucker/Humbuckerize" style="height: 50px;"></webaudio-knob>
-                <div style="text-align:center; font-family: Gecko Lunch; color: rgb(255, 255, 255);">Effect</div>
+                <div style="text-align:center; color: rgb(255, 255, 255);">Effect</div>
             </div>
         </div>
 
         <span class="pedalLabel">Humbucker Sim</span>
         <div class="switch  selected" id="bypass">
             <webaudio-switch src="assets/img/switches/switch_1.png" height="32"
-                width="50" id="switch1"></webaudio-switch>
+                width="60" id="switch1"></webaudio-switch>
 
         </div>
     </div>
