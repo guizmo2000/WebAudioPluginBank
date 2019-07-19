@@ -113,6 +113,13 @@ class OscTubeNode extends AudioWorkletNode {
 
         // Set message handler
         this.port.onmessage = this.handleMessage.bind(this);
+
+        //debugger to know parameters of the pedal
+
+        var entries  = this.parameters.entries()
+        for (var [key, value] of entries) {
+        console.log(key + ' = ' + value);
+}
     }
 
     // To be called by the message port with messages coming from the processor
@@ -164,6 +171,7 @@ class OscTubeNode extends AudioWorkletNode {
     {
         // Needed for sample accurate control
         this.parameters.get(path).setValueAtTime(val, 0);
+        console.log(path + " and " + val);
     }
 
     /**
