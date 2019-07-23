@@ -1,0 +1,346 @@
+<link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Audiowide">
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script>
+    WebAudioControlsOptions = {
+        useMidi: 1,
+    };
+</script>
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<template>
+    <style>
+        :host {
+            display: block;
+            box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(rgb(148, 7, 94), rgb(77, 10, 41));
+            position: relative;
+            width: 250px;
+            height: 430px;
+            user-select: none;
+            cursor: move;
+            z-index: 9;
+            font-family: "Audiowide";
+            font-size: 12px;
+            /* bring your own prefixes */
+        }
+
+
+        .knob,
+        .switch,
+        .icon,
+        .label,
+        .slider {
+            cursor: pointer;
+            text-align: center;
+        }
+
+
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            margin: 5px;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .pedalLabel {
+            margin-left: 80px;
+            top: 225px;
+            font-size: 18px;
+            /*{font}*/
+            text-align: center;
+            line-height: 30px;
+            /*{pedalfontsize}*/
+            width: 150px;
+            color: rgb(255, 255, 255);
+            /*{fontcolor}*/
+        }
+
+        .knob-label {
+            position: absolute;
+            font-size: 12px;
+            /*{knobfontsize}*/
+            line-height: 12px;
+            width: 64px;
+            max-width: 64px;
+            overflow: hidden;
+            text-align: center;
+            font-family: Sansita;
+            /*{font}*/
+            color: #6B0000;
+            /*{fontcolor}*/
+        }
+
+        #knob1-label {
+            top: 84px;
+            left: 43px;
+        }
+    </style>
+    <div class="main">
+        <div class="row">
+            <div class="column">
+                <div class="knob" id="Depth">
+                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.00999999978" value="1" id="/PhaserRix/Depth" style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white;">Depth</div>
+                </div>
+                <div class="knob" id="Feedback Gain">
+                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.00999999978" value="0" id="/PhaserRix/Feedback_Gain" style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white;">Feedback Gain</div>
+                </div>
+                <div class="knob" id="MaxNotch1Freq">
+                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="20"
+                        max="10000" step="1" value="800" id="/PhaserRix/MaxNotch1Freq" style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white;">MaxNotch1Freq</div>
+                </div>
+                <div class="knob" id="MinNotch1Freq">
+                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="20"
+                        max="5000" step="1" value="100" id="/PhaserRix/MinNotch1Freq" style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white;">MinNotch1Freq</div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="knob" id="Notch Width">
+                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="10"
+                        max="5000" step="1" value="1000" id="/PhaserRix/Notch_Width" style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white;">Notch Width</div>
+                </div>
+                <div class="knob" id="NotchFreq">
+                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100"
+                        min="1.10000002" max="4" step="0.00999999978" value="1.5" id="/PhaserRix/NotchFreq"
+                        style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white;">NotchFreq</div>
+                </div>
+                <div class="knob" id="Speed">
+                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100"
+                        min="0.00100000005" max="20" step="0.00999999978" value="0.5" id="/PhaserRix/Speed"
+                        style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; color:white;">Speed</div>
+                </div>
+                <div class="knob" id="level">
+                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="-60"
+                        max="10" step="0.100000001" value="0" id="/PhaserRix/level" style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white;">level</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="margin-left: 55px;">
+            <div class="switch" id="VibratoMode">
+                <webaudio-switch src="assets/img/switches/switch_2.png" height="50" width="80" id="switch1"
+                    style="height: 50px;"></webaudio-switch>
+                    <div style="text-align:center; color:white;">VibratoMode</div>
+            </div>
+            <div class="switch" id="invert">
+                <webaudio-switch src="assets/img/switches/switch_2.png" height="50" width="80" style="height: 50px;">
+                </webaudio-switch>
+                <div style="text-align:center; color:white;">invert</div>
+            </div>
+        </div>
+
+        <span class="pedalLabel">Phaser Rix</span>
+        <div class="switch" id="bypass">
+            <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" style="height: 50px;">
+            </webaudio-switch>
+        </div>
+    </div>
+</template>
+<script>
+    let templatePhaserRixGui = document.currentScript.ownerDocument.querySelector('template');
+    class PhaserRixGui extends HTMLElement {
+
+
+        constructor(plug) {
+
+            super();
+            this._plug = plug;
+            this._plug.gui = this;
+            let posOfLastSlash = templatePhaserRixGui.baseURI.lastIndexOf("/");
+            this.basePath = templatePhaserRixGui.baseURI.substring(0, posOfLastSlash);
+            this._root = this.attachShadow({ mode: 'open' });
+            this._root.appendChild(templatePhaserRixGui.content.cloneNode(true));
+            this.isOn;
+            this.state = new Object();
+            this.setKnobs();
+            this.setSliders();
+            this.setSwitchListener();
+            this.setActive(false);
+            this.fixRelativeImagePathsInCSS();
+
+        }
+
+        fixRelativeImagePathsInCSS() {
+            // change webaudiocontrols relative paths for spritesheets to absolute
+            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch, webaudio-slider, img");
+            webaudioControls.forEach(e => {
+                let currentImagePath = e.getAttribute("src");
+                //for webaudio-slider who has a second parameter to get the src of the knob
+                let currentKnobSliderPath = e.getAttribute("knobsrc")
+                if (currentImagePath !== undefined) {
+                    //console.log("Got wc src as " + e.getAttribute("src"));
+                    let imagePath = e.getAttribute("src");
+                    e.setAttribute("src", this.basePath + "/" + imagePath);
+                    //console.log("After fix : wc src as " + e.getAttribute("src"));
+                }
+                if (currentKnobSliderPath != undefined) {
+                    let sliderKnobPath = e.getAttribute("knobsrc");
+                    e.setAttribute("knobsrc", this.basePath + "/" + sliderKnobPath);
+                }
+            });
+        }
+
+        attributeChangedCallback() {
+
+            console.log("Custom element attributes changed.");
+            this.state = JSON.parse(this.getAttribute('state'));
+            let tmp = "/PhaserRix/bypass";
+            if (this.state[tmp] == 1) {
+                this._root.querySelector("#switch1").value = 0;
+                this.isOn = false;
+            } else if (this.state[tmp] == 0) {
+                this._root.querySelector("#switch1").value = 1;
+                this.isOn = true;
+            }
+            this.knobs = this._root.querySelectorAll(".knob");
+            console.log(this.state);
+            for (var i = 0; i < this.knobs.length; i++) {
+                this.knobs[i].setValue(this.state[this.knobs[i].id], false);
+                console.log(this.knobs[i].value);
+            }
+
+        }
+
+        get properties() {
+
+            this.boundingRect = {
+                dataWidth: {
+                    type: Number,
+                    value: 250
+                },
+                dataHeight: {
+                    type: Number,
+                    value: 480
+                }
+            };
+            return this.boundingRect;
+
+        }
+
+        static get observedAttributes() {
+
+            return ['state'];
+
+        }
+
+        setResources() {
+
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+            });
+
+            this._root.querySelectorAll(".switch").forEach((s) => {
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+            });
+
+
+
+        }
+
+        setKnobs() {
+            this._root.getElementById("/PhaserRix/Depth").addEventListener("input", (e) => this._plug.setParam("/PhaserRix/Depth", e.target.value));
+            this._root.getElementById("/PhaserRix/Feedback_Gain").addEventListener("input", (e) => this._plug.setParam("/PhaserRix/Feedback_Gain", e.target.value));
+            this._root.getElementById("/PhaserRix/MaxNotch1Freq").addEventListener("input", (e) => this._plug.setParam("/PhaserRix/MaxNotch1Freq", e.target.value));
+            this._root.getElementById("/PhaserRix/MinNotch1Freq").addEventListener("input", (e) => this._plug.setParam("/PhaserRix/MinNotch1Freq", e.target.value));
+            this._root.getElementById("/PhaserRix/Notch_Width").addEventListener("input", (e) => this._plug.setParam("/PhaserRix/Notch_Width", e.target.value));
+            this._root.getElementById("/PhaserRix/NotchFreq").addEventListener("input", (e) => this._plug.setParam("/PhaserRix/NotchFreq", e.target.value));
+            this._root.getElementById("/PhaserRix/Speed").addEventListener("input", (e) => this._plug.setParam("/PhaserRix/Speed", e.target.value));
+            this._root.getElementById("/PhaserRix/level").addEventListener("input", (e) => this._plug.setParam("/PhaserRix/level", e.target.value));
+
+        }
+
+        bypass() {
+
+            this._plug.setParam("/PhaserRix/bypass", 1);
+            console.log("disabled");
+
+        }
+
+        setSwitchListener() {
+
+            console.log("setswitch");
+            if (this._root.querySelector("#switch1")) {
+                this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                    if (this.isOn) this.bypass()
+                    else this.reactivate();
+                    this.isOn = !this.isOn;
+                });
+            }
+
+        }
+
+        reactivate() {
+
+            this._plug.setParam("/PhaserRix/bypass", 0);
+
+        }
+
+        setSliders() {
+
+        }
+
+        setActive(active) {
+
+            // Where there is not swtich, no need to set activation logic. 
+            if (!this._root.querySelector("#switch1")) {
+                return;
+            }
+            if (active == undefined || active == false) {
+                this.isOn = false;
+                this.bypass();
+                this._root.querySelector("#switch1").value = 0;
+            } else if (active) {
+                this.isOn = true;
+                this.reactivate();
+                this._root.querySelector("#switch1").value = 1;
+            }
+
+        }
+    }
+    try {
+        customElements.define('wap-phaserrix', PhaserRixGui);
+        console.log("Element defined");
+    } catch (error) {
+        console.log(error);
+        console.log("Element already defined");
+    }
+
+    createPhaserRixGUI = (plug) => {
+        let elem = new PhaserRixGui(plug);
+        return elem;
+    }
+</script>
