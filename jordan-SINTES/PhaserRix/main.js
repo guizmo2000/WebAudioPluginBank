@@ -5,9 +5,9 @@ Compilation options: -lang wasm-ib -scal -ftz 2
 */
 
 function getJSONPhaserRix() {
-    return "{\"name\": \"PhaserRix\",\"filename\": \"PhaserRix.dsp\",\"version\": \"2.18.0\",\"compile_options\": \"-lang wasm-ib -scal -ftz 2\",\"include_pathnames\": [\"/usr/local/share/faust\",\"/usr/local/share/faust\",\"/usr/share/faust\",\".\",\"/tmp/sessions/607F8B012B2D811A0EE28AC27BEE6A36C6845C70/web/wap\"],\"size\": \"208\",\"inputs\": \"2\",\"outputs\": \"2\",\"meta\": [ { \"category\": \"Modulation\" },{ \"compilation_options\": \"-single -scal -I libraries/ -I project/ -lang wasm\" },{ \"effect_lib_author\": \"Julius O. Smith (jos at ccrma.stanford.edu)\" },{ \"effect_lib_copyright\": \"Julius O. Smith III\" },{ \"effect_lib_deprecated\": \"This library is deprecated and is not maintained anymore. It will be removed in August 2017.\" },{ \"effect_lib_exciter_author\": \"Priyanka Shekar (pshekar@ccrma.stanford.edu)\" },{ \"effect_lib_exciter_copyright\": \"Copyright (c) 2013 Priyanka Shekar\" },{ \"effect_lib_exciter_license\": \"MIT License (MIT)\" },{ \"effect_lib_exciter_name\": \"Harmonic Exciter\" },{ \"effect_lib_exciter_version\": \"1.0\" },{ \"effect_lib_license\": \"STK-4.3\" },{ \"effect_lib_name\": \"Faust Audio Effect Library\" },{ \"effect_lib_version\": \"1.33\" },{ \"filename\": \"PhaserRix.dsp\" },{ \"filter_lib_author\": \"Julius O. Smith (jos at ccrma.stanford.edu)\" },{ \"filter_lib_copyright\": \"Julius O. Smith III\" },{ \"filter_lib_deprecated\": \"This library is deprecated and is not maintained anymore. It will be removed in August 2017.\" },{ \"filter_lib_license\": \"STK-4.3\" },{ \"filter_lib_name\": \"Faust Filter Library\" },{ \"filter_lib_reference\": \"https://ccrma.stanford.edu/~jos/filters/\" },{ \"filter_lib_version\": \"1.29\" },{ \"id\": \"phaser\" },{ \"library_path\": \"FaustDSP\" },{ \"math_lib_author\": \"GRAME\" },{ \"math_lib_copyright\": \"GRAME\" },{ \"math_lib_deprecated\": \"This library is deprecated and is not maintained anymore. It will be removed in August 2017.\" },{ \"math_lib_license\": \"LGPL with exception\" },{ \"math_lib_name\": \"Math Library\" },{ \"math_lib_version\": \"1.0\" },{ \"maths_lib_author\": \"GRAME\" },{ \"maths_lib_copyright\": \"GRAME\" },{ \"maths_lib_license\": \"LGPL with exception\" },{ \"maths_lib_name\": \"Faust Math Library\" },{ \"maths_lib_version\": \"2.1\" },{ \"music_lib_author\": \"GRAME\" },{ \"music_lib_copyright\": \"GRAME\" },{ \"music_lib_deprecated\": \"This library is deprecated and is not maintained anymore. It will be removed in August 2017.\" },{ \"music_lib_license\": \"LGPL with exception\" },{ \"music_lib_name\": \"Music Library\" },{ \"music_lib_version\": \"1.0\" },{ \"name\": \"PhaserRix\" },{ \"oscillator_lib_author\": \"Julius O. Smith (jos at ccrma.stanford.edu)\" },{ \"oscillator_lib_copyright\": \"Julius O. Smith III\" },{ \"oscillator_lib_deprecated\": \"This library is deprecated and is not maintained anymore. It will be removed in August 2017.\" },{ \"oscillator_lib_license\": \"STK-4.3\" },{ \"oscillator_lib_name\": \"Faust Oscillator Library\" },{ \"oscillator_lib_version\": \"1.11\" }],\"ui\": [ {\"type\": \"vgroup\",\"label\": \"PhaserRix\",\"items\": [ {\"type\": \"hslider\",\"label\": \"Depth\",\"address\": \"/PhaserRix/Depth\",\"index\": \"40\",\"meta\": [{ \"OWL\": \"PARAMETER_B\" },{ \"style\": \"knob\" }],\"init\": \"1\",\"min\": \"0\",\"max\": \"1\",\"step\": \"0.01\"},{\"type\": \"hslider\",\"label\": \"Feedback Gain\",\"address\": \"/PhaserRix/Feedback_Gain\",\"index\": \"52\",\"meta\": [{ \"OWL\": \"PARAMETER_C\" },{ \"style\": \"knob\" }],\"init\": \"0\",\"min\": \"0\",\"max\": \"1\",\"step\": \"0.01\"},{\"type\": \"hslider\",\"label\": \"MaxNotch1Freq\",\"address\": \"/PhaserRix/MaxNotch1Freq\",\"index\": \"68\",\"meta\": [{ \"style\": \"knob\" },{ \"unit\": \"Hz\" }],\"init\": \"800\",\"min\": \"20\",\"max\": \"10000\",\"step\": \"1\"},{\"type\": \"hslider\",\"label\": \"MinNotch1Freq\",\"address\": \"/PhaserRix/MinNotch1Freq\",\"index\": \"64\",\"meta\": [{ \"style\": \"knob\" },{ \"unit\": \"Hz\" }],\"init\": \"100\",\"min\": \"20\",\"max\": \"5000\",\"step\": \"1\"},{\"type\": \"hslider\",\"label\": \"Notch Width\",\"address\": \"/PhaserRix/Notch_Width\",\"index\": \"48\",\"meta\": [{ \"OWL\": \"PARAMETER_D\" },{ \"style\": \"knob\" },{ \"unit\": \"Hz\" }],\"init\": \"1000\",\"min\": \"10\",\"max\": \"5000\",\"step\": \"1\"},{\"type\": \"hslider\",\"label\": \"NotchFreq\",\"address\": \"/PhaserRix/NotchFreq\",\"index\": \"56\",\"meta\": [{ \"style\": \"knob\" }],\"init\": \"1.5\",\"min\": \"1.1\",\"max\": \"4\",\"step\": \"0.01\"},{\"type\": \"hslider\",\"label\": \"Speed\",\"address\": \"/PhaserRix/Speed\",\"index\": \"72\",\"meta\": [{ \"OWL\": \"PARAMETER_A\" },{ \"style\": \"knob\" },{ \"unit\": \"Hz\" }],\"init\": \"0.5\",\"min\": \"0.001\",\"max\": \"20\",\"step\": \"0.01\"},{\"type\": \"checkbox\",\"label\": \"VibratoMode\",\"address\": \"/PhaserRix/VibratoMode\",\"index\": \"36\",\"meta\": [{ \"enum\": \"direct | vibrato\" }]},{\"type\": \"checkbox\",\"label\": \"bypass\",\"address\": \"/PhaserRix/bypass\",\"index\": \"20\"},{\"type\": \"checkbox\",\"label\": \"invert\",\"address\": \"/PhaserRix/invert\",\"index\": \"148\",\"meta\": [{ \"enum\": \"linear|invert\" }]},{\"type\": \"hslider\",\"label\": \"level\",\"address\": \"/PhaserRix/level\",\"index\": \"32\",\"meta\": [{ \"style\": \"knob\" },{ \"unit\": \"dB\" }],\"init\": \"0\",\"min\": \"-60\",\"max\": \"10\",\"step\": \"0.1\"}]}]}";
+	return "{\"name\": \"PhaserRix\",\"filename\": \"PhaserRix.dsp\",\"version\": \"2.18.0\",\"compile_options\": \"-lang wasm-ib -scal -ftz 2\",\"include_pathnames\": [\"/usr/local/share/faust\",\"/usr/local/share/faust\",\"/usr/share/faust\",\".\",\"/tmp/sessions/82CC9468F438578F977795EBA5548B2CA900A281/web/wap\"],\"size\": \"208\",\"inputs\": \"2\",\"outputs\": \"2\",\"meta\": [ { \"basics_lib_name\": \"Faust Basic Element Library\" },{ \"basics_lib_version\": \"0.0\" },{ \"category\": \"Modulation\" },{ \"compilation_options\": \"-single -scal -I libraries/ -I project/ -lang wasm\" },{ \"effect_lib_author\": \"Julius O. Smith (jos at ccrma.stanford.edu)\" },{ \"effect_lib_copyright\": \"Julius O. Smith III\" },{ \"effect_lib_deprecated\": \"This library is deprecated and is not maintained anymore. It will be removed in August 2017.\" },{ \"effect_lib_exciter_author\": \"Priyanka Shekar (pshekar@ccrma.stanford.edu)\" },{ \"effect_lib_exciter_copyright\": \"Copyright (c) 2013 Priyanka Shekar\" },{ \"effect_lib_exciter_license\": \"MIT License (MIT)\" },{ \"effect_lib_exciter_name\": \"Harmonic Exciter\" },{ \"effect_lib_exciter_version\": \"1.0\" },{ \"effect_lib_license\": \"STK-4.3\" },{ \"effect_lib_name\": \"Faust Audio Effect Library\" },{ \"effect_lib_version\": \"1.33\" },{ \"filename\": \"PhaserRix.dsp\" },{ \"filter_lib_author\": \"Julius O. Smith (jos at ccrma.stanford.edu)\" },{ \"filter_lib_copyright\": \"Julius O. Smith III\" },{ \"filter_lib_deprecated\": \"This library is deprecated and is not maintained anymore. It will be removed in August 2017.\" },{ \"filter_lib_license\": \"STK-4.3\" },{ \"filter_lib_name\": \"Faust Filter Library\" },{ \"filter_lib_reference\": \"https://ccrma.stanford.edu/~jos/filters/\" },{ \"filter_lib_version\": \"1.29\" },{ \"id\": \"phaser\" },{ \"library_path\": \"FaustDSP\" },{ \"math_lib_author\": \"GRAME\" },{ \"math_lib_copyright\": \"GRAME\" },{ \"math_lib_deprecated\": \"This library is deprecated and is not maintained anymore. It will be removed in August 2017.\" },{ \"math_lib_license\": \"LGPL with exception\" },{ \"math_lib_name\": \"Math Library\" },{ \"math_lib_version\": \"1.0\" },{ \"maths_lib_author\": \"GRAME\" },{ \"maths_lib_copyright\": \"GRAME\" },{ \"maths_lib_license\": \"LGPL with exception\" },{ \"maths_lib_name\": \"Faust Math Library\" },{ \"maths_lib_version\": \"2.1\" },{ \"music_lib_author\": \"GRAME\" },{ \"music_lib_copyright\": \"GRAME\" },{ \"music_lib_deprecated\": \"This library is deprecated and is not maintained anymore. It will be removed in August 2017.\" },{ \"music_lib_license\": \"LGPL with exception\" },{ \"music_lib_name\": \"Music Library\" },{ \"music_lib_version\": \"1.0\" },{ \"name\": \"PhaserRix\" },{ \"oscillator_lib_author\": \"Julius O. Smith (jos at ccrma.stanford.edu)\" },{ \"oscillator_lib_copyright\": \"Julius O. Smith III\" },{ \"oscillator_lib_deprecated\": \"This library is deprecated and is not maintained anymore. It will be removed in August 2017.\" },{ \"oscillator_lib_license\": \"STK-4.3\" },{ \"oscillator_lib_name\": \"Faust Oscillator Library\" },{ \"oscillator_lib_version\": \"1.11\" }],\"ui\": [ {\"type\": \"vgroup\",\"label\": \"PhaserRix\",\"items\": [ {\"type\": \"hslider\",\"label\": \"Depth\",\"address\": \"/PhaserRix/Depth\",\"index\": \"40\",\"meta\": [{ \"OWL\": \"PARAMETER_B\" },{ \"style\": \"knob\" }],\"init\": \"1\",\"min\": \"0\",\"max\": \"1\",\"step\": \"0.01\"},{\"type\": \"hslider\",\"label\": \"Feedback Gain\",\"address\": \"/PhaserRix/Feedback_Gain\",\"index\": \"52\",\"meta\": [{ \"OWL\": \"PARAMETER_C\" },{ \"style\": \"knob\" }],\"init\": \"0\",\"min\": \"0\",\"max\": \"1\",\"step\": \"0.01\"},{\"type\": \"hslider\",\"label\": \"MaxNotch1Freq\",\"address\": \"/PhaserRix/MaxNotch1Freq\",\"index\": \"68\",\"meta\": [{ \"style\": \"knob\" },{ \"unit\": \"Hz\" }],\"init\": \"800\",\"min\": \"20\",\"max\": \"10000\",\"step\": \"1\"},{\"type\": \"hslider\",\"label\": \"MinNotch1Freq\",\"address\": \"/PhaserRix/MinNotch1Freq\",\"index\": \"64\",\"meta\": [{ \"style\": \"knob\" },{ \"unit\": \"Hz\" }],\"init\": \"100\",\"min\": \"20\",\"max\": \"5000\",\"step\": \"1\"},{\"type\": \"hslider\",\"label\": \"Notch Width\",\"address\": \"/PhaserRix/Notch_Width\",\"index\": \"48\",\"meta\": [{ \"OWL\": \"PARAMETER_D\" },{ \"style\": \"knob\" },{ \"unit\": \"Hz\" }],\"init\": \"1000\",\"min\": \"10\",\"max\": \"5000\",\"step\": \"1\"},{\"type\": \"hslider\",\"label\": \"NotchFreq\",\"address\": \"/PhaserRix/NotchFreq\",\"index\": \"56\",\"meta\": [{ \"style\": \"knob\" }],\"init\": \"1.5\",\"min\": \"1.1\",\"max\": \"4\",\"step\": \"0.01\"},{\"type\": \"hslider\",\"label\": \"Speed\",\"address\": \"/PhaserRix/Speed\",\"index\": \"72\",\"meta\": [{ \"OWL\": \"PARAMETER_A\" },{ \"style\": \"knob\" },{ \"unit\": \"Hz\" }],\"init\": \"0.5\",\"min\": \"0.001\",\"max\": \"20\",\"step\": \"0.01\"},{\"type\": \"checkbox\",\"label\": \"VibratoMode\",\"address\": \"/PhaserRix/VibratoMode\",\"index\": \"36\",\"meta\": [{ \"enum\": \"direct | vibrato\" }]},{\"type\": \"checkbox\",\"label\": \"bypass\",\"address\": \"/PhaserRix/bypass\",\"index\": \"20\"},{\"type\": \"checkbox\",\"label\": \"invert\",\"address\": \"/PhaserRix/invert\",\"index\": \"148\",\"meta\": [{ \"enum\": \"linear|invert\" }]},{\"type\": \"hslider\",\"label\": \"level\",\"address\": \"/PhaserRix/level\",\"index\": \"32\",\"meta\": [{ \"style\": \"knob\" },{ \"unit\": \"dB\" }],\"init\": \"0\",\"min\": \"-60\",\"max\": \"10\",\"step\": \"0.1\"}]}]}";
 }
-function getBase64CodePhaserRix() { return "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ZS9mYXVzdCIsIi91c3Ivc2hhcmUvZmF1c3QiLCIuIiwiL3RtcC9zZXNzaW9ucy82MDdGOEIwMTJCMkQ4MTFBMEVFMjhBQzI3QkVFNkEzNkM2ODQ1QzcwL3dlYi93YXAiXSwic2l6ZSI6ICIyMDgiLCJpbnB1dHMiOiAiMiIsIm91dHB1dHMiOiAiMiIsIm1ldGEiOiBbIHsgImNhdGVnb3J5IjogIk1vZHVsYXRpb24iIH0seyAiY29tcGlsYXRpb25fb3B0aW9ucyI6ICItc2luZ2xlIC1zY2FsIC1JIGxpYnJhcmllcy8gLUkgcHJvamVjdC8gLWxhbmcgd2FzbSIgfSx7ICJlZmZlY3RfbGliX2F1dGhvciI6ICJKdWxpdXMgTy4gU21pdGggKGpvcyBhdCBjY3JtYS5zdGFuZm9yZC5lZHUpIiB9LHsgImVmZmVjdF9saWJfY29weXJpZ2h0IjogIkp1bGl1cyBPLiBTbWl0aCBJSUkiIH0seyAiZWZmZWN0X2xpYl9kZXByZWNhdGVkIjogIlRoaXMgbGlicmFyeSBpcyBkZXByZWNhdGVkIGFuZCBpcyBub3QgbWFpbnRhaW5lZCBhbnltb3JlLiBJdCB3aWxsIGJlIHJlbW92ZWQgaW4gQXVndXN0IDIwMTcuIiB9LHsgImVmZmVjdF9saWJfZXhjaXRlcl9hdXRob3IiOiAiUHJpeWFua2EgU2hla2FyIChwc2hla2FyQGNjcm1hLnN0YW5mb3JkLmVkdSkiIH0seyAiZWZmZWN0X2xpYl9leGNpdGVyX2NvcHlyaWdodCI6ICJDb3B5cmlnaHQgKGMpIDIwMTMgUHJpeWFua2EgU2hla2FyIiB9LHsgImVmZmVjdF9saWJfZXhjaXRlcl9saWNlbnNlIjogIk1JVCBMaWNlbnNlIChNSVQpIiB9LHsgImVmZmVjdF9saWJfZXhjaXRlcl9uYW1lIjogIkhhcm1vbmljIEV4Y2l0ZXIiIH0seyAiZWZmZWN0X2xpYl9leGNpdGVyX3ZlcnNpb24iOiAiMS4wIiB9LHsgImVmZmVjdF9saWJfbGljZW5zZSI6ICJTVEstNC4zIiB9LHsgImVmZmVjdF9saWJfbmFtZSI6ICJGYXVzdCBBdWRpbyBFZmZlY3QgTGlicmFyeSIgfSx7ICJlZmZlY3RfbGliX3ZlcnNpb24iOiAiMS4zMyIgfSx7ICJmaWxlbmFtZSI6ICJQaGFzZXJSaXguZHNwIiB9LHsgImZpbHRlcl9saWJfYXV0aG9yIjogIkp1bGl1cyBPLiBTbWl0aCAoam9zIGF0IGNjcm1hLnN0YW5mb3JkLmVkdSkiIH0seyAiZmlsdGVyX2xpYl9jb3B5cmlnaHQiOiAiSnVsaXVzIE8uIFNtaXRoIElJSSIgfSx7ICJmaWx0ZXJfbGliX2RlcHJlY2F0ZWQiOiAiVGhpcyBsaWJyYXJ5IGlzIGRlcHJlY2F0ZWQgYW5kIGlzIG5vdCBtYWludGFpbmVkIGFueW1vcmUuIEl0IHdpbGwgYmUgcmVtb3ZlZCBpbiBBdWd1c3QgMjAxNy4iIH0seyAiZmlsdGVyX2xpYl9saWNlbnNlIjogIlNUSy00LjMiIH0seyAiZmlsdGVyX2xpYl9uYW1lIjogIkZhdXN0IEZpbHRlciBMaWJyYXJ5IiB9LHsgImZpbHRlcl9saWJfcmVmZXJlbmNlIjogImh0dHBzOi8vY2NybWEuc3RhbmZvcmQuZWR1L35qb3MvZmlsdGVycy8iIH0seyAiZmlsdGVyX2xpYl92ZXJzaW9uIjogIjEuMjkiIH0seyAiaWQiOiAicGhhc2VyIiB9LHsgImxpYnJhcnlfcGF0aCI6ICJGYXVzdERTUCIgfSx7ICJtYXRoX2xpYl9hdXRob3IiOiAiR1JBTUUiIH0seyAibWF0aF9saWJfY29weXJpZ2h0IjogIkdSQU1FIiB9LHsgIm1hdGhfbGliX2RlcHJlY2F0ZWQiOiAiVGhpcyBsaWJyYXJ5IGlzIGRlcHJlY2F0ZWQgYW5kIGlzIG5vdCBtYWludGFpbmVkIGFueW1vcmUuIEl0IHdpbGwgYmUgcmVtb3ZlZCBpbiBBdWd1c3QgMjAxNy4iIH0seyAibWF0aF9saWJfbGljZW5zZSI6ICJMR1BMIHdpdGggZXhjZXB0aW9uIiB9LHsgIm1hdGhfbGliX25hbWUiOiAiTWF0aCBMaWJyYXJ5IiB9LHsgIm1hdGhfbGliX3ZlcnNpb24iOiAiMS4wIiB9LHsgIm1hdGhzX2xpYl9hdXRob3IiOiAiR1JBTUUiIH0seyAibWF0aHNfbGliX2NvcHlyaWdodCI6ICJHUkFNRSIgfSx7ICJtYXRoc19saWJfbGljZW5zZSI6ICJMR1BMIHdpdGggZXhjZXB0aW9uIiB9LHsgIm1hdGhzX2xpYl9uYW1lIjogIkZhdXN0IE1hdGggTGlicmFyeSIgfSx7ICJtYXRoc19saWJfdmVyc2lvbiI6ICIyLjEiIH0seyAibXVzaWNfbGliX2F1dGhvciI6ICJHUkFNRSIgfSx7ICJtdXNpY19saWJfY29weXJpZ2h0IjogIkdSQU1FIiB9LHsgIm11c2ljX2xpYl9kZXByZWNhdGVkIjogIlRoaXMgbGlicmFyeSBpcyBkZXByZWNhdGVkIGFuZCBpcyBub3QgbWFpbnRhaW5lZCBhbnltb3JlLiBJdCB3aWxsIGJlIHJlbW92ZWQgaW4gQXVndXN0IDIwMTcuIiB9LHsgIm11c2ljX2xpYl9saWNlbnNlIjogIkxHUEwgd2l0aCBleGNlcHRpb24iIH0seyAibXVzaWNfbGliX25hbWUiOiAiTXVzaWMgTGlicmFyeSIgfSx7ICJtdXNpY19saWJfdmVyc2lvbiI6ICIxLjAiIH0seyAibmFtZSI6ICJQaGFzZXJSaXgiIH0seyAib3NjaWxsYXRvcl9saWJfYXV0aG9yIjogIkp1bGl1cyBPLiBTbWl0aCAoam9zIGF0IGNjcm1hLnN0YW5mb3JkLmVkdSkiIH0seyAib3NjaWxsYXRvcl9saWJfY29weXJpZ2h0IjogIkp1bGl1cyBPLiBTbWl0aCBJSUkiIH0seyAib3NjaWxsYXRvcl9saWJfZGVwcmVjYXRlZCI6ICJUaGlzIGxpYnJhcnkgaXMgZGVwcmVjYXRlZCBhbmQgaXMgbm90IG1haW50YWluZWQgYW55bW9yZS4gSXQgd2lsbCBiZSByZW1vdmVkIGluIEF1Z3VzdCAyMDE3LiIgfSx7ICJvc2NpbGxhdG9yX2xpYl9saWNlbnNlIjogIlNUSy00LjMiIH0seyAib3NjaWxsYXRvcl9saWJfbmFtZSI6ICJGYXVzdCBPc2NpbGxhdG9yIExpYnJhcnkiIH0seyAib3NjaWxsYXRvcl9saWJfdmVyc2lvbiI6ICIxLjExIiB9XSwidWkiOiBbIHsidHlwZSI6ICJ2Z3JvdXAiLCJsYWJlbCI6ICJQaGFzZXJSaXgiLCJpdGVtcyI6IFsgeyJ0eXBlIjogImhzbGlkZXIiLCJsYWJlbCI6ICJEZXB0aCIsImFkZHJlc3MiOiAiL1BoYXNlclJpeC9EZXB0aCIsImluZGV4IjogIjQwIiwibWV0YSI6IFt7ICJPV0wiOiAiUEFSQU1FVEVSX0IiIH0seyAic3R5bGUiOiAia25vYiIgfV0sImluaXQiOiAiMSIsIm1pbiI6ICIwIiwibWF4IjogIjEiLCJzdGVwIjogIjAuMDEifSx7InR5cGUiOiAiaHNsaWRlciIsImxhYmVsIjogIkZlZWRiYWNrIEdhaW4iLCJhZGRyZXNzIjogIi9QaGFzZXJSaXgvRmVlZGJhY2tfR2FpbiIsImluZGV4IjogIjUyIiwibWV0YSI6IFt7ICJPV0wiOiAiUEFSQU1FVEVSX0MiIH0seyAic3R5bGUiOiAia25vYiIgfV0sImluaXQiOiAiMCIsIm1pbiI6ICIwIiwibWF4IjogIjEiLCJzdGVwIjogIjAuMDEifSx7InR5cGUiOiAiaHNsaWRlciIsImxhYmVsIjogIk1heE5vdGNoMUZyZXEiLCJhZGRyZXNzIjogIi9QaGFzZXJSaXgvTWF4Tm90Y2gxRnJlcSIsImluZGV4IjogIjY4IiwibWV0YSI6IFt7ICJzdHlsZSI6ICJrbm9iIiB9LHsgInVuaXQiOiAiSHoiIH1dLCJpbml0IjogIjgwMCIsIm1pbiI6ICIyMCIsIm1heCI6ICIxMDAwMCIsInN0ZXAiOiAiMSJ9LHsidHlwZSI6ICJoc2xpZGVyIiwibGFiZWwiOiAiTWluTm90Y2gxRnJlcSIsImFkZHJlc3MiOiAiL1BoYXNlclJpeC9NaW5Ob3RjaDFGcmVxIiwiaW5kZXgiOiAiNjQiLCJtZXRhIjogW3sgInN0eWxlIjogImtub2IiIH0seyAidW5pdCI6ICJIeiIgfV0sImluaXQiOiAiMTAwIiwibWluIjogIjIwIiwibWF4IjogIjUwMDAiLCJzdGVwIjogIjEifSx7InR5cGUiOiAiaHNsaWRlciIsImxhYmVsIjogIk5vdGNoIFdpZHRoIiwiYWRkcmVzcyI6ICIvUGhhc2VyUml4L05vdGNoX1dpZHRoIiwiaW5kZXgiOiAiNDgiLCJtZXRhIjogW3sgIk9XTCI6ICJQQVJBTUVURVJfRCIgfSx7ICJzdHlsZSI6ICJrbm9iIiB9LHsgInVuaXQiOiAiSHoiIH1dLCJpbml0IjogIjEwMDAiLCJtaW4iOiAiMTAiLCJtYXgiOiAiNTAwMCIsInN0ZXAiOiAiMSJ9LHsidHlwZSI6ICJoc2xpZGVyIiwibGFiZWwiOiAiTm90Y2hGcmVxIiwiYWRkcmVzcyI6ICIvUGhhc2VyUml4L05vdGNoRnJlcSIsImluZGV4IjogIjU2IiwibWV0YSI6IFt7ICJzdHlsZSI6ICJrbm9iIiB9XSwiaW5pdCI6ICIxLjUiLCJtaW4iOiAiMS4xIiwibWF4IjogIjQiLCJzdGVwIjogIjAuMDEifSx7InR5cGUiOiAiaHNsaWRlciIsImxhYmVsIjogIlNwZWVkIiwiYWRkcmVzcyI6ICIvUGhhc2VyUml4L1NwZWVkIiwiaW5kZXgiOiAiNzIiLCJtZXRhIjogW3sgIk9XTCI6ICJQQVJBTUVURVJfQSIgfSx7ICJzdHlsZSI6ICJrbm9iIiB9LHsgInVuaXQiOiAiSHoiIH1dLCJpbml0IjogIjAuNSIsIm1pbiI6ICIwLjAwMSIsIm1heCI6ICIyMCIsInN0ZXAiOiAiMC4wMSJ9LHsidHlwZSI6ICJjaGVja2JveCIsImxhYmVsIjogIlZpYnJhdG9Nb2RlIiwiYWRkcmVzcyI6ICIvUGhhc2VyUml4L1ZpYnJhdG9Nb2RlIiwiaW5kZXgiOiAiMzYiLCJtZXRhIjogW3sgImVudW0iOiAiZGlyZWN0IHwgdmlicmF0byIgfV19LHsidHlwZSI6ICJjaGVja2JveCIsImxhYmVsIjogImJ5cGFzcyIsImFkZHJlc3MiOiAiL1BoYXNlclJpeC9ieXBhc3MiLCJpbmRleCI6ICIyMCJ9LHsidHlwZSI6ICJjaGVja2JveCIsImxhYmVsIjogImludmVydCIsImFkZHJlc3MiOiAiL1BoYXNlclJpeC9pbnZlcnQiLCJpbmRleCI6ICIxNDgiLCJtZXRhIjogW3sgImVudW0iOiAibGluZWFyfGludmVydCIgfV19LHsidHlwZSI6ICJoc2xpZGVyIiwibGFiZWwiOiAibGV2ZWwiLCJhZGRyZXNzIjogIi9QaGFzZXJSaXgvbGV2ZWwiLCJpbmRleCI6ICIzMiIsIm1ldGEiOiBbeyAic3R5bGUiOiAia25vYiIgfSx7ICJ1bml0IjogImRCIiB9XSwiaW5pdCI6ICIwIiwibWluIjogIi02MCIsIm1heCI6ICIxMCIsInN0ZXAiOiAiMC4xIn1dfV19"; }
+function getBase64CodePhaserRix() { return "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ZS9mYXVzdCIsIi91c3Ivc2hhcmUvZmF1c3QiLCIuIiwiL3RtcC9zZXNzaW9ucy84MkNDOTQ2OEY0Mzg1NzhGOTc3Nzk1RUJBNTU0OEIyQ0E5MDBBMjgxL3dlYi93YXAiXSwic2l6ZSI6ICIyMDgiLCJpbnB1dHMiOiAiMiIsIm91dHB1dHMiOiAiMiIsIm1ldGEiOiBbIHsgImJhc2ljc19saWJfbmFtZSI6ICJGYXVzdCBCYXNpYyBFbGVtZW50IExpYnJhcnkiIH0seyAiYmFzaWNzX2xpYl92ZXJzaW9uIjogIjAuMCIgfSx7ICJjYXRlZ29yeSI6ICJNb2R1bGF0aW9uIiB9LHsgImNvbXBpbGF0aW9uX29wdGlvbnMiOiAiLXNpbmdsZSAtc2NhbCAtSSBsaWJyYXJpZXMvIC1JIHByb2plY3QvIC1sYW5nIHdhc20iIH0seyAiZWZmZWN0X2xpYl9hdXRob3IiOiAiSnVsaXVzIE8uIFNtaXRoIChqb3MgYXQgY2NybWEuc3RhbmZvcmQuZWR1KSIgfSx7ICJlZmZlY3RfbGliX2NvcHlyaWdodCI6ICJKdWxpdXMgTy4gU21pdGggSUlJIiB9LHsgImVmZmVjdF9saWJfZGVwcmVjYXRlZCI6ICJUaGlzIGxpYnJhcnkgaXMgZGVwcmVjYXRlZCBhbmQgaXMgbm90IG1haW50YWluZWQgYW55bW9yZS4gSXQgd2lsbCBiZSByZW1vdmVkIGluIEF1Z3VzdCAyMDE3LiIgfSx7ICJlZmZlY3RfbGliX2V4Y2l0ZXJfYXV0aG9yIjogIlByaXlhbmthIFNoZWthciAocHNoZWthckBjY3JtYS5zdGFuZm9yZC5lZHUpIiB9LHsgImVmZmVjdF9saWJfZXhjaXRlcl9jb3B5cmlnaHQiOiAiQ29weXJpZ2h0IChjKSAyMDEzIFByaXlhbmthIFNoZWthciIgfSx7ICJlZmZlY3RfbGliX2V4Y2l0ZXJfbGljZW5zZSI6ICJNSVQgTGljZW5zZSAoTUlUKSIgfSx7ICJlZmZlY3RfbGliX2V4Y2l0ZXJfbmFtZSI6ICJIYXJtb25pYyBFeGNpdGVyIiB9LHsgImVmZmVjdF9saWJfZXhjaXRlcl92ZXJzaW9uIjogIjEuMCIgfSx7ICJlZmZlY3RfbGliX2xpY2Vuc2UiOiAiU1RLLTQuMyIgfSx7ICJlZmZlY3RfbGliX25hbWUiOiAiRmF1c3QgQXVkaW8gRWZmZWN0IExpYnJhcnkiIH0seyAiZWZmZWN0X2xpYl92ZXJzaW9uIjogIjEuMzMiIH0seyAiZmlsZW5hbWUiOiAiUGhhc2VyUml4LmRzcCIgfSx7ICJmaWx0ZXJfbGliX2F1dGhvciI6ICJKdWxpdXMgTy4gU21pdGggKGpvcyBhdCBjY3JtYS5zdGFuZm9yZC5lZHUpIiB9LHsgImZpbHRlcl9saWJfY29weXJpZ2h0IjogIkp1bGl1cyBPLiBTbWl0aCBJSUkiIH0seyAiZmlsdGVyX2xpYl9kZXByZWNhdGVkIjogIlRoaXMgbGlicmFyeSBpcyBkZXByZWNhdGVkIGFuZCBpcyBub3QgbWFpbnRhaW5lZCBhbnltb3JlLiBJdCB3aWxsIGJlIHJlbW92ZWQgaW4gQXVndXN0IDIwMTcuIiB9LHsgImZpbHRlcl9saWJfbGljZW5zZSI6ICJTVEstNC4zIiB9LHsgImZpbHRlcl9saWJfbmFtZSI6ICJGYXVzdCBGaWx0ZXIgTGlicmFyeSIgfSx7ICJmaWx0ZXJfbGliX3JlZmVyZW5jZSI6ICJodHRwczovL2Njcm1hLnN0YW5mb3JkLmVkdS9+am9zL2ZpbHRlcnMvIiB9LHsgImZpbHRlcl9saWJfdmVyc2lvbiI6ICIxLjI5IiB9LHsgImlkIjogInBoYXNlciIgfSx7ICJsaWJyYXJ5X3BhdGgiOiAiRmF1c3REU1AiIH0seyAibWF0aF9saWJfYXV0aG9yIjogIkdSQU1FIiB9LHsgIm1hdGhfbGliX2NvcHlyaWdodCI6ICJHUkFNRSIgfSx7ICJtYXRoX2xpYl9kZXByZWNhdGVkIjogIlRoaXMgbGlicmFyeSBpcyBkZXByZWNhdGVkIGFuZCBpcyBub3QgbWFpbnRhaW5lZCBhbnltb3JlLiBJdCB3aWxsIGJlIHJlbW92ZWQgaW4gQXVndXN0IDIwMTcuIiB9LHsgIm1hdGhfbGliX2xpY2Vuc2UiOiAiTEdQTCB3aXRoIGV4Y2VwdGlvbiIgfSx7ICJtYXRoX2xpYl9uYW1lIjogIk1hdGggTGlicmFyeSIgfSx7ICJtYXRoX2xpYl92ZXJzaW9uIjogIjEuMCIgfSx7ICJtYXRoc19saWJfYXV0aG9yIjogIkdSQU1FIiB9LHsgIm1hdGhzX2xpYl9jb3B5cmlnaHQiOiAiR1JBTUUiIH0seyAibWF0aHNfbGliX2xpY2Vuc2UiOiAiTEdQTCB3aXRoIGV4Y2VwdGlvbiIgfSx7ICJtYXRoc19saWJfbmFtZSI6ICJGYXVzdCBNYXRoIExpYnJhcnkiIH0seyAibWF0aHNfbGliX3ZlcnNpb24iOiAiMi4xIiB9LHsgIm11c2ljX2xpYl9hdXRob3IiOiAiR1JBTUUiIH0seyAibXVzaWNfbGliX2NvcHlyaWdodCI6ICJHUkFNRSIgfSx7ICJtdXNpY19saWJfZGVwcmVjYXRlZCI6ICJUaGlzIGxpYnJhcnkgaXMgZGVwcmVjYXRlZCBhbmQgaXMgbm90IG1haW50YWluZWQgYW55bW9yZS4gSXQgd2lsbCBiZSByZW1vdmVkIGluIEF1Z3VzdCAyMDE3LiIgfSx7ICJtdXNpY19saWJfbGljZW5zZSI6ICJMR1BMIHdpdGggZXhjZXB0aW9uIiB9LHsgIm11c2ljX2xpYl9uYW1lIjogIk11c2ljIExpYnJhcnkiIH0seyAibXVzaWNfbGliX3ZlcnNpb24iOiAiMS4wIiB9LHsgIm5hbWUiOiAiUGhhc2VyUml4IiB9LHsgIm9zY2lsbGF0b3JfbGliX2F1dGhvciI6ICJKdWxpdXMgTy4gU21pdGggKGpvcyBhdCBjY3JtYS5zdGFuZm9yZC5lZHUpIiB9LHsgIm9zY2lsbGF0b3JfbGliX2NvcHlyaWdodCI6ICJKdWxpdXMgTy4gU21pdGggSUlJIiB9LHsgIm9zY2lsbGF0b3JfbGliX2RlcHJlY2F0ZWQiOiAiVGhpcyBsaWJyYXJ5IGlzIGRlcHJlY2F0ZWQgYW5kIGlzIG5vdCBtYWludGFpbmVkIGFueW1vcmUuIEl0IHdpbGwgYmUgcmVtb3ZlZCBpbiBBdWd1c3QgMjAxNy4iIH0seyAib3NjaWxsYXRvcl9saWJfbGljZW5zZSI6ICJTVEstNC4zIiB9LHsgIm9zY2lsbGF0b3JfbGliX25hbWUiOiAiRmF1c3QgT3NjaWxsYXRvciBMaWJyYXJ5IiB9LHsgIm9zY2lsbGF0b3JfbGliX3ZlcnNpb24iOiAiMS4xMSIgfV0sInVpIjogWyB7InR5cGUiOiAidmdyb3VwIiwibGFiZWwiOiAiUGhhc2VyUml4IiwiaXRlbXMiOiBbIHsidHlwZSI6ICJoc2xpZGVyIiwibGFiZWwiOiAiRGVwdGgiLCJhZGRyZXNzIjogIi9QaGFzZXJSaXgvRGVwdGgiLCJpbmRleCI6ICI0MCIsIm1ldGEiOiBbeyAiT1dMIjogIlBBUkFNRVRFUl9CIiB9LHsgInN0eWxlIjogImtub2IiIH1dLCJpbml0IjogIjEiLCJtaW4iOiAiMCIsIm1heCI6ICIxIiwic3RlcCI6ICIwLjAxIn0seyJ0eXBlIjogImhzbGlkZXIiLCJsYWJlbCI6ICJGZWVkYmFjayBHYWluIiwiYWRkcmVzcyI6ICIvUGhhc2VyUml4L0ZlZWRiYWNrX0dhaW4iLCJpbmRleCI6ICI1MiIsIm1ldGEiOiBbeyAiT1dMIjogIlBBUkFNRVRFUl9DIiB9LHsgInN0eWxlIjogImtub2IiIH1dLCJpbml0IjogIjAiLCJtaW4iOiAiMCIsIm1heCI6ICIxIiwic3RlcCI6ICIwLjAxIn0seyJ0eXBlIjogImhzbGlkZXIiLCJsYWJlbCI6ICJNYXhOb3RjaDFGcmVxIiwiYWRkcmVzcyI6ICIvUGhhc2VyUml4L01heE5vdGNoMUZyZXEiLCJpbmRleCI6ICI2OCIsIm1ldGEiOiBbeyAic3R5bGUiOiAia25vYiIgfSx7ICJ1bml0IjogIkh6IiB9XSwiaW5pdCI6ICI4MDAiLCJtaW4iOiAiMjAiLCJtYXgiOiAiMTAwMDAiLCJzdGVwIjogIjEifSx7InR5cGUiOiAiaHNsaWRlciIsImxhYmVsIjogIk1pbk5vdGNoMUZyZXEiLCJhZGRyZXNzIjogIi9QaGFzZXJSaXgvTWluTm90Y2gxRnJlcSIsImluZGV4IjogIjY0IiwibWV0YSI6IFt7ICJzdHlsZSI6ICJrbm9iIiB9LHsgInVuaXQiOiAiSHoiIH1dLCJpbml0IjogIjEwMCIsIm1pbiI6ICIyMCIsIm1heCI6ICI1MDAwIiwic3RlcCI6ICIxIn0seyJ0eXBlIjogImhzbGlkZXIiLCJsYWJlbCI6ICJOb3RjaCBXaWR0aCIsImFkZHJlc3MiOiAiL1BoYXNlclJpeC9Ob3RjaF9XaWR0aCIsImluZGV4IjogIjQ4IiwibWV0YSI6IFt7ICJPV0wiOiAiUEFSQU1FVEVSX0QiIH0seyAic3R5bGUiOiAia25vYiIgfSx7ICJ1bml0IjogIkh6IiB9XSwiaW5pdCI6ICIxMDAwIiwibWluIjogIjEwIiwibWF4IjogIjUwMDAiLCJzdGVwIjogIjEifSx7InR5cGUiOiAiaHNsaWRlciIsImxhYmVsIjogIk5vdGNoRnJlcSIsImFkZHJlc3MiOiAiL1BoYXNlclJpeC9Ob3RjaEZyZXEiLCJpbmRleCI6ICI1NiIsIm1ldGEiOiBbeyAic3R5bGUiOiAia25vYiIgfV0sImluaXQiOiAiMS41IiwibWluIjogIjEuMSIsIm1heCI6ICI0Iiwic3RlcCI6ICIwLjAxIn0seyJ0eXBlIjogImhzbGlkZXIiLCJsYWJlbCI6ICJTcGVlZCIsImFkZHJlc3MiOiAiL1BoYXNlclJpeC9TcGVlZCIsImluZGV4IjogIjcyIiwibWV0YSI6IFt7ICJPV0wiOiAiUEFSQU1FVEVSX0EiIH0seyAic3R5bGUiOiAia25vYiIgfSx7ICJ1bml0IjogIkh6IiB9XSwiaW5pdCI6ICIwLjUiLCJtaW4iOiAiMC4wMDEiLCJtYXgiOiAiMjAiLCJzdGVwIjogIjAuMDEifSx7InR5cGUiOiAiY2hlY2tib3giLCJsYWJlbCI6ICJWaWJyYXRvTW9kZSIsImFkZHJlc3MiOiAiL1BoYXNlclJpeC9WaWJyYXRvTW9kZSIsImluZGV4IjogIjM2IiwibWV0YSI6IFt7ICJlbnVtIjogImRpcmVjdCB8IHZpYnJhdG8iIH1dfSx7InR5cGUiOiAiY2hlY2tib3giLCJsYWJlbCI6ICJieXBhc3MiLCJhZGRyZXNzIjogIi9QaGFzZXJSaXgvYnlwYXNzIiwiaW5kZXgiOiAiMjAifSx7InR5cGUiOiAiY2hlY2tib3giLCJsYWJlbCI6ICJpbnZlcnQiLCJhZGRyZXNzIjogIi9QaGFzZXJSaXgvaW52ZXJ0IiwiaW5kZXgiOiAiMTQ4IiwibWV0YSI6IFt7ICJlbnVtIjogImxpbmVhcnxpbnZlcnQiIH1dfSx7InR5cGUiOiAiaHNsaWRlciIsImxhYmVsIjogImxldmVsIiwiYWRkcmVzcyI6ICIvUGhhc2VyUml4L2xldmVsIiwiaW5kZXgiOiAiMzIiLCJtZXRhIjogW3sgInN0eWxlIjogImtub2IiIH0seyAidW5pdCI6ICJkQiIgfV0sImluaXQiOiAiMCIsIm1pbiI6ICItNjAiLCJtYXgiOiAiMTAiLCJzdGVwIjogIjAuMSJ9XX1dfQ=="; }
 
 /*
  faust2wasm: GRAME 2017-2019
@@ -16,51 +16,56 @@ function getBase64CodePhaserRix() { return "AGFzbQEAAAAB4ICAgAASYAJ/fwBgBH9/f38A
 'use strict';
 
 if (typeof (AudioWorkletNode) === "undefined") {
-    alert("AudioWorklet is not supported in this browser !")
+	alert("AudioWorklet is not supported in this browser !")
 }
 
 class PhaserRixNode extends AudioWorkletNode {
 
-    constructor(context, baseURL, options) {
+    constructor(context, baseURL, options)
+    {
         super(context, 'PhaserRix', options);
-
+        
         this.baseURL = baseURL;
         this.json = options.processorOptions.json;
         this.json_object = JSON.parse(this.json);
-
+     
         // JSON parsing functions
-        this.parse_ui = function (ui, obj) {
+        this.parse_ui = function(ui, obj)
+        {
             for (var i = 0; i < ui.length; i++) {
                 this.parse_group(ui[i], obj);
             }
         }
 
-        this.parse_group = function (group, obj) {
+        this.parse_group = function(group, obj)
+        {
             if (group.items) {
                 this.parse_items(group.items, obj);
             }
         }
 
-        this.parse_items = function (items, obj) {
+        this.parse_items = function(items, obj)
+        {
             for (var i = 0; i < items.length; i++) {
-                this.parse_item(items[i], obj);
+            	this.parse_item(items[i], obj);
             }
         }
 
-        this.parse_item = function (item, obj) {
+        this.parse_item = function(item, obj)
+        {
             if (item.type === "vgroup"
                 || item.type === "hgroup"
                 || item.type === "tgroup") {
                 this.parse_items(item.items, obj);
             } else if (item.type === "hbargraph"
-                || item.type === "vbargraph") {
+                       || item.type === "vbargraph") {
                 // Keep bargraph adresses
                 obj.outputs_items.push(item.address);
             } else if (item.type === "vslider"
-                || item.type === "hslider"
-                || item.type === "button"
-                || item.type === "checkbox"
-                || item.type === "nentry") {
+                       || item.type === "hslider"
+                       || item.type === "button"
+                       || item.type === "checkbox"
+                       || item.type === "nentry") {
                 // Keep inputs adresses
                 obj.inputs_items.push(item.address);
                 obj.descriptor.push(item);
@@ -72,20 +77,18 @@ class PhaserRixNode extends AudioWorkletNode {
                                 obj.fPitchwheelLabel.push(item.address);
                             } else if (item.meta[i].midi.trim().split(" ")[0] === "ctrl") {
                                 obj.fCtrlLabel[parseInt(item.meta[i].midi.trim().split(" ")[1])]
-                                    .push({
-                                        path: item.address,
-                                        min: parseFloat(item.min),
-                                        max: parseFloat(item.max)
-                                    });
+                                .push({ path:item.address,
+                                      min:parseFloat(item.min),
+                                      max:parseFloat(item.max) });
                             }
                         }
                     }
-                }
+                }      
                 // Define setXXX/getXXX, replacing '/c' with 'C' everywhere in the string
                 var set_name = "set" + item.address;
                 var get_name = "get" + item.address;
-                set_name = set_name.replace(/\/./g, (x) => { return x.substr(1, 1).toUpperCase(); });
-                get_name = get_name.replace(/\/./g, (x) => { return x.substr(1, 1).toUpperCase(); });
+                set_name = set_name.replace(/\/./g, (x) => { return x.substr(1,1).toUpperCase(); });     
+                get_name = get_name.replace(/\/./g, (x) => { return x.substr(1,1).toUpperCase(); });
                 obj[set_name] = (val) => { obj.setParamValue(item.address, val); };
                 obj[get_name] = () => { return obj.getParamValue(item.address); };
                 //console.log(set_name);
@@ -99,7 +102,7 @@ class PhaserRixNode extends AudioWorkletNode {
         this.inputs_items = [];
         this.outputs_items = [];
         this.descriptor = [];
-
+        
         // MIDI
         this.fPitchwheelLabel = [];
         this.fCtrlLabel = new Array(128);
@@ -110,17 +113,11 @@ class PhaserRixNode extends AudioWorkletNode {
 
         // Set message handler
         this.port.onmessage = this.handleMessage.bind(this);
-
-        //debugger to know parameters of the pedal
-
-        var entries = this.parameters.entries()
-        for (var [key, value] of entries) {
-            console.log(key + ' = ' + value);
-        }
     }
 
     // To be called by the message port with messages coming from the processor
-    handleMessage(event) {
+    handleMessage(event)
+    {
         var msg = event.data;
         if (this.output_handler) {
             this.output_handler(msg.path, msg.value);
@@ -132,20 +129,22 @@ class PhaserRixNode extends AudioWorkletNode {
     /**
      *  Returns a full JSON description of the DSP.
      */
-    getJSON() {
+    getJSON()
+    {
         return this.json;
     }
-
+    
     // For WAP
-    async getMetadata() {
+    async getMetadata() 
+    {
         return new Promise(resolve => {
             let real_url = (this.baseURL === "") ? "main.json" : (this.baseURL + "/main.json");
             fetch(real_url).then(responseJSON => {
-                return responseJSON.json();
-            }).then(json => {
-                resolve(json);
-            })
-        });
+            	return responseJSON.json();
+        	}).then(json => {
+        		resolve(json);
+        	})
+    	});
     }
 
     /**
@@ -154,13 +153,15 @@ class PhaserRixNode extends AudioWorkletNode {
      * @param path - a path to the control
      * @param val - the value to be set
      */
-    setParamValue(path, val) {
+    setParamValue(path, val)
+    {
         // Needed for sample accurate control
         this.parameters.get(path).setValueAtTime(val, 0);
     }
-
+    
     // For WAP
-    setParam(path, val) {
+    setParam(path, val)
+    {
         // Needed for sample accurate control
         this.parameters.get(path).setValueAtTime(val, 0);
     }
@@ -170,12 +171,14 @@ class PhaserRixNode extends AudioWorkletNode {
      *
      * @return the current control value
      */
-    getParamValue(path) {
+    getParamValue(path)
+    {
         return this.parameters.get(path).value;
     }
-
+    
     // For WAP
-    getParam(path) {
+    getParam(path) 
+    {
         return this.parameters.get(path).value;
     }
 
@@ -186,43 +189,51 @@ class PhaserRixNode extends AudioWorkletNode {
      *
      * @param handler - a function of type function(path, value)
      */
-    setOutputParamHandler(handler) {
+    setOutputParamHandler(handler)
+    {
         this.output_handler = handler;
     }
 
     /**
      * Get the current output handler.
      */
-    getOutputParamHandler() {
+    getOutputParamHandler()
+    {
         return this.output_handler;
     }
 
-    getNumInputs() {
+    getNumInputs()
+    {
         return parseInt(this.json_object.inputs);
     }
 
-    getNumOutputs() {
+    getNumOutputs()
+    {
         return parseInt(this.json_object.outputs);
     }
-
+    
     // For WAP
-    inputChannelCount() {
+    inputChannelCount() 
+    {
         return parseInt(this.json_object.inputs);
     }
 
-    outputChannelCount() {
+    outputChannelCount() 
+    {
         return parseInt(this.json_object.outputs);
     }
 
     /**
      * Returns an array of all input paths (to be used with setParamValue/getParamValue)
      */
-    getParams() {
+    getParams()
+    {
         return this.inputs_items;
     }
-
+    
     // For WAP
-    getDescriptor() {
+    getDescriptor() 
+    {
         var desc = {};
         for (const item in this.descriptor) {
             if (this.descriptor.hasOwnProperty(item)) {
@@ -241,7 +252,8 @@ class PhaserRixNode extends AudioWorkletNode {
      * @param ctrl - the MIDI controller number (0..127)
      * @param value - the MIDI controller value (0..127)
      */
-    ctrlChange(channel, ctrl, value) {
+    ctrlChange(channel, ctrl, value)
+    {
         if (this.fCtrlLabel[ctrl] !== []) {
             for (var i = 0; i < this.fCtrlLabel[ctrl].length; i++) {
                 var path = this.fCtrlLabel[ctrl][i].path;
@@ -259,10 +271,11 @@ class PhaserRixNode extends AudioWorkletNode {
      * @param channel - the MIDI channel (0..15, not used for now)
      * @param value - the MIDI controller value (-1..1)
      */
-    pitchWheel(channel, wheel) {
+    pitchWheel(channel, wheel)
+    {
         for (var i = 0; i < this.fPitchwheelLabel.length; i++) {
             var path = this.fPitchwheelLabel[i];
-            this.setParamValue(path, Math.pow(2.0, wheel / 12.0));
+            this.setParamValue(path, Math.pow(2.0, wheel/12.0));
             if (this.output_handler) {
                 this.output_handler(path, this.getParamValue(path));
             }
@@ -272,30 +285,33 @@ class PhaserRixNode extends AudioWorkletNode {
     /**
      * Generic MIDI message handler.
      */
-    midiMessage(data) {
+    midiMessage(data)
+    {
         var cmd = data[0] >> 4;
         var channel = data[0] & 0xf;
         var data1 = data[1];
         var data2 = data[2];
-
+        
         if (channel === 9) {
             return;
         } else if (cmd === 11) {
             this.ctrlChange(channel, data1, data2);
         } else if (cmd === 14) {
-            this.pitchWheel(channel, ((data2 * 128.0 + data1) - 8192) / 8192.0);
+            this.pitchWheel(channel, ((data2 * 128.0 + data1)-8192)/8192.0);
         }
     }
-
+    
     // For WAP
-    onMidi(data) {
-        midiMessage(data);
+    onMidi(data) 
+    {
+     	midiMessage(data);
     }
-
+    
     /**
      * @returns {Object} describes the path for each available param and its current value
      */
-    async getState() {
+    async getState() 
+    {
         var params = new Object();
         for (let i = 0; i < this.getParams().length; i++) {
             Object.assign(params, { [this.getParams()[i]]: `${this.getParam(this.getParams()[i])}` });
@@ -307,7 +323,8 @@ class PhaserRixNode extends AudioWorkletNode {
      * Sets each params with the value indicated in the state object
      * @param {Object} state 
      */
-    async setState(state) {
+    async setState(state) 
+    {
         return new Promise(resolve => {
             for (const param in state) {
                 if (state.hasOwnProperty(param)) this.setParam(param, state[param]);
@@ -320,19 +337,21 @@ class PhaserRixNode extends AudioWorkletNode {
             resolve(state);
         })
     }
-
+    
     /**
      * A different call closer to the preset management
      * @param {Object} patch to assign as a preset to the node
      */
-    setPatch(patch) {
+    setPatch(patch) 
+    {
         this.setState(this.presets[patch])
     }
-
-    static remap(v, mn0, mx0, mn1, mx1) {
+    
+    static remap(v, mn0, mx0, mn1, mx1)
+    {
         return (1.0 * (v - mn0) / (mx0 - mn0)) * (mx1 - mn1) + mn1;
     }
-
+    
 }
 
 // Factory class
@@ -344,17 +363,19 @@ class PhaserRix {
      * @param context - the audio context
      * @param baseURL - the baseURL of the plugin folder
      */
-    constructor(context, baseURL = "") {
-        console.log("baseLatency " + context.baseLatency);
-        console.log("outputLatency " + context.outputLatency);
-        console.log("sampleRate " + context.sampleRate);
-
+    constructor(context, baseURL = "")
+    {
+    	console.log("baseLatency " + context.baseLatency);
+    	console.log("outputLatency " + context.outputLatency);
+    	console.log("sampleRate " + context.sampleRate);
+    	
         this.context = context;
         this.baseURL = baseURL;
         this.pathTable = [];
     }
 
-    heap2Str(buf) {
+    heap2Str(buf)
+    {
         let str = "";
         let i = 0;
         while (buf[i] !== 0) {
@@ -362,18 +383,19 @@ class PhaserRix {
         }
         return str;
     }
-
+    
     /**
      * Load additionnal resources to prepare the custom AudioWorkletNode. Returns a promise to be used with the created node.
      */
-    async load() {
+    async load()
+    {
         try {
             const importObject = {
                 env: {
                     memoryBase: 0,
                     tableBase: 0,
                     _abs: Math.abs,
-
+                        
                     // Float version
                     _acosf: Math.acos,
                     _asinf: Math.asin,
@@ -400,7 +422,7 @@ class PhaserRix {
                     _coshf: Math.cosh,
                     _sinhf: Math.sinh,
                     _tanhf: Math.tanh,
-
+                        
                     // Double version
                     _acos: Math.acos,
                     _asin: Math.asin,
@@ -427,7 +449,7 @@ class PhaserRix {
                     _cosh: Math.cosh,
                     _sinh: Math.sinh,
                     _tanh: Math.tanh,
-
+                        
                     table: new WebAssembly.Table({ initial: 0, element: "anyfunc" })
                 }
             };
@@ -437,30 +459,28 @@ class PhaserRix {
             const dspBuffer = await dspFile.arrayBuffer();
             const dspModule = await WebAssembly.compile(dspBuffer);
             const dspInstance = await WebAssembly.instantiate(dspModule, importObject);
-
-            return new Promise((resolve, reject) => {
-
+            
+            return new Promise((resolve, reject) => {   
+            
                 let HEAPU8 = new Uint8Array(dspInstance.exports.memory.buffer);
                 let json = this.heap2Str(HEAPU8);
-                let json_object = JSON.parse(json);
+                let json_object = JSON.parse(json);  
                 let options = { wasm_module: dspModule, json: json };
-
+                
                 let re = /JSON_STR/g;
                 let PhaserRixProcessorString1 = PhaserRixProcessorString.replace(re, json);
                 let real_url = window.URL.createObjectURL(new Blob([PhaserRixProcessorString1], { type: 'text/javascript' }));
-
+                
                 this.context.audioWorklet.addModule(real_url).then(() => {
-                    this.node = new PhaserRixNode(this.context, this.baseURL,
-                        {
-                            numberOfInputs: (parseInt(json_object.inputs) > 0) ? 1 : 0,
-                            numberOfOutputs: (parseInt(json_object.outputs) > 0) ? 1 : 0,
-                            channelCount: Math.max(1, parseInt(json_object.inputs)),
-                            outputChannelCount: [parseInt(json_object.outputs)],
-                            channelCountMode: "explicit",
-                            channelInterpretation: "speakers",
-                            processorOptions: options
-                        });
-                    this.node.onprocessorerror = () => { console.log('An error from PhaserRix-processor was detected.'); }
+                    this.node = new PhaserRixNode(this.context, this.baseURL, 
+                                        { numberOfInputs: (parseInt(json_object.inputs) > 0) ? 1 : 0,
+                                        numberOfOutputs: (parseInt(json_object.outputs) > 0) ? 1 : 0,
+                                        channelCount: Math.max(1, parseInt(json_object.inputs)),
+                                        outputChannelCount: [parseInt(json_object.outputs)],
+                                        channelCountMode: "explicit",
+                                        channelInterpretation: "speakers",
+                                        processorOptions: options });
+                    this.node.onprocessorerror = () => { console.log('An error from PhaserRix-processor was detected.');}
                     return (this.node);
                 }).then((node) => {
                     resolve(node);
@@ -468,16 +488,17 @@ class PhaserRix {
                     reject(e);
                 });
             });
-
+            
         } catch (e) {
             this.error(e);
             this.error("Faust " + this.name + " cannot be loaded or compiled");
             return null;
         }
-
+    	
     }
-
-    async loadGui() {
+    
+    async loadGui()
+    {
         return new Promise((resolve, reject) => {
             try {
                 // DO THIS ONLY ONCE. If another instance has already been added, do not add the html file again
@@ -508,9 +529,10 @@ class PhaserRix {
         });
     };
 
-    linkExists(url) {
-        return document.querySelectorAll(`link[href="${url}"]`).length > 0;
-    }
+	linkExists(url) 
+	{
+    	return document.querySelectorAll(`link[href="${url}"]`).length > 0;
+   	}
 
 }
 
