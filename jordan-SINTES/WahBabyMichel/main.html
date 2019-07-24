@@ -260,7 +260,7 @@
 
         setSliders() {
             this._root.getElementById("/CRYBABY/Wah_parameter").addEventListener("input", (e) => {
-                this._plug.setParam("/CRYBABY/Wah_parameter", 1 - e.target.value);
+                this._plug.setParam("/CRYBABY/Wah_parameter",  e.target.value);
                 console.log(e.target.value);
                 let wah = this._root.querySelector("#imgWah");
                 let angle = 35 * (1-e.target.value);
