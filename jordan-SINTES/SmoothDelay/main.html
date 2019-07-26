@@ -132,7 +132,7 @@
             let posOfLastSlash = templateSmoothDelayGui .baseURI.lastIndexOf("/");
             this.basePath = templateSmoothDelayGui .baseURI.substring(0, posOfLastSlash);
             this._root = this.attachShadow({ mode: 'open' });
-            this._root.appendChild(SmoothDelayTemp.content.cloneNode(true));
+            this._root.appendChild(templateSmoothDelayGui.content.cloneNode(true));
             this.isOn;
             this.state = new Object();
             this.setKnobs();
