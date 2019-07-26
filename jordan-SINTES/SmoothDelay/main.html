@@ -120,7 +120,7 @@
     </div>
 </template>
 <script>
-    let SmoothDelayTemp = document.currentScript.ownerDocument.querySelector('template');
+    let templateSmoothDelayGui = document.currentScript.ownerDocument.querySelector('template');
     class SmoothDelayGui extends HTMLElement {
 
 
@@ -129,7 +129,8 @@
             super();
             this._plug = plug;
             this._plug.gui = this;
-            console.log(this._plug);
+            let posOfLastSlash = templateSmoothDelayGui .baseURI.lastIndexOf("/");
+            this.basePath = templateSmoothDelayGui .baseURI.substring(0, posOfLastSlash);
             this._root = this.attachShadow({ mode: 'open' });
             this._root.appendChild(SmoothDelayTemp.content.cloneNode(true));
             this.isOn;
@@ -138,7 +139,22 @@
             this.setSliders();
             this.setSwitchListener();
             this.setActive(false);
+            this.fixRelativeImagePathsInCSS();
 
+        }
+
+        fixRelativeImagePathsInCSS() {
+            // change webaudiocontrols relative paths for spritesheets to absolute
+            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch, img");
+            webaudioControls.forEach(e => {
+                let currentImagePath = e.getAttribute("src");
+                if (currentImagePath !== undefined) {
+                    //console.log("Got wc src as " + e.getAttribute("src"));
+                    let imagePath = e.getAttribute("src");
+                    e.setAttribute("src", this.basePath + "/" + imagePath);
+                    //console.log("After fix : wc src as " + e.getAttribute("src"));
+                }
+            });
         }
 
         attributeChangedCallback() {
