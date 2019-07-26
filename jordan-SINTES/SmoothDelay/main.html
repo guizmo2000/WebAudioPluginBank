@@ -1,0 +1,274 @@
+<link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Acme">
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script>
+    WebAudioControlsOptions = {
+        useMidi: 1,
+    };
+</script>
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<template>
+    <style>
+        :host {
+            display: block;
+            box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(rgb(71, 4, 110), rgb(29, 8, 53));
+            position: relative;
+            width: 200px;
+            height: 210px;
+            user-select: none;
+            cursor: move;
+            z-index: 9;
+            font-family: "Acme";
+            font-size: 12px;
+            /* bring your own prefixes */
+        }
+
+
+
+        .knob,
+        .switch,
+        .icon,
+        .label,
+        .slider {
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .pedalLabel {
+            margin-left: 50px;
+            top: 225px;
+            font-size: 18px;
+            /*{font}*/
+            text-align: center;
+            line-height: 30px;
+            /*{pedalfontsize}*/
+            width: 150px;
+            color: rgb(255, 255, 255);
+            /*{fontcolor}*/
+        }
+
+        #knob1-label {
+            top: 84px;
+            left: 43px;
+        }
+    </style>
+
+    <div class="main">
+        <div class="row">
+            <div class="column">
+                <div class="knob" id="Delay">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100"
+                        min="0.0000999999975" max="500" step="0.100000001" value="1" id="/SmoothDelay/Delay"
+                        style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; color: white">Delay</div>
+                </div>
+                <div class="knob" id="Dry/Wet">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.0250000004" value="0.333299994" id="/SmoothDelay/Dry/Wet" style="height: 50px; margin-top:10px">
+                    </webaudio-knob>
+                    <div style="text-align:center; color: white;">Dry/Wet</div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="knob" id="Feedback">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="100" step="0.100000001" value="0" id="/SmoothDelay/Feedback" style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color: white">Feedback</div>
+                </div>
+                <div class="switch" id="bypass">
+                    <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" id="switch1"
+                        style="height: 50px; margin-top:40px;"></webaudio-switch>
+                </div>
+            </div>
+            <div class="column">
+                <div class="knob" id="Interpolation">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="1"
+                        max="100" step="0.100000001" value="10" id="/SmoothDelay/Interpolation" style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color: white">Interpolation</div>
+                </div>
+                <div class="knob" id="Super Wet">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="0.5" step="0.0250000004" value="0" id="/SmoothDelay/Super_Wet" style="height: 50px; margin-top:10px">
+                    </webaudio-knob>
+                    <div style="text-align:center; color: white">Super Wet</div>
+                </div>
+            </div>
+        </div>
+        <span class="pedalLabel">Smooth Delay</span>
+    </div>
+</template>
+<script>
+    let SmoothDelayTemp = document.currentScript.ownerDocument.querySelector('template');
+    class SmoothDelayGui extends HTMLElement {
+
+
+        constructor(plug) {
+
+            super();
+            this._plug = plug;
+            this._plug.gui = this;
+            console.log(this._plug);
+            this._root = this.attachShadow({ mode: 'open' });
+            this._root.appendChild(SmoothDelayTemp.content.cloneNode(true));
+            this.isOn;
+            this.state = new Object();
+            this.setKnobs();
+            this.setSliders();
+            this.setSwitchListener();
+            this.setActive(false);
+
+        }
+
+        attributeChangedCallback() {
+
+            console.log("Custom element attributes changed.");
+            this.state = JSON.parse(this.getAttribute('state'));
+            let tmp = "/SmoothDelay/bypass";
+            if (this.state[tmp] == 1) {
+                this._root.querySelector("#switch1").value = 0;
+                this.isOn = false;
+            } else if (this.state[tmp] == 0) {
+                this._root.querySelector("#switch1").value = 1;
+                this.isOn = true;
+            }
+            this.knobs = this._root.querySelectorAll(".knob");
+            console.log(this.state);
+            for (var i = 0; i < this.knobs.length; i++) {
+                this.knobs[i].setValue(this.state[this.knobs[i].id], false);
+                console.log(this.knobs[i].value);
+            }
+
+        }
+
+        get properties() {
+
+            this.boundingRect = {
+                dataWidth: {
+                    type: Number,
+                    value: 200
+                },
+                dataHeight: {
+                    type: Number,
+                    value: 210
+                }
+            };
+            return this.boundingRect;
+
+        }
+
+        static get observedAttributes() {
+
+            return ['state'];
+
+        }
+
+        setResources() {
+
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+            });
+
+            this._root.querySelectorAll(".switch").forEach((s) => {
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+            });
+
+
+
+        }
+
+        setKnobs() {
+            this._root.getElementById("/SmoothDelay/Delay").addEventListener("input", (e) => this._plug.setParam("/SmoothDelay/Delay", e.target.value));
+            this._root.getElementById("/SmoothDelay/Dry/Wet").addEventListener("input", (e) => this._plug.setParam("/SmoothDelay/Dry/Wet", e.target.value));
+            this._root.getElementById("/SmoothDelay/Feedback").addEventListener("input", (e) => this._plug.setParam("/SmoothDelay/Feedback", e.target.value));
+            this._root.getElementById("/SmoothDelay/Interpolation").addEventListener("input", (e) => this._plug.setParam("/SmoothDelay/Interpolation", e.target.value));
+            this._root.getElementById("/SmoothDelay/Super_Wet").addEventListener("input", (e) => this._plug.setParam("/SmoothDelay/Super_Wet", e.target.value));
+
+        }
+
+        bypass() {
+
+            this._plug.setParam("/SmoothDelay/bypass", 1);
+            console.log("disabled");
+
+        }
+
+        setSwitchListener() {
+
+            console.log("setswitch");
+            if (this._root.querySelector("#switch1")) {
+                this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                    if (this.isOn) this.bypass()
+                    else this.reactivate();
+                    this.isOn = !this.isOn;
+                });
+            }
+
+        }
+
+        reactivate() {
+
+            this._plug.setParam("/SmoothDelay/bypass", 0);
+
+        }
+
+        setSliders() {
+
+        }
+
+        setActive(active) {
+
+            // Where there is not swtich, no need to set activation logic. 
+            if (!this._root.querySelector("#switch1")) {
+                return;
+            }
+            if (active == undefined || active == false) {
+                this.isOn = false;
+                this.bypass();
+                this._root.querySelector("#switch1").value = 0;
+            } else if (active) {
+                this.isOn = true;
+                this.reactivate();
+                this._root.querySelector("#switch1").value = 1;
+            }
+
+        }
+    }
+    try {
+        customElements.define('wap-smoothdelay', SmoothDelayGui);
+        console.log("Element defined");
+    } catch (error) {
+        console.log(error);
+        console.log("Element already defined");
+    }
+
+    createSmoothDelayGUI = (plug) => {
+        let elem = new SmoothDelayGui(plug);
+        return elem;
+    }
+</script>
