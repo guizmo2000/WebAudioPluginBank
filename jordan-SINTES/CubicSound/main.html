@@ -1,0 +1,242 @@
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Anton">
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script>
+    WebAudioControlsOptions = {
+        useMidi: 1,
+    };
+</script>
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<template>
+    <style>
+        :host {
+            display: block;
+            box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(rgb(13, 151, 9), rgb(10, 87, 16));
+            position: relative;
+            width: 160px;
+            height: 220px;
+            user-select: none;
+            cursor: move;
+            z-index: 9;
+            font-family: "Anton";
+            font-size: 12px;
+            /* bring your own prefixes */
+        }
+
+        .knob,
+        .switch,
+        .icon,
+        .label,
+        .slider {
+
+            cursor: pointer;
+            text-align: center;
+        }
+
+
+        .pedalLabel {
+            margin-left: 35px;
+            top: 225px;
+            font-size: 18px;
+            /*{font}*/
+            text-align: center;
+            line-height: 30px;
+            /*{pedalfontsize}*/
+            width: 150px;
+            color: rgb(255, 255, 255);
+            /*{fontcolor}*/
+        }
+
+        #knob1-label {
+            top: 84px;
+            left: 43px;
+        }
+    </style>
+    <div class="main">
+        <div class="knob" id="Drive">
+            <webaudio-knob value="0" height="50" width="50" sprites="100" max="1" min="0" step="0.00999999978"
+                src="assets/img/knobs/m400.png" 
+                id="/CUBIC_NONLINEARITY_cubicnl/Drive" style="height: 40px;"></webaudio-knob>
+            <div>Drive</div>
+        </div>
+        <div class="knob" id="Offset">
+            <webaudio-knob value="0" height="50" width="50" sprites="100" max="1" min="0" step="0.00999999978"
+                src="assets/img/knobs/m400.png" 
+                id="/CUBIC_NONLINEARITY_cubicnl/Offset" style="height: 40px;"></webaudio-knob>
+            <div>Offset</div>
+        </div>
+        <span class="pedalLabel">Cubic Sound</span>
+        <div class="switch" id="Bypass">
+            <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" id="switch1"
+                style="height: 50px;"></webaudio-switch>
+        </div>
+    </div>
+</template>
+<script>
+    let templateCubicSoundGui = document.currentScript.ownerDocument.querySelector('template');
+    class CubicSoundGui extends HTMLElement {
+
+
+        constructor(plug) {
+
+            super();
+            this._plug = plug;
+            this._plug.gui = this;
+            let posOfLastSlash = templateCubicSoundGui .baseURI.lastIndexOf("/");
+            this.basePath = templateCubicSoundGui .baseURI.substring(0, posOfLastSlash);
+            this._root = this.attachShadow({ mode: 'open' });
+            this._root.appendChild(templateCubicSoundGui.content.cloneNode(true));
+            this.isOn;
+            this.state = new Object();
+            this.setKnobs();
+            this.setSliders();
+            this.setSwitchListener();
+            this.setActive(false);
+            this.fixRelativeImagePathsInCSS();
+
+        }
+
+        fixRelativeImagePathsInCSS() {
+            // change webaudiocontrols relative paths for spritesheets to absolute
+            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch, img");
+            webaudioControls.forEach(e => {
+                let currentImagePath = e.getAttribute("src");
+                if (currentImagePath !== undefined) {
+                    //console.log("Got wc src as " + e.getAttribute("src"));
+                    let imagePath = e.getAttribute("src");
+                    e.setAttribute("src", this.basePath + "/" + imagePath);
+                    //console.log("After fix : wc src as " + e.getAttribute("src"));
+                }
+            });
+        }
+
+        attributeChangedCallback() {
+
+            console.log("Custom element attributes changed.");
+            this.state = JSON.parse(this.getAttribute('state'));
+            let tmp = "/CUBIC_NONLINEARITY_cubicnl/Bypass";
+            if (this.state[tmp] == 1) {
+                this._root.querySelector("#switch1").value = 0;
+                this.isOn = false;
+            } else if (this.state[tmp] == 0) {
+                this._root.querySelector("#switch1").value = 1;
+                this.isOn = true;
+            }
+            this.knobs = this._root.querySelectorAll(".knob");
+            console.log(this.state);
+            for (var i = 0; i < this.knobs.length; i++) {
+                this.knobs[i].setValue(this.state[this.knobs[i].id], false);
+                console.log(this.knobs[i].value);
+            }
+
+        }
+
+        get properties() {
+
+            this.boundingRect = {
+                dataWidth: {
+                    type: Number,
+                    value: 160
+                },
+                dataHeight: {
+                    type: Number,
+                    value: 220
+                }
+            };
+            return this.boundingRect;
+
+        }
+
+        static get observedAttributes() {
+
+            return ['state'];
+
+        }
+
+        setResources() {
+
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+            });
+
+            this._root.querySelectorAll(".switch").forEach((s) => {
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+            });
+
+
+
+        }
+
+        setKnobs() {
+            this._root.getElementById("/CUBIC_NONLINEARITY_cubicnl/Drive").addEventListener("input", (e) => this._plug.setParam("/CUBIC_NONLINEARITY_cubicnl/Drive", e.target.value));
+            this._root.getElementById("/CUBIC_NONLINEARITY_cubicnl/Offset").addEventListener("input", (e) => this._plug.setParam("/CUBIC_NONLINEARITY_cubicnl/Offset", e.target.value));
+
+        }
+
+        bypass() {
+
+            this._plug.setParam("/CUBIC_NONLINEARITY_cubicnl/Bypass", 1);
+            console.log("disabled");
+
+        }
+
+        setSwitchListener() {
+
+            console.log("setswitch");
+            if (this._root.querySelector("#switch1")) {
+                this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                    if (this.isOn) this.bypass()
+                    else this.reactivate();
+                    this.isOn = !this.isOn;
+                });
+            }
+
+        }
+
+        reactivate() {
+
+            this._plug.setParam("/CUBIC_NONLINEARITY_cubicnl/Bypass", 0);
+
+        }
+
+        setSliders() {
+           
+        }
+
+        setActive(active) {
+
+            // Where there is not swtich, no need to set activation logic. 
+            if (!this._root.querySelector("#switch1")) {
+                return;
+            }
+            if (active == undefined || active == false) {
+                this.isOn = false;
+                this.bypass();
+                this._root.querySelector("#switch1").value = 0;
+            } else if (active) {
+                this.isOn = true;
+                this.reactivate();
+                this._root.querySelector("#switch1").value = 1;
+            }
+
+        }
+    }
+    try {
+        customElements.define('wap-cubicsound', CubicSoundGui);
+        console.log("Element defined");
+    } catch (error) {
+        console.log(error);
+        console.log("Element already defined");
+    }
+
+    createCubicSoundGUI = (plug) => {
+        let elem = new CubicSoundGui(plug);
+        return elem;
+    }
+</script>
