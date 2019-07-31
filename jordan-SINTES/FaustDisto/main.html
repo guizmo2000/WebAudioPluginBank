@@ -1,5 +1,4 @@
-<link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Permanent+Marker">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Permanent+Marker">
 <script
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
 <script>
@@ -57,7 +56,7 @@
         }
 
         .pedalLabel {
-            margin-left: 97px;
+            margin-left: 85px;
             top: 225px;
             font-size: 20px;
             /*{font}*/
@@ -93,53 +92,58 @@
     <div class="main">
         <div class="row">
             <div class="column">
-                <div class="knob" id="Curve">
-                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100"
-                        min="0.100000001" max="4" step="0.00100000005" value="1" id="/FaustDisto/Curve"
-                        style="height: 50px; margin-top: 35px;"></webaudio-knob>
-                    <div style="text-align:center; color:white;">Curve</div>
-                </div>
                 <div class="knob" id="Cutoff">
                     <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="100"
-                        max="20000" step="1" value="20000" id="/FaustDisto/Cutoff" style="height: 50px; margin-top: 10px;">
+                        max="20000" step="1" value="20000" id="/FaustDisto/Cutoff"
+                        style="height: 50px; margin-top: 35px;">
                     </webaudio-knob>
                     <div style="text-align:center; color:white;">Cutoff</div>
                 </div>
-            </div>
-            <div class="column">
-                <div class="knob" id="Drive">
-                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="-10"
-                        max="10" step="0.00100000005" value="4" id="/FaustDisto/Drive" style="height: 50px;">
-                    </webaudio-knob>
-                    <div style="text-align:center; color:white;">Drive</div>
-                </div>
-                <div class="knob" id="Feedback">
-                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="-60"
-                        max="-24" step="1" value="-60" id="/FaustDisto/Feedback" style="height: 50px; margin-top: 10px;"></webaudio-knob>
-                    <div style="text-align:center; color:white;">Feedback</div>
-                </div>
-                <div class="knob" id="Level">
-                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="-24"
-                        max="24" step="1" value="-3" id="/FaustDisto/Level" style="height: 50px; margin-top: 10px;"></webaudio-knob>
-                    <div style="text-align:center; color:white;">Level</div>
-                </div>
-            </div>
-            <div class="column">
                 <div class="knob" id="Resonance">
                     <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="1"
-                        max="8" step="0.00100000005" value="1" id="/FaustDisto/Resonance" style="height: 50px; margin-top: 35px;">
+                        max="8" step="0.00100000005" value="1" id="/FaustDisto/Resonance"
+                        style="height: 50px; margin-top: 10px;">
                     </webaudio-knob>
                     <div style="text-align:center; color:white;">Resonance</div>
                 </div>
+            </div>
+            <div class="column">
+                <div class="knob" id="Curve">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100"
+                        min="0.100000001" max="4" step="0.00100000005" value="1" id="/FaustDisto/Curve"
+                        style="height: 50px;"></webaudio-knob>
+                    <div style="text-align:center; color:white;">Curve</div>
+                </div>
+                <div class="knob" id="Drive">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="-10"
+                        max="10" step="0.00100000005" value="4" id="/FaustDisto/Drive" style="height: 50px; margin-top: 10px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white; ;">Drive</div>
+                </div>
                 <div class="knob" id="Saturation">
                     <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
-                        max="1" step="0.00100000005" value="1" id="/FaustDisto/Saturation" style="height: 50px; margin-top: 10px;">
+                        max="1" step="0.00100000005" value="1" id="/FaustDisto/Saturation"
+                        style="height: 50px; margin-top: 10px;">
                     </webaudio-knob>
                     <div style="text-align:center; color:white;">Saturation</div>
                 </div>
             </div>
+            <div class="column">
+                <div class="knob" id="Feedback">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="-60"
+                        max="-24" step="1" value="-60" id="/FaustDisto/Feedback"
+                        style="height: 50px; margin-top: 35px;"></webaudio-knob>
+                    <div style="text-align:center; color:white;">Feedback</div>
+                </div>
+                <div class="knob" id="Level">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="-24"
+                        max="24" step="1" value="-3" id="/FaustDisto/Level" style="height: 50px; margin-top: 10px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white;">Level</div>
+                </div>
+            </div>
         </div>
-        <span class="pedalLabel">FaustDisto</span>
+        <span class="pedalLabel">TemperDisto</span>
         <div class="switch" id="bypass">
             <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" id="switch1"
                 style="height: 50px;"></webaudio-switch>
