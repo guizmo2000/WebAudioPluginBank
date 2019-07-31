@@ -166,7 +166,21 @@
             this.setSliders();
             this.setSwitchListener();
             this.setActive(false);
+            this.fixRelativeImagePathsInCSS();
+        }
 
+        fixRelativeImagePathsInCSS() {
+            // change webaudiocontrols relative paths for spritesheets to absolute
+            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch, img");
+            webaudioControls.forEach(e => {
+                let currentImagePath = e.getAttribute("src");
+                if (currentImagePath !== undefined) {
+                    //console.log("Got wc src as " + e.getAttribute("src"));
+                    let imagePath = e.getAttribute("src");
+                    e.setAttribute("src", this.basePath + "/" + imagePath);
+                    //console.log("After fix : wc src as " + e.getAttribute("src"));
+                }
+            });
         }
 
         attributeChangedCallback() {
