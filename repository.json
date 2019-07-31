@@ -39,6 +39,7 @@
     "PhaserRix": "https://mainline.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/PhaserRix",
     "SmoothDelay": "https://mainline.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/SmoothDelay",
     "CubicSound": "https://mainline.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/CubicSound",
-    "FaustEQ": "https://mainline.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/FaustEQ"
+    "FaustEQ": "https://mainline.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/FaustEQ",
+    "FaustDisto": "https://mainline.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/FaustDisto"
   }
 }

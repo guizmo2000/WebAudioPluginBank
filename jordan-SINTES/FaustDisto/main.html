@@ -1,0 +1,304 @@
+<link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Permanent+Marker">
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script>
+    WebAudioControlsOptions = {
+        useMidi: 1,
+    };
+</script>
+<script
+    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<template>
+    <style>
+        :host {
+            display: block;
+            box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);
+            background: linear-gradient(rgb(161, 47, 47), rgb(90, 36, 36));
+            position: relative;
+            width: 280px;
+            height: 330px;
+            user-select: none;
+            cursor: move;
+            z-index: 9;
+            font-family: "Permanent Marker";
+            font-size: 10px;
+            /* bring your own prefixes */
+        }
+
+        .knob,
+        .switch,
+        .icon,
+        .label,
+        .slider {
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .row {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: stretch;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            margin: 5px;
+            margin-top: 10px;
+            text-align: center;
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .pedalLabel {
+            margin-left: 97px;
+            top: 225px;
+            font-size: 20px;
+            /*{font}*/
+            text-align: center;
+            line-height: 30px;
+            /*{pedalfontsize}*/
+            width: 150px;
+            color: rgb(255, 255, 255);
+            /*{fontcolor}*/
+        }
+
+        .knob-label {
+            position: absolute;
+            font-size: 12px;
+            /*{knobfontsize}*/
+            line-height: 12px;
+            width: 64px;
+            max-width: 64px;
+            overflow: hidden;
+            text-align: center;
+            font-family: Sansita;
+            /*{font}*/
+            color: #6B0000;
+            /*{fontcolor}*/
+        }
+
+        #knob1-label {
+            top: 84px;
+            left: 43px;
+        }
+    </style>
+
+    <div class="main">
+        <div class="row">
+            <div class="column">
+                <div class="knob" id="Curve">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100"
+                        min="0.100000001" max="4" step="0.00100000005" value="1" id="/FaustDisto/Curve"
+                        style="height: 50px; margin-top: 35px;"></webaudio-knob>
+                    <div style="text-align:center; color:white;">Curve</div>
+                </div>
+                <div class="knob" id="Cutoff">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="100"
+                        max="20000" step="1" value="20000" id="/FaustDisto/Cutoff" style="height: 50px; margin-top: 10px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white;">Cutoff</div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="knob" id="Drive">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="-10"
+                        max="10" step="0.00100000005" value="4" id="/FaustDisto/Drive" style="height: 50px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white;">Drive</div>
+                </div>
+                <div class="knob" id="Feedback">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="-60"
+                        max="-24" step="1" value="-60" id="/FaustDisto/Feedback" style="height: 50px; margin-top: 10px;"></webaudio-knob>
+                    <div style="text-align:center; color:white;">Feedback</div>
+                </div>
+                <div class="knob" id="Level">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="-24"
+                        max="24" step="1" value="-3" id="/FaustDisto/Level" style="height: 50px; margin-top: 10px;"></webaudio-knob>
+                    <div style="text-align:center; color:white;">Level</div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="knob" id="Resonance">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="1"
+                        max="8" step="0.00100000005" value="1" id="/FaustDisto/Resonance" style="height: 50px; margin-top: 35px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white;">Resonance</div>
+                </div>
+                <div class="knob" id="Saturation">
+                    <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.00100000005" value="1" id="/FaustDisto/Saturation" style="height: 50px; margin-top: 10px;">
+                    </webaudio-knob>
+                    <div style="text-align:center; color:white;">Saturation</div>
+                </div>
+            </div>
+        </div>
+        <span class="pedalLabel">FaustDisto</span>
+        <div class="switch" id="bypass">
+            <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" id="switch1"
+                style="height: 50px;"></webaudio-switch>
+        </div>
+    </div>
+</template>
+<script>
+    let templateFaustDistoGui = document.currentScript.ownerDocument.querySelector('template');
+    class FaustDistoGui extends HTMLElement {
+
+
+        constructor(plug) {
+
+            super();
+            this._plug = plug;
+            this._plug.gui = this;
+            let posOfLastSlash = templateFaustDistoGui.baseURI.lastIndexOf("/");
+            this.basePath = templateFaustDistoGui.baseURI.substring(0, posOfLastSlash);
+            this._root = this.attachShadow({ mode: 'open' });
+            this._root.appendChild(templateFaustDistoGui.content.cloneNode(true));
+            this.isOn;
+            this.state = new Object();
+            this.setKnobs();
+            this.setSliders();
+            this.setSwitchListener();
+            this.setActive(false);
+
+        }
+
+        attributeChangedCallback() {
+
+            console.log("Custom element attributes changed.");
+            this.state = JSON.parse(this.getAttribute('state'));
+            let tmp = "/FaustDisto/bypass";
+            if (this.state[tmp] == 1) {
+                this._root.querySelector("#switch1").value = 0;
+                this.isOn = false;
+            } else if (this.state[tmp] == 0) {
+                this._root.querySelector("#switch1").value = 1;
+                this.isOn = true;
+            }
+            this.knobs = this._root.querySelectorAll(".knob");
+            console.log(this.state);
+            for (var i = 0; i < this.knobs.length; i++) {
+                this.knobs[i].setValue(this.state[this.knobs[i].id], false);
+                console.log(this.knobs[i].value);
+            }
+
+        }
+
+        get properties() {
+
+            this.boundingRect = {
+                dataWidth: {
+                    type: Number,
+                    value: 280
+                },
+                dataHeight: {
+                    type: Number,
+                    value: 330
+                }
+            };
+            return this.boundingRect;
+
+        }
+
+        static get observedAttributes() {
+
+            return ['state'];
+
+        }
+
+        setResources() {
+
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+            });
+
+            this._root.querySelectorAll(".switch").forEach((s) => {
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+            });
+
+
+
+        }
+
+        setKnobs() {
+            this._root.getElementById("/FaustDisto/Curve").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Curve", e.target.value));
+            this._root.getElementById("/FaustDisto/Cutoff").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Cutoff", e.target.value));
+            this._root.getElementById("/FaustDisto/Drive").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Drive", e.target.value));
+            this._root.getElementById("/FaustDisto/Feedback").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Feedback", e.target.value));
+            this._root.getElementById("/FaustDisto/Level").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Level", e.target.value));
+            this._root.getElementById("/FaustDisto/Resonance").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Resonance", e.target.value));
+            this._root.getElementById("/FaustDisto/Saturation").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Saturation", e.target.value));
+
+        }
+
+        bypass() {
+
+            this._plug.setParam("/FaustDisto/bypass", 1);
+            console.log("disabled");
+
+        }
+
+        setSwitchListener() {
+
+            console.log("setswitch");
+            if (this._root.querySelector("#switch1")) {
+                this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                    if (this.isOn) this.bypass()
+                    else this.reactivate();
+                    this.isOn = !this.isOn;
+                });
+            }
+
+        }
+
+        reactivate() {
+
+            this._plug.setParam("/FaustDisto/bypass", 0);
+
+        }
+
+        setSliders() {
+
+        }
+
+        setActive(active) {
+
+            // Where there is not swtich, no need to set activation logic. 
+            if (!this._root.querySelector("#switch1")) {
+                return;
+            }
+            if (active == undefined || active == false) {
+                this.isOn = false;
+                this.bypass();
+                this._root.querySelector("#switch1").value = 0;
+            } else if (active) {
+                this.isOn = true;
+                this.reactivate();
+                this._root.querySelector("#switch1").value = 1;
+            }
+
+        }
+    }
+    try {
+        customElements.define('wap-faustdisto', FaustDistoGui);
+        console.log("Element defined");
+    } catch (error) {
+        console.log(error);
+        console.log("Element already defined");
+    }
+
+    createFaustDistoGUI = (plug) => {
+        let elem = new FaustDistoGui(plug);
+        return elem;
+    }
+</script>
