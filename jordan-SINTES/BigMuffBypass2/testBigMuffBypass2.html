@@ -48,33 +48,38 @@
   window.onload = () => {
     button = document.querySelector("#toggleGuitarIn");
     audioInput = document.querySelector("#selectAudioInput")
-  }
 
-  function gotDevices(deviceInfos) {
+    function gotDevices(deviceInfos) {
+      for (let i = 0; i !== deviceInfos.length; ++i) {
+        const deviceInfo = deviceInfos[i];
+        if (deviceInfo.kind === 'audioinput') {
+          const option = document.createElement('option');
+          option.value = deviceInfo.deviceId;
+          option.text = deviceInfo.label || `microphone ${audioInput.length + 1}`;
+          audioInput.appendChild(option);
+          console.log("adding " + option.text);
 
-    for (let i = 0; i !== deviceInfos.length; ++i) {
-      const deviceInfo = deviceInfos[i];
-      const option = document.createElement('option');
-      option.value = deviceInfo.deviceId;
-      if (deviceInfo.kind === 'audioinput') {
-        option.text = deviceInfo.label || `microphone ${audioInput.length + 1}`;
-        audioInput.appendChild(option);
-      } else {
-        console.log('Some other kind of source/device: ', deviceInfo);
+        } else {
+          console.log('Some other kind of source/device: ', deviceInfo);
+        }
       }
+
+      
+    }
+    navigator.mediaDevices.enumerateDevices().then(gotDevices);
+
+    function handleError(error) {
+      console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
     }
 
-    selectors.forEach((select, selectorIndex) => {
-      if (Array.prototype.slice.call(select.childNodes).some(n => n.value === values[selectorIndex])) {
-        select.value = values[selectorIndex];
-      }
-    });
-  }
+    audioInput.onchange = (e) =>{
+      let index= e.target.selectedIndex;
+      let id = e.target[index].value;
+      let label = e.target[index].text;
 
-  navigator.mediaDevices.enumerateDevices().then(gotDevices).catch(handleError);
-
-  function handleError(error) {
-    console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
+      console.dir("Audio input selected : " + label + " id = " + id);
+      this.changeStream(id);
+    }
   }
 
   var guitarPluggedIn = false;
@@ -106,6 +111,22 @@
       button.innerHTML = "Guitar input: <span style='color:red;'>NOT ACTIVATED</span>, click to toggle on/off!";
     }
     guitarPluggedIn = !guitarPluggedIn;
+  }
+
+  function changeStream(id){
+    var constraints = {
+      audio: {
+        echoCancellation: false,
+        mozNoiseSuppression: false,
+        mozAutoGainControl: false,
+        deviceId: id ? { exact: id } : undefined
+      }
+    };
+
+    navigator.mediaDevices.getUserMedia(constraints).then((stream) => {
+      window.stream = stream;
+      userMedia = ctx.createMediaStreamSource(stream);
+    });
   }
 
   var mediaSource = ctx.createMediaElementSource(player);
