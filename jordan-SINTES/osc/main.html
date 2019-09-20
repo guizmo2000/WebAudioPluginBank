@@ -1,0 +1,347 @@
+
+            <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+            <script>
+            WebAudioControlsOptions = {
+                useMidi: 1,
+            };
+            </script>
+            <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+        <template><style>	
+                        .pedal{
+                            display: block;
+                            background-color: #7caeff;
+                            width: 130px;
+                            height: 330px;
+                            border-radius: 10px;
+                            position: relative;
+                            /* bring your own prefixes */
+                        }
+            
+                        
+                        #background-image {
+                            //border: solid 2px black;
+                            width: 130px;
+                            height: 330px;
+                            opacity: 1;
+                        }
+
+                        /* #resize {
+                            position: absolute;
+                            cursor: nwse-resize;
+                            width: 10px;
+                            height: 10px;
+                            left: 122px;
+                            top: 322px;
+                            border: 1px solid black;
+                        } */
+
+                        .knob, .switch, .icon, .label, .slider {
+                            position: absolute;
+                            cursor: pointer;
+                            text-align: center;
+                        }
+
+                        .container {
+                            position: relative;
+                            font-family: Arial;
+                          }
+                          
+                        .text-block {
+                            position: absolute;
+                            bottom: 20px;
+                            right: 20px;
+                            background-color: #7caeff;
+                            color: white;
+                            padding-left: 20px;
+                            padding-right: 20px;
+                        }
+
+                        .selected {
+                            border: 1px dashed black;
+                            cursor: move;
+                        }
+
+                        .selected:hover {
+                            border: 1px dashed black;
+                            cursor: move;
+                        }
+
+                        .selected  webaudio-knob{
+                            cursor: move;
+                        }
+
+                        .selected  webaudio-switch{
+                            cursor: move;
+                        }
+
+                        .selected  span{
+                            cursor: move;
+                        }
+
+                        .selected:hover  span{
+                            cursor: move;
+                        }
+
+                        .selected  webaudio-slider{
+                            cursor: move;
+                        }
+
+                        .selected:hover webaudio-knob{
+                            cursor: move;
+                        }
+
+                        .selected:hover webaudio-switch{
+                            cursor: move;
+                        }
+                        
+                        .selected:hover webaudio-slider{
+                            cursor: move;
+                        }
+
+
+                        #switch1 {
+                            bottom: 10px;
+                            right: 0px;
+                        }
+                        
+                    #Fuzz {
+                        left: 40px;
+                        top: 10px;
+                    }
+
+                    #Fuzz div {
+                        color: #000000;
+                        font-family: "Verdana";
+                        font-size: 14px;
+                        
+                    }
+                
+                    #Resonance {
+                        left: 40px;
+                        top: 90px;
+                    }
+
+                    #Resonance div {
+                        color: #000000;
+                        font-family: "Verdana";
+                        font-size: 14px;
+                        
+                    }
+                
+                    #Vibrato {
+                        left: 40px;
+                        top: 170px;
+                    }
+
+                    #Vibrato div {
+                        color: #000000;
+                        font-family: "Verdana";
+                        font-size: 14px;
+                        
+                    }
+                
+                    #bypass {
+                        left: 25px;
+                        top: 250px;
+                    }
+
+                    #bypass div {
+                        color: #000000;
+                        font-family: "Verdana";
+                        font-size: 14px;
+                        
+                    }
+                
+                        
+                        .pedalLabel{
+                            position: absolute;
+                            top: 225px;
+                            font-size: 25px;
+                            font-family: Sansita;/*{font}*/
+                            text-align: center;
+                            line-height: 30px;/*{pedalfontsize}*/
+                            width: 150px;
+                            color: #6B0000;/*{fontcolor}*/
+                        }
+                        .knob-label{
+                            position: absolute;
+                            font-size: 12px;/*{knobfontsize}*/
+                            line-height: 12px;
+                            width:64px;
+                            max-width:64px;
+                            overflow: hidden;
+                            text-align: center;
+                            font-family: Sansita;/*{font}*/
+                            color: #6B0000;/*{fontcolor}*/
+                        }
+                        #knob1-label{
+                            top: 84px;
+                            left: 43px;
+                        }</style><div class="pedal draggable" id="pedal">
+		<div id="resize"></div>
+
+    
+    <div class="container">
+      <img id="background-image">
+      <div class="text-block" id="textB">
+          <h4></h4>
+          <p id="test"></p>
+      </div>
+    </div>
+    <!-- <p id="labeldiv" style="border-style: dashed; top: 68px;">tototo</p> -->
+    <!-- <figure>
+        <img id="background-image" alt="tototo">
+        <figcaption>tototo</figcaption>
+    </figure> -->
+    <!-- <div class="text-block" id="froala-editor"></div> -->
+	<div class="knob" id="Fuzz"><webaudio-knob src="./img/knobs/knob2.png" height="50" width="50" sprites="100" min="-3" max="20" step="1" value="1" id="/osc/Fuzz" style="height: 50px;"></webaudio-knob><div style="text-align:center">Fuzz</div></div><div class="knob" id="Resonance"><webaudio-knob src="./img/knobs/knob2.png" height="50" width="50" sprites="100" min="0" max="0.9" step="0.01" value="0.5" id="/osc/Resonance" style="height: 50px;"></webaudio-knob><div style="text-align:center">Resonance</div></div><div class="knob" id="Vibrato"><webaudio-knob src="./img/knobs/knob2.png" height="50" width="50" sprites="100" min="0" max="0.99" step="0.01" value="1" id="/osc/Vibrato" style="height: 50px;"></webaudio-knob><div style="text-align:center">Vibrato</div></div><div class="switch" id="bypass"><webaudio-switch src="./img/switches/switch_2.png" height="50" width="80" id="switch1" style="height: 50px;"></webaudio-switch><div>bypass</div></div></div></template><script>
+        let oscTemp = document.currentScript.ownerDocument.querySelector('template');
+        class oscGui extends HTMLElement {
+    
+        
+            constructor(plug) {
+               
+                super();
+                this._plug = plug;
+                this._plug.gui = this;
+                console.log(this._plug);
+                this._root = this.attachShadow({ mode: 'open' });
+                this._root.appendChild(oscTemp.content.cloneNode(true));
+                this.isOn;
+                this.state = new Object();
+                this.setKnobs();
+                this.setSliders();
+                this.setSwitchListener();
+                this.setActive(false);
+        
+            }
+        
+            attributeChangedCallback() {
+               
+            console.log("Custom element attributes changed.");
+            this.state = JSON.parse(this.getAttribute('state'));
+            let tmp = "/osc/bypass";
+            if (this.state[tmp] == 1) {
+            this._root.querySelector("#switch1").value = 0;
+            this.isOn = false;
+            } else if (this.state[tmp] == 0) {
+            this._root.querySelector("#switch1").value = 1;
+            this.isOn = true;
+            }
+            this.knobs = this._root.querySelectorAll(".knob");
+            console.log(this.state);
+            for (var i = 0; i < this.knobs.length; i++) {
+                    this.knobs[i].setValue(this.state[this.knobs[i].id],false);
+            console.log(this.knobs[i].value);
+            }
+        
+            }
+        
+            get properties() {
+               
+            this.boundingRect = {
+                dataWidth: {
+                type: Number,
+                value: 130
+                },
+                dataHeight: {
+                type: Number,
+                value: 330
+                }
+          };
+          return this.boundingRect;
+        
+            }
+        
+            static get observedAttributes() {
+               
+                return ['state'];
+        
+            }
+        
+            setResources() {
+               
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+				knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+            });
+            
+            this._root.querySelectorAll(".switch").forEach((s) => {
+				s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+            });
+            
+            
+        
+            }
+        
+            setKnobs() {
+               this._root.getElementById("/osc/Fuzz").addEventListener("input", (e) =>this._plug.setParam("/osc/Fuzz", e.target.value));
+this._root.getElementById("/osc/Resonance").addEventListener("input", (e) =>this._plug.setParam("/osc/Resonance", e.target.value));
+this._root.getElementById("/osc/Vibrato").addEventListener("input", (e) =>this._plug.setParam("/osc/Vibrato", e.target.value));
+
+            }
+        
+            bypass() {
+               
+            this._plug.setParam("/osc/bypass", 1);
+            console.log("disabled");
+        
+            }
+        
+            setSwitchListener() {
+               
+            console.log("setswitch");
+            if(this._root.querySelector("#switch1")) {
+                this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                    if (this.isOn) this.bypass()
+                    else this.reactivate();
+                    this.isOn = !this.isOn;
+                });
+            }
+        
+            }
+        
+            reactivate() {
+               
+            this._plug.setParam("/osc/bypass", 0);
+        
+            }
+        
+            setSliders() {
+               
+            }
+        
+            setActive(active) {
+               
+                // Where there is not swtich, no need to set activation logic. 
+                if(!this._root.querySelector("#switch1")) {
+                    return;
+                }
+                if (active == undefined || active == false) {
+                    this.isOn = false;
+                    this.bypass();
+                    this._root.querySelector("#switch1").value = 0;
+                } else if (active) {
+                    this.isOn = true;
+                    this.reactivate();
+                    this._root.querySelector("#switch1").value = 1;
+                }
+        
+            }
+        }
+                try {
+                    customElements.define('wap-osc', oscGui);
+                    console.log("Element defined");
+                } catch(error){
+                    console.log(error);
+                    console.log("Element already defined");      
+                }
+                
+                createoscGUI = (plug) => {
+                    let elem = new oscGui(plug);
+                    return elem; 
+                }
+        </script>

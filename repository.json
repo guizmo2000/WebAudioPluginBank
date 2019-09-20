@@ -40,6 +40,7 @@
     "SmoothDelay": "https://mainline.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/SmoothDelay",
     "CubicSound": "https://mainline.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/CubicSound",
     "FaustEQ": "https://mainline.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/FaustEQ",
-    "FaustDisto": "https://mainline.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/FaustDisto"
+    "FaustDisto": "https://mainline.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/FaustDisto",
+    "TSDisto": "https://mainline.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/tsdisto"
   }
 }
