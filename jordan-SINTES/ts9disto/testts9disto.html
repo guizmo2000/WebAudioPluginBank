@@ -4,7 +4,7 @@
 <head>
 	<title>Host that loads a plugin with its GUI</title>
 </head>
-<script src="tsdisto.js"></script>
+<script src="main.js"></script>
 
 <body>
 	<audio src="./CleanGuitarRiff.mp3" id="soundSample" controls loop></audio>
@@ -22,7 +22,7 @@
 
   var mediaSource = ctx.createMediaElementSource(player);
   var pluginURL = ".";
-  var plugin = new Fausttsdisto(ctx, pluginURL);
+  var plugin = new Faustts9disto(ctx, pluginURL);
 
   plugin.load().then((node) => {
     plugin.loadGui().then((elem) => {
