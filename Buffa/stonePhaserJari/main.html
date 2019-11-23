@@ -1,0 +1,433 @@
+
+    <link href='https://fonts.googleapis.com/css?family=Montez|Lobster|Roboto|Lexend+Zetta|Josefin+Sans|Shadows+Into+Light|Pacifico|Amatic+SC:700|Orbitron:400,900|Rokkitt|Righteous|Dancing+Script:700|Bangers|Chewy|Sigmar+One|Architects+Daughter|Abril+Fatface|Covered+By+Your+Grace|Kaushan+Script|Gloria+Hallelujah|Satisfy|Lobster+Two:700|Comfortaa:700|Cinzel|Courgette' rel='stylesheet' type='text/css'>
+            <script src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+            <script>
+            </script>
+            <script src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+            WebAudioControlsOptions = {
+                useMidi: 1,
+            };
+            <template><style>	
+                        .pedal{
+                            display: block;
+                            background-color: #7caeff;
+                            width: 130px;
+                            height: 490px;
+                            border-radius: 10px;
+                            position: relative;
+                            /* bring your own prefixes */
+                            /* transform: translate(-50%, -50%); */
+                        }
+            
+                        
+                        #background-image {
+                            //border: solid 2px black;
+                            width: 130px;
+                            height: 490px;
+                            opacity: 1;
+                            /* display: none; */
+                            //visibility: hidden;
+                        }
+
+                        /* .img-bck img[src=""] {
+                            display: none;
+                        } */
+
+                        /* #resize {
+                            position: absolute;
+                            cursor: nwse-resize;
+                            width: 10px;
+                            height: 10px;
+                            left: 122px;
+                            top: 482px;
+                            border: 1px solid black;
+                        } */
+
+                        .knob, .switch, .icon, .label, .slider {
+                            position: absolute;
+                            cursor: pointer;
+                            text-align: center;
+                        }
+
+                        .container {
+                            position: relative;
+                            /* font-family: Arial; */
+                          }
+                          
+                        .text-block {
+                            position: absolute;
+                            bottom: 20px;
+                            right: 20px;
+                            background-color: #7caeff;
+                            color: white;
+                            padding-left: 20px;
+                            padding-right: 20px;
+                        }
+
+                        /* .text-block :not(.tititi) {
+                            opacity : 0;
+                        } */
+
+                        .draggable {
+                            touch-action: none;
+                            user-select: none;
+                        }
+
+                          #canvas {
+                            width:100px;
+                            height:300px;
+                            border: 10px solid;
+                        }
+                        .rectangle {
+                            border: 1px solid #FF0000;
+                            position: absolute;
+                        }
+
+                        .selected {
+                            border: 1px dashed black;
+                            cursor: move;
+                        }
+
+                        .selected:hover {
+                            /* border: 1px dashed black; */
+                            cursor: move;
+                        }
+
+                        .selected  webaudio-knob{
+                            cursor: move;
+                        }
+
+                        .selected  webaudio-switch{
+                            cursor: move;
+                        }
+
+                        .selected  span{
+                            cursor: move;
+                        }
+
+                        .selected:hover  span{
+                            cursor: move;
+                        }
+
+                        .selected  webaudio-slider{
+                            cursor: move;
+                        }
+
+                        .selected:hover webaudio-knob{
+                            cursor: move;
+                        }
+
+                        .selected:hover webaudio-switch{
+                            cursor: move;
+                        }
+                        
+                        .selected:hover webaudio-slider{
+                            cursor: move;
+                        }
+
+
+                        #switch1 {
+                            bottom: 10px;
+                            right: 0px;
+                        }
+                        
+                    #Color {
+                        left: 207px;
+                        top: 17px;
+                    }
+
+                    #Color div {
+                        color: #000000;
+                        font-family: "Verdana";
+                        font-size: 14px;
+                        
+                    }
+                
+                    #LFO_frequency {
+                        left: 5px;
+                        top: 103px;
+                    }
+
+                    #LFO_frequency div {
+                        color: #000000;
+                        font-family: "Verdana";
+                        font-size: 14px;
+                        
+                    }
+                
+                    #Feedback_depth {
+                        left: 159px;
+                        top: 103px;
+                    }
+
+                    #Feedback_depth div {
+                        color: #000000;
+                        font-family: "Verdana";
+                        font-size: 14px;
+                        
+                    }
+                
+                    #Feedback_bass_cut {
+                        left: 137px;
+                        top: 193px;
+                    }
+
+                    #Feedback_bass_cut div {
+                        color: #000000;
+                        font-family: "Verdana";
+                        font-size: 14px;
+                        
+                    }
+                
+                    #Dry_wet_mix {
+                        left: 11px;
+                        top: 17px;
+                    }
+
+                    #Dry_wet_mix div {
+                        color: #000000;
+                        font-family: "Verdana";
+                        font-size: 14px;
+                        
+                    }
+                
+                    #Bypass {
+                        left: 40px;
+                        top: 189px;
+                    }
+
+                    #Bypass div {
+                        color: #000000;
+                        font-family: "Verdana";
+                        font-size: 14px;
+                        
+                    }
+                
+                        
+                        .pedalLabel{
+                            position: absolute;
+                            /* top: 225px; */
+                            font-size: 16pxpx;
+                            font-family: -apple-system, system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";/*Sansita;*//*{font}*/
+                            text-align: center;
+                            line-height: 30px;/*{pedalfontsize}*/
+                            width: 150px;
+                            color: #6B0000;/*{fontcolor}*/
+                        }
+                        .knob-label{
+                            position: absolute;
+                            font-size: 12px;/*{knobfontsize}*/
+                            line-height: 12px;
+                            width:64px;
+                            max-width:64px;
+                            overflow: hidden;
+                            text-align: center;
+                            font-family: Sansita;/*{font}*/
+                            color: #6B0000;/*{fontcolor}*/
+                        }
+                        #knob1-label{
+                            top: 84px;
+                            left: 43px;
+                        }</style><div class="pedal draggable" id="pedal" style="transform: translate(-599.929px, 58.2422px); width: 287.727px; height: 295.518px; box-shadow: rgba(0, 0, 0, 0.7) 4px 5px 6px, rgba(0, 0, 0, 0.2) -2px -2px 5px 0px inset, rgba(255, 255, 255, 0.2) 3px 1px 1px 4px inset, rgba(0, 0, 0, 0.9) 1px 0px 1px 0px, rgba(0, 0, 0, 0.9) 0px 2px 1px 0px, rgba(0, 0, 0, 0.9) 1px 1px 1px 0px; background: linear-gradient(rgb(21, 83, 141), rgb(16, 67, 114));" data-x="-599.9290161132812" data-y="58.2421875">
+    <div id="resize"></div>
+
+
+
+    <div class="container" id="txtcontainer">
+      <img id="background-image" style="width: 287.727px; height: 295.518px;" src="./img/background/2.jpg">
+
+      <h4></h4>
+      <p class="pedalLabel" id="test"></p>
+
+    </div>
+    <!-- <p id="labeldiv" style="border-style: dashed; top: 68px;">tototo</p> -->
+    <!-- <figure>
+        <img id="background-image" alt="tototo">
+        <figcaption>tototo</figcaption>
+    </figure> -->
+    <!-- <div class="text-block" id="froala-editor"></div> -->
+  <div class="knob " id="Color"><webaudio-knob src="./img/knobs/knob2.png" height="50" width="50" sprites="100" min="0" max="1" step="1" value="1" style="height: 50px;" id="/stonePhaserJari/Color"></webaudio-knob><div style="text-align:center">Color</div></div><div class="knob  " id="LFO_frequency"><webaudio-knob src="./img/knobs/knob2.png" height="50" width="50" sprites="100" min="0.01" max="5" step="0.01" value="0.2" style="height: 50px;" id="/stonePhaserJari/LFO_frequency"></webaudio-knob><div style="text-align:center">LFO_frequency</div></div><div class="knob" id="Feedback_depth"><webaudio-knob src="./img/knobs/knob2.png" height="50" width="50" sprites="100" min="0" max="99" step="1" value="75" style="height: 50px;" id="/stonePhaserJari/Feedback_depth"></webaudio-knob><div style="text-align:center">Feedback_depth</div></div><div class="knob  " id="Feedback_bass_cut"><webaudio-knob src="./img/knobs/knob2.png" height="50" width="50" sprites="100" min="10" max="5000" step="1" value="500" style="height: 50px;" id="/stonePhaserJari/Feedback_bass_cut"></webaudio-knob><div style="text-align:center">Feedback_bass_cut</div></div><div class="knob  " id="Dry_wet_mix"><webaudio-knob src="./img/knobs/knob2.png" height="50" width="50" sprites="100" min="0" max="100" step="1" value="50" style="height: 50px;" id="/stonePhaserJari/Dry_wet_mix"></webaudio-knob><div style="text-align:center">Dry_wet_mix</div></div><div class="switch " id="Bypass"><webaudio-switch src="./img/switches/switch_2.png" height="50" width="80" style="height: 50px;" id="/stonePhaserJari/Bypass"></webaudio-switch><div>Bypass</div></div></div></template><script>
+        let stonePhaserJariTemp = document.currentScript.ownerDocument.querySelector('template');
+        class stonePhaserJariGui extends HTMLElement {
+    
+        
+            constructor(plug) {
+               
+                super();
+                this._plug = plug;
+                this._plug.gui = this;
+                console.log(this._plug);
+                this._root = this.attachShadow({ mode: 'open' });
+                this._root.appendChild(stonePhaserJariTemp.content.cloneNode(true));
+                this.isOn;
+                this.state = new Object();
+                this.setKnobs();
+                this.setSliders();
+                this.setSwitches();
+                //this.setSwitchListener();
+                this.setInactive();
+                this._root.querySelector("#pedal").style.transform = 'none';
+                //this._root.querySelector("#test").style.fontFamily = window.getComputedStyle(this._root.querySelector("#test")).getPropertyValue('font-family');
+
+                // Compute base URI of this main.html file. This is needed in order
+                // to fix all relative paths in CSS, as they are relative to
+                // the main document, not the plugin's main.html
+
+                //console.log("maindoc URI = " + stonePhaserJariTemp.baseURI);
+                let posOfLastSlash = stonePhaserJariTemp.baseURI.lastIndexOf("/");
+                //console.log("Base URI = " + stonePhaserJariTemp.baseURI.substring(0, posOfLastSlash))
+                this.basePath = stonePhaserJariTemp.baseURI.substring(0, posOfLastSlash);
+                //console.log("basePath = " + this.basePath)
+                //console.log("baseURI = " + this.baseURI)
+
+                // Fix relative path in WebAudio Controls elements
+                this.fixRelativeImagePathsInCSS();
+
+                // optionnal : set image background using a relative URI (relative
+                // to this main.html file)
+                //this.setImageBackground("/img/BigMuffBackground.png");
+        
+            }
+        
+            fixRelativeImagePathsInCSS(imageRelativeURI) {
+               
+        // change webaudiocontrols relative paths for spritesheets to absolute
+            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch");
+            webaudioControls.forEach(e => {
+                let currentImagePath = e.getAttribute("src");
+                if (currentImagePath !== undefined) {
+                    //console.log("Got wc src as " + e.getAttribute("src"));
+                    let imagePath = e.getAttribute("src");
+                    e.setAttribute("src", this.basePath + "/" + imagePath);
+                    //console.log("After fix : wc src as " + e.getAttribute("src"));
+                }
+            });
+            
+            }
+        
+            setImageBackground() {
+               
+           // check if the shadowroot host has a background image
+            let mainDiv = this._root.querySelector("#main");
+            mainDiv.style.backgroundImage = "url(" + this.basePath + "/" + imageRelativeURI + ")";
+
+            //console.log("background =" + mainDiv.style.backgroundImage);
+            //this._root.style.backgroundImage = "toto.png";
+    
+            }
+        
+            attributeChangedCallback() {
+               
+            console.log("Custom element attributes changed.");
+            this.state = JSON.parse(this.getAttribute('state'));
+            let tmp = "/undefined/bypass";
+            if (this.state[tmp] == 1) {
+            this._root.querySelector("#switch1").value = 0;
+            this.isOn = false;
+            } else if (this.state[tmp] == 0) {
+            this._root.querySelector("#switch1").value = 1;
+            this.isOn = true;
+            }
+            this.knobs = this._root.querySelectorAll(".knob");
+            console.log(this.state);
+            for (var i = 0; i < this.knobs.length; i++) {
+                    this.knobs[i].setValue(this.state[this.knobs[i].id],false);
+            console.log(this.knobs[i].value);
+            }
+        
+            }
+        
+            get properties() {
+               
+            this.boundingRect = {
+                dataWidth: {
+                type: Number,
+                value: 130
+                },
+                dataHeight: {
+                type: Number,
+                value: 490
+                }
+          };
+          return this.boundingRect;
+        
+            }
+        
+            static get observedAttributes() {
+               
+                return ['state'];
+        
+            }
+        
+            setResources() {
+               
+            // Sets the background image and style.
+            var background = this._root.querySelector('img');
+            background.src = this._plug.URL + '/assets/undefined';
+            background.style = 'border-radius : 10px;'
+            this._root.querySelectorAll(".knob").forEach((knob) => {
+				knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+            });
+            
+            this._root.querySelectorAll(".switch").forEach((s) => {
+				s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+            });
+            
+            
+        
+            }
+        
+            setKnobs() {
+               this._root.getElementById("/stonePhaserJari/Color").addEventListener("input", (e) =>this._plug.setParam("/stonePhaserJari/Color", e.target.value));
+this._root.getElementById("/stonePhaserJari/LFO_frequency").addEventListener("input", (e) =>this._plug.setParam("/stonePhaserJari/LFO_frequency", e.target.value));
+this._root.getElementById("/stonePhaserJari/Feedback_depth").addEventListener("input", (e) =>this._plug.setParam("/stonePhaserJari/Feedback_depth", e.target.value));
+this._root.getElementById("/stonePhaserJari/Feedback_bass_cut").addEventListener("input", (e) =>this._plug.setParam("/stonePhaserJari/Feedback_bass_cut", e.target.value));
+this._root.getElementById("/stonePhaserJari/Dry_wet_mix").addEventListener("input", (e) =>this._plug.setParam("/stonePhaserJari/Dry_wet_mix", e.target.value));
+
+            }
+        
+            setSwitchListener() {
+               
+            console.log("setswitch");
+            if(this._root.querySelector("#switch1")) {
+                this._root.querySelector("#switch1").addEventListener('change', (e) => {
+                    if (this.isOn) this.bypass()
+                    else this.reactivate();
+                    this.isOn = !this.isOn;
+                });
+            }
+        
+            }
+        
+            setSliders() {
+               
+            }
+        
+            setSwitches() {
+               this._root.getElementById("/stonePhaserJari/Bypass").addEventListener("change", (e) =>this._plug.setParam("/stonePhaserJari/Bypass", 1-e.target.value));
+
+            }
+        
+            setInactive() {
+               
+        let switches = this._root.querySelectorAll(".switch webaudio-switch");
+        switches.forEach(s => {
+          console.log("### SWITCH ID = " + s.id);
+          this._plug.setParam(s.id, 1);
+        });
+       
+            }
+        }
+                try {
+                    customElements.define('wap-stonephaserjari', stonePhaserJariGui);
+                    console.log("Element defined");
+                } catch(error){
+                    console.log(error);
+                    console.log("Element already defined");      
+                }
+                
+                createstonePhaserJariGUI = (plug) => {
+                    let elem = new stonePhaserJariGui(plug);
+                    return elem; 
+                }
+        </script>
