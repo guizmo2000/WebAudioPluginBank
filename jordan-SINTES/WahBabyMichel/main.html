@@ -8,7 +8,7 @@
 </script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js">
 </script>
-<template>
+<template id="wc-wahBabyMichel">
     <style>
         :host {
             font: "Bungee";
@@ -25,16 +25,16 @@
         }
 
         #main {
-			/* this relative uri is fixed by a call to setBackgroundImage in 
+            /* this relative uri is fixed by a call to setBackgroundImage in 
             constructor. It should be turned into an absolute one */
-			/*background-image: url("assets/img/flame.png");
+            /*background-image: url("assets/img/flame.png");
 
 			/* this is equal to the size of the plugin, and should be equal to the
                size of the background image if you want to see it entirely */
-			background-size: 30px 40px;
-			width: 100%;
-			height: 100%;
-		}
+            background-size: 30px 40px;
+            width: 100%;
+            height: 100%;
+        }
 
 
 
@@ -107,8 +107,8 @@
         <img angle="40" id="imgWah" height=200 src="assets/img/crybaby.png">
 
         <div class="slider" id="wahSlider">
-            <webaudio-slider midilearn="true" midicc="1.7" direction="vert" height=180 value="0" max="1" min="0" step="0.01"
-                src="assets/img/sliders/vsliderbody.png" knobsrc="assets/img/sliders/vsliderknob.png"
+            <webaudio-slider midilearn="true" midicc="1.7" direction="vert" height=180 value="0" max="1" min="0"
+                step="0.01" src="assets/img/sliders/vsliderbody.png" knobsrc="assets/img/sliders/vsliderknob.png"
                 id="/CRYBABY/Wah_parameter"></webaudio-slider>
         </div>
         <span class="pedalLabel">WahBaby</span>
@@ -120,7 +120,7 @@
     </div>
 </template>
 <script>
-    let templateWahBabyGui = document.currentScript.ownerDocument.querySelector('template');
+    let templateWahBabyGui = document.currentScript.ownerDocument.querySelector('#wc-wahBabyMichel');
     class WahBabyGui extends HTMLElement {
 
 
@@ -168,13 +168,13 @@
         }
 
         setImageBackground(imageRelativeURI) {
-			// check if the shadowroot host has a background image
-			let mainDiv = this._root.querySelector("#main");
-			mainDiv.style.backgroundImage = "url(" + this.basePath + "/" + imageRelativeURI + ")";
+            // check if the shadowroot host has a background image
+            let mainDiv = this._root.querySelector("#main");
+            mainDiv.style.backgroundImage = "url(" + this.basePath + "/" + imageRelativeURI + ")";
 
-			//console.log("background =" + mainDiv.style.backgroundImage);
-			//this._root.style.backgroundImage = "toto.png";
-		}
+            //console.log("background =" + mainDiv.style.backgroundImage);
+            //this._root.style.backgroundImage = "toto.png";
+        }
 
         attributeChangedCallback() {
 
@@ -271,10 +271,10 @@
 
         setSliders() {
             this._root.getElementById("/CRYBABY/Wah_parameter").addEventListener("input", (e) => {
-                this._plug.setParam("/CRYBABY/Wah_parameter",  e.target.value);
+                this._plug.setParam("/CRYBABY/Wah_parameter", e.target.value);
                 console.log(e.target.value);
                 let wah = this._root.querySelector("#imgWah");
-                let angle = 35 * (1-e.target.value);
+                let angle = 35 * (1 - e.target.value);
 
                 wah.style.transform = "rotateX(" + angle + "deg)";
 
