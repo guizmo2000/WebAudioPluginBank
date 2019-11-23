@@ -9,7 +9,7 @@
 </script>
 <script
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template>
+<template id="wc-oscTube">
     <style>
         :host {
             display: block;
@@ -96,7 +96,7 @@
     </div>
 </template>
 <script>
-    let templateOscTubeGui = document.currentScript.ownerDocument.querySelector('template');
+    let templateOscTubeGui = document.currentScript.ownerDocument.querySelector('#wc-oscTube');
     class OscTubeGui extends HTMLElement {
 
 

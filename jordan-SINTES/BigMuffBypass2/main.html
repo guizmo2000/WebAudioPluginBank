@@ -10,7 +10,7 @@
 </script>
 <link href="https://fonts.googleapis.com/css?family=Bungee&display=swap" rel="stylesheet">
 
-<template>
+<template id="wc-bigmuff">
     <style>
         :host {
             display: block;
@@ -104,7 +104,7 @@
 
 </template>
 <script>
-    let templateBigMuffBypass2Gui = document.currentScript.ownerDocument.querySelector('template');
+    let templateBigMuffBypass2Gui = document.currentScript.ownerDocument.querySelector('#wc-bigmuff');
 
     class BigMuffBypass2Gui extends HTMLElement {
 

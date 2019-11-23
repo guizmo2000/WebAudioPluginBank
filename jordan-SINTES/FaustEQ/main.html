@@ -1,15 +1,14 @@
-<link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Saira+Stencil+One">
-<script
-    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Saira+Stencil+One">
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js">
+</script>
 <script>
     WebAudioControlsOptions = {
         useMidi: 1,
     };
 </script>
-<script
-    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template>
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js">
+</script>
+<template id="wc-faustEQ">
     <style>
         :host {
             display: block;
@@ -75,7 +74,6 @@
             top: 84px;
             left: 43px;
         }
-        
     </style>
     <div class="main">
         <div class="row">
@@ -83,14 +81,16 @@
                 <div class="knob" id="Low Boost|Cut">
                     <webaudio-knob src="assets/img/knobs/simplegray.png" height="50" width="50" sprites="100" min="-40"
                         max="40" step="0.100000001" value="0"
-                        id="/FaustEQ/PARAMETRIC_EQ_SECTIONS/Low_Shelf/Low_Boost|Cut" style="height: 50px; margin-top:30px;">
+                        id="/FaustEQ/PARAMETRIC_EQ_SECTIONS/Low_Shelf/Low_Boost|Cut"
+                        style="height: 50px; margin-top:30px;">
                     </webaudio-knob>
                     <div style="text-align:center; color: white; ">Low Boost|Cut</div>
                 </div>
                 <div class="knob" id="Transition Frequency">
                     <webaudio-knob src="assets/img/knobs/simplegray.png" height="50" width="50" sprites="100" min="1"
                         max="5000" step="1" value="8000"
-                        id="/FaustEQ/PARAMETRIC_EQ_SECTIONS/Low_Shelf/Transition_Frequency" style="height: 50px; margin-top:10px;">
+                        id="/FaustEQ/PARAMETRIC_EQ_SECTIONS/Low_Shelf/Transition_Frequency"
+                        style="height: 50px; margin-top:10px;">
                     </webaudio-knob>
                     <div style="text-align:center; color: white;">Transition Frequency</div>
                 </div>
@@ -106,14 +106,16 @@
                 <div class="knob" id="Peak Frequency">
                     <webaudio-knob src="assets/img/knobs/simplegray.png" height="50" width="50" sprites="100" min="1"
                         max="100" step="1" value="49"
-                        id="/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Frequency" style="height: 50px; margin-top:10px;">
+                        id="/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Frequency"
+                        style="height: 50px; margin-top:10px;">
                     </webaudio-knob>
                     <div style="text-align:center; color: white;">Peak Frequency</div>
                 </div>
                 <div class="knob" id="Peak Q">
                     <webaudio-knob src="assets/img/knobs/simplegray.png" height="50" width="50" sprites="100" min="1"
                         max="1000" step="0.100000001" value="40"
-                        id="/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Q" style="height: 50px; margin-top:10px;">
+                        id="/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Q"
+                        style="height: 50px; margin-top:10px;">
                     </webaudio-knob>
                     <div style="text-align:center; color: white;">Peak Q</div>
                 </div>
@@ -122,14 +124,16 @@
                 <div class="knob" id="High Boost|Cut">
                     <webaudio-knob src="assets/img/knobs/simplegray.png" height="50" width="50" sprites="100" min="-40"
                         max="40" step="0.100000001" value="0"
-                        id="/FaustEQ/PARAMETRIC_EQ_SECTIONS/High_Shelf/High_Boost|Cut" style="height: 50px; margin-top:30px;">
+                        id="/FaustEQ/PARAMETRIC_EQ_SECTIONS/High_Shelf/High_Boost|Cut"
+                        style="height: 50px; margin-top:30px;">
                     </webaudio-knob>
                     <div style="text-align:center; color: white;">High Boost|Cut</div>
                 </div>
                 <div class="knob" id="Transition Frequency">
                     <webaudio-knob min="20" max="10000" value="8000" sprites="100" step="1" height="50" width="50"
                         src="assets/img/knobs/simplegray.png"
-                        id="/FaustEQ/PARAMETRIC_EQ_SECTIONS/High_Shelf/Transition_Frequency" style="height: 50px; margin-top:10px;">
+                        id="/FaustEQ/PARAMETRIC_EQ_SECTIONS/High_Shelf/Transition_Frequency"
+                        style="height: 50px; margin-top:10px;">
                     </webaudio-knob>
                     <div style="text-align:center; color: white;">Transition Frequency</div>
                 </div>
@@ -144,7 +148,7 @@
     </div>
 </template>
 <script>
-    let templateFaustEQGui = document.currentScript.ownerDocument.querySelector('template');
+    let templateFaustEQGui = document.currentScript.ownerDocument.querySelector('#wc-faustEQ');
     class FaustEQGui extends HTMLElement {
 
 
@@ -153,9 +157,11 @@
             super();
             this._plug = plug;
             this._plug.gui = this;
-            let posOfLastSlash = templateFaustEQGui .baseURI.lastIndexOf("/");
-            this.basePath = templateFaustEQGui .baseURI.substring(0, posOfLastSlash);
-            this._root = this.attachShadow({ mode: 'open' });
+            let posOfLastSlash = templateFaustEQGui.baseURI.lastIndexOf("/");
+            this.basePath = templateFaustEQGui.baseURI.substring(0, posOfLastSlash);
+            this._root = this.attachShadow({
+                mode: 'open'
+            });
             this._root.appendChild(templateFaustEQGui.content.cloneNode(true));
             this.isOn;
             this.state = new Object();
@@ -168,7 +174,8 @@
 
         fixRelativeImagePathsInCSS() {
             // change webaudiocontrols relative paths for spritesheets to absolute
-            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch, img");
+            let webaudioControls = this._root.querySelectorAll(
+                "webaudio-knob, webaudio-slider, webaudio-switch, img");
             webaudioControls.forEach(e => {
                 let currentImagePath = e.getAttribute("src");
                 if (currentImagePath !== undefined) {
@@ -230,11 +237,13 @@
             background.src = this._plug.URL + '/assets/undefined';
             background.style = 'border-radius : 10px;'
             this._root.querySelectorAll(".knob").forEach((knob) => {
-                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL +
+                    '/assets/MiniMoog_Main.png');
             });
 
             this._root.querySelectorAll(".switch").forEach((s) => {
-                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL +
+                    '/assets/switch_1.png');
             });
 
 
@@ -242,13 +251,27 @@
         }
 
         setKnobs() {
-            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Low_Shelf/Low_Boost|Cut").addEventListener("input", (e) => this._plug.setParam("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Low_Shelf/Low_Boost|Cut", e.target.value));
-            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Low_Shelf/Transition_Frequency").addEventListener("input", (e) => this._plug.setParam("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Low_Shelf/Transition_Frequency", e.target.value));
-            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Boost|Cut").addEventListener("input", (e) => this._plug.setParam("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Boost|Cut", e.target.value));
-            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Frequency").addEventListener("input", (e) => this._plug.setParam("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Frequency", e.target.value));
-            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Q").addEventListener("input", (e) => this._plug.setParam("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Q", e.target.value));
-            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/High_Shelf/High_Boost|Cut").addEventListener("input", (e) => this._plug.setParam("/FaustEQ/PARAMETRIC_EQ_SECTIONS/High_Shelf/High_Boost|Cut", e.target.value));
-            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/High_Shelf/Transition_Frequency").addEventListener("input", (e) => this._plug.setParam("/FaustEQ/PARAMETRIC_EQ_SECTIONS/High_Shelf/Transition_Frequency", e.target.value));
+            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Low_Shelf/Low_Boost|Cut").addEventListener(
+                "input", (e) => this._plug.setParam("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Low_Shelf/Low_Boost|Cut", e
+                    .target.value));
+            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Low_Shelf/Transition_Frequency")
+                .addEventListener("input", (e) => this._plug.setParam(
+                    "/FaustEQ/PARAMETRIC_EQ_SECTIONS/Low_Shelf/Transition_Frequency", e.target.value));
+            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Boost|Cut")
+                .addEventListener("input", (e) => this._plug.setParam(
+                    "/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Boost|Cut", e.target.value));
+            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Frequency")
+                .addEventListener("input", (e) => this._plug.setParam(
+                    "/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Frequency", e.target.value));
+            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Q").addEventListener(
+                "input", (e) => this._plug.setParam("/FaustEQ/PARAMETRIC_EQ_SECTIONS/Peaking_Equalizer/Peak_Q",
+                    e.target.value));
+            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/High_Shelf/High_Boost|Cut").addEventListener(
+                "input", (e) => this._plug.setParam("/FaustEQ/PARAMETRIC_EQ_SECTIONS/High_Shelf/High_Boost|Cut",
+                    e.target.value));
+            this._root.getElementById("/FaustEQ/PARAMETRIC_EQ_SECTIONS/High_Shelf/Transition_Frequency")
+                .addEventListener("input", (e) => this._plug.setParam(
+                    "/FaustEQ/PARAMETRIC_EQ_SECTIONS/High_Shelf/Transition_Frequency", e.target.value));
 
         }
 

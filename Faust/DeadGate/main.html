@@ -5,7 +5,7 @@
   };
 </script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template>
+<template id="wc-deadgate">
   <style>
     .pedal {
       display: block;
@@ -158,7 +158,7 @@
   </div>
 </template>
 <script>
-  let DeadGateTemp = document.currentScript.ownerDocument.querySelector('template');
+  let DeadGateTemp = document.currentScript.ownerDocument.querySelector('#wc-deadgate');
   class DeadGateGui extends HTMLElement {
 
 

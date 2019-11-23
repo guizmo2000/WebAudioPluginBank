@@ -9,7 +9,7 @@
 </script>
 <script
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template>
+<template id="wc-distorder">
     <style>
 
         :host {
@@ -160,7 +160,7 @@
     </div>
 </template>
 <script>
-    let templateDistorderGui = document.currentScript.ownerDocument.querySelector('template');
+    let templateDistorderGui = document.currentScript.ownerDocument.querySelector('#wc-distorder');
     class DistorderGui extends HTMLElement {
 
 

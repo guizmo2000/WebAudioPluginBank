@@ -1,14 +1,14 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Permanent+Marker">
-<script
-    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js">
+</script>
 <script>
     WebAudioControlsOptions = {
         useMidi: 1,
     };
 </script>
-<script
-    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template>
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js">
+</script>
+<template id="wc-faustDisto">
     <style>
         :host {
             display: block;
@@ -116,7 +116,8 @@
                 </div>
                 <div class="knob" id="Drive">
                     <webaudio-knob src="assets/img/knobs/Carbon.png" height="50" width="50" sprites="100" min="-10"
-                        max="10" step="0.00100000005" value="4" id="/FaustDisto/Drive" style="height: 50px; margin-top: 10px;">
+                        max="10" step="0.00100000005" value="4" id="/FaustDisto/Drive"
+                        style="height: 50px; margin-top: 10px;">
                     </webaudio-knob>
                     <div style="text-align:center; color:white; ;">Drive</div>
                 </div>
@@ -151,7 +152,7 @@
     </div>
 </template>
 <script>
-    let templateFaustDistoGui = document.currentScript.ownerDocument.querySelector('template');
+    let templateFaustDistoGui = document.currentScript.ownerDocument.querySelector('#wc-faustDisto');
     class FaustDistoGui extends HTMLElement {
 
 
@@ -162,7 +163,9 @@
             this._plug.gui = this;
             let posOfLastSlash = templateFaustDistoGui.baseURI.lastIndexOf("/");
             this.basePath = templateFaustDistoGui.baseURI.substring(0, posOfLastSlash);
-            this._root = this.attachShadow({ mode: 'open' });
+            this._root = this.attachShadow({
+                mode: 'open'
+            });
             this._root.appendChild(templateFaustDistoGui.content.cloneNode(true));
             this.isOn;
             this.state = new Object();
@@ -175,7 +178,8 @@
 
         fixRelativeImagePathsInCSS() {
             // change webaudiocontrols relative paths for spritesheets to absolute
-            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch, img");
+            let webaudioControls = this._root.querySelectorAll(
+                "webaudio-knob, webaudio-slider, webaudio-switch, img");
             webaudioControls.forEach(e => {
                 let currentImagePath = e.getAttribute("src");
                 if (currentImagePath !== undefined) {
@@ -237,11 +241,13 @@
             background.src = this._plug.URL + '/assets/undefined';
             background.style = 'border-radius : 10px;'
             this._root.querySelectorAll(".knob").forEach((knob) => {
-                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL +
+                    '/assets/MiniMoog_Main.png');
             });
 
             this._root.querySelectorAll(".switch").forEach((s) => {
-                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL +
+                    '/assets/switch_1.png');
             });
 
 
@@ -249,13 +255,20 @@
         }
 
         setKnobs() {
-            this._root.getElementById("/FaustDisto/Curve").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Curve", e.target.value));
-            this._root.getElementById("/FaustDisto/Cutoff").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Cutoff", e.target.value));
-            this._root.getElementById("/FaustDisto/Drive").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Drive", e.target.value));
-            this._root.getElementById("/FaustDisto/Feedback").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Feedback", e.target.value));
-            this._root.getElementById("/FaustDisto/Level").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Level", e.target.value));
-            this._root.getElementById("/FaustDisto/Resonance").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Resonance", e.target.value));
-            this._root.getElementById("/FaustDisto/Saturation").addEventListener("input", (e) => this._plug.setParam("/FaustDisto/Saturation", e.target.value));
+            this._root.getElementById("/FaustDisto/Curve").addEventListener("input", (e) => this._plug.setParam(
+                "/FaustDisto/Curve", e.target.value));
+            this._root.getElementById("/FaustDisto/Cutoff").addEventListener("input", (e) => this._plug.setParam(
+                "/FaustDisto/Cutoff", e.target.value));
+            this._root.getElementById("/FaustDisto/Drive").addEventListener("input", (e) => this._plug.setParam(
+                "/FaustDisto/Drive", e.target.value));
+            this._root.getElementById("/FaustDisto/Feedback").addEventListener("input", (e) => this._plug.setParam(
+                "/FaustDisto/Feedback", e.target.value));
+            this._root.getElementById("/FaustDisto/Level").addEventListener("input", (e) => this._plug.setParam(
+                "/FaustDisto/Level", e.target.value));
+            this._root.getElementById("/FaustDisto/Resonance").addEventListener("input", (e) => this._plug.setParam(
+                "/FaustDisto/Resonance", e.target.value));
+            this._root.getElementById("/FaustDisto/Saturation").addEventListener("input", (e) => this._plug
+                .setParam("/FaustDisto/Saturation", e.target.value));
 
         }
 

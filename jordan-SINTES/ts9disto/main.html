@@ -1,14 +1,15 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Faster+One">
 <script
-    src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+    src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js">
+</script>
 <script>
 </script>
-<script
-    src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<script src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js">
+</script>
 WebAudioControlsOptions = {
 useMidi: 1,
 };
-<template>
+<template id="wc-ts9disto">
     <style>
         .pedal {
             display: block;
@@ -21,7 +22,7 @@ useMidi: 1,
         }
 
 
-      
+
         /* #resize {
                             position: absolute;
                             cursor: nwse-resize;
@@ -72,7 +73,7 @@ useMidi: 1,
             border: 10px solid;
         }
 
-       
+
 
         .selected {
             border: 1px dashed black;
@@ -203,7 +204,8 @@ useMidi: 1,
             left: 43px;
         }
     </style>
-    <div class="pedal draggable" id="pedal" style="background: linear-gradient(rgb(12, 230, 90), rgb(12, 150, 60));             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);       font-family: 'Faster One'; ">
+    <div class="pedal draggable" id="pedal"
+        style="background: linear-gradient(rgb(12, 230, 90), rgb(12, 150, 60));             box-shadow: 4px 5px 6px rgba(0, 0, 0, 0.7), inset -2px -2px 5px 0px rgba(0, 0, 0, 0.2), inset 3px 1px 1px 4px rgba(255, 255, 255, 0.2), 1px 0px 1px 0px rgba(0, 0, 0, 0.9), 0 2px 1px 0 rgba(0, 0, 0, 0.9), 1px 1px 1px 0px rgba(0, 0, 0, 0.9);       font-family: 'Faster One'; ">
 
 
 
@@ -237,7 +239,7 @@ useMidi: 1,
             <div style="text-align:center; font-family: 'Faster One';">tone</div>
         </div>
         <div class="switch        " id="bypass">
-            <webaudio-switch src="./img/switches/switch_1.png" height="30" width="60"  id="/ts9disto/bypass"
+            <webaudio-switch src="./img/switches/switch_1.png" height="30" width="60" id="/ts9disto/bypass"
                 style="height: 50px; margin-left: 12px;"></webaudio-switch>
             <div></div>
         </div>
@@ -246,7 +248,7 @@ useMidi: 1,
 
 </template>
 <script>
-    let ts9distoTemp = document.currentScript.ownerDocument.querySelector('template');
+    let ts9distoTemp = document.currentScript.ownerDocument.querySelector('#wc-ts9disto');
     class ts9distoGui extends HTMLElement {
 
 
@@ -256,7 +258,9 @@ useMidi: 1,
             this._plug = plug;
             this._plug.gui = this;
             console.log(this._plug);
-            this._root = this.attachShadow({ mode: 'open' });
+            this._root = this.attachShadow({
+                mode: 'open'
+            });
             this._root.appendChild(ts9distoTemp.content.cloneNode(true));
             this.isOn;
             this.state = new Object();
@@ -363,11 +367,13 @@ useMidi: 1,
             background.src = this._plug.URL + '/assets/undefined';
             background.style = 'border-radius : 10px;'
             this._root.querySelectorAll(".knob").forEach((knob) => {
-                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL +
+                    '/assets/MiniMoog_Main.png');
             });
 
             this._root.querySelectorAll(".switch").forEach((s) => {
-                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL +
+                    '/assets/switch_1.png');
             });
 
 
@@ -375,9 +381,12 @@ useMidi: 1,
         }
 
         setKnobs() {
-            this._root.getElementById("/ts9disto/Guitarix/TubeScreamer/drive").addEventListener("input", (e) => this._plug.setParam("/ts9disto/Guitarix/TubeScreamer/drive", e.target.value));
-            this._root.getElementById("/ts9disto/Guitarix/TubeScreamer/level").addEventListener("input", (e) => this._plug.setParam("/ts9disto/Guitarix/TubeScreamer/level", e.target.value));
-            this._root.getElementById("/ts9disto/Guitarix/TubeScreamer/tone").addEventListener("input", (e) => this._plug.setParam("/ts9disto/Guitarix/TubeScreamer/tone", e.target.value));
+            this._root.getElementById("/ts9disto/Guitarix/TubeScreamer/drive").addEventListener("input", (e) => this
+                ._plug.setParam("/ts9disto/Guitarix/TubeScreamer/drive", e.target.value));
+            this._root.getElementById("/ts9disto/Guitarix/TubeScreamer/level").addEventListener("input", (e) => this
+                ._plug.setParam("/ts9disto/Guitarix/TubeScreamer/level", e.target.value));
+            this._root.getElementById("/ts9disto/Guitarix/TubeScreamer/tone").addEventListener("input", (e) => this
+                ._plug.setParam("/ts9disto/Guitarix/TubeScreamer/tone", e.target.value));
 
         }
 
@@ -399,7 +408,8 @@ useMidi: 1,
         }
 
         setSwitches() {
-            this._root.getElementById("/ts9disto/bypass").addEventListener("change", (e) => this._plug.setParam("/ts9disto/bypass", 1 - e.target.value));
+            this._root.getElementById("/ts9disto/bypass").addEventListener("change", (e) => this._plug.setParam(
+                "/ts9disto/bypass", 1 - e.target.value));
 
         }
 

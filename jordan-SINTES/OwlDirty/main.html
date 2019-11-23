@@ -1,15 +1,14 @@
-<link rel="stylesheet"
-          href="https://fonts.googleapis.com/css?family=Black+Ops+One">
-<script
-    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Black+Ops+One">
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js">
+</script>
 <script>
     WebAudioControlsOptions = {
         useMidi: 1,
     };
 </script>
-<script
-    src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template>
+<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js">
+</script>
+<template id="wc-owlDirty">
     <style>
         :host {
 
@@ -115,28 +114,28 @@
         <div class=row>
             <div class="column">
                 <div class="knob" id="DECAY">
-                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100"
-                        min="0.5" max="1" step="0.01" value="0.7" id="/OwlDirty/DECAY" style="height: 50px;">
+                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="0.5"
+                        max="1" step="0.01" value="0.7" id="/OwlDirty/DECAY" style="height: 50px;">
                     </webaudio-knob>
                     <div style="text-align:center">DECAY</div>
                 </div>
                 <div class="knob" id="DRIVE">
-                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100"
-                        min="0" max="0.7" step="0.1" value="0" id="/OwlDirty/DRIVE" style="height: 50px;">
+                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="0"
+                        max="0.7" step="0.1" value="0" id="/OwlDirty/DRIVE" style="height: 50px;">
                     </webaudio-knob>
                     <div style="text-align:center">DRIVE</div>
                 </div>
             </div>
             <div class="column">
                 <div class="knob" id="MIX">
-                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100"
-                        min="0" max="1" step="0.01" value="0.75" id="/OwlDirty/MIX" style="height: 50px;">
+                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="0"
+                        max="1" step="0.01" value="0.75" id="/OwlDirty/MIX" style="height: 50px;">
                     </webaudio-knob>
                     <div style="text-align:center">MIX</div>
                 </div>
                 <div class="knob" id="TONE">
-                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100"
-                        min="900" max="8000" step="0.01" value="4000" id="/OwlDirty/TONE" style="height: 50px;">
+                    <webaudio-knob src="assets/img/knobs/JP8000.png" height="50" width="50" sprites="100" min="900"
+                        max="8000" step="0.01" value="4000" id="/OwlDirty/TONE" style="height: 50px;">
                     </webaudio-knob>
                     <div style="text-align:center">TONE</div>
                 </div>
@@ -150,7 +149,7 @@
     </div>
 </template>
 <script>
-    let templateOwlDirtyGui = document.currentScript.ownerDocument.querySelector('template');
+    let templateOwlDirtyGui = document.currentScript.ownerDocument.querySelector('#wc-owlDirty');
     class OwlDirtyGui extends HTMLElement {
 
 
@@ -159,9 +158,11 @@
             super();
             this._plug = plug;
             this._plug.gui = this;
-            let posOfLastSlash = templateOwlDirtyGui .baseURI.lastIndexOf("/");
-            this.basePath = templateOwlDirtyGui .baseURI.substring(0, posOfLastSlash);
-            this._root = this.attachShadow({ mode: 'open' });
+            let posOfLastSlash = templateOwlDirtyGui.baseURI.lastIndexOf("/");
+            this.basePath = templateOwlDirtyGui.baseURI.substring(0, posOfLastSlash);
+            this._root = this.attachShadow({
+                mode: 'open'
+            });
             this._root.appendChild(templateOwlDirtyGui.content.cloneNode(true));
             this.isOn;
             this.state = new Object();
@@ -174,7 +175,8 @@
 
         fixRelativeImagePathsInCSS() {
             // change webaudiocontrols relative paths for spritesheets to absolute
-            let webaudioControls = this._root.querySelectorAll("webaudio-knob, webaudio-slider, webaudio-switch, img");
+            let webaudioControls = this._root.querySelectorAll(
+                "webaudio-knob, webaudio-slider, webaudio-switch, img");
             webaudioControls.forEach(e => {
                 let currentImagePath = e.getAttribute("src");
                 if (currentImagePath !== undefined) {
@@ -236,11 +238,13 @@
             background.src = this._plug.URL + '/assets/undefined';
             background.style = 'border-radius : 10px;'
             this._root.querySelectorAll(".knob").forEach((knob) => {
-                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL +
+                    '/assets/MiniMoog_Main.png');
             });
 
             this._root.querySelectorAll(".switch").forEach((s) => {
-                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL +
+                    '/assets/switch_1.png');
             });
 
 
@@ -248,10 +252,14 @@
         }
 
         setKnobs() {
-            this._root.getElementById("/OwlDirty/DECAY").addEventListener("input", (e) => this._plug.setParam("/OwlDirty/DECAY", e.target.value));
-            this._root.getElementById("/OwlDirty/DRIVE").addEventListener("input", (e) => this._plug.setParam("/OwlDirty/DRIVE", e.target.value));
-            this._root.getElementById("/OwlDirty/MIX").addEventListener("input", (e) => this._plug.setParam("/OwlDirty/MIX", e.target.value));
-            this._root.getElementById("/OwlDirty/TONE").addEventListener("input", (e) => this._plug.setParam("/OwlDirty/TONE", e.target.value));
+            this._root.getElementById("/OwlDirty/DECAY").addEventListener("input", (e) => this._plug.setParam(
+                "/OwlDirty/DECAY", e.target.value));
+            this._root.getElementById("/OwlDirty/DRIVE").addEventListener("input", (e) => this._plug.setParam(
+                "/OwlDirty/DRIVE", e.target.value));
+            this._root.getElementById("/OwlDirty/MIX").addEventListener("input", (e) => this._plug.setParam(
+                "/OwlDirty/MIX", e.target.value));
+            this._root.getElementById("/OwlDirty/TONE").addEventListener("input", (e) => this._plug.setParam(
+                "/OwlDirty/TONE", e.target.value));
 
         }
 

@@ -11,7 +11,7 @@
 
 <script
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template>
+<template id="wc-reverbRaw">
     <style>
         :host {
             display: block;
@@ -218,7 +218,7 @@
     </div>
 </template>
 <script>
-    let templateReverbRawGui = document.currentScript.ownerDocument.querySelector('template');
+    let templateReverbRawGui = document.currentScript.ownerDocument.querySelector('#wc-reverbRaw');
     class ReverbRawGui extends HTMLElement {
 
 

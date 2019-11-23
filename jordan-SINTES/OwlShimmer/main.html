@@ -9,7 +9,7 @@
 </script>
 <script
     src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template>
+<template id="wc-owlShimmer">
     <style>
         :host {
             display: block;
@@ -143,7 +143,7 @@
     </div>
 </template>
 <script>
-    let templateOwlShimmerGui = document.currentScript.ownerDocument.querySelector('template');
+    let templateOwlShimmerGui = document.currentScript.ownerDocument.querySelector('#wc-owlShimmer');
     class OwlShimmerGui extends HTMLElement {
 
 

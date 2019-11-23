@@ -9,7 +9,7 @@
 </script>
 <script
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template>
+<template id="wc-sweetWah">
     <style>
         :host {
             display: block;
@@ -126,7 +126,7 @@
     </div>
 </template>
 <script>
-    let templateSweetWahGui = document.currentScript.ownerDocument.querySelector('template');
+    let templateSweetWahGui = document.currentScript.ownerDocument.querySelector('#wc-sweetWah');
     class SweetWahGui extends HTMLElement {
 
 

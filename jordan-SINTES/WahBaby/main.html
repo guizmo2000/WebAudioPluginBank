@@ -9,7 +9,7 @@
 </script>
 <script
     src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
-<template>
+<template id="wc-wahBaby">
     <style>
         :host {
             font: "Bungee";
@@ -97,7 +97,7 @@
     </div>
 </template>
 <script>
-    let templateWahBabyGui = document.currentScript.ownerDocument.querySelector('template');
+    let templateWahBabyGui = document.currentScript.ownerDocument.querySelector('#wc-wahBaby');
     class WahBabyGui extends HTMLElement {
 
 
