@@ -16,8 +16,6 @@
 <script src="BigMuffBypass2.js"></script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/sdk/WebAudioSDK.js"></script>
 <script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/jordan-SINTES/disto_machine/disto/main.js"></script>
-<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Buffa/CleanMachine/main.js"></script>
-<script src="https://wasabi.i3s.unice.fr/WebAudioPluginBank/Buffa/MetalMachine/metal/main.js"></script>
 <script>
   WebAudioControlsOptions = {
     useMidi: 1,
@@ -29,10 +27,12 @@
   <audio src="./CleanGuitarRiff.mp3" id="soundSample" controls loop></audio>
   <select id="selectAudioInput">
   </select>
+
   <button id="toggleGuitarIn" onclick="toggleGuitarInput(event)">Guitar input:
     <span style='color:red;'>NOT ACTIVATED</span>
     , click to toggle on/off!
   </button>
+  
   <div><span id="plugin"></span><span id="amp"></span></div>
 </body>
 <script>
@@ -64,7 +64,7 @@
         }
       }
 
-      
+
     }
     navigator.mediaDevices.enumerateDevices().then(gotDevices);
 
@@ -72,8 +72,8 @@
       console.log('navigator.MediaDevices.getUserMedia error: ', error.message, error.name);
     }
 
-    audioInput.onchange = (e) =>{
-      let index= e.target.selectedIndex;
+    audioInput.onchange = (e) => {
+      let index = e.target.selectedIndex;
       let id = e.target[index].value;
       let label = e.target[index].text;
 
@@ -113,13 +113,15 @@
     guitarPluggedIn = !guitarPluggedIn;
   }
 
-  function changeStream(id){
+  function changeStream(id) {
     var constraints = {
       audio: {
         echoCancellation: false,
         mozNoiseSuppression: false,
         mozAutoGainControl: false,
-        deviceId: id ? { exact: id } : undefined
+        deviceId: id ? {
+          exact: id
+        } : undefined
       }
     };
 

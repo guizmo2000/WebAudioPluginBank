@@ -1,14 +1,15 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mansalva">
 <script
-    src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js"></script>
+    src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webcomponents-lite.js">
+</script>
 <script>
 </script>
-<script
-    src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js"></script>
+<script src="https://mainline.i3s.unice.fr/WebAudioPluginBank/bower_components/webaudio-controls2/webaudio-controls.js">
+</script>
 WebAudioControlsOptions = {
 useMidi: 1,
 };
-<template>
+<template id="wc-stonePhaser">
     <style>
         :host {
             display: block;
@@ -36,8 +37,8 @@ useMidi: 1,
             text-align: center;
         }
 
-        #Bypass{
-            height:40px;
+        #Bypass {
+            height: 40px;
         }
 
         .row {
@@ -104,13 +105,14 @@ useMidi: 1,
                 </div>
                 <div class="knob" id="Dry/wet mix">
                     <webaudio-knob src="assets/img/knobs/knob2.png" height="50" width="50" sprites="100" min="0"
-                        max="100" step="1" value="50" id="/stonephaser/Dry/wet_mix" style="height: 50px;  margin-top:10px;">
+                        max="100" step="1" value="50" id="/stonephaser/Dry/wet_mix"
+                        style="height: 50px;  margin-top:10px;">
                     </webaudio-knob>
                     <div style="text-align:center;">Dry/wet mix</div>
                 </div>
                 <div class="switch" id="Color">
-                    <webaudio-switch src="assets/img/switches/switch_2.png" height="30" width="49" id="/stonephaser/Color"
-                        style="height: 30px; margin-top:28px"></webaudio-switch>
+                    <webaudio-switch src="assets/img/switches/switch_2.png" height="30" width="49"
+                        id="/stonephaser/Color" style="height: 30px; margin-top:28px"></webaudio-switch>
                     <div>Color</div>
                 </div>
             </div>
@@ -123,13 +125,14 @@ useMidi: 1,
                 </div>
                 <div class="knob" id="Feedback bass cut">
                     <webaudio-knob src="assets/img/knobs/knob2.png" height="50" width="50" sprites="100" min="10"
-                        max="5000" step="1" value="500" id="/stonephaser/Feedback_bass_cut" style="height: 50px;  margin-top:10px;">
+                        max="5000" step="1" value="500" id="/stonephaser/Feedback_bass_cut"
+                        style="height: 50px;  margin-top:10px;">
                     </webaudio-knob>
                     <div style="text-align:center">Feedback bass cut</div>
                 </div>
                 <div class="switch" id="Bypass">
-                    <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60" id="/stonephaser/Bypass"
-                        style="height: 50px; margin-top:15px;"></webaudio-switch>
+                    <webaudio-switch src="assets/img/switches/switch_1.png" height="32" width="60"
+                        id="/stonephaser/Bypass" style="height: 50px; margin-top:15px;"></webaudio-switch>
                 </div>
             </div>
         </div>
@@ -138,7 +141,7 @@ useMidi: 1,
     </div>
 </template>
 <script>
-    let stonephaserTemp = document.currentScript.ownerDocument.querySelector('template');
+    let stonephaserTemp = document.currentScript.ownerDocument.querySelector('wc-stonePhaser');
     class stonephaserGui extends HTMLElement {
 
 
@@ -148,7 +151,9 @@ useMidi: 1,
             this._plug = plug;
             this._plug.gui = this;
             console.log(this._plug);
-            this._root = this.attachShadow({ mode: 'open' });
+            this._root = this.attachShadow({
+                mode: 'open'
+            });
             this._root.appendChild(stonephaserTemp.content.cloneNode(true));
             this.isOn;
             this.state = new Object();
@@ -255,11 +260,13 @@ useMidi: 1,
             background.src = this._plug.URL + '/assets/undefined';
             background.style = 'border-radius : 10px;'
             this._root.querySelectorAll(".knob").forEach((knob) => {
-                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL + '/assets/MiniMoog_Main.png');
+                knob.querySelector("webaudio-knob").setAttribute('src', this._plug.URL +
+                    '/assets/MiniMoog_Main.png');
             });
 
             this._root.querySelectorAll(".switch").forEach((s) => {
-                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL + '/assets/switch_1.png');
+                s.querySelector("webaudio-switch").setAttribute('src', this._plug.URL +
+                    '/assets/switch_1.png');
             });
 
 
@@ -267,10 +274,14 @@ useMidi: 1,
         }
 
         setKnobs() {
-            this._root.getElementById("/stonephaser/LFO_frequency").addEventListener("input", (e) => this._plug.setParam("/stonephaser/LFO_frequency", e.target.value));
-            this._root.getElementById("/stonephaser/Feedback_depth").addEventListener("input", (e) => this._plug.setParam("/stonephaser/Feedback_depth", e.target.value));
-            this._root.getElementById("/stonephaser/Feedback_bass_cut").addEventListener("input", (e) => this._plug.setParam("/stonephaser/Feedback_bass_cut", e.target.value));
-            this._root.getElementById("/stonephaser/Dry/wet_mix").addEventListener("input", (e) => this._plug.setParam("/stonephaser/Dry/wet_mix", e.target.value));
+            this._root.getElementById("/stonephaser/LFO_frequency").addEventListener("input", (e) => this._plug
+                .setParam("/stonephaser/LFO_frequency", e.target.value));
+            this._root.getElementById("/stonephaser/Feedback_depth").addEventListener("input", (e) => this._plug
+                .setParam("/stonephaser/Feedback_depth", e.target.value));
+            this._root.getElementById("/stonephaser/Feedback_bass_cut").addEventListener("input", (e) => this._plug
+                .setParam("/stonephaser/Feedback_bass_cut", e.target.value));
+            this._root.getElementById("/stonephaser/Dry/wet_mix").addEventListener("input", (e) => this._plug
+                .setParam("/stonephaser/Dry/wet_mix", e.target.value));
 
         }
 
@@ -292,8 +303,10 @@ useMidi: 1,
         }
 
         setSwitches() {
-            this._root.getElementById("/stonephaser/Bypass").addEventListener("change", (e) => this._plug.setParam("/stonephaser/Bypass", 1 - e.target.value));
-            this._root.getElementById("/stonephaser/Color").addEventListener("change", (e) => this._plug.setParam("/stonephaser/Color", 1 - e.target.value));
+            this._root.getElementById("/stonephaser/Bypass").addEventListener("change", (e) => this._plug.setParam(
+                "/stonephaser/Bypass", 1 - e.target.value));
+            this._root.getElementById("/stonephaser/Color").addEventListener("change", (e) => this._plug.setParam(
+                "/stonephaser/Color", 1 - e.target.value));
 
         }
 
