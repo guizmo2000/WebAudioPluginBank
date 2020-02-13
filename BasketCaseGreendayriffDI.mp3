@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Welcome to WASABI</title>
+    <!--Disable zoom on mobile devices-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1 user-scalable=no">
+    <!--Import font roboto-->
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,100,300' rel='stylesheet' type='text/css'>
+    <!--Regroupe le code permettant la creation de webcomponent -->
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js" async></script>
+    <link href="bower_components/app-router/app-router.html" rel="import" async>
+    <link href="my_components/modules/nav-bar.html" rel="import">
+    <style is="custom-style" include="iron-flex"></style>
+</head>
+
+<body>
+    <nav-bar></nav-bar>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+            border: 0px;
+            box-sizing: border-box;
+        }
+
+        *:focus {
+            outline: none;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            background-color: #f2f2f2;
+            font-family: 'Roboto', sans-serif !important;
+        }
+
+        #mainContent {
+            width: 60%;
+            margin: 0 auto;
+            margin-top: 100px;
+        }
+
+        paper-material {
+            background-color: #fff;
+        }
+
+        paper-toolbar {
+            z-index: 2;
+        }
+
+        /** RESPONSIVE */
+        @media screen and (max-width: 800px) {
+            #mainContent {
+                margin-top: 0px;
+                width: 100%;
+            }
+        }
+    </style>
+
+    <div id="mainContent">
+        <app-router trailingSlash="ignore">
+            <!--LISTE DES PAGES-->
+            <!--Accueil-->
+            <app-route onUrlChange="updateModel" path="/" import="my_components/paper-tabs-content.html"></app-route>
+            <!--Login-->
+            <app-route onUrlChange="updateModel" path="/login" import="my_components/page-login.html"></app-route>
+            <!--Statistiques-->
+            <app-route onUrlChange="updateModel" path="/stats" import="my_components/page-stats.html"></app-route>
+            <!-- Multitracks -->
+            <app-route onUrlChange="updateModel" path="/search/song/multitrack/"
+                import="my_components/page-multitrack.html"></app-route>
+
+            <!--Accueil + recherche d'artistes/albums/musiques par lettre-->
+            <app-route onUrlChange="updateModel" path="/search/categorie/:categorie/lettre/:lettre/page/:numPage"
+                import="my_components/paper-tabs-content.html"></app-route>
+            <!--Artiste: contient des infos + sa discographie-->
+            <app-route onUrlChange="updateModel" path="/search/artist/:nameArtist"
+                import="my_components/page-artist.html"></app-route>
+            <!--Album: contient des infos + les titres de l'album-->
+            <app-route onUrlChange="updateModel" path="/search/artist/:nameArtist/album/:nameAlbum"
+                import="my_components/page-album.html"></app-route>
+            <!--Musique: contient des infos sur la musique-->
+            <app-route path="/search/artist/:nameArtist/album/:nameAlbum/song/:nameSong"
+                import="my_components/page-song.html"></app-route>
+
+            <!--Infos (anciennement FACETS)-->
+            <app-route onUrlChange="updateModel" path="/search/infos/:infoType/:infoName"
+                import="my_components/page-infos.html"></app-route>
+            <app-route onUrlChange="updateModel" path="/search/infos/:infoType/:infoName/:categoryName"
+                import="my_components/page-infos.html"></app-route>
+
+            <!--404: lorsqu'une mauvaise URL est saisie-->
+            <app-route onUrlChange="updateModel" path="*" import="my_components/page-404.html"></app-route>
+        </app-router>
+    </div>
+
+</body>
+
+</html>
